@@ -1,4 +1,4 @@
-base_dir=.
+base_dir=./src
 result_file=opensips.cfg
 
 recipe_name=$1
