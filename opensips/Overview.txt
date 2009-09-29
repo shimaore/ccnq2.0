@@ -1,0 +1,67 @@
+
+Flags used:
+flag 1 = syslog call logs (acc.so)
+flag 2 = flatstore call logs (acc.so)
+flag 3 = flatstore missed calls (acc.so)
+flag 4 = radius call logs (acc.so)
+flag 5 = radius logs missed calls too (acc.so)
+flag 6 = force MediaProxy
+flag 7 = msg sender (caller) is NATed
+flag 8 = set if mediaproxy already invoked (on this leg) [bflag]
+flag 9 = set if CFB already attempted [bflag]
+flag 10 = set if CFDA already attempted [bflag]
+flag 11 = set if uac_auth done [bflag]
+flag 12 = failed transaction flag
+flag 16 = call is been recorded
+flag 19 = dialog flag (dialog.so)
+
+bflag 18 = call in progress
+bflag 6 = msg recipient (callee) is NATed
+         This flag is also stored in the database in order to determine whether a recipient
+         is NATed or not (and is set by lookup(location)).
+         It is also set for re-INVITE containing ;mp=yes.
+bflag 9 = CFB already attempted
+bflag 10 = CFDA already attempted
+bflag 11 = UAC_auth already attempted
+
+
+branch_route[1]                invite.cfg
+failure_route[1]               invite.cfg
+onreply_route[1]               invite.cfg
+route[1]                       forwarder.cfg
+route[2]                       register*.cfg
+
+route[3]                       invite*.cfg
+route[4]                       mediaproxy.cfg
+route[5]                       loose-route.cfg
+route[6]                       non-loose-route.cfg
+route[7]                       non-loose-route.cfg
+route[8]                       forwarder.cfg
+
+route[10]                      toolbox.cfg
+route[11]                      nat.cfg
+route[12]                      nat.cfg
+route[13]                      authenticate.cfg
+route[14]                      mediaproxy.cfg
+route[15]                      mediaproxy.cfg
+route[16]                      mediaproxy.cfg
+
+route[23]                      nat.cfg
+route[27]                      invite.cfg
+route[28]                      invite.cfg
+
+
+route[lookup]                  register*.cfg
+route[record_route]            register*.cfg
+
+route[authenticate]            authenticate.cfg
+route[authenticate_register]   authenticate.cfg
+route[lr-nat]                  nat.cfg
+route[mid-route-invite]        routing-logic.cfg
+route[onreply-nat]             nat.cfg
+route[pre-route-invite]        invite.cfg
+route[register-nat]            nat.cfg
+route[route-invite]            routing-logic.cfg
+route[start-accounting]        accounting.cfg
+route[try-line-side]           routing-lineside.cfg
+route[try-trunk-side]          routing-trunkside.cfg

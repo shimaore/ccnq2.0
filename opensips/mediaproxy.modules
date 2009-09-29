@@ -1,0 +1,9 @@
+loadmodule "mediaproxy.so"
+
+modparam("mediaproxy","mediaproxy_socket", "/var/run/proxydispatcher.sock")
+# modparam("mediaproxy","sip_asymmetrics","/usr/local/etc/openser/sip-clients")
+# modparam("mediaproxy","rtp_asymmetrics","/usr/local/etc/openser/rtp-clients")
+
+# -----------------------------------------------------------------
+# Media Proxy / RTP Proxy handling
+# -----------------------------------------------------------------

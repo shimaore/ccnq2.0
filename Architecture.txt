@@ -1,0 +1,47 @@
+Components:
+
+Core:
+A = Carrier-facing SBCs (FS)
+B = Inbound routing (OSips)
+C = Outbound routing (OSips)
+
+Customer interface:
+D = Direct-connect customer-facing SBCs (FS)
+E = Customer-facing Feature Engine (FS)
+F = Customer-facing routing (OSips)
+G = Registrar (OSips)
+H = Media-Proxy (MP)
+
+
+
+1. Carrier-facing SBCs (signalling-only FS: late-neg, etc.)
+   With static configuration & firewall
+   Issues:
+   - codec negotiation is no longer transparent
+   - some call flows not properly supported by FS
+   Optionally: allow for remote configuration of carriers (needs FS + Fw config)
+
+2. All routing is DNS-based
+   Therefor: need DB-based DNS, or DNS reconfig toolset
+
+3. Registrar uses OSips 1.5 features for relay of REGISTER, 302 for routing
+
+*. All routing is domain-based
+4. Routing towards customers: all routing via aliases
+5. Routing towards internal: all routing via trunk DNS routing
+
+
+
+
+Deliverables:
+. Debian distribution with everything included
+. Custom packages for configuration, monitoring, ...
+. Testing, testing automation, ..
+
+
+
+OpenSIPS particulars:
+- we're now using _domains_ for all operations.
+
+
+- use DROUTING as the routing engine for the outbound-proxy?

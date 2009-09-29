@@ -1,0 +1,15 @@
+loadmodule "auth.so"
+modparam("auth", "rpid_prefix", "")             # Default value, explicited
+modparam("auth", "rpid_suffix", ";party=calling;id-type=subscriber;screen=yes") # Default value, explicited
+
+loadmodule "auth_db.so"
+#IFAUTHRADIUS loadmodule "auth_radius.so"
+
+# calculate_ha1 MUST be 0 in production
+modparam("auth_db", "db_url", "${DB_URL}")
+modparam("auth_db", "calculate_ha1", 0)
+modparam("auth_db", "use_domain", 1)
+
+#IFAUTHRADIUS   modparam("auth_radius", "radius_config", "${RADIUS_CONFIG}")
+#IFAUTHRADIUS   modparam("auth_radius", "service_type", 15)
+

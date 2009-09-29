@@ -1,0 +1,15 @@
+## This needs to be re-done since it is a co-located registrar.
+
+loadmodule "registrar.so"
+modparam("registrar", "min_expires", 60)
+modparam("registrar", "max_expires", 3600)
+modparam("registrar", "default_expires", 300)
+# Append Branches is the default
+modparam("registrar", "append_branches", 1)
+# No more than 10 contacts per AOR
+modparam("registrar", "max_contacts", 10)
+# RFC3261 section 20.33
+# modparam("registrar", "retry_after", 30)
+# AVP used by nat_traversal
+modparam("registrar", "received_avp", "$avp(nathelper)")
+
