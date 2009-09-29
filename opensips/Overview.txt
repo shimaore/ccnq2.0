@@ -29,26 +29,26 @@ branch_route[1]                invite.cfg
 failure_route[1]               invite.cfg
 onreply_route[1]               invite.cfg
 route[1]                       forwarder.cfg
-route[2]                       register*.cfg
+route[register-handler]                       register*.cfg
 
-route[3]                       invite*.cfg
-route[4]                       mediaproxy.cfg
-route[5]                       loose-route.cfg
-route[6]                       non-loose-route.cfg
-route[7]                       non-loose-route.cfg
-route[8]                       forwarder.cfg
+route[invite-handler]                       invite*.cfg
+route[update-media-proxy]                       mediaproxy.cfg
+route[loose-route-handler]                       loose-route.cfg
+route[non-loose-route-handler]                       non-loose-route.cfg
+route[non-local-uri-handler]                       non-loose-route.cfg
+route[forwarder-progress]                       forwarder.cfg
 
 route[10]                      toolbox.cfg
-route[11]                      nat.cfg
+route[initial-invite-nat]                      nat.cfg
 route[12]                      nat.cfg
 route[13]                      authenticate.cfg
 route[14]                      mediaproxy.cfg
-route[15]                      mediaproxy.cfg
-route[16]                      mediaproxy.cfg
+route[stop-media-proxy]                      mediaproxy.cfg
+route[media-proxy-reply-handler]                      mediaproxy.cfg
 
-route[23]                      nat.cfg
-route[27]                      invite.cfg
-route[28]                      invite.cfg
+route[bye-cancel-prack-nat]                      nat.cfg
+route[line-side-invite]                      invite.cfg
+route[trunk-side-invite]                      invite.cfg
 
 
 route[lookup]                  register*.cfg

@@ -10,15 +10,23 @@ cat - <<EOH > opensips.cfg
 #
 EOH
 
+function nl() { echo >> ${result_file}; }
+
 for building_block in ${recipe}; do
-  echo >> ${result_file}; echo "# Start ${building_block}.modules" >> ${result_file}
-  cat ${base_dir}/${building_block}.modules >> ${result_file}
-  echo >> ${result_file}; echo "# End ${building_block}.modules" >> ${result_file}
+  file="${base_dir}/${building_block}.modules"
+  if [ -e $file  ]; then
+    nl; echo "## ---  Start ${file}  --- ##" >> ${result_file}; nl;
+    cat ${file} >> ${result_file}
+    nl; echo "## ---  End ${file}  --- ##" >> ${result_file}; nl;
+  fi
 done
 for building_block in ${recipe}; do
-  echo >> ${result_file}; echo "# Start ${building_block}.cfg" >> ${result_file}
-  cat ${base_dir}/${building_block}.cfg >> ${result_file}
-  echo >> ${result_file}; echo "# End ${building_block}.cfg" >> ${result_file}
+  file="${base_dir}/${building_block}.cfg"
+  if [ -e ${base_dir}/${building_block}.cfg ]; then
+    nl; echo "## ---  Start ${file}  --- ##" >> ${result_file}; nl;
+    cat ${file} >> ${result_file}
+    nl; echo "## ---  End ${file}  --- ##" >> ${result_file}; nl;
+  fi
 done
 
 # Now locate all the route[...] statements

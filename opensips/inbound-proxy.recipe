@@ -5,3 +5,4 @@ invite-inbound-proxy
 loose-route
 non-loose-route
 toolbox
+register-ignore
