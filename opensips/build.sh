@@ -12,21 +12,15 @@ EOH
 
 function nl() { echo >> ${result_file}; }
 
-for building_block in ${recipe}; do
-  file="${base_dir}/${building_block}.modules"
-  if [ -e $file  ]; then
-    nl; echo "## ---  Start ${file}  --- ##" >> ${result_file}; nl;
-    cat ${file} >> ${result_file}
-    nl; echo "## ---  End ${file}  --- ##" >> ${result_file}; nl;
-  fi
-done
-for building_block in ${recipe}; do
-  file="${base_dir}/${building_block}.cfg"
-  if [ -e ${base_dir}/${building_block}.cfg ]; then
-    nl; echo "## ---  Start ${file}  --- ##" >> ${result_file}; nl;
-    cat ${file} >> ${result_file}
-    nl; echo "## ---  End ${file}  --- ##" >> ${result_file}; nl;
-  fi
+for extension in variables modules cfg; do
+  for building_block in ${recipe}; do
+    file="${base_dir}/${building_block}.${extension}"
+    if [ -e $file  ]; then
+      nl; echo "## ---  Start ${file}  --- ##" >> ${result_file}; nl;
+      cat ${file} >> ${result_file}
+      nl; echo "## ---  End ${file}  --- ##" >> ${result_file}; nl;
+    fi
+  done
 done
 
 # Now locate all the route[...] statements
