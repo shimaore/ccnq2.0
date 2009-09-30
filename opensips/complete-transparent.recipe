@@ -1,0 +1,15 @@
+# Recipe for a standalone proxy that does it all (but assumes proper formatting of numbers)
+generic
+toolbox
+forwarder
+accounting
+authenticate
+nat
+mediaproxy
+invite-router
+loose-route
+non-loose-route
+routing-logic
+routing-lineside
+routing-trunkside-transparent
+register-colocated
