@@ -97,6 +97,7 @@ while(<$fh>)
     s/^${accounting_pattern}//;
     s/^${authenticate_pattern}//;
     s/^#IF_USE_NODE_ID// if $configuration::node_id;
+    s/^#USE_PROXY_IP\s*// if $configuration::sip_host;
     print $fout $_;
 }
 

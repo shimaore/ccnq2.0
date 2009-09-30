@@ -44,7 +44,7 @@
 #       NPANXX+rank is e.g. 2125550 for the first entry (#0) in NPANXX 212555.
 
 # What IP address to listen onto; no statement == listen on all interfaces
-listen=${PROXY_IP}
+#USE_PROXY_IP listen=${PROXY_IP}
 port=${PROXY_PORT}
 
 
