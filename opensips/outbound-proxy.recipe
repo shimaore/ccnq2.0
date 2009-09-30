@@ -6,4 +6,5 @@ accounting
 invite-outbound-proxy
 loose-route
 non-loose-route
+routing-trunkside-transparent
 register-ignore

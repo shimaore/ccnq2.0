@@ -1,10 +1,14 @@
 base_dir=./src
-result_file=output/opensips.cfg
+output_dir=./output
 
 recipe_name=$1
 recipe=`egrep -v '^#' ${recipe_name}.recipe`
 
-cat - <<EOH > opensips.cfg
+## ---  Generate opensips.cfg  --- ##
+
+result_file=${output_dir}/opensips.cfg
+
+cat - <<EOH > ${result_file}
 #
 # Automatically generated for recipe ${recipe_name}
 #
@@ -23,9 +27,20 @@ for extension in variables modules cfg; do
   done
 done
 
-# Now locate all the route[...] statements
-# Then locate all the route(...) statements that do not have a matching route[...] statement and remove them
-
-mv ${result_file} ${result_file}.tmp
+mv -f ${result_file} ${result_file}.tmp
 perl clean.pl ${result_file}.tmp > ${result_file}
 rm ${result_file}.tmp
+
+
+## ---  Generate opensips.sql  --- ##
+
+extension=sql
+result_file=${output_dir}/opensips.${extension}
+
+header()
+for building_block in ${recipe}; do
+  file="${base_dir}/${building_block}.${extension}"
+  if [ -e $file  ]; then
+    cat ${file} >> ${result_file}
+  fi
+done

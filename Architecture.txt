@@ -17,7 +17,7 @@ H = Media-Proxy (MP)
 1. Carrier-facing SBCs (signalling-only FS: late-neg, etc.)
    With static configuration & firewall
    Issues:
-   - codec negotiation is no longer transparent
+   - codec negotiation is no longer transparent (compared to base ccnq)
    - some call flows not properly supported by FS
    Optionally: allow for remote configuration of carriers (needs FS + Fw config)
 
@@ -27,7 +27,9 @@ H = Media-Proxy (MP)
 3. Registrar uses OSips 1.5 features for relay of REGISTER, 302 for routing
 
 *. All routing is domain-based
+
 4. Routing towards customers: all routing via aliases
+
 5. Routing towards internal: all routing via trunk DNS routing
 
 
