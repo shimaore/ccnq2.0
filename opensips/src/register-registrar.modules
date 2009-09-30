@@ -13,3 +13,6 @@ modparam("registrar", "max_contacts", 10)
 # AVP used by nat_traversal
 modparam("registrar", "received_avp", "$avp(nathelper)")
 
+
+modparam("registrar", "sock_flag", 18)
+modparam("registrar", "sock_hdr_name", "Sock-Info")

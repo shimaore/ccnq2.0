@@ -1,0 +1,13 @@
+# Recipe for a customer-facing router in the CCNQ2.0 standard design
+generic
+toolbox
+forwarder
+accounting
+authenticate
+invite-router
+loose-route
+non-loose-route
+routing-logic
+routing-lineside
+routing-trunkside
+register-router

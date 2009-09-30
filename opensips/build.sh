@@ -1,5 +1,5 @@
 base_dir=./src
-result_file=opensips.cfg
+result_file=output/opensips.cfg
 
 recipe_name=$1
 recipe=`egrep -v '^#' ${recipe_name}.recipe`

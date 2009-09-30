@@ -13,7 +13,9 @@ flag 10 = set if CFDA already attempted [bflag]
 flag 11 = set if uac_auth done [bflag]
 flag 12 = failed transaction flag
 flag 16 = call is been recorded
+flag 18 = sock_flag (registrar.so)
 flag 19 = dialog flag (dialog.so)
+flag 20 = from registrar
 
 bflag 18 = call in progress
 bflag 6 = msg recipient (callee) is NATed

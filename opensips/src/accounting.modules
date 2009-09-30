@@ -1,7 +1,7 @@
 loadmodule "acc.so"
 
 modparam("acc", "log_extra", "${CDR_EXTRA}")
-modparam("acc", "db_extra", "${CDR_EXTRA}")
+#IFACCTFLATSTORE modparam("acc", "db_extra", "${CDR_EXTRA}")
 #IFACCTRADIUS   modparam("acc", "radius_config", "${RADIUS_CONFIG}")
 # These attributes need to be defined in a "dictionary" file first.
 #IFACCTRADIUS   modparam("acc", "radius_extra", "${RADIUS_EXTRA}")
@@ -14,11 +14,11 @@ modparam("acc", "report_cancels", 1)
 modparam("acc", "early_media", 1)
 modparam("acc", "report_ack", 1)
 modparam("acc", "failed_transaction_flag", 12)
-modparam("acc", "db_flag",2)
-modparam("acc", "db_missed_flag", 3)
-modparam("acc", "db_table_acc", "acc")
-modparam("acc", "db_table_missed_calls", "missed_calls")
-modparam("acc", "db_url", "flatstore:/var/log/opensips")
+#IFACCTFLATSTORE modparam("acc", "db_flag",2)
+#IFACCTFLATSTORE modparam("acc", "db_missed_flag", 3)
+#IFACCTFLATSTORE modparam("acc", "db_table_acc", "acc")
+#IFACCTFLATSTORE modparam("acc", "db_table_missed_calls", "missed_calls")
+#IFACCTFLATSTORE modparam("acc", "db_url", "flatstore:/var/log/opensips")
 
 # Accounting via RADIUS
 #IFACCTRADIUS   modparam("acc", "radius_flag", 4)
