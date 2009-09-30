@@ -24,7 +24,7 @@ use strict; use warnings;
 use configuration;
 use CCNQ::Proxy::Base;
 
-my $CONFIG = $configuration::opensips_cfg || '/etc/opensips/opensips.cfg';
+my $CONFIG = defined $configuration::opensips_cfg ? $configuration::opensips_cfg : '/etc/opensips/opensips.cfg';
 my $TEMPLATE = 'CCNQ/Proxy/templates/opensips.cfg';
 
 rename $CONFIG, "$CONFIG.bak";
@@ -109,7 +109,9 @@ $sed_commands = <<TXT if ${configuration::install_dir} ne '/var/www';
 
 sed -i bak -e 's/\/var\/www/${sed_dir}/' ${configuration::install_dir}/index.pl
 sed -i bak -e 's/\/var\/www/${sed_dir}/' ${configuration::install_dir}/q.pl
-sed -i bak -e 's/\/var\/www/${sed_dir}/' ${configuration::install_dir}/CCNQ/Proxy/bin/opensips-cdrs.pl
+sed -i bak -e 's/\/var\/www/${sed_dir}/' ${configuration::install_dir}/CCNQ/Proxy/bin/invite-all.pl
+sed -i bak -e 's/\/var\/www/${sed_dir}/' ${configuration::install_dir}/CCNQ/Proxy/bin/invite-outcome.pl
+sed -i bak -e 's/\/var\/www/${sed_dir}/' ${configuration::install_dir}/CCNQ/Proxy/bin/invite-single.pl
 TXT
 
 print <<TXT;

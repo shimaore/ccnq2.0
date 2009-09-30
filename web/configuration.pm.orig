@@ -23,18 +23,12 @@ use strict; use warnings;
 # ---------------------------------------------------------------
 # Rename this file to "configuration.pm" then edit it to reflect
 # your local settings.
+# Run "perl CCNQ/Proxy/bin/configure.pl" to generate opensips.cfg
+# and update the scripts.
 # ---------------------------------------------------------------
 
 # Location of the scripts.
 our $install_dir    = '/var/www';
-
-# ---------------------------------------------------------------
-# If $install_dir is modified, make sure to update
-#   index.pl
-#   q.pl
-#   CCNQ/Proxy/bin/opensips-cdrs.pl
-# on the web server.
-# ---------------------------------------------------------------
 
 # Database access, needed for OpenSIPS and website.
 our $db_host        = '127.0.0.1';
@@ -43,7 +37,6 @@ our $db_login       = 'opensips';
 our $db_password    = 'opensips';
 
 # OpenSIPS parameters.
-# Run "perl CCNQ/Proxy/bin/configure.pl" to generate opensips.cfg.
 our $sip_host       = '127.0.0.1';
 our $sip_port       = '5060';
 our $sip_challenge  = 'CarrierClass.net';
@@ -63,16 +56,8 @@ our $inv_timer      = 60;
 # Website parameters
 our $sitename       = 'CarrierClass.net'; # Used in title, etc.
 our $theme          = ''; # subdirectory where default.css and logo.png are located.
-
-# Website parameters: billing
-our $inbound_file   = '/etc/ccn/inbound.csv';
-our $sip_servers    = '127.0.0.1'; # blank-separated list of OpenSIPS servers
-our $bill_servers   = [ { host => $db_host, name => $db_name, login => $db_login, password => $db_password }, ];
-# also:  { uri => 'http://1.2.3.4/billto.pl', location => '1.2.3.4:80', realm => 'CCNQ', username => 'admin', password => 'letmein' }
-our $billing_dir    = '/var/log/billing';
-our $default_src    = '17001234567';
-our $bill_timezone  = 'US/Central';
-
 our $limit          = 500; # Maximum number of rows in a List tab.
+
+our $sip_servers    = '127.0.0.1'; # blank-separated list of OpenSIPS servers
 
 1;
