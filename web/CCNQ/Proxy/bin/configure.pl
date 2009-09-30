@@ -88,16 +88,15 @@ $configuration::accounting = 'flatstore'
 $configuration::authenticate = 'db'
     if not defined $configuration::authenticate;
 
-my $accounting_pattern   = '#IFACCT'.uc($configuration::accounting);
-my $authenticate_pattern = '#IFAUTH'.uc($configuration::authenticate);
+my $accounting_pattern   = '#IF_ACCT_'.uc($configuration::accounting);
+my $authenticate_pattern = '#IF_AUTH_'.uc($configuration::authenticate);
 
 while(<$fh>)
 {
     s/\$\{([A-Z_]+)\}/defined $values{$1} ? $values{$1} : warn "Undefined $1"/eg;
     s/^${accounting_pattern}//;
     s/^${authenticate_pattern}//;
-    s/^#IFNODE_ID// if $configuration::node_id;
-    s/^#IFNOREGISTER// if $configuration::no_register;
+    s/^#IF_USE_NODE_ID// if $configuration::node_id;
     print $fout $_;
 }
 

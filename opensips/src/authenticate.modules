@@ -7,6 +7,6 @@ modparam("auth_db", "db_url", "${DB_URL}")
 modparam("auth_db", "calculate_ha1", 0)  # calculate_ha1 MUST be 0 in production
 modparam("auth_db", "use_domain", 1)
 
-#IFAUTHRADIUS loadmodule "auth_radius.so"
-#IFAUTHRADIUS   modparam("auth_radius", "radius_config", "${RADIUS_CONFIG}")
-#IFAUTHRADIUS   modparam("auth_radius", "service_type", 15)
+#IF_AUTH_RADIUS loadmodule "auth_radius.so"
+#IF_AUTH_RADIUS   modparam("auth_radius", "radius_config", "${RADIUS_CONFIG}")
+#IF_AUTH_RADIUS   modparam("auth_radius", "service_type", 15)

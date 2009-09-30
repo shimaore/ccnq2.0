@@ -1,10 +1,10 @@
 loadmodule "acc.so"
 
 modparam("acc", "log_extra", "${CDR_EXTRA}")
-#IFACCTFLATSTORE modparam("acc", "db_extra", "${CDR_EXTRA}")
-#IFACCTRADIUS   modparam("acc", "radius_config", "${RADIUS_CONFIG}")
+#IF_ACCT_FLATSTORE modparam("acc", "db_extra", "${CDR_EXTRA}")
+#IF_ACCT_RADIUS   modparam("acc", "radius_config", "${RADIUS_CONFIG}")
 # These attributes need to be defined in a "dictionary" file first.
-#IFACCTRADIUS   modparam("acc", "radius_extra", "${RADIUS_EXTRA}")
+#IF_ACCT_RADIUS   modparam("acc", "radius_extra", "${RADIUS_EXTRA}")
 
 modparam("acc", "log_flag",1) # Normally not used
 modparam("acc", "log_level",1)
@@ -14,16 +14,16 @@ modparam("acc", "report_cancels", 1)
 modparam("acc", "early_media", 1)
 modparam("acc", "report_ack", 1)
 modparam("acc", "failed_transaction_flag", 12)
-#IFACCTFLATSTORE modparam("acc", "db_flag",2)
-#IFACCTFLATSTORE modparam("acc", "db_missed_flag", 3)
-#IFACCTFLATSTORE modparam("acc", "db_table_acc", "acc")
-#IFACCTFLATSTORE modparam("acc", "db_table_missed_calls", "missed_calls")
-#IFACCTFLATSTORE modparam("acc", "db_url", "flatstore:/var/log/opensips")
+#IF_ACCT_FLATSTORE modparam("acc", "db_flag",2)
+#IF_ACCT_FLATSTORE modparam("acc", "db_missed_flag", 3)
+#IF_ACCT_FLATSTORE modparam("acc", "db_table_acc", "acc")
+#IF_ACCT_FLATSTORE modparam("acc", "db_table_missed_calls", "missed_calls")
+#IF_ACCT_FLATSTORE modparam("acc", "db_url", "flatstore:/var/log/opensips")
 
 # Accounting via RADIUS
-#IFACCTRADIUS   modparam("acc", "radius_flag", 4)
-#IFACCTRADIUS   modparam("acc", "radius_missed_flag", 5)
+#IF_ACCT_RADIUS   modparam("acc", "radius_flag", 4)
+#IF_ACCT_RADIUS   modparam("acc", "radius_missed_flag", 5)
 
-#IFACCTRADIUS       modparam("uac_redirect","acc_function","acc_rad_request")
-#IFACCTFLATSTORE    modparam("uac_redirect","acc_function","acc_db_request")
+#IF_ACCT_RADIUS       modparam("uac_redirect","acc_function","acc_rad_request")
+#IF_ACCT_FLATSTORE    modparam("uac_redirect","acc_function","acc_db_request")
 
