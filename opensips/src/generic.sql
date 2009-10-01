@@ -8,7 +8,7 @@ CREATE TABLE version (
 
 INSERT INTO version VALUES ( 'subscriber', '7');
 INSERT INTO version VALUES ( 'missed_calls', '3');
-INSERT INTO version VALUES ( 'location', '1004');
+INSERT INTO version VALUES ( 'location', '1005');
 INSERT INTO version VALUES ( 'aliases', '1004');
 INSERT INTO version VALUES ( 'grp', '2');
 INSERT INTO version VALUES ( 're_grp', '1');
