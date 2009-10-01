@@ -16,7 +16,7 @@ INSERT INTO version VALUES ( 'acc', '4');
 INSERT INTO version VALUES ( 'silo', '5');
 INSERT INTO version VALUES ( 'domain', '1');
 INSERT INTO version VALUES ( 'uri', '1');
-INSERT INTO version VALUES ( 'trusted', '4');
+INSERT INTO version VALUES ( 'trusted', '5');
 INSERT INTO version VALUES ( 'usr_preferences', '2');
 INSERT INTO version VALUES ( 'speed_dial', '2');
 INSERT INTO version VALUES ( 'dbaliases', '1');
