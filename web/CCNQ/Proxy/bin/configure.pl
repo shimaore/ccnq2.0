@@ -95,10 +95,10 @@ my $authenticate_pattern = '#IF_AUTH_'.uc($configuration::authenticate);
 while(<$fh>)
 {
     s/\$\{([A-Z_]+)\}/defined $values{$1} ? $values{$1} : warn "Undefined $1"/eg;
-    s/^${accounting_pattern}//;
-    s/^${authenticate_pattern}//;
-    s/^#IF_USE_NODE_ID// if $configuration::node_id;
-    s/^#USE_PROXY_IP\s*// if $configuration::sip_host;
+    s/^\s*${accounting_pattern}//;
+    s/^\s*${authenticate_pattern}//;
+    s/^\s*#IF_USE_NODE_ID// if $configuration::node_id;
+    s/^\s*#USE_PROXY_IP\s*// if $configuration::sip_host;
     print $fout $_;
 }
 
