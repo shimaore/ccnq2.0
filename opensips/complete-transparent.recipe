@@ -9,7 +9,6 @@ mediaproxy
 invite-router
 loose-route
 non-loose-route
-routing-logic
 routing-lineside
 routing-trunkside-transparent
 register-colocated

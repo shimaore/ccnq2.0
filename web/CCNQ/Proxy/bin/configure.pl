@@ -71,6 +71,7 @@ my %values = (
     CDR_EXTRA   => join(';',@cdr_extra),
     RADIUS_EXTRA   => join(';',@radius_extra),
     NANPA       => 1,
+    FR          => 0,
     MPATH       => defined $configuration::mpath ? $configuration::mpath : '/usr/lib/opensips/modules/',
     RADIUS_CONFIG => defined $configuration::radius_config ? $configuration::radius_config : '',
     DEBUG       => defined $configuration::debug ? $configuration::debug : 3,
