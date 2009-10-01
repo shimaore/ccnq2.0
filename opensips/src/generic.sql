@@ -135,7 +135,7 @@ CREATE INDEX trusted_Key1 ON trusted(src_ip);
 
 CREATE TABLE domain (
   id            int(10) unsigned NOT NULL PRIMARY KEY auto_increment,
-  domain        varchar(128) NOT NULL PRIMARY KEY default '',
+  domain        varchar(128) NOT NULL default '',
   last_modified datetime NOT NULL default '1900-01-01 00:00:00'
 );
 
