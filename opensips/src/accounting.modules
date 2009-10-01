@@ -23,7 +23,3 @@ modparam("acc", "failed_transaction_flag", 12)
 # Accounting via RADIUS
 #IF_ACCT_RADIUS   modparam("acc", "radius_flag", 4)
 #IF_ACCT_RADIUS   modparam("acc", "radius_missed_flag", 5)
-
-#IF_ACCT_RADIUS       modparam("uac_redirect","acc_function","acc_rad_request")
-#IF_ACCT_FLATSTORE    modparam("uac_redirect","acc_function","acc_db_request")
-

@@ -6,6 +6,8 @@ modparam("uac","auth_password_avp", "$(avp(uac_pass))")
 modparam("uac","rr_store_param",    "${UAC_VSF}")
 
 loadmodule "uac_redirect.so"
+#IF_ACCT_RADIUS       modparam("uac_redirect","acc_function","acc_rad_request")
+#IF_ACCT_FLATSTORE    modparam("uac_redirect","acc_function","acc_db_request")
 
 loadmodule "dialog.so"
 modparam("dialog", "dlg_flag", 19)
