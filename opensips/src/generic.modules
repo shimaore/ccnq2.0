@@ -62,6 +62,7 @@ modparam("uri_db", "use_uri_table",   0) # use the "subscriber" table
 
 # -- domain --
 loadmodule "domain.so"
+modparam("domain", "db_url",          "${DB_URL}")
 modparam("domain", "domain_table",    "domain")
 
 # -- avpops --
