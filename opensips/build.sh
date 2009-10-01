@@ -37,7 +37,6 @@ rm ${result_file}.tmp
 extension=sql
 result_file=${output_dir}/opensips.${extension}
 
-header()
 for building_block in ${recipe}; do
   file="${base_dir}/${building_block}.${extension}"
   if [ -e $file  ]; then
