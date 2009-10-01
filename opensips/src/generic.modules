@@ -79,3 +79,4 @@ modparam("permissions", "db_url",     "${DB_URL}")
 modparam("permissions", "db_mode", 0)
 modparam("permissions", "trusted_table", "trusted")
 
+loadmodule "signaling.so"
