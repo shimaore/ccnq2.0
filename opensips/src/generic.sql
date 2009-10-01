@@ -146,7 +146,7 @@ CREATE TABLE address (
   id            int(10) unsigned NOT NULL PRIMARY KEY auto_increment,
   grp           smallint(5) unsigned NOT NULL default '0',
   ip_addr       varchar(15) NOT NULL,
-  mask          varchar NOT NULL default 32,
+  mask          varchar NOT NULL default '32',
   port          smallint(5) unsigned NOT NULL default '0'
 );
 
