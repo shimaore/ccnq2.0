@@ -6,7 +6,7 @@ CREATE TABLE version (
    table_version smallint(5) DEFAULT '0' NOT NULL
 );
 
-INSERT INTO version VALUES ( 'subscriber', '6');
+INSERT INTO version VALUES ( 'subscriber', '7');
 INSERT INTO version VALUES ( 'missed_calls', '3');
 INSERT INTO version VALUES ( 'location', '1004');
 INSERT INTO version VALUES ( 'aliases', '1004');
@@ -104,8 +104,9 @@ CREATE INDEX udc_als ON aliases(username, domain, contact);
 -- Table structure for table 'avpops'
 --
 CREATE TABLE avpops (
+  id            int(10) unsigned NOT NULL PRIMARY KEY auto_increment,
   uuid          varchar(64) NOT NULL default '',
-  username      varchar(100) NOT NULL default '0',
+  username      varchar(128) NOT NULL default '0',
   domain        varchar(128) NOT NULL default '',
   attribute     varchar(32) NOT NULL default '',
   value         varchar(128) NOT NULL default '',
@@ -133,6 +134,7 @@ CREATE INDEX trusted_Key1 ON trusted(src_ip);
 -- 
 
 CREATE TABLE domain (
+  id            int(10) unsigned NOT NULL PRIMARY KEY auto_increment,
   domain        varchar(128) NOT NULL PRIMARY KEY default '',
   last_modified datetime NOT NULL default '1900-01-01 00:00:00'
 );
