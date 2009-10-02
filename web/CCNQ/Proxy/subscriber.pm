@@ -137,7 +137,8 @@ sub insert
     my $default_npa = $params{default_npa};
     my $account     = $params{account};
     my $challenge   = $self->{challenge};
-    $challenge = $domain if $challenge eq '';
+    my $suffix = '';
+    $challenge = $domain, $suffix = $domain if $challenge eq '';
 
     my $allow_local = $params{allow_local} || 0;
     my $allow_ld    = $params{allow_ld} || 0;
@@ -154,7 +155,7 @@ sub insert
     if( defined $password and $password ne '' )
     {
         push @res,
-            <<'SQL',[$username,$domain,$password,md5_hex("$username:$challenge:$password"),md5_hex("$username\@$challenge:$challenge:$password")];
+            <<'SQL',[$username,$domain,$password,md5_hex("$username:$challenge:$password"),md5_hex("$username\@$suffix:$challenge:$password")];
             INSERT INTO subscriber(username,domain,password,ha1,ha1b) VALUES (?,?,?,?,?)
 SQL
     }
