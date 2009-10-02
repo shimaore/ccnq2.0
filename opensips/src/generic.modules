@@ -48,7 +48,7 @@ loadmodule "textops.so"
 loadmodule "usrloc.so"
 # Use usrloc-cl (DB-based)
 modparam("usrloc", "db_url",          "${DB_URL}")
-modparam("usrloc", "db_mode",         3)
+modparam("usrloc", "db_mode",         2)
 modparam("usrloc", "timer_interval",  60)
 modparam("usrloc", "desc_time_order", 1)
 modparam("usrloc", "nat_bflag",       6)
