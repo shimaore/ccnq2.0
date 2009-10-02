@@ -77,7 +77,7 @@ sub form
     my $self = shift;
     return (
         'Username'              => 'text',
-        'Domain'                => 'text',
+        'Domain' => [ map { $_ => $_ } $self->list_of_domains ],
         'Password'              => 'text',
         'IP'                    => 'ip',
         'Port'                  => 'text',

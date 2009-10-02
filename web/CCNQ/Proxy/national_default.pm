@@ -41,7 +41,7 @@ sub form
     my $self = shift;
     return (
         'Node'  => [ map { $_ => $_ } ('',$self->list_of_servers) ],
-        'Domain' => 'text',
+        'Domain' => [ map { $_ => $_ } $self->list_of_domains ],
         'Rank'  => 'integer',
         'Target' => 'text',
     );

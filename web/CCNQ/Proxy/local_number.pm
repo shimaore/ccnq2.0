@@ -54,7 +54,7 @@ sub form
     my $self = shift;
     return (
         'Number' => 'text',
-        'Domain' => 'text',
+        'Domain' => [ map { $_ => $_ } $self->list_of_domains ],
         'Username' => 'text',
         'CFA' => 'text',
         'CFNR' => 'text',

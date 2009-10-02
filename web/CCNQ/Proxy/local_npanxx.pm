@@ -40,7 +40,7 @@ sub form
     my $self = shift;
     return (
         $self->_name => 'text',
-        'Domain' => 'text',
+        'Domain' => [ map { $_ => $_ } $self->list_of_domains ],
     );
 }
 

@@ -44,7 +44,7 @@ sub form
     my $self = shift;
     return (
         'Target' => 'text',
-        'Domain' => 'text',
+        'Domain' => [ map { $_ => $_ } $self->list_of_domains ],
         'Realm' => 'text',
         'Login' => 'text',
         'Password' => 'text',

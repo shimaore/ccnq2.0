@@ -12,7 +12,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-# 
+#
 
 #
 # For more information visit http://carrierclass.net/
@@ -35,9 +35,22 @@ sub list_of_servers
     return split ' ', ${configuration::sip_servers};
 }
 
+sub list_of_domains
+{
+    my $self = shift;
+    unless( exists $self->{list_of_domains} )
+    {
+      $self->{list_of_domains} =
+        $self
+          ->run_sql_command('SELECT domain FROM domain ORDER BY domain ASC')
+          ->fetchall_arrayref([0]);
+    }
+    return @{$self->{list_of_domains}};
+}
+
 sub avp
 {
-    return 
+    return
     {
         # Used by nathelper, etc.
         nathelper       => 42, # customarily
@@ -76,7 +89,7 @@ sub avp
 
         # by number
         dst_subs        => 180, # DID to username
-        cfa             => 181, 
+        cfa             => 181,
         cfnr            => 182,
         cfb             => 183,
         cfda            => 184,
@@ -158,7 +171,7 @@ sub _avp_set
 {
     my $self = shift;
     my ($key,$domain,$attribute_name,$value) = @_;
-    
+
     my $attribute_value = $self->avp->{$attribute_name};
     confess $attribute_name if not defined $attribute_value;
 
