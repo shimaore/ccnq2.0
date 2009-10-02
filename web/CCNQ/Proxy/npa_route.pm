@@ -44,6 +44,7 @@ sub form
     my $self = shift;
     return (
         'Node'  => [ map { $_ => $_ } ('',$self->list_of_servers)],
+        'Domain' => 'text',
         'Route' => 'text',
         'Rank'  => 'integer',
         'Target' => 'text',
@@ -64,6 +65,8 @@ sub insert
     my $rank    = $params{rank};
     my $target  = $params{target};
     
+    my $domain = $params{domain};
+
     die "Invalid Route" unless $route =~ /^\d*$/ and length($route) eq $self->_len;
     die "Invalid Rank"  unless $rank =~ /^\d+$/;
 
@@ -74,8 +77,8 @@ sub insert
     $next_uuid   .= '/'.$node if $node;
 
     return (
-        $self->_avp_set($uuid,'gwadv',$next_uuid),
-        $self->_avp_set($uuid,'tgw',$target),
+        $self->_avp_set($uuid,$domain,'gwadv',$next_uuid),
+        $self->_avp_set($uuid,$domain,'tgw',$target),
     );
 }
 
@@ -87,12 +90,14 @@ sub delete
     my $route   = $params{route};
     my $rank    = $params{rank};
 
+    my $domain = $params{domain};
+
     my $uuid    = $self->_prefix . $route . chr(ord('A')+$rank);
     $uuid        .= '/'.$node if $node;
 
     return (
-        $self->_avp_set($uuid,'gwadv',undef),
-        $self->_avp_set($uuid,'tgw',undef),
+        $self->_avp_set($uuid,$domain,'gwadv',undef),
+        $self->_avp_set($uuid,$domain,'tgw',undef),
     );
 }
 
@@ -104,7 +109,7 @@ sub list
 
     return (
         <<'SQL',
-            SELECT uuid AS uuid, value AS Target
+            SELECT uuid AS uuid, domain AS Domain, value AS Target
             FROM avpops main 
             WHERE (uuid LIKE ? OR uuid LIKE ?) AND attribute = ?
             ORDER BY uuid ASC
@@ -113,6 +118,7 @@ SQL
         sub {
             my ($content,$names) = @_;
             my $uuid = $content->[0];
+            my $domain = $content->[1];
             my $node = '';
             $uuid = $1, $node = $2 if $uuid =~ m{^([^/]+)/(.*)$};
 
@@ -120,12 +126,13 @@ SQL
             # Content
             [
                 $node,
+                $domain,
                 substr($uuid,0,$prefix_length+$self->_len),
                 ord(substr($uuid,$prefix_length+$self->_len,1))-ord('A'),
-                $content->[1],
+                $content->[2],
             ],
             # Names 
-            [qw(Node Route Rank Target)]
+            [qw(Node Domain Route Rank Target)]
             ;            
         }
     );

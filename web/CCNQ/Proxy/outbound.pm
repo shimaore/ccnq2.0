@@ -44,6 +44,7 @@ sub form
     my $self = shift;
     return (
         'Target' => 'text',
+        'Domain' => 'text',
         'Realm' => 'text',
         'Login' => 'text',
         'Password' => 'text',
@@ -56,14 +57,15 @@ sub insert
     my $self = shift;
     my %params = @_;
     my $target  = $params{target};
+    my $domain  = $params{domain};
     my $uac_realm   = $params{realm};
     my $uac_user    = $params{login};
     my $uac_pass    = $params{password};
 
     return (
-        $self->_avp_set($target,'uac_realm',$uac_realm),
-        $self->_avp_set($target,'uac_user',$uac_user),
-        $self->_avp_set($target,'uac_pass',$uac_pass),
+        $self->_avp_set($target,$domain,'uac_realm',$uac_realm),
+        $self->_avp_set($target,$domain,'uac_user',$uac_user),
+        $self->_avp_set($target,$domain,'uac_pass',$uac_pass),
     );
 }
 
@@ -72,13 +74,14 @@ sub delete
     my $self = shift;
     my %params = @_;
     my $target  = $params{target};
+    my $domain  = $params{domain};
     
     die "Target must be an IP:port" unless $target =~ /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,5}$/;
 
     return (
-        $self->_avp_set($target,'uac_realm',undef),
-        $self->_avp_set($target,'uac_user',undef),
-        $self->_avp_set($target,'uac_pass',undef),
+        $self->_avp_set($target,$domain,'uac_realm',undef),
+        $self->_avp_set($target,$domain,'uac_user',undef),
+        $self->_avp_set($target,$domain,'uac_pass',undef),
     );
 }
 
@@ -88,7 +91,7 @@ sub list
 
     return (
         <<'SQL',
-            SELECT DISTINCT value AS Target,
+            SELECT DISTINCT value AS Target, domain AS Domain
                     (SELECT value FROM avpops WHERE uuid = main.value AND attribute = ?) AS Realm,
                     (SELECT value FROM avpops WHERE uuid = main.value AND attribute = ?) AS Login,
                     (SELECT value FROM avpops WHERE uuid = main.value AND attribute = ?) AS Password

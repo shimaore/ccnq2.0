@@ -151,25 +151,25 @@ sub radius_extra
     ];
 }
 
-sub _avp_delete_st { q(DELETE FROM avpops WHERE uuid = ? AND attribute = ?) }
-sub _avp_insert_st { q(INSERT INTO avpops(uuid,username,domain,attribute,value,type) VALUES (?,?,'',?,?,2)) }
+sub _avp_delete_st { q(DELETE FROM avpops WHERE uuid = ? AND domain = ? AND attribute = ?) }
+sub _avp_insert_st { q(INSERT INTO avpops(uuid,username,domain,attribute,value,type) VALUES (?,?,?,?,?,2)) }
 
-sub _avp_set()
+sub _avp_set
 {
     my $self = shift;
-    my ($key,$attribute_name,$value) = @_;
+    my ($key,$domain,$attribute_name,$value) = @_;
     
     my $attribute_value = $self->avp->{$attribute_name};
     confess $attribute_name if not defined $attribute_value;
 
     if(defined $value)
     {
-        return (_avp_delete_st,[$key,$attribute_value],
-                _avp_insert_st,[$key,$key,$attribute_value,$value]);
+        return (_avp_delete_st,[$key,$domain,$attribute_value],
+                _avp_insert_st,[$key,$key,$domain,$attribute_value,$value]);
     }
     else
     {
-        return (_avp_delete_st,[$key,$attribute_value]);
+        return (_avp_delete_st,[$key,$domain,$attribute_value]);
     }
 }
 

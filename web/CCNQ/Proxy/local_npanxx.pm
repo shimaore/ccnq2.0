@@ -40,6 +40,7 @@ sub form
     my $self = shift;
     return (
         $self->_name => 'text',
+        'Domain' => 'text',
     );
 }
 
@@ -49,8 +50,10 @@ sub insert
     my %params = @_;
     my $npa  = $params{lc($self->_name)};
 
+    my $domain = $params{domain};
+
     return (
-        $self->_avp_set($npa,lc($self->_name),1),
+        $self->_avp_set($npa,$domain,lc($self->_name),1),
     );
 }
 
@@ -60,8 +63,10 @@ sub delete
     my %params = @_;
     my $npa  = $params{lc($self->_name)};
 
+    my $domain = $params{domain};
+
     return (
-        $self->_avp_set($npa,lc($self->_name),undef),
+        $self->_avp_set($npa,$domain,lc($self->_name),undef),
     );
 }
 
@@ -71,7 +76,7 @@ sub list
     my $name = $self->_name;
 
     return (<<SQL, [$self->avp->{lc($name)}], undef);
-            SELECT DISTINCT uuid AS $name
+            SELECT DISTINCT uuid AS $name, domain AS "Domain"
             FROM avpops
             WHERE attribute = ?
             ORDER BY uuid ASC

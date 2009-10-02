@@ -12,7 +12,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-# 
+#
 
 #
 # For more information visit http://carrierclass.net/
@@ -63,7 +63,7 @@ sub doc
     For calls that must terminate at a subscriber, the following are tried in order:
     <ul>
     <li>the location specified in the registration information, if the subscriber is registered;
-    <li>the location (SIP URI) specified as the CFNR (Call Forward on Non-Registered) 
+    <li>the location (SIP URI) specified as the CFNR (Call Forward on Non-Registered)
         for the destination Inbound Number if one is specified (see under Inbound Numbers);
     <li>as a last resort, the IP address and SIP port number specified for the Subscriber.
     </ul>
@@ -77,6 +77,7 @@ sub form
     my $self = shift;
     return (
         'Username'              => 'text',
+        'Domain'                => 'text',
         'Password'              => 'text',
         'IP'                    => 'ip',
         'Port'                  => 'text',
@@ -100,18 +101,20 @@ sub new_precondition
     my %params = @_;
 
     my $username = $params{username};
-    
+    my $domain   = $params{domain};
+
     warn("No username provided.") if not defined $username or $username eq '';
     warn("Username must be a-z0-9_-.") unless $username =~ /^[\w-]+$/;
+    warn("No domain provided.") if not defined $domain or $domain eq '';
 
     my $count = 0;
 
-    $count += $self->run_sql_once(<<'SQL',$username);
-        SELECT COUNT(*) FROM subscriber WHERE username = ?
+    $count += $self->run_sql_once(<<'SQL',$username,$domain);
+        SELECT COUNT(*) FROM subscriber WHERE username = ? AND domain = ?
 SQL
 
-    $count += $self->run_sql_once(<<'SQL',$username,$self->avp->{src_subs});
-        SELECT COUNT(*) FROM avpops WHERE value = ? AND attribute = ?
+    $count += $self->run_sql_once(<<'SQL',$username,$domain,$self->avp->{src_subs});
+        SELECT COUNT(*) FROM avpops WHERE value = ? AND domain = ? AND attribute = ?
 SQL
 
     return $count == 0;
@@ -124,6 +127,7 @@ sub insert
     my $self = shift;
     my %params = @_;
     my $username    = $params{username};
+    my $domain      = $params{domain};
     my $password    = $params{password};
     my $ip          = $params{ip};
     my $port        = $params{port};
@@ -149,42 +153,42 @@ sub insert
     if( defined $password and $password ne '' )
     {
         push @res,
-            <<'SQL',[$username,$password,md5_hex("$username:$challenge:$password"),md5_hex("$username\@:$challenge:$password")];
-            INSERT INTO subscriber(username,domain,password,ha1,ha1b) VALUES (?,'',?,?,?)
+            <<'SQL',[$username,$domain,$password,md5_hex("$username:$challenge:$password"),md5_hex("$username\@:$challenge:$password")];
+            INSERT INTO subscriber(username,domain,password,ha1,ha1b) VALUES (?,?,?,?,?)
 SQL
     }
     else
     {
         push @res,
-            <<'SQL',[$username];
-            INSERT INTO subscriber(username,domain) VALUES (?,'')
+            <<'SQL',[$username,$domain];
+            INSERT INTO subscriber(username,domain) VALUES (?,?)
 SQL
     }
 
-    push @res, <<'SQL',[$account,$username];
-        UPDATE subscriber SET account = ? WHERE username = ?
+    push @res, <<'SQL',[$account,$username,$domain];
+        UPDATE subscriber SET account = ? WHERE username = ? AND domain = ?
 SQL
 
     # Map IP to username (for IP-based authentication)
     if(defined $ip)
     {
-        push @res, $self->_avp_set($ip,'src_subs',$username);
+        push @res, $self->_avp_set($ip,$domain,'src_subs',$username);
     }
 
     return (
         @res,
-        $self->_avp_set($username,'account',$account),
-        $self->_avp_set($username,'user_ip',$ip),
-        $self->_avp_set($username,'user_port',$port),
-        $self->_avp_set($username,'user_srv',$srv),
-        $self->_avp_set($username,'user_recording',$recording),
-        $self->_avp_set($username,'strip_digit',$strip_digit),
-        $self->_avp_set($username,'default_npa',$default_npa),
-        $self->_avp_set($username,'allow_local',$allow_local?1:undef),
-        $self->_avp_set($username,'allow_ld',$allow_ld?1:undef),
-        $self->_avp_set($username,'allow_premium',$allow_premium?1:undef),
-        $self->_avp_set($username,'allow_intl',$allow_intl?1:undef),
-        $self->_avp_set($username,'user_force_mp',$always_mp?1:undef),
+        $self->_avp_set($username,$domain,'account',$account),
+        $self->_avp_set($username,$domain,'user_ip',$ip),
+        $self->_avp_set($username,$domain,'user_port',$port),
+        $self->_avp_set($username,$domain,'user_srv',$srv),
+        $self->_avp_set($username,$domain,'user_recording',$recording),
+        $self->_avp_set($username,$domain,'strip_digit',$strip_digit),
+        $self->_avp_set($username,$domain,'default_npa',$default_npa),
+        $self->_avp_set($username,$domain,'allow_local',$allow_local?1:undef),
+        $self->_avp_set($username,$domain,'allow_ld',$allow_ld?1:undef),
+        $self->_avp_set($username,$domain,'allow_premium',$allow_premium?1:undef),
+        $self->_avp_set($username,$domain,'allow_intl',$allow_intl?1:undef),
+        $self->_avp_set($username,$domain,'user_force_mp',$always_mp?1:undef),
     );
 }
 
@@ -193,34 +197,35 @@ sub delete
     my $self = shift;
     my %params = @_;
     my $username = $params{username};
+    my $domain   = $params{domain};
     my $ip       = $params{ip};
 
     my @res = (
-        <<'SQL',[$username],
-        DELETE FROM subscriber WHERE username = ? AND domain = ''
+        <<'SQL',[$username,$domain],
+        DELETE FROM subscriber WHERE username = ? AND domain = ?
 SQL
         # Should be redundant with the avp_set(src_subs) below.
         <<'SQL',[$username,$self->avp->{src_subs}],
         DELETE FROM avpops WHERE value = ? AND attribute = ?
 SQL
 
-        $self->_avp_set($username,'account',undef),
-        $self->_avp_set($username,'user_ip',undef),
-        $self->_avp_set($username,'user_port',undef),
-        $self->_avp_set($username,'user_srv',undef),
-        $self->_avp_set($username,'user_recording',undef),
-        $self->_avp_set($username,'strip_digit',undef),
-        $self->_avp_set($username,'default_npa',undef),
-        $self->_avp_set($username,'allow_local',undef),
-        $self->_avp_set($username,'allow_ld',undef),
-        $self->_avp_set($username,'allow_premium',undef),
-        $self->_avp_set($username,'allow_intl',undef),
-        $self->_avp_set($username,'user_force_mp',undef),
+        $self->_avp_set($username,$domain,'account',undef),
+        $self->_avp_set($username,$domain,'user_ip',undef),
+        $self->_avp_set($username,$domain,'user_port',undef),
+        $self->_avp_set($username,$domain,'user_srv',undef),
+        $self->_avp_set($username,$domain,'user_recording',undef),
+        $self->_avp_set($username,$domain,'strip_digit',undef),
+        $self->_avp_set($username,$domain,'default_npa',undef),
+        $self->_avp_set($username,$domain,'allow_local',undef),
+        $self->_avp_set($username,$domain,'allow_ld',undef),
+        $self->_avp_set($username,$domain,'allow_premium',undef),
+        $self->_avp_set($username,$domain,'allow_intl',undef),
+        $self->_avp_set($username,$domain,'user_force_mp',undef),
     );
 
     if(defined $ip)
     {
-        push @res, $self->_avp_set($ip,'src_subs',undef);
+        push @res, $self->_avp_set($ip,$domain,'src_subs',undef);
     }
 
     return @res;
@@ -231,7 +236,7 @@ sub list
     my $self = shift;
     my @params = $self->vars;
     my %params = @params;
-    
+
     my @where = ();
     my @where_values = ();
     my $account = $params{account};
@@ -242,33 +247,38 @@ sub list
     push( @where, 'Username = ?' ), push( @where_values, $username )
         if defined $username and $username ne '';
 
+    my $domain = $params{domain};
+    push( @where, 'Domain = ?' ), push( @where_values, $domain )
+        if defined $domain and $domain ne '';
+
     my $where = '';
     $where = 'HAVING '. join('AND', map { "($_)" } @where ) if @where;
 
     return (<<SQL,[$self->avp->{account},$self->avp->{src_subs},$self->avp->{user_port},$self->avp->{user_srv},$self->avp->{user_recording},$self->avp->{strip_digit},$self->avp->{default_npa},$self->avp->{allow_local},$self->avp->{allow_ld},$self->avp->{allow_premium},$self->avp->{allow_intl},$self->avp->{user_force_mp},$self->avp->{src_subs},@where_values],undef);
         SELECT username AS Username,
-               (SELECT value FROM avpops WHERE uuid = main.username AND attribute = ?) AS "Account",
-               (SELECT password FROM subscriber WHERE username = main.username ) AS Password,
-               (SELECT uuid FROM avpops WHERE value = main.username AND attribute = ?) AS "IP",
-               (SELECT value FROM avpops WHERE uuid = main.username AND attribute = ?) AS "Port",
-               (SELECT value FROM avpops WHERE uuid = main.username AND attribute = ?) AS "SRV",
-               (SELECT value FROM avpops WHERE uuid = main.username AND attribute = ?) AS "Recording",
-               (SELECT value FROM avpops WHERE uuid = main.username AND attribute = ?) AS "Strip_Digit",
-               (SELECT value FROM avpops WHERE uuid = main.username AND attribute = ?) AS "Default_NPA",
-               (SELECT COUNT(value) FROM avpops WHERE uuid = main.username AND attribute = ?) AS "Allow_Local",
-               (SELECT COUNT(value) FROM avpops WHERE uuid = main.username AND attribute = ?) AS "Allow_LD",
-               (SELECT COUNT(value) FROM avpops WHERE uuid = main.username AND attribute = ?) AS "Allow_Premium",
-               (SELECT COUNT(value) FROM avpops WHERE uuid = main.username AND attribute = ?) AS "Allow_International",
-               (SELECT COUNT(value) FROM avpops WHERE uuid = main.username AND attribute = ?) AS "Always_Proxy_Media",
-               (SELECT contact FROM location WHERE username = main.username) AS "Contact",
-               (SELECT received FROM location WHERE username = main.username) AS "Received",
-               (SELECT user_agent FROM location WHERE username = main.username) AS "User_Agent",
-               (SELECT expires FROM location WHERE username = main.username) AS "Expires"
-        FROM 
+               domain AS Domain,
+               (SELECT value FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS "Account",
+               (SELECT password FROM subscriber WHERE username = main.username AND domain = main.domain ) AS Password,
+               (SELECT uuid FROM avpops WHERE value = main.username AND domain = main.domain AND attribute = ?) AS "IP",
+               (SELECT value FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS "Port",
+               (SELECT value FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS "SRV",
+               (SELECT value FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS "Recording",
+               (SELECT value FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS "Strip_Digit",
+               (SELECT value FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS "Default_NPA",
+               (SELECT COUNT(value) FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS "Allow_Local",
+               (SELECT COUNT(value) FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS "Allow_LD",
+               (SELECT COUNT(value) FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS "Allow_Premium",
+               (SELECT COUNT(value) FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS "Allow_International",
+               (SELECT COUNT(value) FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS "Always_Proxy_Media",
+               (SELECT contact FROM location WHERE username = main.username AND domain = main.domain ) AS "Contact",
+               (SELECT received FROM location WHERE username = main.username AND domain = main.domain ) AS "Received",
+               (SELECT user_agent FROM location WHERE username = main.username AND domain = main.domain ) AS "User_Agent",
+               (SELECT expires FROM location WHERE username = main.username AND domain = main.domain ) AS "Expires"
+        FROM
         (
-            SELECT username AS username FROM subscriber main
+            SELECT username AS username, domain AS domain FROM subscriber main
             UNION
-            SELECT value AS username FROM avpops WHERE attribute = ?
+            SELECT value AS username, domain AS domain FROM avpops WHERE attribute = ?
         ) main
         $where
         ORDER BY username ASC

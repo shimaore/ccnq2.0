@@ -12,7 +12,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-# 
+#
 
 #
 # For more information visit http://carrierclass.net/
@@ -38,7 +38,7 @@ sub doc
     <p>
     For example, if you want calls to go to a voicemail system
     on Busy, enter a SIP URI targetting your voicemail system
-    for the CFB field, such as 
+    for the CFB field, such as
     "sip:vmb-username@voicemail.example.com".
     <p>
     The CFDA_Timeout parameter allows you to control the duration
@@ -54,6 +54,7 @@ sub form
     my $self = shift;
     return (
         'Number' => 'text',
+        'Domain' => 'text',
         'Username' => 'text',
         'CFA' => 'text',
         'CFNR' => 'text',
@@ -71,6 +72,7 @@ sub insert
     my %params = @_;
     my $number  = $params{number};
     my $username    = $params{username};
+    my $domain  = $params{domain};
     my $cfa   = $params{cfa} || undef;
     my $cfnr    = $params{cfnr} || undef;
     my $cfb    = $params{cfb} || undef;
@@ -82,13 +84,13 @@ sub insert
     return () unless defined $username and $username ne '';
 
     return (
-        $self->_avp_set($number,'dst_subs',$username),
-        $self->_avp_set($number,'cfa',$cfa),
-        $self->_avp_set($number,'cfnr',$cfnr),
-        $self->_avp_set($number,'cfb',$cfb),
-        $self->_avp_set($number,'cfda',$cfda),
-        $self->_avp_set($number,'inv_timer',$cfda_timeout),
-        $self->_avp_set($number,'outbound_route',$outbound_route),
+        $self->_avp_set($number,$domain,'dst_subs',$username),
+        $self->_avp_set($number,$domain,'cfa',$cfa),
+        $self->_avp_set($number,$domain,'cfnr',$cfnr),
+        $self->_avp_set($number,$domain,'cfb',$cfb),
+        $self->_avp_set($number,$domain,'cfda',$cfda),
+        $self->_avp_set($number,$domain,'inv_timer',$cfda_timeout),
+        $self->_avp_set($number,$domain,'outbound_route',$outbound_route),
     );
 }
 
@@ -97,15 +99,16 @@ sub delete
     my $self = shift;
     my %params = @_;
     my $number  = $params{number};
+    my $domain  = $params{domain};
 
     return (
-        $self->_avp_set($number,'dst_subs',undef),
-        $self->_avp_set($number,'cfa',undef),
-        $self->_avp_set($number,'cfnr',undef),
-        $self->_avp_set($number,'cfb',undef),
-        $self->_avp_set($number,'cfda',undef),
-        $self->_avp_set($number,'inv_timer',undef),
-        $self->_avp_set($number,'outbound_route',undef),
+        $self->_avp_set($number,$domain,'dst_subs',undef),
+        $self->_avp_set($number,$domain,'cfa',undef),
+        $self->_avp_set($number,$domain,'cfnr',undef),
+        $self->_avp_set($number,$domain,'cfb',undef),
+        $self->_avp_set($number,$domain,'cfda',undef),
+        $self->_avp_set($number,$domain,'inv_timer',undef),
+        $self->_avp_set($number,$domain,'outbound_route',undef),
     );
 }
 
@@ -120,17 +123,17 @@ sub list
     {
         $where .= q( AND uuid LIKE '%).$number.q(%');
     }
-  
+
     return (
         <<SQL,
-            SELECT DISTINCT uuid AS "Number", value AS "Username",
-                    (SELECT value FROM avpops WHERE uuid = main.uuid AND attribute = ?) AS CFA,
-                    (SELECT value FROM avpops WHERE uuid = main.uuid AND attribute = ?) AS CFNR,
-                    (SELECT value FROM avpops WHERE uuid = main.uuid AND attribute = ?) AS CFB,
-                    (SELECT value FROM avpops WHERE uuid = main.uuid AND attribute = ?) AS CFDA,
-                    (SELECT value FROM avpops WHERE uuid = main.uuid AND attribute = ?) AS CFDA_Timeout,
-                    (SELECT value FROM avpops WHERE uuid = main.uuid AND attribute = ?) AS Outbound_Route
-            FROM avpops main 
+            SELECT DISTINCT uuid AS "Number", domain AS "Domain", value AS "Username",
+                    (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS CFA,
+                    (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS CFNR,
+                    (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS CFB,
+                    (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS CFDA,
+                    (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS CFDA_Timeout,
+                    (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS Outbound_Route
+            FROM avpops main
             WHERE attribute = ? $where
             ORDER BY uuid, value ASC
 SQL
