@@ -1,6 +1,7 @@
 loadmodule "auth.so"
 modparam("auth", "rpid_prefix", "")             # Default value, explicited
 modparam("auth", "rpid_suffix", ";party=calling;id-type=subscriber;screen=yes") # Default value, explicited
+modparam("auth", "nonce_expire", 30)
 
 loadmodule "auth_db.so"
 modparam("auth_db", "db_url", "${DB_URL}")

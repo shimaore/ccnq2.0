@@ -1,7 +1,7 @@
 loadmodule "nat_traversal.so"
 
 modparam("nat_traversal", "keepalive_interval", 30)
-
+modparam("nat_traversal", "keepalive_method", "OPTIONS")
 
 # nat_uac_test 1 = RFC1918 IP in Contact?
 # nat_uac_test 2 = IP in Via = src_ip ("received" test)
