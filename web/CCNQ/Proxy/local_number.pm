@@ -87,7 +87,7 @@ sub insert
 
     return (
         $self->_avp_set($number,$domain,'dst_subs',$username),
-        $self->_avp_set($number,$domain,'dst_domain',$domain),
+        $self->_avp_set($number,$domain,'dst_domain',$username_domain),
         $self->_avp_set($number,$domain,'cfa',$cfa),
         $self->_avp_set($number,$domain,'cfnr',$cfnr),
         $self->_avp_set($number,$domain,'cfb',$cfb),
