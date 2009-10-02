@@ -91,7 +91,7 @@ sub list
 
     return (
         <<'SQL',
-            SELECT DISTINCT value AS Target, domain AS Domain
+            SELECT DISTINCT value AS Target, domain AS Domain,
                     (SELECT value FROM avpops WHERE uuid = main.value AND attribute = ?) AS Realm,
                     (SELECT value FROM avpops WHERE uuid = main.value AND attribute = ?) AS Login,
                     (SELECT value FROM avpops WHERE uuid = main.value AND attribute = ?) AS Password
