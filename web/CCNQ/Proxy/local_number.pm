@@ -56,6 +56,7 @@ sub form
         'Number' => 'text',
         'Domain' => [ map { $_ => $_ } $self->list_of_domains ],
         'Username' => 'text',
+        'Username_Domain' => [ map { $_ => $_ } $self->list_of_domains ],
         'CFA' => 'text',
         'CFNR' => 'text',
         'CFB' => 'text',
@@ -71,8 +72,9 @@ sub insert
     my $self = shift;
     my %params = @_;
     my $number  = $params{number};
-    my $username    = $params{username};
     my $domain  = $params{domain};
+    my $username    = $params{username};
+    my $username_domain  = $params{username_domain};
     my $cfa   = $params{cfa} || undef;
     my $cfnr    = $params{cfnr} || undef;
     my $cfb    = $params{cfb} || undef;
@@ -85,6 +87,7 @@ sub insert
 
     return (
         $self->_avp_set($number,$domain,'dst_subs',$username),
+        $self->_avp_set($number,$domain,'dst_domain',$domain),
         $self->_avp_set($number,$domain,'cfa',$cfa),
         $self->_avp_set($number,$domain,'cfnr',$cfnr),
         $self->_avp_set($number,$domain,'cfb',$cfb),
@@ -103,6 +106,7 @@ sub delete
 
     return (
         $self->_avp_set($number,$domain,'dst_subs',undef),
+        $self->_avp_set($number,$domain,'dst_domain',undef),
         $self->_avp_set($number,$domain,'cfa',undef),
         $self->_avp_set($number,$domain,'cfnr',undef),
         $self->_avp_set($number,$domain,'cfb',undef),
@@ -127,6 +131,7 @@ sub list
     return (
         <<SQL,
             SELECT DISTINCT uuid AS "Number", domain AS "Domain", value AS "Username",
+                    (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS Username_Domain,
                     (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS CFA,
                     (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS CFNR,
                     (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS CFB,
@@ -137,7 +142,7 @@ sub list
             WHERE attribute = ? $where
             ORDER BY uuid, value ASC
 SQL
-        [$self->avp->{cfa},$self->avp->{cfnr},$self->avp->{cfb},$self->avp->{cfda},$self->avp->{inv_timer},$self->avp->{outbound_route},$self->avp->{dst_subs}],
+        [$self->avp->{dst_domain},$self->avp->{cfa},$self->avp->{cfnr},$self->avp->{cfb},$self->avp->{cfda},$self->avp->{inv_timer},$self->avp->{outbound_route},$self->avp->{dst_subs}],
         undef
     );
 }

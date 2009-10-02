@@ -97,6 +97,7 @@ sub avp
         cfb             => 183,
         cfda            => 184,
         outbound_route  => 185,
+        dst_domain      => 186, # DID to domain
         inv_timer       => 43,
 
         # cdr info
