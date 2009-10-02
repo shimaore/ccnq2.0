@@ -41,9 +41,12 @@ sub list_of_domains
     unless( exists $self->{list_of_domains} )
     {
       $self->{list_of_domains} =
+        map { $_->[0] }
+        @{
         $self
           ->run_sql_command('SELECT domain FROM domain ORDER BY domain ASC')
-          ->fetchall_arrayref([0]);
+          ->fetchall_arrayref([0])
+        };
     }
     return @{$self->{list_of_domains}};
 }
