@@ -11,7 +11,7 @@ modparam("registrar", "max_contacts", 10)
 # RFC3261 section 20.33
 # modparam("registrar", "retry_after", 30)
 # AVP used by nat_traversal
-modparam("registrar", "received_avp", "$avp(nathelper)")
+modparam("registrar", "received_avp", "$avp(received_avp)")
 
 
 modparam("registrar", "sock_flag", 18)

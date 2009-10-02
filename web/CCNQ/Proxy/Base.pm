@@ -55,8 +55,7 @@ sub avp
 {
     return
     {
-        # Used by nathelper, etc.
-        nathelper       => 42, # customarily
+        received_avp    => 42, # customarily
 
         # nanpa-rewriting
         local_npanxx    => 160,

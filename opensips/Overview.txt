@@ -16,6 +16,7 @@ flag 16 = call is been recorded
 flag 18 = sock_flag (registrar.so)
 flag 19 = dialog flag (dialog.so)
 flag 20 = from registrar
+flag 21 = tcp_persistent_flag
 
 bflag 18 = call in progress
 bflag 6 = msg recipient (callee) is NATed
