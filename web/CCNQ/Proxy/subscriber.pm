@@ -154,7 +154,7 @@ sub insert
     if( defined $password and $password ne '' )
     {
         push @res,
-            <<'SQL',[$username,$domain,$password,md5_hex("$username:$challenge:$password"),md5_hex("$username\@$domain:$challenge:$password")];
+            <<'SQL',[$username,$domain,$password,md5_hex("$username:$challenge:$password"),md5_hex("$username\@$challenge:$challenge:$password")];
             INSERT INTO subscriber(username,domain,password,ha1,ha1b) VALUES (?,?,?,?,?)
 SQL
     }
