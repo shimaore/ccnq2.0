@@ -4,6 +4,7 @@ toolbox
 forwarder
 accounting
 invite-inbound-proxy
+failure_route
 loose-route
 non-loose-route
 register-ignore

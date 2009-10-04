@@ -5,6 +5,7 @@ forwarder
 accounting
 authenticate
 invite-router
+failure_route
 loose-route
 non-loose-route
 routing-logic

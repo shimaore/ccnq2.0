@@ -4,6 +4,7 @@ toolbox
 forwarder
 accounting
 invite-outbound-proxy
+failure_route
 loose-route
 non-loose-route
 routing-trunkside-transparent
