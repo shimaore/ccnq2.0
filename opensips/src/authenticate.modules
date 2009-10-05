@@ -19,6 +19,11 @@ modparam("auth", "rpid_prefix", "")             # Default value, explicited
 modparam("auth", "rpid_suffix", ";party=calling;id-type=subscriber;screen=yes") # Default value, explicited
 modparam("auth", "nonce_expire", 60)
 
+# testing
+# SJPhone breaks otherwise
+modparam("auth", "disable_nonce_check", 1)
+# /testing
+
 loadmodule "auth_db.so"
 modparam("auth_db", "db_url", "${DB_URL}")
 modparam("auth_db", "calculate_ha1", 0)  # calculate_ha1 MUST be 0 in production
