@@ -3,6 +3,7 @@ generic
 toolbox
 forwarder
 accounting
+invite
 invite-outbound-proxy
 failure_route
 loose-route
