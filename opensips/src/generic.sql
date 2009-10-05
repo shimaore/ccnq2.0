@@ -103,7 +103,7 @@ CREATE TABLE aliases (
 );
 
 CREATE UNIQUE INDEX key_als ON location(username, domain);
-CREATE INDEX udc_als ON aliases(username, domain, contact);
+CREATE INDEX udc_als ON aliases(username, domain, alias_username, alias_domain);
 
 --
 -- Table structure for table 'avpops'
