@@ -125,6 +125,6 @@ mysql <<SQL
     GRANT ALL ON ${configuration::db_name}.* TO ${configuration::db_login};
 SQL
 
-mysql ${configuration::db_name} < CCNQ/Proxy/templates/opensips.sql
+mysql ${configuration::db_name} < ${configuration::install_dir}/CCNQ/Proxy/templates/opensips.sql
 
 TXT
