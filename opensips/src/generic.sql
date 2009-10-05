@@ -95,22 +95,11 @@ CREATE UNIQUE INDEX user_id ON subscriber(username, domain);
 -- Table structure for table 'aliases' -- location-like table
 --
 CREATE TABLE aliases (
-  id            int(10) unsigned NOT NULL PRIMARY KEY auto_increment,
-  username      varchar(64) NOT NULL default '',
-  domain        varchar(128) NOT NULL default '',
-  contact       varchar(255) NOT NULL default '',
-  received      varchar(255) default NULL,
-  path          varchar(255) default NULL,
-  expires       datetime NOT NULL default '2020-05-28 21:32:15',
-  q             float(10,2) NOT NULL default '1.0',
-  callid        varchar(255) NOT NULL default 'Default-Call-ID',
-  cseq          int(11) NOT NULL default '42',
-  last_modified datetime NOT NULL default '1900-01-01 00:00',
-  flags         int(11) NOT NULL default '0',
-  cflags        int(11) NOT NULL default '0',
-  user_agent    varchar(255) NOT NULL default '',
-  socket        varchar(128) default NULL,
-  methods       int(11) default NULL
+  id              int(10) unsigned NOT NULL PRIMARY KEY auto_increment,
+  username        varchar(64) NOT NULL default '',
+  domain          varchar(128) NOT NULL default '',
+  alias_username  varchar(64) NOT NULL default '',
+  alias_domain    varchar(64) NOT NULL default ''
 );
 
 CREATE UNIQUE INDEX key_als ON location(username, domain);

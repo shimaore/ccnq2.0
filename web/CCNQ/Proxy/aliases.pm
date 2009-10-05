@@ -40,7 +40,9 @@ sub form
     my $self = shift;
     return (
         'Username' => 'text',
-        'Contact'  => 'text',
+        'Domain'   => 'text',
+        'Target_Username' => 'text',
+        'Target_Domain'   => 'text',
     );
 }
 
@@ -48,16 +50,21 @@ sub insert
 {
     my $self = shift;
     my %params = @_;
-    
+
     my $username = $params{username};
-    my $contact = $params{contact};
-    
+    my $domain   = $params{domain};
+    my $alias_username = $params{target_username};
+    my $alias_domain   = $params{target_domain};
+
+
     return ()
         unless defined $username and $username ne ''
-        and    defined $contact and $contact ne '';
-    
-    return (<<'SQL',[$username,$contact]);
-        INSERT INTO aliases(username,domain,contact) VALUES (?,'',?)
+        and    defined $domain   and $domain ne ''
+        and    defined $alias_username and $alias_username ne ''
+        and    defined $alias_domain   and $alias_domain ne '';
+
+    return (<<'SQL',[$username,$domain,$alias_username,$alias_domain]);
+        INSERT INTO aliases(username,domain,alias_username,alias_domain) VALUES (?,?,?,?)
 SQL
 }
 
@@ -66,10 +73,12 @@ sub delete
     my $self = shift;
     my %params = @_;
     my $username = $params{username};
-    my $contact = $params{contact};
+    my $domain   = $params{domain};
+    my $alias_username = $params{target_username};
+    my $alias_domain   = $params{target_domain};
 
-    return (<<'SQL',[$username,$contact]);
-        DELETE FROM aliases WHERE username = ? AND contact = ?
+    return (<<'SQL',[$username,$domain,$alias_username,$alias_domain]);
+        DELETE FROM aliases WHERE username = ? AND domain = ? AND alias_username = ? AND alias_domain = ?
 SQL
 }
 
@@ -77,9 +86,9 @@ sub list
 {
     my $self = shift;
     return (<<'SQL',[],undef);
-        SELECT username AS Username, contact AS Contact 
+        SELECT username AS Username, domain AS Domain, alias_username AS Target_Username, alias_domain AS Target_Domain
         FROM aliases
-        ORDER BY username ASC
+        ORDER BY username, domain, alias_username, alias_domain ASC
 SQL
 }
 

@@ -97,4 +97,11 @@ modparam("permissions", "db_url",     "${DB_URL}")
 modparam("permissions", "db_mode", 0)
 modparam("permissions", "trusted_table", "trusted")
 
+# -- signaling --
 loadmodule "signaling.so"
+
+# -- alias_db (alias_db_lookup) --
+loadmodule "alias_db.so"
+modparam("alias_db", "db_url",     "${DB_URL}")
+modparam("alias_db", "use_domain", 1)
+modparam("alias_db", "append_branches", 1)
