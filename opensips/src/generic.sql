@@ -47,7 +47,7 @@ INSERT INTO version VALUES ( 'address', '4');
 -- Table structure for table 'location' -- that is persistent UsrLoc
 --
 CREATE TABLE location (
-  id            int(10) unsigned NOT NULL PRIMARY KEY auto_increment, 
+  id            int(10) unsigned NOT NULL PRIMARY KEY auto_increment,
   username      varchar(64) NOT NULL default '',
   domain        varchar(128) NOT NULL default '',
   contact       varchar(255) NOT NULL default '',
@@ -147,7 +147,7 @@ CREATE INDEX trusted_Key1 ON trusted(src_ip);
 
 --
 -- Table structure for table 'domain' -- domains this proxy is responsible for
--- 
+--
 
 CREATE TABLE domain (
   id            int(10) unsigned NOT NULL PRIMARY KEY auto_increment,

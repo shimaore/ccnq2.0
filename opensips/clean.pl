@@ -25,7 +25,7 @@ my @available = ($t =~ m{ \b route \[ ([^\]]+) \] }gsx);
 my %available = map { $_ => 0 } @available;
 $t =~ s{ \b route \( ([^\)]+) \) }{
   exists($available{$1})
-    ? ($available{$1}++, "route($1)") 
+    ? ($available{$1}++, "route($1)")
     : (_warn("Removing unknown route($1)"),"")
 }gsxe;
 

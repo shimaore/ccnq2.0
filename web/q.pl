@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# Copyright (C) 2006, 2007  Stephane Alnet
+# Copyright (C) 2006, 2007, 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
