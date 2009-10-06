@@ -1,4 +1,4 @@
-# invite.modules -- modules and configuration shared by all invite-*.cfg modules
+# invite.modules -- modules and configuration shared by all forwarding INVITE modules
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software: you can redistribute it and/or modify
