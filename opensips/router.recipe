@@ -4,9 +4,8 @@ toolbox
 forwarder
 accounting
 authenticate
-invite
 invite-router
-failure_route
+invite
 loose-route
 non-loose-route
 routing-logic

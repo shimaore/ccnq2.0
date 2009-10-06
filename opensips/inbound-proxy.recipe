@@ -3,9 +3,8 @@ generic
 toolbox
 forwarder
 accounting
-invite
 invite-inbound-proxy
-failure_route
+invite
 loose-route
 non-loose-route
 register-ignore

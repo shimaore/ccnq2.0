@@ -3,9 +3,8 @@ generic
 toolbox
 forwarder
 accounting
-invite
 invite-outbound-proxy
-failure_route
+invite
 loose-route
 non-loose-route
 routing-trunkside-transparent
