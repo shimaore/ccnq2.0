@@ -105,9 +105,9 @@ CREATE TABLE avpops (
     last_modified DATETIME DEFAULT '1900-01-01 00:00:01' NOT NULL
 );
 
-CREATE INDEX ua_idx ON usr_preferences (uuid, attribute);
-CREATE INDEX uda_idx ON usr_preferences (username, domain, attribute);
-CREATE INDEX value_idx ON usr_preferences (value);
+CREATE INDEX ua_idx ON avpops (uuid, attribute);
+CREATE INDEX uda_idx ON avpops (username, domain, attribute);
+CREATE INDEX value_idx ON avpops (value);
 
 --
 -- Table structure for table trusted
