@@ -1,3 +1,8 @@
+--
+-- List of gateways
+-- Note: we are not using the full feature here.
+--       We assume a single configuration per address.
+
 INSERT INTO version (table_name, table_version) values ('dr_gateways','3');
 CREATE TABLE dr_gateways (
     gwid INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
@@ -8,6 +13,11 @@ CREATE TABLE dr_gateways (
     attrs CHAR(255) DEFAULT NULL,
     description CHAR(128) DEFAULT '' NOT NULL
 );
+
+--
+-- Rules for drouting
+-- Note: we currently do not use timerec.
+--       also, needs to figure out a way to do gwlist using the GUI.
 
 INSERT INTO version (table_name, table_version) values ('dr_rules','2');
 CREATE TABLE dr_rules (
@@ -21,6 +31,9 @@ CREATE TABLE dr_rules (
     description CHAR(128) DEFAULT '' NOT NULL
 );
 
+--
+-- We're not using this table.
+--
 INSERT INTO version (table_name, table_version) values ('dr_gw_lists','1');
 CREATE TABLE dr_gw_lists (
     id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
@@ -28,6 +41,8 @@ CREATE TABLE dr_gw_lists (
     description CHAR(128) DEFAULT '' NOT NULL
 );
 
+--
+-- Maps a username@domain to a specific groupid (in dr_rules).
 INSERT INTO version (table_name, table_version) values ('dr_groups','2');
 CREATE TABLE dr_groups (
     id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
