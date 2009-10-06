@@ -13,7 +13,7 @@ package CCNQ::Base;
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-# 
+#
 
 #
 # For more information visit http://carrierclass.net/
@@ -66,7 +66,7 @@ sub do_input
             '<th class="label">',
                 '<label for="'.lc($name).'">'.$label.'</label>',
             '</th>';
-        
+
         print
             '<td class="value">';
 
@@ -85,14 +85,14 @@ sub do_input
                 push @values2, shift @values;
                 shift @values;
             }
-            
+
             # Print an option group.
             print $self->_cgi->popup_menu(
                 -name => lc($name),
                 -default=> $default,
                 -values => \@values2,
                 -labels => \%values2,
-            );  
+            );
         }
         else
         {
@@ -102,7 +102,7 @@ sub do_input
                 @extras = (
                     -dojoType => 'dijit.form.ValidationTextBox',
                     -regExp => '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}',
-                    -invalidMessage => 'Need IP Address',                    
+                    -invalidMessage => 'Need IP Address',
                 );
             }
 
@@ -127,7 +127,7 @@ sub do_input
 
     if($self->method eq 'input_modify')
     {
-        print $self->_cgi->hidden(-name=>'_method',-default=>'modify',-force=>1);        
+        print $self->_cgi->hidden(-name=>'_method',-default=>'modify',-force=>1);
         print $self->_cgi->submit('Modify');
         print $self->_cgi->reset();
     }
@@ -230,7 +230,7 @@ sub do_form
             '</td>';
 
         print $display;
-            
+
         print "</tr>\n";
     };
     sub html_end
@@ -239,7 +239,7 @@ sub do_form
     }
 
     my $nb_rows = $self->do_list($sql_callback,$html_callback,@params);
-    
+
     html_end() if $started;
 
     # YYY This should be done using
@@ -256,7 +256,7 @@ sub do_form
         # Print a "first" button ...
         if($_offset > $_limit)
         {
-            print 
+            print
                 $self->_cgi->start_form(-method=>'POST'),
                 $self->_cgi->hidden(-name=>'_class', -default=>$self->class,  -force=>1),
                 $self->_cgi->hidden(-name=>'_method',-default=>'',-force=>1),
@@ -276,7 +276,7 @@ sub do_form
         {
             my $prev = $_offset - $_limit;
             $prev = 0 if $prev < 0;
-            print 
+            print
                 $self->_cgi->start_form(-method=>'POST'),
                 $self->_cgi->hidden(-name=>'_class', -default=>$self->class,  -force=>1),
                 $self->_cgi->hidden(-name=>'_method',-default=>'',-force=>1),
@@ -299,7 +299,7 @@ sub do_form
         # Print a "next" button
         if(defined $nb_rows and $nb_rows == $_limit)
         {
-            print 
+            print
                 $self->_cgi->start_form(-method=>'POST'),
                 $self->_cgi->hidden(-name=>'_class', -default=>$self->class,  -force=>1),
                 $self->_cgi->hidden(-name=>'_method',-default=>'',-force=>1),
@@ -326,7 +326,7 @@ sub new_precondition
 {
     my $self = shift;
     my %params = @_;
-    
+
     return 1;
 }
 
@@ -478,7 +478,7 @@ sub vars()
 sub run_as_html()
 {
     my $self = shift;
-    
+
     my $title = ucfirst($self->class).' '.ucfirst($self->method);
 
     my $dojo_code = <<JAVASCRIPT;
@@ -487,10 +487,10 @@ sub run_as_html()
     dojo.require("dijit.layout.TabContainer");
     dojo.require("dijit.form.Button");
     dojo.require("dijit.form.ValidationTextBox");
-    dojo.require("dijit.form.NumberTextBox");    
+    dojo.require("dijit.form.NumberTextBox");
 JAVASCRIPT
 
-    print 
+    print
         $self->_cgi->header,
         <<HTML;
 <html>
@@ -516,7 +516,7 @@ HTML
 
         print q(<div id="view" dojoType="dijit.layout.ContentPane" title="Manage").($tab == 1?q( selected="true"):'').q(>);
             print '<div class="input">';
-            $self->do_input;        
+            $self->do_input;
             print '</div>';
         print q(</div>);
 
@@ -524,7 +524,7 @@ HTML
         {
             print q(<div id="list" dojoType="dijit.layout.ContentPane" title="List").($tab == 2?q( selected="true"):'').q(>);
                 print '<div class="form">';
-                $self->do_form;        
+                $self->do_form;
                 print '</div>';
             print q(</div>);
 
