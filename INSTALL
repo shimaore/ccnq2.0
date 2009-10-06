@@ -1,0 +1,31 @@
+Prerequisites:
+- a database server; the configuration scripts are written for MySQL
+  but could be easily modified for PostgreSQL.
+    aptitude install mysql-server
+- a web server; I use lighttpd but any server that can handle .pl files
+  as CGI will do.
+		aptitude install lighttpd
+- Perl's JSON library:
+    aptitude install libjson-perl
+
+Note: personally I add:
+  aptitude --purge remove portmap
+  aptitude install postfix
+
+Installing the code:
+
+	aptitude install git-core
+	mkdir ~/src && (cd ~/src && git clone git://github.com/stephanealnet/ccnq2.0.git)
+	mkdir ~/bin && cp ~/src/ccnq2.0/bin/upgrade.sh ~/bin/
+	# Edit ~/bin/upgrade.sh to your liking
+	~/bin/upgrade.sh
+	# cd /var/www && cp configuration.pm.orig configuration.pm
+	# Edit configuration.pm to your liking
+	# Edit /etc/default/opensips.cfg to enable OpenSIPS
+	~/bin/upgrade.sh
+
+Also:
+- Make sure the user running the web server (e.g. user www-data) is in the group
+  that has access to the OpenSIPS FIFO (e.g. group opensips) so that the code
+  can issue MI commands.
+
