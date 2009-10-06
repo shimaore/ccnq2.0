@@ -166,10 +166,6 @@ SQL
 SQL
     }
 
-    push @res, <<'SQL',[$account,$username,$domain];
-        UPDATE subscriber SET account = ? WHERE username = ? AND domain = ?
-SQL
-
     # Map IP to username (for IP-based authentication)
     if(defined $ip)
     {
