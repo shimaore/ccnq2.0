@@ -65,6 +65,10 @@ sub avp
         # Outbound-trunks
         tgw             => 152,
         gwadv           => 154,
+
+        dr_ruri         => 155,
+        dr_attrs        => 156,
+
         # Used by the UAC module
         uac_realm       => 10,
         uac_user        => 11,
