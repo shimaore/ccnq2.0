@@ -17,142 +17,132 @@
 --
 -- Table structure versions
 --
+-- standard-create.sql
 CREATE TABLE version (
-   table_name varchar(64) NOT NULL PRIMARY KEY,
-   table_version smallint(5) DEFAULT '0' NOT NULL
+    table_name CHAR(32) NOT NULL,
+    table_version INT UNSIGNED DEFAULT 0 NOT NULL,
+    CONSTRAINT t_name_idx UNIQUE (table_name)
 );
-
-INSERT INTO version VALUES ( 'subscriber', '7');
-INSERT INTO version VALUES ( 'missed_calls', '3');
-INSERT INTO version VALUES ( 'location', '1005');
-INSERT INTO version VALUES ( 'aliases', '1005');
-INSERT INTO version VALUES ( 'grp', '2');
-INSERT INTO version VALUES ( 're_grp', '1');
-INSERT INTO version VALUES ( 'acc', '4');
-INSERT INTO version VALUES ( 'silo', '5');
-INSERT INTO version VALUES ( 'domain', '1');
-INSERT INTO version VALUES ( 'uri', '1');
-INSERT INTO version VALUES ( 'trusted', '5');
-INSERT INTO version VALUES ( 'usr_preferences', '2');
-INSERT INTO version VALUES ( 'speed_dial', '2');
-INSERT INTO version VALUES ( 'dbaliases', '1');
-INSERT INTO version VALUES ( 'gw', '4');
-INSERT INTO version VALUES ( 'gw_grp', '1');
-INSERT INTO version VALUES ( 'lcr', '2');
-INSERT INTO version VALUES ( 'address', '4');
 
 -- These tables are updated dynamically (and never provisioned).
 
 --
 -- Table structure for table 'location' -- that is persistent UsrLoc
 --
+-- usrloc-create.sql
+INSERT INTO version (table_name, table_version) values ('location','1005');
 CREATE TABLE location (
-  id            int(10) unsigned NOT NULL PRIMARY KEY auto_increment,
-  username      varchar(64) NOT NULL default '',
-  domain        varchar(128) NOT NULL default '',
-  contact       varchar(255) NOT NULL default '',
-  received      varchar(255) default NULL,
-  path          varchar(255) default NULL,
-  expires       datetime NOT NULL default '2020-05-28 21:32:15',
-  q             float(10,2) NOT NULL default '1.0',
-  callid        varchar(255) NOT NULL default 'Default-Call-ID',
-  cseq          int(11) NOT NULL default '42',
-  last_modified datetime NOT NULL default '1900-01-01 00:00',
-  flags         int(11) NOT NULL default '0',
-  cflags        int(11) NOT NULL default '0',
-  user_agent    varchar(255) NOT NULL default '',
-  socket        varchar(128) default NULL,
-  methods       int(11) default NULL
+    id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    username CHAR(64) DEFAULT '' NOT NULL,
+    domain CHAR(64) DEFAULT NULL,
+    contact CHAR(255) DEFAULT '' NOT NULL,
+    received CHAR(128) DEFAULT NULL,
+    path CHAR(128) DEFAULT NULL,
+    expires DATETIME DEFAULT '2020-05-28 21:32:15' NOT NULL,
+    q FLOAT(10,2) DEFAULT 1.0 NOT NULL,
+    callid CHAR(255) DEFAULT 'Default-Call-ID' NOT NULL,
+    cseq INT(11) DEFAULT 13 NOT NULL,
+    last_modified DATETIME DEFAULT '1900-01-01 00:00:01' NOT NULL,
+    flags INT(11) DEFAULT 0 NOT NULL,
+    cflags INT(11) DEFAULT 0 NOT NULL,
+    user_agent CHAR(255) DEFAULT '' NOT NULL,
+    socket CHAR(64) DEFAULT NULL,
+    methods INT(11) DEFAULT NULL
 );
 
-CREATE UNIQUE INDEX key_loc ON location(username, domain);
-CREATE INDEX udc_loc ON location(username, domain, contact);
+CREATE INDEX account_contact_idx ON location (username, domain, contact);
 
 -- These tables are provisioned.
 
 --
 -- Table structure for table 'subscriber' -- user database
 --
+-- auth_db-create.sql
+INSERT INTO version (table_name, table_version) values ('subscriber','7');
 CREATE TABLE subscriber (
-  id            int(10) unsigned NOT NULL PRIMARY KEY auto_increment,
-  username      varchar(64) NOT NULL default '',
-  domain        varchar(128) NOT NULL default '',
-  password      varchar(25) NOT NULL default '',
-  first_name    varchar(25) NOT NULL default '',
-  last_name     varchar(45) NOT NULL default '',
-  email_address varchar(50) NOT NULL default '',
-  datetime_created datetime NOT NULL default '1900-01-01 00:00:00',
-  ha1           varchar(128) NOT NULL default '',
-  ha1b          varchar(128) NOT NULL default '',
-  timezone      varchar(128) default NULL,
-  account       varchar(128) default NULL,
-  rpid          varchar(128) default NULL
+    id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    username CHAR(64) DEFAULT '' NOT NULL,
+    domain CHAR(64) DEFAULT '' NOT NULL,
+    password CHAR(25) DEFAULT '' NOT NULL,
+    email_address CHAR(64) DEFAULT '' NOT NULL,
+    ha1 CHAR(64) DEFAULT '' NOT NULL,
+    ha1b CHAR(64) DEFAULT '' NOT NULL,
+    rpid CHAR(64) DEFAULT NULL,
+    CONSTRAINT account_idx UNIQUE (username, domain)
 );
 
-CREATE UNIQUE INDEX user_id ON subscriber(username, domain);
+CREATE INDEX username_idx ON subscriber (username);
 
 --
 -- Table structure for table 'aliases' -- location-like table
 --
-CREATE TABLE aliases (
-  id              int(10) unsigned NOT NULL PRIMARY KEY auto_increment,
-  username        varchar(64) NOT NULL default '',
-  domain          varchar(128) NOT NULL default '',
-  alias_username  varchar(64) NOT NULL default '',
-  alias_domain    varchar(64) NOT NULL default ''
+-- alias_db-create.sql
+INSERT INTO version (table_name, table_version) values ('dbaliases','2');
+CREATE TABLE dbaliases (
+    id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    alias_username CHAR(64) DEFAULT '' NOT NULL,
+    alias_domain CHAR(64) DEFAULT '' NOT NULL,
+    username CHAR(64) DEFAULT '' NOT NULL,
+    domain CHAR(64) DEFAULT '' NOT NULL,
+    CONSTRAINT alias_idx UNIQUE (alias_username, alias_domain)
 );
 
-CREATE UNIQUE INDEX key_als ON location(username, domain);
-CREATE INDEX udc_als ON aliases(username, domain, alias_username, alias_domain);
+CREATE INDEX target_idx ON dbaliases (username, domain);
 
 --
 -- Table structure for table 'avpops'
 --
-CREATE TABLE avpops (
-  id            int(10) unsigned NOT NULL PRIMARY KEY auto_increment,
-  uuid          varchar(64) NOT NULL default '',
-  username      varchar(128) NOT NULL default '0',
-  domain        varchar(128) NOT NULL default '',
-  attribute     varchar(32) NOT NULL default '',
-  value         varchar(128) NOT NULL default '',
-  type          integer NOT NULL default '0',
-  last_modified datetime NOT NULL default '1900-01-01 00:00:00'
+-- avpops-create.sql
+INSERT INTO version (table_name, table_version) values ('usr_preferences','3');
+CREATE TABLE usr_preferences (
+    id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    uuid CHAR(64) DEFAULT '' NOT NULL,
+    username CHAR(128) DEFAULT 0 NOT NULL,
+    domain CHAR(64) DEFAULT '' NOT NULL,
+    attribute CHAR(32) DEFAULT '' NOT NULL,
+    type INT(11) DEFAULT 0 NOT NULL,
+    value CHAR(128) DEFAULT '' NOT NULL,
+    last_modified DATETIME DEFAULT '1900-01-01 00:00:01' NOT NULL
 );
-CREATE UNIQUE INDEX key_avp1 ON avpops(attribute,username,domain);
-CREATE UNIQUE INDEX key_avp2 ON avpops(attribute,uuid,domain);
+
+CREATE INDEX ua_idx ON usr_preferences (uuid, attribute);
+CREATE INDEX uda_idx ON usr_preferences (username, domain, attribute);
+CREATE INDEX value_idx ON usr_preferences (value);
 
 --
 -- Table structure for table trusted
---
+-- permissions-create.sql
+INSERT INTO version (table_name, table_version) values ('trusted','5');
 CREATE TABLE trusted (
-  id            int(10) unsigned NOT NULL PRIMARY KEY auto_increment,
-  src_ip        varchar(39) NOT NULL,
-  proto         varchar(4) NOT NULL,
-  from_pattern  varchar(64) DEFAULT NULL,
-  tag           varchar(32) DEFAULT NULL
+    id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    src_ip CHAR(50) NOT NULL,
+    proto CHAR(4) NOT NULL,
+    from_pattern CHAR(64) DEFAULT NULL,
+    tag CHAR(32)
 );
 
-CREATE INDEX trusted_Key1 ON trusted(src_ip);
+CREATE INDEX peer_idx ON trusted (src_ip);
+
+INSERT INTO version (table_name, table_version) values ('address','4');
+CREATE TABLE address (
+    id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    grp SMALLINT(5) UNSIGNED DEFAULT 0 NOT NULL,
+    ip_addr CHAR(15) NOT NULL,
+    mask TINYINT DEFAULT 32 NOT NULL,
+    port SMALLINT(5) UNSIGNED DEFAULT 0 NOT NULL
+);
+
 
 --
 -- Table structure for table 'domain' -- domains this proxy is responsible for
 --
-
+-- domain-create.sql
+INSERT INTO version (table_name, table_version) values ('domain','2');
 CREATE TABLE domain (
-  id            int(10) unsigned NOT NULL PRIMARY KEY auto_increment,
-  domain        varchar(128) NOT NULL default '',
-  last_modified datetime NOT NULL default '1900-01-01 00:00:00'
-);
-
---
--- Table structure for table 'address'
---
-CREATE TABLE address (
-  id            int(10) unsigned NOT NULL PRIMARY KEY auto_increment,
-  grp           smallint(5) unsigned NOT NULL default '0',
-  ip_addr       varchar(15) NOT NULL,
-  mask          varchar(2) NOT NULL default 32,
-  port          smallint(5) unsigned NOT NULL default '0'
+    id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    domain CHAR(64) DEFAULT '' NOT NULL,
+    last_modified DATETIME DEFAULT '1900-01-01 00:00:01' NOT NULL,
+    CONSTRAINT domain_idx UNIQUE (domain)
 );
 
 
