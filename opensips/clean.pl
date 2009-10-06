@@ -39,8 +39,8 @@ my %route = map { $_ => ++$route } sort @used;
 
 _warn("Found $route routes");
 
-$t =~ s{ \b route \( ([^\)]+) \) \s* ([\{;\#]) }{ "route($route{$1}) $2" }gsxe;
-$t =~ s{ \b route \[ ([^\]]+) \] \s* ([\{;\#]) }{ "route[$route{$1}] $2" }gsxe;
+$t =~ s{ \b route \( ([^\)]+) \) \s* ([;\#\)]) }{ "route($route{$1}) $2" }gsxe;
+$t =~ s{ \b route \[ ([^\]]+) \] \s* ([\{\#]) }{ "route[$route{$1}] $2" }gsxe;
 
 $t .= "\n".join('', map { "# route($route{$_}) => route($_)\n" } sort keys %route);
 
