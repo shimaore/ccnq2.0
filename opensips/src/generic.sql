@@ -93,7 +93,7 @@ CREATE INDEX target_idx ON dbaliases (username, domain);
 -- Table structure for table 'avpops'
 --
 -- avpops-create.sql
-INSERT INTO version (table_name, table_version) values ('usr_preferences','3');
+INSERT INTO version (table_name, table_version) values ('avpops','3');
 CREATE TABLE avpops (
     id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
     uuid CHAR(64) DEFAULT '' NOT NULL,
