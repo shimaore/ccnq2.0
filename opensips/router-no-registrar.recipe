@@ -6,6 +6,8 @@ accounting
 authenticate
 invite-router
 invite
+# obsolete:
+invite-trunk-side
 loose-route
 non-loose-route
 routing-logic
