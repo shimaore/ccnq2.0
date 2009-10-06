@@ -5,25 +5,24 @@ flag 2 = flatstore call logs (acc.so)
 flag 3 = flatstore missed calls (acc.so)
 flag 4 = radius call logs (acc.so)
 flag 5 = radius logs missed calls too (acc.so)
+
 flag 6 = force MediaProxy
 flag 7 = msg sender (caller) is NATed
-flag 8 = set if mediaproxy already invoked (on this leg) [bflag]
-flag 9 = set if CFB already attempted [bflag]
-flag 10 = set if CFDA already attempted [bflag]
-flag 11 = set if uac_auth done [bflag]
+flag 8 = set if mediaproxy already invoked (on this leg) [flag, bflag]
+
 flag 12 = failed transaction flag
 flag 16 = call is been recorded
 flag 18 = sock_flag (registrar.so)
 flag 19 = dialog flag (dialog.so)
 flag 20 = from registrar
 flag 21 = tcp_persistent_flag
+flag 22 = routing towards trunk
 
-bflag 18 = call in progress
 bflag 6 = msg recipient (callee) is NATed
          This flag is also stored in the database in order to determine whether a recipient
          is NATed or not (and is set by lookup(location)).
          It is also set for re-INVITE containing ;mp=yes.
+bflag 18 = call in progress
 bflag 9 = CFB already attempted
 bflag 10 = CFDA already attempted
 bflag 11 = UAC_auth already attempted
-
