@@ -14,12 +14,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#ifnotdef SKIP_UAC_AUTH
 loadmodule "uac.so"
 
 modparam("uac","auth_realm_avp",    "$(avp(uac_realm))")
 modparam("uac","auth_username_avp", "$(avp(uac_user))")
 modparam("uac","auth_password_avp", "$(avp(uac_pass))")
 modparam("uac","rr_store_param",    "${UAC_VSF}")
+#endifnotdef SKIP_UAC_AUTH
 
 loadmodule "uac_redirect.so"
 #IF_ACCT_RADIUS       modparam("uac_redirect","acc_function","acc_rad_request")
