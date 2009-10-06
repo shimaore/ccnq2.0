@@ -4,6 +4,7 @@ toolbox
 forwarder
 accounting
 authenticate
+invite
 invite-router
 failure_route
 loose-route
