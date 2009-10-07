@@ -439,9 +439,8 @@ sub run_sql_command
     my $self = shift;
     my $cmd = shift;
     my $sth = $self->_db->prepare($cmd);
-    return if not $sth;
 
-    if(!$sth->execute(@_))
+    if(!$sth || !$sth->execute(@_))
     {
         use Carp;
         confess("$cmd(".join(',',@_)."): ".$self->_db->errstr);
