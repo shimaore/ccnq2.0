@@ -21,11 +21,14 @@ Installing the code:
 	~/bin/upgrade.sh
 	# cd /var/www && cp configuration.pm.orig configuration.pm
 	# Edit configuration.pm to your liking
-	# Edit /etc/default/opensips.cfg to enable OpenSIPS
+	# Edit /etc/default/opensips to enable OpenSIPS
+	~/bin/upgrade.sh
+	# Run the two mysql commands recommended by the script.
 	~/bin/upgrade.sh
 
 Also:
 - Make sure the user running the web server (e.g. user www-data) is in the group
   that has access to the OpenSIPS FIFO (e.g. group opensips) so that the code
   can issue MI commands.
-
+  This can be done by editing /etc/group and adding "www-data" to the line
+  for the "opensips" group.

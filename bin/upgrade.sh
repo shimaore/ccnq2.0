@@ -22,12 +22,17 @@ export MODEL=complete-transparent
 # end of configuration parameters.
 
 # Update the code in the local repository
+echo "Updating the code in the local repository"
 (cd $SRC && git pull)
 # Copy the updated web code to its actual destination
+echo "Copying the updated web code to its actual destination"
 cp -a $SRC/web/* $WWW/
 # Generate a new opensips.cfg and opensips.sql file and push them
+echo "Generating a new opensips.cfg and opensips.sql"
 (cd $SRC/opensips && mkdir -p output && ./build.sh $MODEL && mkdir -p $WWW/CCNQ/Proxy/templates && mv output/opensips.* $WWW/CCNQ/Proxy/templates)
 # Reconfigure the local system (includes installing the new opensips.cfg file in /etc/opensips)
+echo "Reconfiguring the local system"
 (cd $WWW && sudo perl CCNQ/Proxy/bin/configure.pl)
 # Restart OpenSIPS using the new configuration.
+echo "Restarting OpenSIPS"
 sudo /etc/init.d/opensips restart
