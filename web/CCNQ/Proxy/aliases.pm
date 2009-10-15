@@ -54,7 +54,7 @@ sub insert
     my $alias_username = $params{username};
     my $alias_domain   = $params{domain};
     my $username = $params{target_username};
-    my $domain   = $params{taregt_domain};
+    my $domain   = $params{target_domain};
 
     return ()
         unless defined $username and $username ne ''
@@ -74,7 +74,7 @@ sub delete
     my $alias_username = $params{username};
     my $alias_domain   = $params{domain};
     my $username = $params{target_username};
-    my $domain   = $params{taregt_domain};
+    my $domain   = $params{target_domain};
 
     return (<<'SQL',[$username,$domain,$alias_username,$alias_domain]);
         DELETE FROM aliases WHERE username = ? AND domain = ? AND alias_username = ? AND alias_domain = ?
