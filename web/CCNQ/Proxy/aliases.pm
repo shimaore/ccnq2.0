@@ -56,7 +56,6 @@ sub insert
     my $username = $params{target_username};
     my $domain   = $params{taregt_domain};
 
-
     return ()
         unless defined $username and $username ne ''
         and    defined $domain   and $domain ne ''
