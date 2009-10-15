@@ -51,10 +51,10 @@ sub insert
     my $self = shift;
     my %params = @_;
 
-    my $username = $params{username};
-    my $domain   = $params{domain};
-    my $alias_username = $params{target_username};
-    my $alias_domain   = $params{target_domain};
+    my $alias_username = $params{username};
+    my $alias_domain   = $params{domain};
+    my $username = $params{target_username};
+    my $domain   = $params{taregt_domain};
 
 
     return ()
@@ -72,10 +72,10 @@ sub delete
 {
     my $self = shift;
     my %params = @_;
-    my $username = $params{username};
-    my $domain   = $params{domain};
-    my $alias_username = $params{target_username};
-    my $alias_domain   = $params{target_domain};
+    my $alias_username = $params{username};
+    my $alias_domain   = $params{domain};
+    my $username = $params{target_username};
+    my $domain   = $params{taregt_domain};
 
     return (<<'SQL',[$username,$domain,$alias_username,$alias_domain]);
         DELETE FROM aliases WHERE username = ? AND domain = ? AND alias_username = ? AND alias_domain = ?
@@ -86,7 +86,7 @@ sub list
 {
     my $self = shift;
     return (<<'SQL',[],undef);
-        SELECT username AS Username, domain AS Domain, alias_username AS Target_Username, alias_domain AS Target_Domain
+        SELECT alias_username AS Username, alias_domain AS Domain, username AS Target_Username, domain AS Target_Domain
         FROM aliases
         ORDER BY username, domain, alias_username, alias_domain ASC
 SQL
