@@ -12,6 +12,7 @@ invite
 invite-trunk-side
 loose-route
 non-loose-route
+routing-logic
 routing-lineside
 routing-trunkside-transparent
 register-colocated
