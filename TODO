@@ -1,0 +1,6 @@
+1. Queries WHERE on Domain -- DONE
+2. FIFO / www-data -> add www-data to group opensips
+3. DROUTING module
+  emergency-<type>*<orig-number>
+  <dest>
+  <orig>*<dest>
