@@ -1,0 +1,29 @@
+use Tree::Trie;
+
+
+
+
+
+
+format:
+
+date time account 
+
+elements:
+
+create cnam
+modify cnam
+delete cnam
+create 911
+modify 911
+delete 911
+etc.
+
++ every day, report on elements which are present:
+
+DIDs
+TFs
+0810
+etc. (per category -- category is assigned in DB when element is created)
+
+then add them for the month (meaning we can do partial-month billing on dids)
