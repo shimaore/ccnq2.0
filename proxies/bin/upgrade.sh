@@ -3,7 +3,7 @@
 # SRC: where the copy of the original code lies.
 # I create mine in ~/src using:
 #    cd $HOME/src && git clone git://github.com/stephanealnet/ccnq2.0.git
-export SRC=$HOME/src/ccnq2.0
+export SRC=$HOME/src/ccnq2.0/proxies
 
 # WWW: Where the web content actually lies.
 export WWW=/var/www
@@ -27,6 +27,7 @@ echo "Updating the code in the local repository"
 # Copy the updated web code to its actual destination
 echo "Copying the updated web code to its actual destination"
 cp -a $SRC/web/* $WWW/
+cp -a $SRC/CCNQ  $WWW/
 # Generate a new opensips.cfg and opensips.sql file and push them
 echo "Generating a new opensips.cfg and opensips.sql"
 (cd $SRC/opensips && mkdir -p output && ./build.sh $MODEL && mkdir -p $WWW/CCNQ/Proxy/templates && mv output/opensips.* $WWW/CCNQ/Proxy/templates)
