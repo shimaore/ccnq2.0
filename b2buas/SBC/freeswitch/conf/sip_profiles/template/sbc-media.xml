@@ -53,9 +53,9 @@
     <param name="pass-rfc2833" value="true"/>
     <!--<param name="odbc-dsn" value="dsn:user:pass"/>-->
     
-    <param name="inbound-bypass-media" value="true"/>
+    <param name="inbound-bypass-media" value="false"/>
     <param name="inbound-proxy-media" value="false"/>
-    <param name="inbound-late-negotiation" value="true"/>
+    <param name="inbound-late-negotiation" value="false"/>
     
     <!-- <param name="accept-blind-reg" value="true"/> -->
     <!-- <param name="accept-blind-auth" value="true"/> -->
@@ -152,9 +152,9 @@
     <param name="pass-rfc2833" value="true"/>
     <!--<param name="odbc-dsn" value="dsn:user:pass"/>-->
     
-    <param name="inbound-bypass-media" value="true"/>
+    <param name="inbound-bypass-media" value="false"/>
     <param name="inbound-proxy-media" value="false"/>
-    <param name="inbound-late-negotiation" value="true"/>
+    <param name="inbound-late-negotiation" value="false"/>
     
     <!-- <param name="accept-blind-reg" value="true"/> -->
     <!-- <param name="accept-blind-auth" value="true"/> -->

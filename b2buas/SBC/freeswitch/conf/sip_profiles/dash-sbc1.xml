@@ -1,0 +1,4 @@
+<X-PRE-PROCESS cmd="set" data="profile_name=dash-sbc1"/>
+<X-PRE-PROCESS cmd="set" data="internal_sip_port=15066"/>
+<X-PRE-PROCESS cmd="set" data="external_sip_port=5066"/>
+<X-PRE-PROCESS cmd="include" data="template/sbc-nomedia.xml"/>

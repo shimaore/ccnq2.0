@@ -28,5 +28,15 @@
       <node type="allow" cidr="4.79.132.210/32"/>
     </list>
 
+    <list name="sbc-dash-sbc1" default="deny">
+      <!-- old gateways -->
+      <node type="allow" cidr="63.214.44.25/32"/>
+      <node type="allow" cidr="63.214.44.26/32"/>
+      <!-- current (200909) gateways -->
+      <node type="allow" cidr="208.94.157.10/32"/>
+      <node type="allow" cidr="208.94.159.10/32"/>
+    </list>
+    
+
   </network-lists>
 </configuration>
