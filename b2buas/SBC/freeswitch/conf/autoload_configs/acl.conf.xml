@@ -1,0 +1,32 @@
+<configuration name="acl.conf" description="Network Lists">
+  <network-lists>
+
+    <list name="dl-candidates" default="allow">
+      <node type="deny" cidr="10.0.0.0/8"/>
+      <node type="deny" cidr="172.16.0.0/12"/>
+      <node type="deny" cidr="192.168.0.0/16"/>
+    </list>
+
+    <list name="rfc1918" default="deny">
+      <node type="allow" cidr="10.0.0.0/8"/>
+      <node type="allow" cidr="172.16.0.0/12"/>
+      <node type="allow" cidr="192.168.0.0/16"/>
+    </list>
+
+    <!-- This ACL should contain one entry for each OpenSIPS egress host. -->
+    <!-- This should complement, not replace, a firewall or iptables. -->
+    <list name="proxies" default="deny">
+      <!-- List the IP addresses of each OpenSIPS egress server. -->
+      <node type="allow" cidr="${__OPENSIPS_HOST__}/32"/>
+    </list>
+
+    <!-- Create one ACL for each carrier profile. They should be called "sbc-${profile_name}" -->
+    <!-- This should complement, not replace, a firewall or iptables. -->
+    <list name="sbc-sotel-sbc1" default="deny">
+      <!-- List the IP address of each ingress IP for the carrier. -->
+      <node type="allow" cidr="4.79.132.209/32"/>
+      <node type="allow" cidr="4.79.132.210/32"/>
+    </list>
+
+  </network-lists>
+</configuration>

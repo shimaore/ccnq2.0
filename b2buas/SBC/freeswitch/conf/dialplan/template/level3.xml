@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<include>
+  <!-- egress towards carrier -->
+  <context name="from-proxy-for-$${profile_name}">
+
+    <extension name="unloop">
+      <condition field="${unroll_loops}" expression="^true$"/>
+      <condition field="${sip_looped_call}" expression="^true$">
+        <action application="deflect" data="${destination_number}"/>
+      </condition>
+    </extension>
+
+    <extension name="default-egress">
+      <condition field="destination_number" expression="^(.*)$">
+        <action application="set" data="bypass_media=true"/>
+        <action application="set" data="progress_timeout=12"/>
+        <action application="set" data="effective_caller_id_name=_undef_"/>
+        <action application="set" data="effective_caller_id_number=+${caller_id_number}"/>
+        <!-- if needed, see the list of variables at http://wiki.freeswitch.org/wiki/Channel_Variables#variable_xxxx -->
+        <!-- <action application="set" data="sip_contact_host=$${local_ip_v4}/> -->
+        <!-- <action application="set" data="sip_to_uri=sip:+$1@$${egress_target}/> -->
+        <action application="set" data="sip_cid_type=none"/>
+        <action application="bridge" data="sofia/sbc-$${profile_name}/+$1@$${egress_target}"/>
+      </condition>
+    </extension>
+
+  </context>
+
+  <!-- ingres from carrier -->
+  <context name="from-sbc-$${profile_name}">
+
+    <extension name="unloop">
+      <condition field="${unroll_loops}" expression="^true$"/>
+      <condition field="${sip_looped_call}" expression="^true$">
+        <action application="deflect" data="${destination_number}"/>
+      </condition>
+    </extension>
+
+    <extension name="default-ingress">
+      <condition field="destination_number" expression="^\+(.*)$">
+        <action application="set" data="bypass_media=true"/>
+        <action application="set" data="progress_timeout=12"/>
+        <action application="set" data="effective_caller_id_number=${regex(${caller_id_number}|^\\+(.*)|%1)}"/>
+        <action application="bridge" data="sofia/internal-$${profile_name}/$1@$${ingress_target}"/>
+      </condition>
+    </extension>
+
+  </context>
+</include>

@@ -1,0 +1,3 @@
+In this option, static XML files are regenerated when the user ask for "Apply" of the configuration changes.
+
+You must create a file called "apply.sh" in this directory which should call dialplan.sh on each server that uses on our copy of the CDB.

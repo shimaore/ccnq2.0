@@ -1,0 +1,3 @@
+The SBC is implemented using FreeSwitch.
+The files in this directory are only templates and need to be edited before the system is put in production.
+Use them as guidelines. I give one example for Sotel.
