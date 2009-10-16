@@ -1,0 +1,7 @@
+<include>
+  <context name="routing">
+
+    <X-PRE-PROCESS cmd="include" data="routing/*.xml"/>
+
+  </context>
+</include>

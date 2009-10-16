@@ -1,0 +1,26 @@
+
+
+Port assignments:
+
+These are required to be managed so that multiple services can be
+co-located.
+
+RTP ports:
+  MediaProxy:    40000:41998 (1000 sessions, up to 500 calls)
+  FeatureServer: 42000:42998 (500 sessions, up to 250 calls)
+  SBC+media:     43000:43998 (500 sessions, up to 250 calls)
+
+SIP ports (Sofia profiles):
+  The ports indicated are the external ports for SBC profiles.
+  The internal profiles use port N+10000.
+
+  Dash-911:     5068
+  Dash SBC:     5066
+  GC:           5064
+  L3:           5060 *
+  Sotel:        5070
+
+  FeatureServer:  5100
+
+  Cust SBC:     5200 and up
+    
