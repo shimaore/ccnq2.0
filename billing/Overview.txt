@@ -1,0 +1,66 @@
+
+
+Provisioning:
+  (1) normalize the request
+  (2) authorize the request
+  (3) break down a single Request into individual, possibly inter-dependent, Activities
+
+  Activities include the creation of a billing event
+
+  A request is completed when all its descendents are completed.
+  A request can only be deleted if all its descendents are new.
+  
+
+Activity queueing and distribution:
+
+  See slide 2 of Architecture.odg for activity lifecycle
+
+
+
+
+Common Billing Element Format (CBEF)
+
+  All CDRs, logs, and activity-based events are aggregated.
+  The aggregated files are classified by type (e.g. FreeSwitch CDRs, etc.) and then fed to different Mediation processors based on their content.
+  There is a Null Mediation processor for records which are already in CBEF format.
+
+  The Billing Elements are then fed into the Rating engine. The Rating engine will use 
+
+  The file format is tab-delimited UTF-8 data. The first line in each file is used to indicate the fields names.
+  (If a Mediation processor doesn't know which fields will be needed, it should provide all the fields it knows about.)
+  If a field is empty (two tabs around it) it is treated as undefined/unassigned (i.e. the empty string is not valid content).
+
+* start_date            YYYYMMDD (local time)
+* start_time            HHMMSS   (local time)
+* timestamp             (unix epoch-based timestamp, used for correlation with e.g. logs)
+* collecting_node       (DNS, IP, or other name for the node that collected the element)
+
+* account               (opaque account number)
+  account_sub           (opaque sub account, e.g. SIP trunk ID)
+* event_type            (opaque event type; the "element rates and conditions" DB will provide information on how to handle it)
+  event_description     (plain-text description of the event that caused the Element to be created)
+  request_uuid          (uuid of the Request that created the Element)
+
+    For some events we might need to collect an event count:
+  count           number of events
+
+    For calls we need to collect the following information:
+  duration        duration in seconds
+  from_e164       +....
+  to_e164         +....
+
+
+  The Rating engine will use the rules in the ERC-DB in order to build a new file which will provide for each element the following additional information:
+  
+  currency              USD, EUR, etc.
+  amount                (standard float with . decimal separator)
+  tax_count             (how many tax_rate and tax_amount)
+  tax_jurisdiction_1    (opaque jurisdiction reference or name)
+  tax_rate_1            (in %)
+  tax_amount_1          (in currency)
+  tax_jurisdiction_2    (...)
+  tax_rate_2            (in %)
+   (etc.)
+
+  The Rating engine might generate 0 amount records if (e.g.) the call is included in a plan, or is a toll-free call.
+
