@@ -1,4 +1,4 @@
-// DEPLOY AS a new CouchDb view called freeswitch/xml (the name is hardcoded in dialplan.yaws)
+// DEPLOY AS a new CouchDb view called freeswitch/xml_nocontext (the name is hardcoded in dialplan.pl)
 //
 // This function is used by CouchDB in order to generate on-the-fly XML
 // for FreeSwitch.

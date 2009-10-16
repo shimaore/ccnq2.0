@@ -17,7 +17,8 @@ use constant DB_NAME => 'dialplan';
 
 sub run {
   my $cdb = new Net::CouchDb(uri => DB_URI);
-  my $results = $cdb->db(DB_NAME)->call('GET','_view/freeswitch/xml_nocontext');
+  # Updated for CouchDB 0.9
+  my $results = $cdb->db(DB_NAME)->call('GET','_design/freeswitch/_view/xml_nocontext');
   my $res = '';
   if($results && $results->{rows})
   {
