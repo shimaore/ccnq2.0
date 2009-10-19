@@ -22,10 +22,7 @@ use strict; use warnings;
 package CCNQ::Proxy::outbound_route;
 use base qw(CCNQ::Proxy::npa_route);
 
-sub doc
-{
-    return <<'HTML';
-
+=pod
     The Route value is the Outbound Route name to be considered for routing.
     Rank must be an integer starting at 0 (first route) and 
     going up.
@@ -34,9 +31,7 @@ sub doc
     (IP address or DNS name) to use, and what port to use on
     the destination (use 0 to force DNS SRV resolution; otherwise
     in most cases the value should be 5060).
-
-HTML
-}
+=cut
 
 sub _prefix { 'R' }
 sub _like     { my $self = shift; return $self->_prefix.('%'); }

@@ -22,17 +22,12 @@ use strict; use warnings;
 package CCNQ::Proxy::premium_npa;
 use base qw(CCNQ::Proxy::local_npanxx);
 
-sub doc
-{
-    return <<'HTML';
-
+=pod
     List here all the NPAs that are considered "Premium" for the
     purpose of authorizing calls.
     <p>
     You should probably have at least 900 and 976 listed here.
-
-HTML
-}
+=cut
 
 sub _name { 'Premium_NPA' }
 

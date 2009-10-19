@@ -22,14 +22,9 @@ use strict; use warnings;
 
 use base qw(CCNQ::Proxy::report);
 
-sub doc
-{
-    return <<'HTML';
-
+=pod
         This report shows details for a single call attempt.
-
-HTML
-}
+=cut
 
 sub form
 {

@@ -22,10 +22,8 @@ use strict; use warnings;
 
 use base qw(CCNQ::Proxy::report);
 
-sub doc
-{
-    return <<'HTML';
 
+=pod
         This report shows call attempts and call attempt outcomes per hour for the
         current running set of logs.
     <br>
@@ -39,9 +37,7 @@ sub doc
         Other columns should show little to no activity.
     <br>
         Note: the subscriber name may be a regular expression.
-
-HTML
-}
+=cut
 
 sub form
 {

@@ -22,17 +22,12 @@ use strict; use warnings;
 
 use base qw(CCNQ::Proxy::report);
 
-sub doc
-{
-    return <<'HTML';
-
+=pod
         This report shows call attempts.
 
         <br>
             Note: the subscriber name may be a regular expression.
-
-HTML
-}
+=cut
 
 sub form
 {

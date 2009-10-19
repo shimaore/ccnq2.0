@@ -22,19 +22,14 @@ use strict; use warnings;
 package CCNQ::Proxy::international_default;
 use base qw(CCNQ::Proxy::national_default);
 
-sub doc
-{
-    return <<'HTML';
-
+=pod
     Specify one or more default targets to handle international traffic.
     <p>
     Target must be a "host:port" value indicating what host
     (IP address or DNS name) to use, and what port to use on
     the destination (use 0 to force DNS SRV resolution; otherwise
     in most cases the value should be 5060).
-
-HTML
-}
+=cut
 
 sub _prefix {'+'}
 

@@ -22,9 +22,8 @@ use strict; use warnings;
 
 use base qw(CCNQ::Proxy::Base);
 
-sub doc
-{
-    return <<'HTML';
+
+=pod
     Aliases are used to define the following services:
     <ul>
     <li>N11 Easily Recognizable Codes
@@ -32,8 +31,7 @@ sub doc
     </ul>
     For Username, enter for example "911", and for Contact the SIP URI
     that emergency calls should follow (e.g. "sip:911@emergency.example.com").
-HTML
-}
+=cut
 
 sub form
 {

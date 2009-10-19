@@ -22,12 +22,6 @@ use strict; use warnings;
 
 use base qw(CCNQ::Proxy::Base);
 
-sub doc
-{
-    return <<'HTML';
-HTML
-}
-
 sub form
 {
     my $self = shift;

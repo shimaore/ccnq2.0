@@ -22,10 +22,7 @@ use strict; use warnings;
 package CCNQ::Proxy::domain;
 use base qw(CCNQ::Proxy::Base);
 
-sub doc
-{
-    return <<'HTML';
-
+=pod
     Domains list the names this system recognizes itself as. The domains
     are matched against the domain part of the SIP URI; calls are rejected
     if the domain is not listed here.
@@ -37,10 +34,7 @@ sub doc
     <li>if you defined SRV names for load-balancing or redundancy purposes, include
       the DNS names (withouth the _sip._udp prefix) here.
     </ul>
-HTML
-}
-
-
+=cut
 
 sub form
 {

@@ -22,17 +22,12 @@ use strict; use warnings;
 package CCNQ::Proxy::premium_nxx;
 use base qw(CCNQ::Proxy::local_npanxx);
 
-sub doc
-{
-    return <<'HTML';
-
+=pod
     List here all the NXXs that are considered "Premium" for the
     purpose of authorizing calls.
     <p>
     You may want to have 555 listed here.
-
-HTML
-}
+=cut
 
 sub _name { 'Premium_NXX' }
 

@@ -22,11 +22,7 @@ use strict; use warnings;
 package CCNQ::Proxy::local_number;
 use base qw(CCNQ::Proxy::Base);
 
-
-sub doc
-{
-    return <<'HTML';
-
+=pod
     A number (DID or other) is mapped to a subscriber using
     that subscriber's Username. Numbers must start with a 1
     and be followed by 10 digits to be used.
@@ -44,10 +40,7 @@ sub doc
     The CFDA_Timeout parameter allows you to control the duration
     a destination is tried (ringing) before the call is considered
     Not Answered. (The default value is 120 seconds.)
-
-HTML
-}
-
+=cut
 
 sub form
 {

@@ -22,16 +22,10 @@ use strict; use warnings;
 package CCNQ::Proxy::local_npanxx;
 use base qw(CCNQ::Proxy::Base);
 
-sub doc
-{
-    return <<'HTML';
-
+=pod
     Indicate any NPANXX (six digits prefix) that should be treated as
     "local call" for the purpose of call authorization.
-
-HTML
-}
-
+=cut
 
 sub _name { 'Local_NPANXX' }
 

@@ -22,10 +22,7 @@ use strict; use warnings;
 
 use base qw(CCNQ::Proxy::Base);
 
-sub doc
-{
-    return <<'HTML';
-
+=pod
     Inbound trunks. List the IP addresses of gateways or SBCs which
     are "trusted" (=not authenticated) and treated as PSTN calls.
     <p>
@@ -34,10 +31,7 @@ sub doc
     call redirection can work properly.
     <p>
     The Source parameter must be an IP address.
-
-HTML
-}
-
+=cut
 
 sub form
 {

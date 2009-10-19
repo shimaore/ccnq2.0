@@ -25,14 +25,12 @@ use base qw(CCNQ::Object);
 sub _init
 {
     my $self = shift;
-    my ($cgi,$db) = @_;
-    $self->{_cgi}      = $cgi;
+    my ($db) = @_;
     $self->{_db}       = $db;
 }
 
 sub class { my $c = ref(shift); $c =~ s/^.*:://; return $c; }
 
-sub _cgi { shift->{_cgi} }
 sub _db  { shift->{_db} }
 
 sub method
@@ -41,279 +39,6 @@ sub method
     my $method = $self->_cgi->param('_method');
     $method = 'list' if not defined $method;
     return $method;
-}
-
-sub do_input
-{
-    my $self = shift;
-    my @form = $self->form();
-
-    print
-        $self->_cgi->start_form(-method=>'POST'),
-        $self->_cgi->hidden(-name=>'_class',-default=>$self->class,-force=>1);
-
-    print
-        '<table class="ccn_form">';
-
-    while( my $name = shift @form )
-    {
-        print '<tr class="line">';
-
-        my $type = shift @form;
-        my $label = $name;
-        $label =~ s/_/ /g;
-        print
-            '<th class="label">',
-                '<label for="'.lc($name).'">'.$label.'</label>',
-            '</th>';
-
-        print
-            '<td class="value">';
-
-        # Save the previous value for modifications.
-        my $default = $self->_cgi->param(lc($name));
-        print $self->_cgi->hidden(-name=>lc($name).':old',-default=>$default,-force=>1);
-
-        if( ref($type) eq 'ARRAY' )
-        {
-            # Take every other field, in the same order.
-            my @values = @{$type};
-            my %values2 = @values;
-            my @values2;
-            while( @values )
-            {
-                push @values2, shift @values;
-                shift @values;
-            }
-
-            # Print an option group.
-            print $self->_cgi->popup_menu(
-                -name => lc($name),
-                -default=> $default,
-                -values => \@values2,
-                -labels => \%values2,
-            );
-        }
-        else
-        {
-            my @extras = ();
-            if($type eq 'ip')
-            {
-                @extras = (
-                    -dojoType => 'dijit.form.ValidationTextBox',
-                    -regExp => '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}',
-                    -invalidMessage => 'Need IP Address',
-                );
-            }
-
-            # Print a simple textfield.
-            print $self->_cgi->textfield(
-                -name => lc($name),
-                -default => $default,
-                -value => '',
-                -size => 16,
-                -maxlength => 255,
-                @extras
-            );
-        }
-        print
-            '</td>';
-
-        print '</tr>'; # line
-    }
-
-    print
-        '</table>';
-
-    if($self->method eq 'input_modify')
-    {
-        print $self->_cgi->hidden(-name=>'_method',-default=>'modify',-force=>1);
-        print $self->_cgi->submit('Modify');
-        print $self->_cgi->reset();
-    }
-    else
-    {
-        print $self->_cgi->hidden(-name=>'_method',-default=>'insert',-force=>1);
-        print $self->_cgi->submit('Insert');
-        print $self->_cgi->reset();
-    }
-
-    print $self->_cgi->end_form;
-}
-
-sub do_form
-{
-    our $self = shift;
-    my @params = $self->vars;
-    our %params = @params;
-
-    my $sql_callback = sub
-    {
-        my $sql = shift;
-        $sql .= " LIMIT $params{_limit}"
-            if exists $params{_limit}
-            and defined $params{_limit};
-        $sql .= " OFFSET $params{_offset}"
-            if exists $params{_offset}
-            and defined $params{_offset};
-        return $sql;
-    };
-
-    our $started = 0;
-
-    sub html_start($)
-    {
-        my ($names) = @_;
-        print '<table class="ccn_report"><tbody><tr>';
-        print '<th class="ccn_action">Modify</td>';
-        print '<th class="ccn_action">Delete</td>';
-        for my $name (@{$names})
-        {
-            my $display_name = $name;
-            $display_name =~ s/[!*]$//;
-            $display_name =~ s/_/ /;
-            print qq(<th class="ccn_report">$display_name</th>)
-                unless $name =~ /\*$/; # hide
-        }
-        print "</tr>\n";
-        $started = 1;
-    }
-
-    my $html_callback = sub
-    {
-        my ($content,$names) = @_;
-        # No content?
-        return unless defined $content and $content;
-        #
-        html_start($names) if not $started;
-
-        print '<tr>';
-
-        my $form = '';
-        my $display = '';
-
-        my @content = @{$content};
-        for my $name (@{$names})
-        {
-            my $value = shift @content;
-            my $display_name = $name;
-            $display_name =~ s/[!*]$//;
-            $display .=
-                '<td class="ccn_report">'.
-                    (defined $value ? $value : '').
-                '</td>'
-                unless $name =~ /\*$/;
-            $form .= $self->_cgi->hidden(-name=>lc($display_name),-default=>$value,-force=>1)
-                unless $name =~ /!$/; # no value
-        }
-
-        print
-            '<td class="ccn_action">',
-                $self->_cgi->start_form(-method=>'POST').
-                $form,
-                $self->_cgi->hidden(-name=>'_class', -default=>$self->class,  -force=>1),
-                $self->_cgi->hidden(-name=>'_method',-default=>'input_modify',-force=>1),
-                # $self->_cgi->submit('Modify'),
-                $self->_cgi->image_button(-name=>'_apply',-src=>'ccn_icons/modify.png',-align=>'MIDDLE'),
-                $self->_cgi->end_form,
-            '</td>';
-
-        print
-            '<td class="ccn_action">',
-                $self->_cgi->start_form(-method=>'POST').
-                $form,
-                $self->_cgi->hidden(-name=>'_class', -default=>$self->class,-force=>1),
-                $self->_cgi->hidden(-name=>'_method',-default=>'delete',    -force=>1),
-                # $self->_cgi->submit('Delete'),
-                $self->_cgi->image_button(-name=>'_apply',-src=>'ccn_icons/delete.png',-align=>'MIDDLE'),
-                $self->_cgi->end_form,
-            '</td>';
-
-        print $display;
-
-        print "</tr>\n";
-    };
-    sub html_end
-    {
-        print '</tbody></table>';
-    }
-
-    my $nb_rows = $self->do_list($sql_callback,$html_callback,@params);
-
-    html_end() if $started;
-
-    # YYY This should be done using
-    # http://dojotoolkit.org/book/book-dojo/part-3-javascript-programming-dojo-and-dijit/using-dojo-data/available-stores/dojox-d
-    # and
-    # http://dojotoolkit.org/book/dojo-book-0-9/docx-documentation-under-development/grid
-    # but let's wait until the API stabilize and Grid makes it into Dijit.
-    my $_limit = $params{_limit};
-    my $_offset = $params{_offset};
-    $_offset = 0 if not defined $_offset;
-
-    if(defined $_limit)
-    {
-        # Print a "first" button ...
-        if($_offset > $_limit)
-        {
-            print
-                $self->_cgi->start_form(-method=>'POST'),
-                $self->_cgi->hidden(-name=>'_class', -default=>$self->class,  -force=>1),
-                $self->_cgi->hidden(-name=>'_method',-default=>'',-force=>1),
-                $self->_cgi->hidden(-name=>'_offset',-default=>0,-force=>1),
-                $self->_cgi->hidden(-name=>'_limit',-default=>$_limit,-force=>1),
-                $self->_cgi->hidden(-name=>'_tab', -default=>2,  -force=>1),
-                $self->_cgi->image_button(-name=>'_apply',-src=>'ccn_icons/go-first.png'),
-                $self->_cgi->end_form;
-        }
-        else
-        {
-            print q(<img src="ccn_icons/blank.png" />);
-        }
-
-        # Print a "previous" button ...
-        if($_offset > 0)
-        {
-            my $prev = $_offset - $_limit;
-            $prev = 0 if $prev < 0;
-            print
-                $self->_cgi->start_form(-method=>'POST'),
-                $self->_cgi->hidden(-name=>'_class', -default=>$self->class,  -force=>1),
-                $self->_cgi->hidden(-name=>'_method',-default=>'',-force=>1),
-                $self->_cgi->hidden(-name=>'_offset',-default=>$prev,-force=>1),
-                $self->_cgi->hidden(-name=>'_limit',-default=>$_limit,-force=>1),
-                $self->_cgi->hidden(-name=>'_tab', -default=>2,  -force=>1),
-                $self->_cgi->image_button(-name=>'_apply',-src=>'ccn_icons/go-previous.png'),
-                $self->_cgi->end_form;
-        }
-        else
-        {
-            print q(<img src="ccn_icons/blank.png" />);
-        }
-
-        if($_offset+1 < $_offset+$nb_rows)
-        {
-            print " ".($_offset+1)." .. ".($_offset+$nb_rows)." ";
-        }
-
-        # Print a "next" button
-        if(defined $nb_rows and $nb_rows == $_limit)
-        {
-            print
-                $self->_cgi->start_form(-method=>'POST'),
-                $self->_cgi->hidden(-name=>'_class', -default=>$self->class,  -force=>1),
-                $self->_cgi->hidden(-name=>'_method',-default=>'',-force=>1),
-                $self->_cgi->hidden(-name=>'_offset',-default=>($_offset+$nb_rows),-force=>1),
-                $self->_cgi->hidden(-name=>'_limit',-default=>$_limit,-force=>1),
-                $self->_cgi->hidden(-name=>'_tab', -default=>2,  -force=>1),
-                $self->_cgi->image_button(-name=>'_apply',-src=>'ccn_icons/go-next.png'),
-                $self->_cgi->end_form;
-        }
-        else
-        {
-            print q(<img src="ccn_icons/blank.png" />);
-        }
-    }
 }
 
 =pod
@@ -474,72 +199,6 @@ sub vars()
     return @res;
 }
 
-sub run_as_html()
-{
-    my $self = shift;
-
-    my $title = ucfirst($self->class).' '.ucfirst($self->method);
-
-    my $dojo_code = <<JAVASCRIPT;
-    dojo.require("dojo.parser");
-    dojo.require("dijit.layout.ContentPane");
-    dojo.require("dijit.layout.TabContainer");
-    dojo.require("dijit.form.Button");
-    dojo.require("dijit.form.ValidationTextBox");
-    dojo.require("dijit.form.NumberTextBox");
-JAVASCRIPT
-
-    print
-        $self->_cgi->header,
-        <<HTML;
-<html>
-    <head>
-    <title>${configuration::sitename}</title>
-        <style type="text/css">
-            \@import "js/dojo/dijit/themes/tundra/tundra.css";
-            \@import "js/dojo/dojo/resources/dojo.css";
-            \@import "${configuration::theme}default.css";
-        </style>
-        <script type="text/javascript" src="js/dojo/dojo/dojo.js" djConfig="parseOnLoad: true"></script>
-        <script type="text/javascript">
-            $dojo_code
-        </script>
-    </head>
-    <body class="tundra">
-HTML
-
-    print q(<div id="mainTabContainer" dojoType="dijit.layout.TabContainer" style="width:auto;height:100%;">);
-
-    my $tab = $self->_cgi->param('_tab');
-    $tab = 1 if not defined $tab or int($tab) < 1;
-
-        print q(<div id="view" dojoType="dijit.layout.ContentPane" title="Manage").($tab == 1?q( selected="true"):'').q(>);
-            print '<div class="input">';
-            $self->do_input;
-            print '</div>';
-        print q(</div>);
-
-        unless( $self->_cgi->param('_quick') )
-        {
-            print q(<div id="list" dojoType="dijit.layout.ContentPane" title="List").($tab == 2?q( selected="true"):'').q(>);
-                print '<div class="form">';
-                $self->do_form;
-                print '</div>';
-            print q(</div>);
-
-            print q(<div id="help" dojoType="dijit.layout.ContentPane" title="Help">);
-                print q(<div class="doc">);
-                print $self->doc;
-                print '</div>';
-            print q(</div>);
-        }
-
-    print q(</div>);
-
-    print
-        $self->_cgi->end_html;
-}
-
 sub run_as_json
 {
     our $self = shift;
@@ -609,8 +268,6 @@ sub run()
     my $self = shift;
 
     my $method = $self->method;
-    my $as = $self->_cgi->param('_as');
-    $as = 'html' if not defined $as;
 
     my $result = 'ok';
     # This would need an eval() to collect error messages,
@@ -619,9 +276,7 @@ sub run()
     $result = $self->do_insert if $method eq 'insert';
     $result = $self->do_modify if $method eq 'modify';
 
-    $self->run_as_html() if $as eq 'html';
-    $self->run_as_json($result) if $as eq 'json';
-    $self->run_as_tab()  if $as eq 'tab';
+    $self->run_as_json($result);
 }
 
 1;

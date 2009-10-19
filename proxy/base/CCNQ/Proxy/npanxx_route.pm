@@ -22,10 +22,7 @@ use strict; use warnings;
 package CCNQ::Proxy::npanxx_route;
 use base qw(CCNQ::Proxy::npa_route);
 
-sub doc
-{
-    return <<'HTML';
-
+=pod
     For each NPANXX you must define the trunk set to use.
     The Route value is the NPANXX to be considered for routing.
     Rank must be an integer starting at 0 (first route) and 
@@ -35,9 +32,7 @@ sub doc
     (IP address or DNS name) to use, and what port to use on
     the destination (use 0 to force DNS SRV resolution; otherwise
     in most cases the value should be 5060).
-
-HTML
-}
+=cut
 
 
 sub _len { 6 }

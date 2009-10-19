@@ -22,10 +22,7 @@ use strict; use warnings;
 
 use base qw(CCNQ::Proxy::Base);
 
-sub doc
-{
-    return <<'HTML';
-
+=pod
     Each Target defined in a trunk set (for example for routing NPA,
     NPANXX, or customers) can be assigned parameters to control
     how the proxy access the target.
@@ -34,10 +31,7 @@ sub doc
     and Password required to proceed with authentication.
     <p>
     The target <em>must</em> be specified as IP:port, for example <tt>10.1.1.10:5060</tt> is a valid target.
-
-HTML
-}
-
+=cut
 
 sub form
 {

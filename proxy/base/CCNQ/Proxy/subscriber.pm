@@ -22,10 +22,7 @@ use strict; use warnings;
 package CCNQ::Proxy::subscriber;
 use base qw(CCNQ::Proxy::Base);
 
-sub doc
-{
-    return <<'HTML';
-
+=pod
     A subscriber can be a line or trunk towards one of your downstream
     customers.
     <p>
@@ -67,9 +64,7 @@ sub doc
         for the destination Inbound Number if one is specified (see under Inbound Numbers);
     <li>as a last resort, the IP address and SIP port number specified for the Subscriber.
     </ul>
-
-HTML
-}
+=cut
 
 
 sub form
