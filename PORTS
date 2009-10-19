@@ -23,4 +23,5 @@ SIP ports (Sofia profiles):
   FeatureServer:  5100
 
   Cust SBC:     5200 and up
-    
+
+  OpenSIPS:     5060 *
