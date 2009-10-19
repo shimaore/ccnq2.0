@@ -1,0 +1,2 @@
+Write the code that will install the configuration files into /opt/local
+and change the ownership. (This must be callable from the XMPP bus.)

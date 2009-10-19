@@ -1,0 +1,90 @@
+
+* The system manages a set of clusters located inside a unique domain.
+
+	Parameter: domain_name: DNS domain name used _only_ for management.
+
+* Each cluster implements one and only one role.
+
+  Parameter: cluster_name: Unique name assigned to a cluster within ${domain_name}.
+             ${cluster_name}.${domain_name} is used in DNS SRV, etc.
+             jabber:${cluster_name}@${domain_name} is an XMPP MUC chatroom used for configuration.
+
+  Parameter: cluster_role: Role implemented by this cluster.
+             DNS: _role.${cluster_name}.${domain_name} IN TXT "$role"
+
+* A host (or server) may belong to one or more clusters. Which is equivalent to saying:
+  Each server may host one or multiple roles.
+  e.g.: a server might be a b2bua, a mediaproxy, and a proxy
+
+  Parameter: host_name: Unique name assigned to a server/host within ${domain_name}.
+             ${host_name}.${domain_name} IN A <server-ip>  must be a valid DNS entry with a valid IP.
+             (It is used e.g. for CDR retrieval and other file-transfer operations from the host.)
+
+  Parameter: A server discovers which clusters it belongs to by using DNS.
+             _clusters.${host_name}.${domain_name} IN TXT "<blank-separated list of ${cluster_name}>"
+
+* Each node role may require one or more node functions to be implemented.
+  e.g: a "carrier-sbc" role requires at least the "b2bua-config" and the "b2bua-cdr" functions
+
+	Parameter: role_name: one of the available role names
+
+* Each node function instance registers as an XMPP client inside the domain.
+  e.g.: The node function jabber:${host_name}@${domain_name}/${function_name} will listen in MUC ${cluster_name}.
+
+	Parameter: function_name: one of the available function names.
+
+
+Inter-node communications are established using XMPP.
+
+
+
+
+
+Available Node Roles:
+
+# A carrier-facing SBC
+role: carrier-sbc
+	functions: b2bua/base b2bua/cdr b2bua/carrier-sbc-config
+
+# A customer-facing SBC
+role: client-sbc
+	functions: b2bua/base b2bua/cdr b2bua/client-sbc-config
+
+# Inbound routing
+role: inbound-proxy
+	functions: proxy/base proxy/inbound-proxy
+
+# Outbound routing
+role: outbound-proxy
+  functions: proxy/base proxy/outbound-proxy
+
+# Transparent (no digit manipulation) proxy with all features (including registrar and mediaproxy)
+role: complete-transparent-proxy
+	functions: proxy/base proxy/registrar proxy/mediaproxy proxy/complete-transparent
+
+# Router with embedded registrar (but no mediaproxy)
+role: router
+	functions: proxy/base proxy/registrar proxy/router
+
+	#    complete
+	#    router-no-registrar
+	#    registrar
+
+...
+
+portal
+	roles: portal/base
+
+aggregator:
+	roles: billing/aggregator
+	Note: The aggregator requests each function (a b2bua/cdr instance) to prepare (and rotate) its CDRs.
+	      Each function should request a one-time password (used for encryption of the file) from the aggregator.
+	      The function will eventually reply to the request with the location of the CDR file (an HTTP URI).
+
+manager:
+	roles: manager/base
+
+
+Note: 
+  - If no inbound-proxy is present, and only one "client-sbc" or "client-proxy" cluster is present, use the client-* item for inbound.
+  - If no outbound-proxy is present, and only one "carrier-sbc" cluster is present, use the carrier-sbc as the target for outbound.

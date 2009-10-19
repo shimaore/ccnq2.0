@@ -1,0 +1,18 @@
+This code is designed to work with the following versions of these products:
+
+Debian GNU/Linux    lenny       www.debian.org
+OpenSIPS            1.5         www.opensips.org
+MediaProxy          
+FreeSwitch          1.4         www.freeswitch.org
+
+Pre-built Debian packages for the various components are made available at:
+  http://opensource.sotelips.net/
+  http://carrierclass.net/
+
+
+
+
+
+This work is supported by Sotel Systems LLC, http://www.sotelsystems.com
+who provide servers and network infrastructure for the development environment,
+and provide financial support for the main developper.

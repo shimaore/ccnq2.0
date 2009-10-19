@@ -1,0 +1,6 @@
+The common toolset includes:
+
+- Libraries to access the JSON/XMPP bus.
+- Libraries to retrieve information stored in DNS.
+- Base function-handling XMPP tool (which will dispatch).
+- Encrypt content for the web.
