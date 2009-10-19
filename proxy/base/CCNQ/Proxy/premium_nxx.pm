@@ -29,6 +29,6 @@ use base qw(CCNQ::Proxy::local_npanxx);
     You may want to have 555 listed here.
 =cut
 
-sub _name { 'Premium_NXX' }
+sub _name { 'premium_nxx' }
 
 1;

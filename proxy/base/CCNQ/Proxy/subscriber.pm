@@ -64,7 +64,6 @@ use base qw(CCNQ::Proxy::Base);
         for the destination Inbound Number if one is specified (see under Inbound Numbers);
     <li>as a last resort, the IP address and SIP port number specified for the Subscriber.
     </ul>
-=cut
 
 
 sub form
@@ -89,14 +88,14 @@ sub form
     );
 }
 
+=cut
 
 sub new_precondition
 {
-    my $self = shift;
-    my %params = @_;
+    my ($self,$params) = @_;
 
-    my $username = $params{username};
-    my $domain   = $params{domain};
+    my $username = $params->{username};
+    my $domain   = $params->{domain};
 
     warn("No username provided.") if not defined $username or $username eq '';
     warn("Username must be a-z0-9_-.") unless $username =~ /^[\w-]+$/;
@@ -119,27 +118,27 @@ use Digest::MD5 qw(md5_hex);
 
 sub insert
 {
-    my $self = shift;
-    my %params = @_;
-    my $username    = $params{username};
-    my $domain      = $params{domain};
-    my $password    = $params{password};
-    my $ip          = $params{ip};
-    my $port        = $params{port};
-    my $srv         = $params{srv};
-    my $recording   = $params{recording};
-    my $strip_digit = $params{strip_digit};
-    my $default_npa = $params{default_npa};
-    my $account     = $params{account};
+    my ($self,$params) = @_;
+    my $username    = $params->{username};
+    my $domain      = $params->{domain};
+    my $password    = $params->{password};
+    my $ip          = $params->{ip};
+    my $port        = $params->{port};
+    my $srv         = $params->{srv};
+    my $recording   = $params->{recording};
+    my $strip_digit = $params->{strip_digit};
+    my $default_npa = $params->{default_npa};
+    my $account     = $params->{account};
+
     my $challenge   = $self->{challenge};
     $challenge = $domain if $challenge eq '';
 
-    my $allow_local = $params{allow_local} || 0;
-    my $allow_ld    = $params{allow_ld} || 0;
-    my $allow_premium = $params{allow_premium} || 0;
-    my $allow_intl  = $params{allow_international} || 0;
+    my $allow_local   = $params->{allow_local} || 0;
+    my $allow_ld      = $params->{allow_ld} || 0;
+    my $allow_premium = $params->{allow_premium} || 0;
+    my $allow_intl    = $params->{allow_international} || 0;
 
-    my $always_mp   = $params{always_proxy_media} || 0;
+    my $always_mp   = $params->{always_proxy_media} || 0;
 
     $ip = undef unless $ip =~ /^[\d.]+$/;
 
@@ -186,11 +185,10 @@ SQL
 
 sub delete
 {
-    my $self = shift;
-    my %params = @_;
-    my $username = $params{username};
-    my $domain   = $params{domain};
-    my $ip       = $params{ip};
+    my ($self,$params) = @_;
+    my $username = $params->{username};
+    my $domain   = $params->{domain};
+    my $ip       = $params->{ip};
 
     my @res = (
         <<'SQL',[$username,$domain],
@@ -225,21 +223,19 @@ SQL
 
 sub list
 {
-    my $self = shift;
-    my @params = $self->vars;
-    my %params = @params;
+    my ($self,$params) = @_;
 
     my @where = ();
     my @where_values = ();
-    my $account = $params{account};
+    my $account = $params->{account};
     push( @where, 'Account = ?' ), push( @where_values, $account )
         if defined $account and $account ne '';
 
-    my $username = $params{username};
+    my $username = $params->{username};
     push( @where, 'Username = ?' ), push( @where_values, $username )
         if defined $username and $username ne '';
 
-    my $domain = $params{domain};
+    my $domain = $params->{domain};
     push( @where, 'Domain = ?' ), push( @where_values, $domain )
         if defined $domain and $domain ne '';
 
@@ -247,25 +243,25 @@ sub list
     $where = 'HAVING '. join('AND', map { "($_)" } @where ) if @where;
 
     return (<<SQL,[$self->avp->{account},$self->avp->{src_subs},$self->avp->{user_port},$self->avp->{user_srv},$self->avp->{user_recording},$self->avp->{strip_digit},$self->avp->{default_npa},$self->avp->{allow_local},$self->avp->{allow_ld},$self->avp->{allow_premium},$self->avp->{allow_intl},$self->avp->{user_force_mp},$self->avp->{src_subs},@where_values],undef);
-        SELECT username AS Username,
-               domain AS Domain,
-               (SELECT value FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS "Account",
-               (SELECT password FROM subscriber WHERE username = main.username AND domain = main.domain ) AS Password,
-               (SELECT uuid FROM avpops WHERE value = main.username AND domain = main.domain AND attribute = ?) AS "IP",
-               (SELECT value FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS "Port",
-               (SELECT value FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS "SRV",
-               (SELECT value FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS "Recording",
-               (SELECT value FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS "Strip_Digit",
-               (SELECT value FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS "Default_NPA",
-               (SELECT COUNT(value) FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS "Allow_Local",
-               (SELECT COUNT(value) FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS "Allow_LD",
-               (SELECT COUNT(value) FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS "Allow_Premium",
-               (SELECT COUNT(value) FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS "Allow_International",
-               (SELECT COUNT(value) FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS "Always_Proxy_Media",
-               (SELECT contact FROM location WHERE username = main.username AND domain = main.domain ) AS "Contact",
-               (SELECT received FROM location WHERE username = main.username AND domain = main.domain ) AS "Received",
-               (SELECT user_agent FROM location WHERE username = main.username AND domain = main.domain ) AS "User_Agent",
-               (SELECT expires FROM location WHERE username = main.username AND domain = main.domain ) AS "Expires"
+        SELECT username AS username,
+               domain AS domain,
+               (SELECT value FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS account,
+               (SELECT password FROM subscriber WHERE username = main.username AND domain = main.domain ) AS password,
+               (SELECT uuid FROM avpops WHERE value = main.username AND domain = main.domain AND attribute = ?) AS ip,
+               (SELECT value FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS port,
+               (SELECT value FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS srv,
+               (SELECT value FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS recording,
+               (SELECT value FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS strip_digit,
+               (SELECT value FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS default_npa,
+               (SELECT COUNT(value) FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS allow_local,
+               (SELECT COUNT(value) FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS allow_ld,
+               (SELECT COUNT(value) FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS allow_premium,
+               (SELECT COUNT(value) FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS allow_international,
+               (SELECT COUNT(value) FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS always_proxy_media,
+               (SELECT contact FROM location WHERE username = main.username AND domain = main.domain ) AS contact,
+               (SELECT received FROM location WHERE username = main.username AND domain = main.domain ) AS received,
+               (SELECT user_agent FROM location WHERE username = main.username AND domain = main.domain ) AS user_agent,
+               (SELECT expires FROM location WHERE username = main.username AND domain = main.domain ) AS expires
         FROM
         (
             SELECT username AS username, domain AS domain FROM subscriber main

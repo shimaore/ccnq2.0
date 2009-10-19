@@ -63,9 +63,6 @@ sub avp
         premium_nxx     => 162,
 
         # Outbound-trunks
-        tgw             => 152,
-        gwadv           => 154,
-
         dr_ruri         => 155,
         dr_attrs        => 156,
 
@@ -99,7 +96,6 @@ sub avp
         cfnr            => 182,
         cfb             => 183,
         cfda            => 184,
-        outbound_route  => 185,
         dst_domain      => 186, # DID to domain
         inv_timer       => 43,
 

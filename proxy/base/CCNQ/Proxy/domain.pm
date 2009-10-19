@@ -12,7 +12,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-# 
+#
 
 #
 # For more information visit http://carrierclass.net/
@@ -34,7 +34,6 @@ use base qw(CCNQ::Proxy::Base);
     <li>if you defined SRV names for load-balancing or redundancy purposes, include
       the DNS names (withouth the _sip._udp prefix) here.
     </ul>
-=cut
 
 sub form
 {
@@ -44,13 +43,13 @@ sub form
     );
 }
 
+=cut
 
 sub insert
 {
-    my $self = shift;
-    my %params = @_;
-    my $domain = $params{domain};
-    
+    my ($self,$params) = @_;
+    my $domain = $params->{domain};
+
     return ()
         unless defined $domain and $domain ne '';
 
@@ -61,9 +60,8 @@ SQL
 
 sub delete
 {
-    my $self = shift;
-    my %params = @_;
-    my $domain = $params{domain};
+    my ($self,$params) = @_;
+    my $domain = $params->{domain};
 
     return ()
         unless defined $domain and $domain ne '';

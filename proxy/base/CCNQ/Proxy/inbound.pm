@@ -31,7 +31,6 @@ use base qw(CCNQ::Proxy::Base);
     call redirection can work properly.
     <p>
     The Source parameter must be an IP address.
-=cut
 
 sub form
 {
@@ -40,6 +39,8 @@ sub form
         'Source' => 'text',
     );
 }
+
+=cut
 
 sub insert
 {

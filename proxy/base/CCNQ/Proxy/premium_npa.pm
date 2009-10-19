@@ -29,6 +29,6 @@ use base qw(CCNQ::Proxy::local_npanxx);
     You should probably have at least 900 and 976 listed here.
 =cut
 
-sub _name { 'Premium_NPA' }
+sub _name { 'premium_npa' }
 
 1;

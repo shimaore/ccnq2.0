@@ -22,6 +22,8 @@ use strict; use warnings;
 
 use base qw(CCNQ::Proxy::Base);
 
+=pod
+
 sub form
 {
     my $self = shift;
@@ -34,6 +36,8 @@ sub form
         'Password'    => 'text',
     );
 }
+
+=cut
 
 sub list_of_gateways
 {
@@ -55,14 +59,13 @@ sub list_of_gateways
 
 sub insert
 {
-    my $self = shift;
-    my %params = @_;
-    my $address     = $params{target};
-    my $strip       = $params{strip_digit};
-    my $pri_prefix  = $params{prefix};
-    my $uac_realm   = $params{realm};
-    my $uac_user    = $params{login};
-    my $uac_pass    = $params{password};
+    my ($self,$params) = @_;
+    my $address     = $params->{target};
+    my $strip       = $params->{strip_digit};
+    my $pri_prefix  = $params->{prefix};
+    my $uac_realm   = $params->{realm};
+    my $uac_user    = $params->{login};
+    my $uac_pass    = $params->{password};
 
     my @res;
     push @res,
@@ -81,9 +84,8 @@ SQL
 
 sub delete
 {
-    my $self = shift;
-    my %params = @_;
-    my $address = $params{target};
+    my ($self,$params) = @_;
+    my $address = $params->{target};
 
     my @res;
     push @res,

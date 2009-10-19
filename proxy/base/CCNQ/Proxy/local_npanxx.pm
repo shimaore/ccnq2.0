@@ -25,9 +25,6 @@ use base qw(CCNQ::Proxy::Base);
 =pod
     Indicate any NPANXX (six digits prefix) that should be treated as
     "local call" for the purpose of call authorization.
-=cut
-
-sub _name { 'Local_NPANXX' }
 
 sub form
 {
@@ -38,13 +35,16 @@ sub form
     );
 }
 
+=cut
+
+sub _name { 'local_npanxx' }
+
 sub insert
 {
-    my $self = shift;
-    my %params = @_;
-    my $npa  = $params{lc($self->_name)};
+    my ($self,$params) = @_;
+    my $npa  = $params->{lc($self->_name)};
 
-    my $domain = $params{domain};
+    my $domain = $params->{domain};
 
     return (
         $self->_avp_set($npa,$domain,lc($self->_name),1),
@@ -53,11 +53,10 @@ sub insert
 
 sub delete
 {
-    my $self = shift;
-    my %params = @_;
-    my $npa  = $params{lc($self->_name)};
+    my ($self,$params) = @_;
+    my $npa  = $params->{lc($self->_name)};
 
-    my $domain = $params{domain};
+    my $domain = $params->{domain};
 
     return (
         $self->_avp_set($npa,$domain,lc($self->_name),undef),
@@ -70,7 +69,7 @@ sub list
     my $name = $self->_name;
 
     return (<<SQL, [$self->avp->{lc($name)}], undef);
-            SELECT DISTINCT uuid AS $name, domain AS "Domain"
+            SELECT DISTINCT uuid AS $name, domain AS domain
             FROM avpops
             WHERE attribute = ?
             ORDER BY uuid ASC

@@ -22,30 +22,34 @@ use strict; use warnings;
 
 use base qw(CCNQ::Proxy::Base);
 
+=pod
+
 sub form
 {
     my $self = shift;
     return (
-        'Group'       => 'text',
+        'Group'       => 'text', # 0 for default, otherwise user-specific (via dr_groups)
+        'Description' => 'text',
         'Prefix'      => 'text',
         'Priority'    => 'text',
         'Target'      => $self->list_of_gateways(), # For now we can select only one gateway
     );
 }
 
+=cut
 
 sub insert
 {
-    my $self = shift;
-    my %params = @_;
-    my $groupid     = $params{group};
-    my $prefix      = $params{prefix};
-    my $priority    = $params{priority};
-    my $gwlist      = $params{target};
+    my ($self,$params) = @_;
+    my $groupid     = $params->{group};
+    my $description = $groupid == 0 ? 'Default' : $params->{description};
+    my $prefix      = $params->{prefix};
+    my $priority    = $params->{priority};
+    my $gwlist      = $params->{target};
 
     my @res;
     push @res,
-        <<'SQL',[$group,$prefix,'',$priority,'',$gwlist,''];
+        <<'SQL',[$group,$prefix,'',$priority,'',$gwlist,$description];
         INSERT INTO dr_rules(groupid,prefix,timerec,priority,routeid,gwlist,description) VALUES (?,?,?,?,?,?,?)
 SQL
 
@@ -53,11 +57,10 @@ SQL
 
 sub delete
 {
-    my $self = shift;
-    my %params = @_;
-    my $groupid     = $params{group};
-    my $prefix      = $params{prefix};
-    my $priority    = $params{priority};
+    my ($self,$params) = @_;
+    my $groupid     = $params->{group};
+    my $prefix      = $params->{prefix};
+    my $priority    = $params->{priority};
 
     my @res;
     push @res,
@@ -72,7 +75,7 @@ sub list
     my $self = shift;
 
     return (<<'SQL',[],undef);
-            SELECT DISTINCT groupid AS "Group", prefix AS "Prefix", priority AS "Priority", gwlist AS "Target"
+            SELECT DISTINCT groupid AS "Group", description AS "Description", prefix AS "Prefix", priority AS "Priority", gwlist AS "Target"
             FROM dr_rules main
             ORDER BY groupid, prefix, priority ASC
 SQL

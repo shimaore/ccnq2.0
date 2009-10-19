@@ -31,7 +31,6 @@ use base qw(CCNQ::Proxy::Base);
     </ul>
     For Username, enter for example "911", and for Contact the SIP URI
     that emergency calls should follow (e.g. "sip:911@emergency.example.com").
-=cut
 
 sub form
 {
@@ -44,21 +43,22 @@ sub form
     );
 }
 
+=cut
+
 sub insert
 {
-    my $self = shift;
-    my %params = @_;
+    my ($self,$params) = @_;
 
-    my $alias_username = $params{username};
-    my $alias_domain   = $params{domain};
-    my $username = $params{target_username};
-    my $domain   = $params{target_domain};
+    my $alias_username = $params->{username};
+    my $alias_domain   = $params->{domain};
+    my $username = $params->{target_username};
+    my $domain   = $params->{target_domain};
 
     return ()
-        unless defined $username and $username ne ''
-        and    defined $domain   and $domain ne ''
-        and    defined $alias_username and $alias_username ne ''
-        and    defined $alias_domain   and $alias_domain ne '';
+        unless defined ($username) and $username ne ''
+        and    defined ($domain)   and $domain ne ''
+        and    defined ($alias_username) and $alias_username ne ''
+        and    defined ($alias_domain)   and $alias_domain ne '';
 
     return (<<'SQL',[$username,$domain,$alias_username,$alias_domain]);
         INSERT INTO aliases(username,domain,alias_username,alias_domain) VALUES (?,?,?,?)
@@ -83,7 +83,7 @@ sub list
 {
     my $self = shift;
     return (<<'SQL',[],undef);
-        SELECT alias_username AS Username, alias_domain AS Domain, username AS Target_Username, domain AS Target_Domain
+        SELECT alias_username AS username, alias_domain AS domain, username AS target_username, domain AS target_domain
         FROM aliases
         ORDER BY username, domain, alias_username, alias_domain ASC
 SQL

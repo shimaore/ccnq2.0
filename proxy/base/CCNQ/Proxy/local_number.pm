@@ -40,7 +40,6 @@ use base qw(CCNQ::Proxy::Base);
     The CFDA_Timeout parameter allows you to control the duration
     a destination is tried (ringing) before the call is considered
     Not Answered. (The default value is 120 seconds.)
-=cut
 
 sub form
 {
@@ -59,26 +58,39 @@ sub form
     );
 }
 
+=cut
+
 
 sub insert
 {
-    my $self = shift;
-    my %params = @_;
-    my $number  = $params{number};
-    my $domain  = $params{domain};
-    my $username    = $params{username};
-    my $username_domain  = $params{username_domain};
-    my $cfa   = $params{cfa} || undef;
-    my $cfnr    = $params{cfnr} || undef;
-    my $cfb    = $params{cfb} || undef;
-    my $cfda    = $params{cfda} || undef;
-    my $cfda_timeout    = $params{cfda_timeout} || undef;
-    my $outbound_route  = $params{outbound_route} || undef;
+    my ($self,$params) = @_;
+    my $number            = $params->{number};
+    my $domain            = $params->{domain};
+    my $username          = $params->{username};
+    my $username_domain   = $params->{username_domain};
+    my $cfa               = $params->{cfa} || undef;
+    my $cfnr              = $params->{cfnr} || undef;
+    my $cfb               = $params->{cfb} || undef;
+    my $cfda              = $params->{cfda} || undef;
+    my $cfda_timeout      = $params->{cfda_timeout} || undef;
+    my $outbound_route    = $params->{outbound_route} || undef;
 
     return () unless defined $number and $number ne '';
     return () unless defined $username and $username ne '';
 
+    my @result = ();
+    if(defined $outbound_route) {
+      push @result, (<<'SQL',[$username,$domain,$outbound_route]);
+        INSERT INTO dr_groups(username,domain,groupid) VALUES (?,?,?);
+SQL
+    } else {
+      push @result, (<<'SQL',[$username,$domain]);
+        DELETE FROM dr_groups WHERE username = ? AND domain = ?;
+SQL
+    }
+
     return (
+        @result,
         $self->_avp_set($number,$domain,'dst_subs',$username),
         $self->_avp_set($number,$domain,'dst_domain',$username_domain),
         $self->_avp_set($number,$domain,'cfa',$cfa),
@@ -86,18 +98,20 @@ sub insert
         $self->_avp_set($number,$domain,'cfb',$cfb),
         $self->_avp_set($number,$domain,'cfda',$cfda),
         $self->_avp_set($number,$domain,'inv_timer',$cfda_timeout),
-        $self->_avp_set($number,$domain,'outbound_route',$outbound_route),
     );
 }
 
 sub delete
 {
-    my $self = shift;
-    my %params = @_;
-    my $number  = $params{number};
-    my $domain  = $params{domain};
+    my ($self,$params) = @_;
+    my $number  = $params->{number};
+    my $domain  = $params->{domain};
 
+    my @result = (<<'SQL',[$username,$domain]);
+      DELETE FROM dr_groups WHERE username = ? AND domain = ?;
+SQL
     return (
+        @result,
         $self->_avp_set($number,$domain,'dst_subs',undef),
         $self->_avp_set($number,$domain,'dst_domain',undef),
         $self->_avp_set($number,$domain,'cfa',undef),
@@ -105,15 +119,13 @@ sub delete
         $self->_avp_set($number,$domain,'cfb',undef),
         $self->_avp_set($number,$domain,'cfda',undef),
         $self->_avp_set($number,$domain,'inv_timer',undef),
-        $self->_avp_set($number,$domain,'outbound_route',undef),
     );
 }
 
 sub list
 {
-    my $self = shift;
-    my %params = @_;
-    my $number = $params{number};
+    my ($self,$params) = @_;
+    my $number = $params->{number};
 
     my $where = '';
     if(defined $number and $number =~ /^\d+$/)
@@ -123,19 +135,19 @@ sub list
 
     return (
         <<SQL,
-            SELECT DISTINCT uuid AS "Number", domain AS "Domain", value AS "Username",
-                    (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS Username_Domain,
-                    (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS CFA,
-                    (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS CFNR,
-                    (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS CFB,
-                    (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS CFDA,
-                    (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS CFDA_Timeout,
-                    (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS Outbound_Route
+            SELECT DISTINCT uuid AS number, domain AS domain, value AS username,
+                    (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS username_domain,
+                    (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS cfa,
+                    (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS cfnr,
+                    (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS cfb,
+                    (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS cfda,
+                    (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS cfda_timeout,
+                    (SELECT groupid FROM dr_groups WHERE username = main.uuid AND domain = main.domain) AS outbound_route
             FROM avpops main
             WHERE attribute = ? $where
             ORDER BY uuid, value ASC
 SQL
-        [$self->avp->{dst_domain},$self->avp->{cfa},$self->avp->{cfnr},$self->avp->{cfb},$self->avp->{cfda},$self->avp->{inv_timer},$self->avp->{outbound_route},$self->avp->{dst_subs}],
+        [$self->avp->{dst_domain},$self->avp->{cfa},$self->avp->{cfnr},$self->avp->{cfb},$self->avp->{cfda},$self->avp->{inv_timer},$self->avp->{dst_subs}],
         undef
     );
 }
