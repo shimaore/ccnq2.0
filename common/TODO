@@ -1,0 +1,5 @@
+Investigate:
+
+Anyevent + EV
+AnyEvent::DBI
+AnyEvent::CouchDB

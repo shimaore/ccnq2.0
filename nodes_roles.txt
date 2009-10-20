@@ -21,7 +21,8 @@
              (It is used e.g. for CDR retrieval and other file-transfer operations from the host.)
 
   Parameter: A server discovers which clusters it belongs to by using DNS.
-             _clusters.${host_name}.${domain_name} IN TXT "<blank-separated list of ${cluster_name}>"
+             The clusters are available as TXT records (one or more):
+             _clusters.${host_name}.${domain_name} IN TXT "${cluster_name}>"
 
 * Each node role may require one or more node functions to be implemented.
   e.g: a "carrier-sbc" role requires at least the "b2bua-config" and the "b2bua-cdr" functions
