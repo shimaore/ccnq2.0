@@ -6,7 +6,7 @@ sub configure_opensips {
   use lib proxy_base_lib;
   use CCNQ::Proxy::Base;
 
-  require CCNQ::Install::CCN.'configuration.pm';
+  require (CCNQ::Install::CCN.'configuration.pm');
 
   my $CONFIG   = runtime_opensips_cfg;
   my $TEMPLATE = template_opensips_cfg;
@@ -133,7 +133,7 @@ TXT
     info($@) if $@;
 
     # Restart OpenSIPS using the new configuration.
-    echo "Restarting OpenSIPS"
+    info("Restarting OpenSIPS");
     CCNQ::Install::_execute("sudo /etc/init.d/opensips restart");
   },
 }
