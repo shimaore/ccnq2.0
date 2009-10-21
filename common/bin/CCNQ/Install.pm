@@ -198,7 +198,7 @@ sub resolve_roles {
 
 sub resolve_roles_and_functions {
   my $cb = shift;
-  for my $cluster_name (@{cluster_names}) {
+  for my $cluster_name (@{cluster_names()}) {
     my @roles = resolve_roles($cluster_name);
     my %functions = ();
     for my $role (@roles) {
