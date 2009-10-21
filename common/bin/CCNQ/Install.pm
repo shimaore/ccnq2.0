@@ -145,7 +145,7 @@ use constant xmpp_tag => 'xmpp-agent';
 
 
 sub make_password {
-  return sha1_hex(join('',fqdn,cookie,@_);
+  return sha1_hex(join('',fqdn,cookie,@_));
 }
 
 # Service definitions
