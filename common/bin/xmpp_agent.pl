@@ -14,14 +14,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Note: install.pl is started from the proper directory, so locating
-# CCNQ::Install is not an issue.
-
+use strict; use warnings;
 use CCNQ::Install;
+use CCNQ::XMPPAgent;
+
+use Logger::Syslog;
+
+use File::Spec;
+use constant self_script => File::Spec->catfile(CCNQ::Install::install_script_dir,'xmpp_agent.pl');
 
 sub run {
-  CCNQ::Install::attempt_on_roles_and_functions('install');
-  print "Done.\n";
+  my $running = 1;
+  info('starting');
+  while($running) {
+    eval {
+      CCNQ::XMPPAgent::run();
+    };
+    $running = 0 if $@ eq 'restart';
+    info("restarting, running = $running");
+  }
+  chdir(CCNQ::Install::install_script_dir);
+  warning('exec '.self_script);
+  exec(self_script);
 }
-
 run();
