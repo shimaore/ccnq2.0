@@ -217,7 +217,8 @@ sub attempt_run {
   debug("Attempting ${action} in function ${function}.\n");
   my $run_file = File::Spec->catfile(CCNQ::Install::SRC,$function,actions_file_name);
 
-  debug("No such file $run_file, skipping") unless -e $run_file;
+  debug("No such file $run_file, skipping"),
+  return unless -e $run_file;
   my $eval = content_of($run_file);
 
   # The script should return a hashref, which keys are the actions and
