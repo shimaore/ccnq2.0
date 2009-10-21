@@ -53,7 +53,7 @@ sub run {
     CCNQ::Install::attempt_run('node','install_all');
   };
 
-  die $@ if $@;
+  die "upgrade.pl: $@" if $@;
 }
 
 run();
