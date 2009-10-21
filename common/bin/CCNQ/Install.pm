@@ -108,7 +108,7 @@ use constant source_path_file => tag_to_file(source_path_tag);
 
 use constant SRC => get_variable(source_path_tag,source_path_file,sub {
   # Work under the assumption that upgrade.pl already did the right thing.
-  my $abs_path = File::Spec->curdir();
+  my $abs_path = File::Spec->rel2abs(File::Spec->curdir());
   # my $abs_path = File::Spec->rel2abs($0);
   my ($volume,$directories,$file) = File::Spec->splitpath($abs_path);
   my @directories = File::Spec->splitdir($directories);
