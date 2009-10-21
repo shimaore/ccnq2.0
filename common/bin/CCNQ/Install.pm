@@ -127,7 +127,7 @@ use constant host_name_tag => 'host_name';
 use constant domain_name_tag => 'domain_name';
 
 use constant host_name_file => tag_to_file(host_name_tag);
-use constant host_name_file => tag_to_file(domain_name_tag);
+use constant domain_name_file => tag_to_file(domain_name_tag);
 
 use constant host_name =>
   get_variable(host_name_tag,host_name_file,sub {Net::Domain::hostname()});
