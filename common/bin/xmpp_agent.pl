@@ -30,7 +30,7 @@ use constant self_script => File::Spec->catfile(CCNQ::Install::install_script_di
 # Also: it's not certain that running all of these this way (using a single AnyEvent process)
 #       might actually work.
 sub run {
-  resolve_roles_and_functions(sub{
+  CCNQ::Install::resolve_roles_and_functions(sub{
     my ($cluster_name,$role,$function) = @_;
     my $running = 1;
     while($running) {
