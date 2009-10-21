@@ -73,7 +73,7 @@ sub handle_message {
 
 sub run {
   my $function = shift;
-  
+
   debug("Attempting to start XMPPAgent for function $function");
 
   # AnyEvent says:
