@@ -202,7 +202,7 @@ sub resolve_roles_and_functions {
     my @roles = resolve_roles($cluster_name);
     my %functions = ();
     for my $role (@roles) {
-      for my $function (@{roles_to_function()->{$role}}) {
+      for my $function (@{roles_to_functions()->{$role}}) {
         $cb->($cluster_name,$role,$function);
       }
     }
