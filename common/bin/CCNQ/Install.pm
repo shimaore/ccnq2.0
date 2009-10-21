@@ -132,7 +132,7 @@ use constant domain_name_file => tag_to_file(domain_name_tag);
 use constant host_name =>
   get_variable(host_name_tag,host_name_file,sub {Net::Domain::hostname()});
 use constant domain_name =>
-  get_variable(domain_name_tag,domain_name_file,sub {Net::Domain::domainname()});
+  get_variable(domain_name_tag,domain_name_file,sub {Net::Domain::hostdomain()});
 
 # Like File::Spec::catfile, but for DNS names.
 sub catdns {
