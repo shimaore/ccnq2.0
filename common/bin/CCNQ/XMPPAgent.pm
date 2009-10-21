@@ -71,8 +71,8 @@ sub handle_message {
   }
 }
 
-sub run {
-  my $function = shift;
+sub start {
+  my ($function,$j) = @_;
 
   debug("Attempting to start XMPPAgent for function $function");
 
@@ -85,9 +85,6 @@ sub run {
   our $disco  = new AnyEvent::XMPP::Ext::Disco or restart();
   our $muc    = new AnyEvent::XMPP::Ext::MUC( disco => $disco ) or restart();
   our $pubsub = new AnyEvent::XMPP::Ext::Pubsub() or restart();
-
-  # Loops until we are asked to restart ourselves (e.g. after upgrade)
-  my $j = AnyEvent->condvar;
 
   my $username = CCNQ::Install::host_name;
   my $domain   = CCNQ::Install::domain_name;
@@ -171,9 +168,6 @@ sub run {
 
   info("Trying to connect...\n");
   $con->connect ();
-
-  $j->recv;
-  restart();
 }
 
 1;

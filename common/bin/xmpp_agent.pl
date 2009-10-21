@@ -30,20 +30,19 @@ use constant self_script => File::Spec->catfile(CCNQ::Install::install_script_di
 # Also: it's not certain that running all of these this way (using a single AnyEvent process)
 #       might actually work.
 sub run {
+  # Loops until we are asked to restart ourselves (e.g. after upgrade)
+  my $j = AnyEvent->condvar;
+
   CCNQ::Install::resolve_roles_and_functions(sub{
     my ($cluster_name,$role,$function) = @_;
-    my $running = 1;
-    while($running) {
-      info("(re)starting $function");
-      eval {
-        CCNQ::XMPPAgent::run($function);
-      };
-      $running = 0 if $@ eq CCNQ::Install::xmpp_restart_all;
-    }
-    warning(CCNQ::Install::xmpp_restart_all." received (in $function)");
-    chdir(CCNQ::Install::install_script_dir);
-    warning('exec '.self_script);
-    exec(self_script,$function);
+    eval { CCNQ::XMPPAgent::start($function,$j); };
+    error($@) if $@;
   });
+
+  $j->recv;
+  warning(CCNQ::Install::xmpp_restart_all." received (in $function)");
+  chdir(CCNQ::Install::install_script_dir);
+  warning('exec '.self_script);
+  exec(self_script,$function);
 }
 run();

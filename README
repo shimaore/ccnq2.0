@@ -13,7 +13,7 @@ Pre-built Debian packages for the various components are made available at:
   http://carrierclass.net/
 
 
-aptitude install   libnet-libidn-perl libauthen-sasl-perl libxml-writer-perl libwww-perl libyaml-perl libexpat-dev liblogger-syslog-perl git-core build-essential
+aptitude install   libnet-libidn-perl libauthen-sasl-perl libxml-writer-perl libwww-perl libyaml-perl libexpat-dev liblogger-syslog-perl git-core libnet-ssleay-perl build-essential
 cpan EV
 cpan AnyEvent::XMPP
 (libxml-parser-expat-perl libobject-event-perl )
