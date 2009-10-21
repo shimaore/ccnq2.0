@@ -49,9 +49,9 @@ sub configure_opensips {
   undef @radius_src;
 
   my %values = (
-      PROXY_IP    => $configuration::sip_host,
-      PROXY_PORT  => $configuration::sip_port,
-      CHALLENGE   => $configuration::sip_challenge,
+      PROXY_IP    => $configuration::sip_host || '',
+      PROXY_PORT  => $configuration::sip_port || '',
+      CHALLENGE   => $configuration::sip_challenge || '',
       DB_URL      => "mysql://${configuration::db_login}:${configuration::db_password}\@${configuration::db_host}/${configuration::db_name}",
       AVP_ALIASES => join(';',map { "$_=I:$avps{$_}" } (sort keys %avps)),
       CDR_EXTRA   => join(';',@cdr_extra),
@@ -88,7 +88,7 @@ sub configure_opensips {
   my $cfg_text = '';
   while(<$template>)
   {
-      s/\$\{([A-Z_]+)\}/defined $values{$1} ? $values{$1} : warn "Undefined $1"/eg;
+      s/\$\{([A-Z_]+)\}/defined $values{$1} ? $values{$1} : (warning("Undefined $1"),'')/eg;
       s/^\s*${accounting_pattern}//;
       s/^\s*${authenticate_pattern}//;
       s/^\s*#IF_USE_NODE_ID// if $configuration::node_id;
