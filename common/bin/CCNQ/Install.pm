@@ -102,7 +102,11 @@ use constant cookie =>
 # Source path resolution
 
 # Try to guess the source location from the value of $0.
-use constant container_path => sub {
+
+use constant source_path_tag => 'source_path';
+use constant source_path_file => tag_to_file(source_path_tag);
+
+use constant SRC => get_variable(source_path_tag,source_path_file,sub {
   my $abs_path = File::Spec->rel2abs($0);
   my ($volume,$directories,$file) = File::Spec->splitpath($abs_path);
   my @directories = File::Spec->splitdir($directories);
@@ -110,12 +114,7 @@ use constant container_path => sub {
   pop @directories; # Remove common/
   $directories = File::Spec->catdir(@directories);
   return File::Spec->catpath($volume,$directories,'');
-}->();
-
-use constant source_path_tag => 'source_path';
-use constant source_path_file => tag_to_file(source_path_tag);
-
-use constant SRC => get_variable(source_path_tag,source_path_file,container_path);
+});
 
 use constant install_script_dir => File::Spec->catfile(SRC,'common','bin');
 
