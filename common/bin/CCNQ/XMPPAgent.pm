@@ -133,7 +133,7 @@ sub run {
         my ($con, $h, $p, $reason) = @_;
         error("Disconnected from $h:$p: $reason\n");
         $j->broadcast;
-     }
+     },
 
      # MUC-specific
      enter => sub {
@@ -148,11 +148,11 @@ sub run {
        my ($con,$room,$error) = @_;
        error("Error: " . $error->string . "\n");
        $j->broadcast;
-     }
+     },
      presence => sub {
        my ($con,$room,$user) = @_;
        debug("presence");
-     }
+     },
      join => sub {
         my ($con,$room,$user) = @_;
         debug($user->nick . " joined $room\n");
@@ -160,13 +160,13 @@ sub run {
      part => sub {
        my ($con,$room,$user) = @_;
        debug($user->nick . " left $room\n");
-     }
+     },
 
      # PubSub-specific
      pubsub_recv => sub {
        my ($con) = @_;
        debug("pubsub_recv");
-     }
+     },
   );
 
   info("Trying to connect...\n");
