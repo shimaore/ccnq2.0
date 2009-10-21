@@ -57,7 +57,7 @@ sub configure_opensips {
 
   my %values = (
       PROXY_IP    => $configuration::sip_host || '',
-      PROXY_PORT  => $configuration::sip_port || '',
+      PROXY_PORT  => $configuration::sip_port || '5060',
       CHALLENGE   => $configuration::sip_challenge || '',
       DB_URL      => "mysql://${configuration::db_login}:${configuration::db_password}\@${configuration::db_host}/${configuration::db_name}",
       AVP_ALIASES => join(';',map { "$_=I:$avps{$_}" } (sort keys %avps)),
