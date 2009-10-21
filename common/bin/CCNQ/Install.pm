@@ -176,7 +176,7 @@ use constant _install_file => q(install.pm);
 
 sub resolve_cluster_names {
   my $cv = AnyEvent->condvar;
-  AnyEvent::DNS::txt $fqdn, $cv;
+  AnyEvent::DNS::txt fqdn, $cv;
   my @cluster_names = $cv->recv;
   return join(' ',@cluster_names);
 }
