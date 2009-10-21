@@ -228,7 +228,7 @@ sub attempt_run {
   eval {
     $result = $run->{$action}->($params) if $run->{$action};
   };
-  warning("In ${run_file} ($cluster_name,$role,$function,$action): $@") if $@;
+  warning("In ${run_file} ($function,$action,...): $@") if $@;
   return $result;
 }
 
