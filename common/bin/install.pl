@@ -20,6 +20,10 @@
 use CCNQ::Install;
 
 sub run {
+  # Update the code from the Git repository.
+  chdir(CCNQ::Install::SRC) or die "chdir(".CCNQ::Install::SRC."): $!";
+  CCNQ::Install::_execute(qw( git pull ));
+
   CCNQ::Install::attempt_on_roles_and_functions('install');
   print "Done.\n";
 }

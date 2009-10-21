@@ -43,20 +43,17 @@ sub run {
   }->();
 
   chdir(script_path) or die "chdir(".script_path."): $!";
-  eval { use CCNQ::Install };
+  eval q{
+    use CCNQ::Install;
+
+    # Execute install.pl
+    use constant install_script => File::Spec->catfile(CCNQ::Install::script_path(),'install.pl');
+
+    chdir(script_path) or die "chdir(".script_path."): $!";
+    exec install_script;
+  };
+
   die $@ if $@;
-
-  # Update the code from the Git repository.
-  use constant _git_pull => [qw( git pull )];
-
-  chdir(CCNQ::Install::SRC) or die "chdir(".CCNQ::Install::SRC."): $!";
-  CCNQ::Install::_execute(@{_git_pull});
-
-  # Execute install.pl
-  use constant install_script => File::Spec->catfile(CCNQ::Install::script_path,'install.pl');
-
-  chdir(script_path) or die "chdir(".script_path."): $!";
-  exec install_script;
 }
 
 run();
