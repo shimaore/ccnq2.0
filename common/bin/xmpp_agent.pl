@@ -40,7 +40,7 @@ sub run {
       };
       $running = 0 if $@ eq CCNQ::Install::xmpp_restart_all;
     }
-    warning(xmpp_restart_all." received (in $function)");
+    warning(CCNQ::Install::xmpp_restart_all." received (in $function)");
     chdir(CCNQ::Install::install_script_dir);
     warning('exec '.self_script);
     exec(self_script,$function);
