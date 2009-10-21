@@ -1,5 +1,5 @@
 use constant runtime_opensips_cfg => '/etc/opensips/opensips.cfg';
-use constant template_opensips_cfg => File::Spec->catfile(CCN::Install::CCN,'opensips.cfg');
+use constant template_opensips_cfg => File::Spec->catfile(CCNQ::Install::CCN,'opensips.cfg');
 use constant proxy_base_lib => File::Spec->catfile(CCNQ::Install::SRC,qw( proxy base lib ));
 
 sub configure_opensips {
