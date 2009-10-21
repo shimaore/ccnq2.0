@@ -15,29 +15,28 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
+use Logger::Syslog;
 
 local $/;
 my $t = <>;
-
-sub _warn { print STDERR join(' ',@_)."\n" }
 
 my @available = ($t =~ m{ \b route \[ ([^\]]+) \] }gsx);
 my %available = map { $_ => 0 } @available;
 $t =~ s{ \b route \( ([^\)]+) \) }{
   exists($available{$1})
     ? ($available{$1}++, "route($1)")
-    : (_warn("Removing unknown route($1)"),"")
+    : (warning("Removing unknown route($1)"),"")
 }gsxe;
 
 my @unused = grep { !$available{$_} } sort keys %available;
-_warn( q(Unused routes: ).join(', ',@unused) ) if @unused;
+warning( q(Unused routes: ).join(', ',@unused) ) if @unused;
 
 my @used = grep { $available{$_} } sort keys %available;
 
 my $route = 0;
 my %route = map { $_ => ++$route } sort @used;
 
-_warn("Found $route routes");
+warning("Found $route routes");
 
 $t =~ s{ \b route \( ([^\)]+) \) \s* ([;\#\)]) }{ "route($route{$1}) $2" }gsxe;
 $t =~ s{ \b route \[ ([^\]]+) \] \s* ([\{\#]) }{ "route[$route{$1}] $2" }gsxe;

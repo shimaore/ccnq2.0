@@ -36,11 +36,11 @@ sub _execute {
       error("Failed to execute ${command}: $!\n");
   }
   elsif ($? & 127) {
-      error("Child command ${command} died with signal %d, %s coredump\n"),
-          ($? & 127),  ($? & 128) ? 'with' : 'without';
+      error(sprintf "Child command ${command} died with signal %d, %s coredump\n",
+          ($? & 127),  ($? & 128) ? 'with' : 'without');
   }
   else {
-      info("Child command ${command} exited with value %d\n", $? >> 8);
+      info(sprintf "Child command ${command} exited with value %d\n", $? >> 8);
   }
   return 0;
 }
@@ -72,10 +72,10 @@ sub get_variable {
   my $result;
   if(-e $file) {
     $result = first_line_of($file);
-    print "Using existing $what $result .\n";
+    info("Using existing ${what} ${result}.");
   } else {
     my $guess = $guess_tool->();
-    print "Found $what $guess, please edit $file if needed.\n";
+    info("Found ${what} ${guess}, please edit ${file} if needed.");
     print_to($file,$guess);
     exit(1);
   }
@@ -151,12 +151,12 @@ sub make_password {
 # Service definitions
 
 use constant roles_to_functions => {
-  'carrier-sbc' => [qw( b2bua/base b2bua/cdr b2bua/carrier-sbc-config node )],
-  'client-sbc'  => [qw( b2bua/base b2bua/cdr b2bua/client-sbc-config node )],
-  'inbound-proxy' => [qw( proxy/inbound-proxy proxy/base node )],
-  'outbound-proxy' => [qw( proxy/outbound-proxy proxy/base node )],
+  'carrier-sbc'     => [qw( b2bua/base b2bua/cdr b2bua/carrier-sbc-config node )],
+  'client-sbc'      => [qw( b2bua/base b2bua/cdr b2bua/client-sbc-config node )],
+  'inbound-proxy'   => [qw( proxy/inbound-proxy proxy/base node )],
+  'outbound-proxy'  => [qw( proxy/outbound-proxy proxy/base node )],
   'complete-transparent-proxy' => [qw( proxy/registrar proxy/mediaproxy proxy/complete-transparent proxy/base node )],
-  'router' => [qw( proxy/registrar proxy/router proxy/base node )],
+  'router'          => [qw( proxy/registrar proxy/router proxy/base node )],
   # ...
 };
 
@@ -214,23 +214,23 @@ use constant actions_file_name => 'actions.pm';
 sub attempt_run {
   my ($function,$action,$params) = @_;
 
-  debug("Attempting ${action} in function ${function}.\n");
+  debug(qq(Attempting "${action}" in function "${function}".));
   my $run_file = File::Spec->catfile(CCNQ::Install::SRC,$function,actions_file_name);
 
-  debug("No such file $run_file, skipping"),
+  debug(qq(No such file "${run_file}", skipping)),
   return unless -e $run_file;
   my $eval = content_of($run_file);
 
   # The script should return a hashref, which keys are the actions and
   # the values are sub().
   my $run = eval($eval);
-  warning("Loading ${run_file} in attempt_run($function,$action,...): $@") if $@;
+  warning(qq(Loading "${run_file}" in attempt_run("$function","$action",...): $@)) if $@;
 
   my $result = undef;
   eval {
     $result = $run->{$action}->($params) if $run->{$action};
   };
-  warning("Executing ${run_file} attempt_run($function,$action,...): $@") if $@;
+  warning(qq(Executing "${run_file}" attempt_run("$function","$action",...): $@)) if $@;
   return $result;
 }
 
