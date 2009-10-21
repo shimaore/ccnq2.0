@@ -1,17 +1,8 @@
-#!/usr/bin/perl
-use strict; use warnings;
-
-use Carp;
+package CCNQ::Install;
 
 # Where the local configuration information is kept.
 use constant CCN => q(/etc/ccn);
 
-# Create the configuration directory.
-use File::Path qw(mkpath);
-die unless mkpath(CCN);
-
-# This code should be in a separate module (CCNQ::Install)
-# but cannot be since we don't even know where to find CCNQ::Install.
 
 sub _execute {
   my $command = join(' ',@_);
@@ -35,6 +26,14 @@ sub first_line_of {
   open(my $fh, '<', $_[0]) or croak "$_[0]: $!";
   my $result = <$fh>;
   chomp($result);
+  close($fh) or croak "$_[0]: $!";
+  return $result;
+}
+
+sub content_of {
+  open(my $fh, '<', $_[0]) or croak "$_[0]: $!";
+  local $/;
+  my $result = <$fh>;
   close($fh) or croak "$_[0]: $!";
   return $result;
 }
@@ -68,8 +67,6 @@ use constant source_path => 'source_path';
 # SRC: where the copy of the original code lies.
 # I create mine in ~/src using:
 #    cd $HOME/src && git clone git://github.com/stephanealnet/ccnq2.0.git
-# use constant HOME => $ENV{HOME};
-# use constant SRC_DEFAULT => HOME.q(/src/ccnq2.0);
 
 # Try to guess the source location from the value of $0.
 sub container_path {
@@ -87,13 +84,4 @@ use constant SRC_DEFAULT => container_path;
 use constant _source_path_file => File::Spec->catfile(CCN,source_path);
 use constant SRC => get_variable(source_path,_source_path_file,SRC_DEFAULT);
 
-use constant _git_pull => [qw( git pull )];
-
-chdir(SRC) or die "chdir(".SRC."): $!";
-_execute(@{_git_pull});
-
-use constant install_script_dir => File::Spec->catfile(SRC,'common','bin');
-use constant install_script => File::Spec->catfile(install_script_dir,'install.pl');
-
-chdir(install_script_dir) or die "chdir(".install_script_dir."): $!";
-exec install_script;
+1;
