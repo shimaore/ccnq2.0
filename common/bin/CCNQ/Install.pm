@@ -33,14 +33,14 @@ sub _execute {
   return 1 if $ret == 0;
   # Happily lifted from perlfunc.
   if ($? == -1) {
-      print STDERR "Failed to execute ${command}: $!\n";
+      error("Failed to execute ${command}: $!\n");
   }
   elsif ($? & 127) {
-      printf STDERR "Child command ${command} died with signal %d, %s coredump\n",
+      error("Child command ${command} died with signal %d, %s coredump\n"),
           ($? & 127),  ($? & 128) ? 'with' : 'without';
   }
   else {
-      printf STDERR "Child command ${command} exited with value %d\n", $? >> 8;
+      info("Child command ${command} exited with value %d\n", $? >> 8);
   }
   return 0;
 }
@@ -224,12 +224,13 @@ sub attempt_run {
   # The script should return a hashref, which keys are the actions and
   # the values are sub().
   my $run = eval($eval);
+  warning("Loading ${run_file} in attempt_run($function,$action,...): $@") if $@;
 
   my $result = undef;
   eval {
     $result = $run->{$action}->($params) if $run->{$action};
   };
-  warning("In ${run_file} ($function,$action,...): $@") if $@;
+  warning("Executing ${run_file} attempt_run($function,$action,...): $@") if $@;
   return $result;
 }
 

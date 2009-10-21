@@ -129,12 +129,11 @@ TXT
 
     # Reconfigure the local system (includes installing the new opensips.cfg file in /etc/opensips)
     info("Reconfiguring the local system");
-    eval { configure_opensips(); }
+    eval { configure_opensips(); };
     info($@) if $@;
 
     # Restart OpenSIPS using the new configuration.
     echo "Restarting OpenSIPS"
     CCNQ::Install::_execute("sudo /etc/init.d/opensips restart");
   },
-
 }

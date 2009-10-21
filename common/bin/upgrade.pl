@@ -17,13 +17,15 @@
 use strict; use warnings;
 use File::Spec;
 
+use Logger::Syslog;
+
 # Where the local configuration information is kept.
 use constant CCN => q(/etc/ccn);
 
 sub run {
   # Create the configuration directory.
   use File::Path qw(mkpath);
-  die unless -d CCN or mkpath(CCN);
+  die "No ".CCN unless -d CCN or mkpath(CCN);
 
   # Source path resolution
 
@@ -42,7 +44,7 @@ sub run {
   }->();
 
   chdir(script_path) or die "chdir(".script_path."): $!";
-  print STDERR "Starting from ".script_path."\n";
+  debug("Starting from ".script_path."\n");
   eval q{
     use CCNQ::Install;
 
@@ -53,7 +55,11 @@ sub run {
     CCNQ::Install::attempt_run('node','install_all');
   };
 
-  die "upgrade.pl: $@" if $@;
+  if($@) {
+    error("upgrade.pl: $@");
+  } else {
+    info("updgrade.pl done.");
+  }
 }
 
 run();
