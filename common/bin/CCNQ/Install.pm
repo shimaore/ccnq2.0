@@ -74,7 +74,7 @@ sub get_variable {
     $result = first_line_of($file);
     print "Using existing $what $result .\n";
   } else {
-    my $guess = $guess_tool();
+    my $guess = $guess_tool->();
     print "Found $what $guess, please edit $file if needed.\n";
     print_to($file,$guess);
     exit(1);
