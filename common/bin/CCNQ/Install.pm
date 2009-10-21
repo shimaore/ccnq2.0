@@ -102,7 +102,7 @@ use constant cookie =>
 # Source path resolution
 
 # Try to guess the source location from the value of $0.
-use contant container_path => sub {
+use constant container_path => sub {
   my $abs_path = File::Spec->rel2abs($0);
   my ($volume,$directories,$file) = File::Spec->splitpath($abs_path);
   my @directories = File::Spec->splitdir($directories);
