@@ -13,6 +13,8 @@ sub configure_opensips {
   use CCNQ::Proxy::Base;
   use CCNQ::Proxy::Config;
 
+  use IO::Scalar;
+
   # Use sensible defaults if no configuration.pm is found.
   eval { require (CCNQ::Install::CCN.'/configuration.pm'); };
   warning($@) if $@;
@@ -47,6 +49,11 @@ sub configure_opensips {
       push @radius_extra, "$name=$var";
   }
   undef @radius_src;
+
+  $configuration::db_login ||= 'opensips';
+  $configuration::db_password ||= 'opensips';
+  $configuration::db_host ||= '127.0.0.1';
+  $configuration::db_name ||= 'opensips';
 
   my %values = (
       PROXY_IP    => $configuration::sip_host || '',
