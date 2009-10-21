@@ -93,8 +93,9 @@ sub do_modify
 sub do_list
 {
     my $self = shift;
-    my ($sql_callback,$output_callback,$params) = @_;
-    my ($sql,$params,$post_process) = $self->list($params);
+    my ($sql_callback,$output_callback,$list_params) = @_;
+
+    my ($sql,$params,$post_process) = $self->list($list_params);
 
     $sql = $sql_callback->($sql);
 
@@ -123,12 +124,12 @@ sub do_query
     {
         my $sql = shift;
 
-        $sql .= " LIMIT $params{_limit}",
+        $sql .= " LIMIT $params->{_limit}",
         $result->{limit} = $params->{_limit}
             if exists $params->{_limit}
             and defined $params->{_limit};
 
-        $sql .= " OFFSET $params{_offset}",
+        $sql .= " OFFSET $params->{_offset}",
         $result->{offset} = $params->{_offset}
             if exists $params->{_offset}
             and defined $params->{_offset};
