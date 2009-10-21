@@ -1,21 +1,23 @@
+use File::Temp;
+
 use constant runtime_opensips_cfg => '/etc/opensips/opensips.cfg';
-use constant template_opensips_cfg => File::Spec->catfile(CCNQ::Install::CCN,'opensips.cfg');
+use constant runtime_opensips_sql => '/etc/opensips/opensips.sql';
+
 use constant proxy_base_lib => File::Spec->catfile(CCNQ::Install::SRC,qw( proxy base lib ));
+use constant opensips_base_lib => File::Spec->catfile(proxy_base_lib,'opensips');
 
 sub configure_opensips {
+  my ($model) = @_;
+
   use lib proxy_base_lib;
   use CCNQ::Proxy::Base;
+  use CCNQ::Proxy::Config;
 
-  require (CCNQ::Install::CCN.'configuration.pm');
+  # Use sensible defaults if no configuration.pm is found.
+  eval { require (CCNQ::Install::CCN.'/configuration.pm'); };
+  warning($@) if $@;
 
-  my $CONFIG   = runtime_opensips_cfg;
-  my $TEMPLATE = template_opensips_cfg;
-
-  rename $CONFIG, "$CONFIG.bak";
-
-  open(my $fh,'<',$TEMPLATE) or die "open $TEMPLATE: $!";
-  open(my $fout,'>',$CONFIG) or die "open $CONFIG: $!";
-
+  # Evaluate the parameters
   my %avps = %{CCNQ::Proxy::Base::avp()};
 
   # -----------------------
@@ -76,16 +78,37 @@ sub configure_opensips {
   my $accounting_pattern   = '#IF_ACCT_'.uc($configuration::accounting);
   my $authenticate_pattern = '#IF_AUTH_'.uc($configuration::authenticate);
 
-  while(<$fh>)
+  # End of parameters
+
+  my $template_text = CCNQ::Proxy::Config::compile_cfg(opensips_base_lib,$model);
+  my $sql_text      = CCNQ::Proxy::Config::compile_sql(opensips_base_lib,$model);
+
+  my $template = new IO::Scalar \$template_text;
+
+  my $cfg_text = '';
+  while(<$template>)
   {
       s/\$\{([A-Z_]+)\}/defined $values{$1} ? $values{$1} : warn "Undefined $1"/eg;
       s/^\s*${accounting_pattern}//;
       s/^\s*${authenticate_pattern}//;
       s/^\s*#IF_USE_NODE_ID// if $configuration::node_id;
       s/^\s*#USE_PROXY_IP\s*// if $configuration::sip_host;
-      print $fout $_;
+      $cfg_text .= $_;
   }
 
+  # Save the configurations to temp files
+  my $cfg_file = new File::Temp;
+  my $sql_file = new File::Temp;
+  print_to($cfg_file,$cfg_text);
+  print_to($sql_file,$sql_text);
+
+  # Move the temp files to their final destinations
+  info("Installing new configuration");
+  CCNQ::Install::_execute('sudo','cp',$cfg_file,runtime_opensips_cfg);
+  CCNQ::Install::_execute('sudo','cp',$sql_file,runtime_opensips_sql);
+
+  # Print out some info on how to use the SQL file.
+  my $runtime_opensips_sql = runtime_opensips_sql;
   info(<<TXT);
 Please run the following commands:
 mysql <<SQL
@@ -95,7 +118,7 @@ mysql <<SQL
   GRANT ALL ON ${configuration::db_name}.* TO ${configuration::db_login};
 SQL
 
-mysql ${configuration::db_name} < ${CCNQ::Install::CCN}/opensips.sql
+mysql ${configuration::db_name} < ${runtime_opensips_sql}
 
 TXT
 
@@ -123,17 +146,13 @@ TXT
     # We install opensips.cfg and opensips.sql into /etc/ccn/
     my $SRC = CCNQ::Install::SRC;
 
-    # Generate a new opensips.cfg and opensips.sql file and push them
-    info("Generating a new opensips.cfg and opensips.sql");
-    CCNQ::Install::_execute("cd ${SRC}/proxy/base/opensips && ./build.sh ${model} ${template_dir}");
-
     # Reconfigure the local system (includes installing the new opensips.cfg file in /etc/opensips)
     info("Reconfiguring the local system");
-    eval { configure_opensips(); };
+    eval { configure_opensips($model); };
     info($@) if $@;
 
     # Restart OpenSIPS using the new configuration.
     info("Restarting OpenSIPS");
-    CCNQ::Install::_execute("sudo /etc/init.d/opensips restart");
+    CCNQ::Install::_execute('sudo','/etc/init.d/opensips','restart');
   },
 }
