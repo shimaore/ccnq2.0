@@ -89,7 +89,7 @@ sub start {
   my $username = CCNQ::Install::host_name;
   my $domain   = CCNQ::Install::domain_name;
   my $resource = $function;
-  my $password = CCNQ::Install::make_password($function,CCNQ::Install::xmpp_tag);
+  my $password = CCNQ::Install::make_password(CCNQ::Install::xmpp_tag);
 
   debug("Attempting XMPP Connection for ${username}\@${domain}/${resource} using password $password.");
 
