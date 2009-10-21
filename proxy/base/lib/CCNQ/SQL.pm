@@ -1,4 +1,4 @@
-package CCNQ::Base::SQL;
+package CCNQ::Proxy::SQL;
 # Copyright (C) 2006, 2007  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
