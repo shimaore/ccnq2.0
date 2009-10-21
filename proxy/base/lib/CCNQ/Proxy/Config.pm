@@ -60,7 +60,7 @@ EOH
       }
     }
   }
-  return clean($result);
+  return clean_cfg($result);
 }
 
 sub compile_sql {
