@@ -89,12 +89,19 @@ sub run {
   # Loops until we are asked to restart ourselves (e.g. after upgrade)
   my $j = AnyEvent->condvar;
 
+  my $username = CCNQ::Install::host_name;
+  my $domain   = CCNQ::Install::domain_name;
+  my $resource = $function;
+  my $password = CCNQ::Install::make_password($function,CCNQ::Install::xmpp_tag);
+
+  debug("Attempting XMPP Connection for ${username}\@${domain}/${resource} using password $password.");
+
   my $con =
      AnyEvent::XMPP::IM::Connection->new (
-        username          => CCNQ::Install::host_name,
-        domain            => CCNQ::Install::domain_name,
-        resource          => $function
-        password          => CCNQ::Install::make_password($function,CCNQ::Install::xmpp_tag),
+        username          => $username,
+        domain            => $domain,
+        resource          => $resource,
+        password          => $password,
         # host              => HOST,
         initial_presence  => -10,
         'debug'           => 1,
