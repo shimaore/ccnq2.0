@@ -20,7 +20,7 @@ package CCNQ::Base;
 #
 use strict; use warnings;
 
-use base qw(CCNQ::Base::SQL);
+use base qw(CCNQ::Proxy::SQL);
 
 =pod
     sub new_precondition($params)
