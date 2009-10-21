@@ -46,12 +46,10 @@ sub run {
   eval q{
     use CCNQ::Install;
 
-    # Update the code from the Git repository.
-    chdir(CCNQ::Install::SRC) or die "chdir(".CCNQ::Install::SRC."): $!";
-    CCNQ::Install::_execute(qw( git pull ));
+    # Upgrade the code
+    CCNQ::Install::attempt_run('node','upgrade');
 
     # Run the installer.
-    chdir(script_path) or die "chdir(".script_path."): $!";
     CCNQ::Install::attempt_run('node','install_all');
   };
 
