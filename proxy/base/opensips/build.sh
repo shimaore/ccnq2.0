@@ -17,7 +17,7 @@
 
 
 base_dir=./src
-output_dir=./output
+output_dir=$2
 
 recipe_name=$1
 recipe=`egrep -v '^#' ${recipe_name}.recipe`

@@ -1,6 +1,7 @@
 {
   install_all => sub {
     CCNQ::Install::attempt_on_roles_and_functions('install');
+    return;
   },
 
   upgrade => sub {
@@ -9,6 +10,7 @@
     CCNQ::Install::_execute(qw( git pull ));
     # Switch back to the directory we normally run from.
     chdir(CCNQ::Install::install_script_dir) or die "chdir(".CCNQ::Install::install_script_dir."): $!";
+    return;
   },
 
   # Used to provide server-wide status information.
