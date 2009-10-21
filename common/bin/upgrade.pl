@@ -43,7 +43,8 @@ sub run {
   }->();
 
   chdir(script_path) or die "chdir(".script_path."): $!";
-  use CCNQ::Install;
+  eval { use CCNQ::Install };
+  die $@ if $@;
 
   # Update the code from the Git repository.
   use constant _git_pull => [qw( git pull )];
