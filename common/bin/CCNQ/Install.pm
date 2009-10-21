@@ -139,7 +139,7 @@ sub catdns {
   return join('.',@_);
 }
 
-use constant fqdn => catdns($host_name,$domain_name);
+use constant fqdn => catdns(host_name,domain_name);
 
 use constant xmpp_tag => 'xmpp-agent';
 
