@@ -47,7 +47,7 @@ sub run {
     use CCNQ::Install;
 
     # Execute install.pl
-    use constant install_script => File::Spec->catfile(CCNQ::Install::script_path(),'install.pl');
+    use constant install_script => File::Spec->catfile(script_path,'install.pl');
 
     chdir(script_path) or die "chdir(".script_path."): $!";
     exec install_script;
