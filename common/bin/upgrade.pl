@@ -52,7 +52,7 @@ sub run {
 
     # Run the installer.
     chdir(script_path) or die "chdir(".script_path."): $!";
-    attempt_run('node','install_all');
+    CCNQ::Install::attempt_run('node','install_all');
   };
 
   die $@ if $@;
