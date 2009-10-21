@@ -235,7 +235,6 @@ sub attempt_run {
 sub attempt_on_roles_and_functions {
   our $action = shift;
   our $params = shift || {};
-  our ($action,$params) = @_;
   resolve_roles_and_functions(sub {
     our ($cluster_name,$role,$function) = @_;
     attempt_run($function,$action,{ %{$params}, cluster_name => $cluster_name, role => $role });
