@@ -43,6 +43,7 @@ sub run {
   }->();
 
   chdir(script_path) or die "chdir(".script_path."): $!";
+  print STDERR "Starting from ".script_path."\n";
   eval q{
     use CCNQ::Install;
 
