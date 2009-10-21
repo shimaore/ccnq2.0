@@ -20,26 +20,10 @@ package configuration;
 #
 use strict; use warnings;
 
-# ---------------------------------------------------------------
-# Rename this file to "configuration.pm" then edit it to reflect
-# your local settings.
-# Run "perl CCNQ/Proxy/bin/configure.pl" to generate opensips.cfg
-# and update the scripts.
-# ---------------------------------------------------------------
-
-# Location of the scripts.
-our $install_dir    = '/var/www';
-
-# Database access, needed for OpenSIPS and website.
-our $db_host        = '127.0.0.1';
-our $db_name        = 'opensips';
-our $db_login       = 'opensips';
-our $db_password    = 'opensips';
-
 # OpenSIPS parameters.
-our $sip_host       = '127.0.0.1';
+our $sip_host       = '127.0.0.1'; # or blank for all local interfaces
 our $sip_port       = '5060';
-our $sip_challenge  = 'CarrierClass.net';
+our $sip_challenge  = 'CarrierClass.net'; # or blank for: use domain
 our $opensips_cfg   = '/etc/opensips/opensips.cfg';
 our $mpath          = '/usr/lib/opensips/modules/';
 our $debug          = 3; # Debug level
@@ -52,12 +36,5 @@ our $node_id        = ''; # Either none (no node-specific routing) or one of the
 
 our $max_hops       = '10'; # Maximum number of hops before rejection (loop prevention)
 our $inv_timer      = 60;
-
-# Website parameters
-our $sitename       = 'CarrierClass.net'; # Used in title, etc.
-our $theme          = ''; # subdirectory where default.css and logo.png are located.
-our $limit          = 500; # Maximum number of rows in a List tab.
-
-our $sip_servers    = '127.0.0.1'; # blank-separated list of OpenSIPS servers
 
 1;

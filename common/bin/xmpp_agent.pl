@@ -23,18 +23,27 @@ use Logger::Syslog;
 use File::Spec;
 use constant self_script => File::Spec->catfile(CCNQ::Install::install_script_dir,'xmpp_agent.pl');
 
+# This start all the proper agents
+# Note: this might not be the best (proper) way to do it, since some
+#       agents may need to be running as specific userids (for e.g. opensips or freeswitch).
+
+# Also: it's not certain that running all of these this way (using a single AnyEvent process)
+#       might actually work.
 sub run {
-  my $running = 1;
-  info('starting');
-  while($running) {
-    eval {
-      CCNQ::XMPPAgent::run();
-    };
-    $running = 0 if $@ eq 'restart';
-    info("restarting, running = $running");
-  }
-  chdir(CCNQ::Install::install_script_dir);
-  warning('exec '.self_script);
-  exec(self_script);
+  resolve_roles_and_functions(sub{
+    my ($cluster_name,$role,$function) = @_;
+    my $running = 1;
+    while($running) {
+      info("(re)starting $function");
+      eval {
+        CCNQ::XMPPAgent::run($function);
+      };
+      $running = 0 if $@ eq CCNQ::Install::xmpp_restart_all;
+    }
+    warning(xmpp_restart_all." received (in $function)");
+    chdir(CCNQ::Install::install_script_dir);
+    warning('exec '.self_script);
+    exec(self_script,$function);
+  });
 }
 run();

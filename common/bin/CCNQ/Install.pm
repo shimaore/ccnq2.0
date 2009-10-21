@@ -144,19 +144,18 @@ use constant xmpp_tag => 'xmpp-agent';
 
 
 sub make_password {
-  my ($text) = @_;
-  return sha1_hex(fqdn.$text.cookie);
+  return sha1_hex(join('',fqdn,cookie,@_);
 }
 
 # Service definitions
 
 use constant roles_to_functions => {
-  'carrier-sbc' => [qw( b2bua/base b2bua/cdr b2bua/carrier-sbc-config )],
-  'client-sbc'  => [qw( b2bua/base b2bua/cdr b2bua/client-sbc-config )],
-  'inbound-proxy' => [qw( proxy/inbound-proxy proxy/base )],
-  'outbound-proxy' => [qw( proxy/outbound-proxy proxy/base )],
-  'complete-transparent-proxy' => [qw( proxy/registrar proxy/mediaproxy proxy/complete-transparent proxy/base )],
-  'router' => [qw( proxy/registrar proxy/router proxy/base )],
+  'carrier-sbc' => [qw( b2bua/base b2bua/cdr b2bua/carrier-sbc-config node )],
+  'client-sbc'  => [qw( b2bua/base b2bua/cdr b2bua/client-sbc-config node )],
+  'inbound-proxy' => [qw( proxy/inbound-proxy proxy/base node )],
+  'outbound-proxy' => [qw( proxy/outbound-proxy proxy/base node )],
+  'complete-transparent-proxy' => [qw( proxy/registrar proxy/mediaproxy proxy/complete-transparent proxy/base node )],
+  'router' => [qw( proxy/registrar proxy/router proxy/base node )],
   # ...
 };
 
@@ -167,8 +166,8 @@ use constant roles_to_functions => {
 #       and gather that information as part of the regular startup
 #       process.
 
-use constant _clusters => '_clusters';
-use constant _roles    => '_roles';
+use constant clusters_tag => 'clusters';
+use constant roles_tag    => 'roles';
 
 use constant _install_file => q(install.pm);
 
@@ -176,25 +175,30 @@ use constant _install_file => q(install.pm);
 
 sub resolve_cluster_names {
   my $cv = AnyEvent->condvar;
-  AnyEvent::DNS::txt catdns(_clusters,$fqdn), $cv;
+  AnyEvent::DNS::txt $fqdn, $cv;
   my @cluster_names = $cv->recv;
   return join(' ',@cluster_names);
 }
 
-use constant clusters_file => tag_to_file(_clusters);
+use constant clusters_file => tag_to_file(clusters_tag);
 
 use constant cluster_names =>
-  [ split(' ',get_variable(_clusters,clusters_file,sub {resolve_cluster_names})) ];
+  [ split(' ',get_variable(clusters_tag,clusters_file,sub {resolve_cluster_names})) ];
 
 # Resolve role(s) and function(s)
+
+sub resolve_roles {
+  my ($cluster_name) = @_;
+  my $cv = AnyEvent->condvar;
+  AnyEvent::DNS::txt catdns($cluster_name,domain_name), $cv;
+  my @roles = $cv->recv;
+  return join(' ',@roles);
+}
 
 sub resolve_roles_and_functions {
   my $cb = shift;
   for my $cluster_name (@{cluster_names}) {
-    my $cv = AnyEvent->condvar;
-    AnyEvent::DNS::txt catdns(_roles,$cluster_name,$domain_name), $cv;
-    my @roles = $cv->recv;
-
+    my @roles = resolve_roles($cluster_name);
     my %functions = ();
     for my $role (@roles) {
       for my $function (@{roles_to_function->{$role}}) {
@@ -236,5 +240,7 @@ sub attempt_on_roles_and_functions {
     attempt_run($function,$action,{ %{$params}, cluster_name => $cluster_name, role => $role });
   });
 }
+
+use constant xmpp_restart_all => 'restart_all';
 
 1;

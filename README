@@ -5,6 +5,9 @@ OpenSIPS            1.5         www.opensips.org
 MediaProxy          
 FreeSwitch          1.4         www.freeswitch.org
 
+Perl AnyEvent
+Perl AnyEvent::XMPP
+
 Pre-built Debian packages for the various components are made available at:
   http://opensource.sotelips.net/
   http://carrierclass.net/

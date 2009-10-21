@@ -26,11 +26,6 @@ use Logger::Syslog;
 
 use JSON;
 
-use constant JID        => CCNQ::Install::host_name;
-use constant PASSWORD   => CCNQ::Install::make_password(CCNQ::Install::xmpp_tag);
-use constant HOST       => CCNQ::Install::domain_name;
-use constant NICK       => CCNQ::Install::fqdn; # Must be unique in the chatroom, if used
-
 sub restart {
   error('restart');
   die 'restart'; # Intercepted by xmpp_agent.pl
@@ -54,12 +49,12 @@ if($muc) {
 sub send_message {
   my ($con,$dest,$content) = @_;
   my $msg = encode_json($content);
-  $immsg = new AnyEvent::XMPP::IM::Message(to => $dest, body => $msg);
+  my $immsg = new AnyEvent::XMPP::IM::Message(to => $dest, body => $msg);
   $immsg->send($con);
 }
 
 sub handle_message {
-  my ($con,$msg) = @_;
+  my ($con,$function,$msg) = @_;
   my $content = decode_json($msg);
   debug("Decoded $content");
   error("Object received is not an hashref") unless ref($content) eq 'HASH';
@@ -67,7 +62,6 @@ sub handle_message {
   # XXX Need transaction and auth handling here.
 
   # Try to process the command.
-  my $function = $content->{function};
   my $action = $content->{action};
   my $result = CCNQ::Install::attempt_run($function,$action,$content);
 
@@ -78,14 +72,18 @@ sub handle_message {
 }
 
 sub run {
+  my $function = shift;
+  
+  debug("Attempting to start XMPPAgent for function $function");
+
   # AnyEvent says:
   # *** The EV module is recommended for even better performance, unless you
   # *** have to use one of the other adaptors (Event, Glib, Tk, etc.).
   # *** The Async::Interrupt module is highly recommended to efficiently avoid
   # *** race conditions in/with other event loops.
 
-  our $disco = new AnyEvent::XMPP::Ext::Disco or restart();
-  our $muc = new AnyEvent::XMPP::Ext::MUC( disco => $disco ) or restart();
+  our $disco  = new AnyEvent::XMPP::Ext::Disco or restart();
+  our $muc    = new AnyEvent::XMPP::Ext::MUC( disco => $disco ) or restart();
   our $pubsub = new AnyEvent::XMPP::Ext::Pubsub() or restart();
 
   # Loops until we are asked to restart ourselves (e.g. after upgrade)
@@ -93,11 +91,13 @@ sub run {
 
   my $con =
      AnyEvent::XMPP::IM::Connection->new (
-        jid               => JID,
-        password          => PASSWORD,
-        host              => HOST,
+        username          => CCNQ::Install::host_name,
+        domain            => CCNQ::Install::domain_name,
+        resource          => $function
+        password          => CCNQ::Install::make_password($function,CCNQ::Install::xmpp_tag),
+        # host              => HOST,
         initial_presence  => -10,
-        debug             => 1
+        'debug'           => 1,
      );
 
   $con->add_extension($disco);
@@ -110,13 +110,13 @@ sub run {
         debug("Connected as " . $con->jid);
         $con->send_presence("present");
         for my $muc_room (@{CCNQ::Install::cluster_names}) {
-          $muc->join_room($con,$muc_room,NICK);
+          $muc->join_room($con,$muc_room);
         }
      },
      message => sub {
         my ($con, $msg) = @_;
         debug("Message from " . $msg->from . ":\n" . $msg->any_body . "\n---\n");
-        handle_message($con,$msg);
+        handle_message($con,$function,$msg);
      },
      error => sub {
         my ($con, $error) = @_;
