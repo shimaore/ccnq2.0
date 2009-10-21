@@ -23,8 +23,7 @@ use constant CCN => q(/etc/ccn);
 sub run {
   # Create the configuration directory.
   use File::Path qw(mkpath);
-  die unless mkpath(CCN);
-  die unless -d CCN;
+  die unless -d CCN or mkpath(CCN);
 
   # Source path resolution
 
