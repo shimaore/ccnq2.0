@@ -113,7 +113,7 @@ sub join_cluster_room {
 }
 
 sub start {
-  our ($cluster_name,$role,$function,$j) = @_;
+  my ($cluster_name,$role,$function,$j) = @_;
 
   debug("Starting XMPPAgent for function $function");
 
@@ -150,7 +150,7 @@ sub start {
   $con->add_extension($muc);
   $con->add_extension($pubsub);
 
-  our $context = {
+  my $context = {
     connection => $con,
     disco      => $disco,
     muc        => $muc,
@@ -185,7 +185,7 @@ sub start {
     # AnyEvent::XMPP::IM::Connection
     session_ready => sub {
       my $con = shift;
-      debug("Connected as " . $con->jid . " in function $function");
+      debug("Connected as " . $con->jid . " in function $context->{function}");
       $con->send_presence("present");
       # my ($user, $host, $res) = split_jid ($con->jid);
       CCNQ::Install::attempt_run($context->{function},'_session_ready',$context);
