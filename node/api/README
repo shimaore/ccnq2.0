@@ -1,0 +1,2 @@
+This implements an HTTP -> XMPP gateway for Request submission.
+The Request is simply submitted to the local manager.

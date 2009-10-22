@@ -73,17 +73,18 @@ role: router
 
 ...
 
-portal
-	roles: portal/base
+role: manager
+	functions: manager
 
-aggregator:
-	roles: billing/aggregator
+role: portal
+	functions: portal/base node/api
+
+role: aggregator
+	functions: billing/aggregator
 	Note: The aggregator requests each function (a b2bua/cdr instance) to prepare (and rotate) its CDRs.
 	      Each function should request a one-time password (used for encryption of the file) from the aggregator.
 	      The function will eventually reply to the request with the location of the CDR file (an HTTP URI).
 
-manager:
-	roles: manager/base
 
 
 Note: 

@@ -15,22 +15,23 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use strict; use warnings;
+
+use AnyEvent::WatchDog autorestart => 1, heartbeat => 30;
+
 use CCNQ::Install;
 use CCNQ::XMPPAgent;
 
 use Logger::Syslog;
 
-use File::Spec;
-use constant self_script => File::Spec->catfile(CCNQ::Install::install_script_dir,'xmpp_agent.pl');
+use constant seconds_before_restarting => 2;
 
 # This start all the proper agents
 # Note: this might not be the best (proper) way to do it, since some
 #       agents may need to be running as specific userids (for e.g. opensips or freeswitch).
 
-# Also: it's not certain that running all of these this way (using a single AnyEvent process)
-#       might actually work.
 sub run {
-  # Loops until we are asked to restart ourselves (e.g. after upgrade)
+  # Loop until we are asked to restart ourselves (e.g. after upgrade)
+  # or until something breaks (e.g. server died).
   my $j = AnyEvent->condvar;
 
   CCNQ::Install::resolve_roles_and_functions(sub{
@@ -40,9 +41,9 @@ sub run {
   });
 
   $j->recv;
-  warning(CCNQ::Install::xmpp_restart_all." received");
-  chdir(CCNQ::Install::install_script_dir);
-  warning('exec '.self_script);
-  exec(self_script);
+  undef $j;
+
+  sleep(seconds_before_restarting);
+  run();
 }
 run();

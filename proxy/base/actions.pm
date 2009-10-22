@@ -55,6 +55,25 @@ sub configure_opensips {
   $configuration::db_host ||= '127.0.0.1';
   $configuration::db_name ||= 'opensips';
 
+=pod
+  # OpenSIPS parameters.
+  our $sip_host       = '127.0.0.1'; # or blank for all local interfaces
+  our $sip_port       = '5060';
+  our $sip_challenge  = 'CarrierClass.net'; # or blank for: use domain
+  our $opensips_cfg   = '/etc/opensips/opensips.cfg';
+  our $mpath          = '/usr/lib/opensips/modules/';
+  our $debug          = 3; # Debug level
+  our $accounting     = 'flatstore'; # either '', 'flatstore' or 'radius'; currently flatstore is always enabled by default
+  our $authenticate   = 'db'; # either 'db' or 'radius'
+  our $radius_config  = '/etc/radiusclient/radiusclient.conf'; # Location of the Radius library config file
+  our $mp_allowed     = 1; # Allow Media Proxy?
+  our $mp_always      = 0; # Set to 1 to force media-proxy on all calls. Make sure you have enough media-proxy servers to handle the load, otherwise calls will be rejected or fail.
+  our $node_id        = ''; # Either none (no node-specific routing) or one of the IPs listed in $sip_servers below.
+
+  our $max_hops       = '10'; # Maximum number of hops before rejection (loop prevention)
+  our $inv_timer      = 60;
+=cut
+
   my %values = (
       PROXY_IP    => $configuration::sip_host || '',
       PROXY_PORT  => $configuration::sip_port || '5060',

@@ -96,7 +96,7 @@ use constant cookie_file => tag_to_file(cookie_tag);
 #       of the system.
 
 use constant cookie =>
-  get_variable(cookie_tag,cookie_file,sub{die "No cookie file ".cookie_file." found"});
+  get_variable(cookie_tag,cookie_file,sub{croak "No cookie file ".cookie_file." found"});
 
 
 # Source path resolution
@@ -140,6 +140,7 @@ sub catdns {
 }
 
 use constant fqdn => catdns(host_name,domain_name);
+use constant manager_cluster_name => 'manager';
 
 use constant xmpp_tag => 'xmpp-agent';
 
@@ -157,6 +158,10 @@ use constant roles_to_functions => {
   'outbound-proxy'  => [qw( proxy/outbound-proxy proxy/base node )],
   'complete-transparent-proxy' => [qw( proxy/registrar proxy/mediaproxy proxy/complete-transparent proxy/base node )],
   'router'          => [qw( proxy/registrar proxy/router proxy/base node )],
+  # ...
+  'portal'          => [qw( portal/base node/api )],
+  'manager'         => [qw( manager )],
+  'aggregator'      => [qw( billing/aggregator node/api )],
   # ...
 };
 
@@ -212,26 +217,33 @@ sub resolve_roles_and_functions {
 use constant actions_file_name => 'actions.pm';
 
 sub attempt_run {
-  my ($function,$action,$params) = @_;
+  my ($function,$action,$params,$context) = @_;
 
   debug(qq(Attempting "${action}" in function "${function}".));
   my $run_file = File::Spec->catfile(CCNQ::Install::SRC,$function,actions_file_name);
 
-  debug(qq(No such file "${run_file}", skipping)),
-  return unless -e $run_file;
+  warning(qq(No such file "${run_file}", skipping)),
+  return { error => 'invalid action' } unless -e $run_file;
   my $eval = content_of($run_file);
 
   # The script should return a hashref, which keys are the actions and
   # the values are sub().
   my $run = eval($eval);
-  warning(qq(Loading "${run_file}" in attempt_run("$function","$action",...): $@)) if $@;
+  warning(qq(Loading "${run_file}" in attempt_run("$function","$action",...): $@)),
+  return { error => 'internal error' } if $@;
 
   my $result = undef;
   eval {
-    $result = $run->{$action}->($params) if $run->{$action};
+    if($run->{$action}) {
+      $result = $run->{$action}->($params,$context);
+    } else {
+      $result = $run->{_default}->($action,$params,$context);
+    }
   };
-  warning(qq(Executing "${run_file}" attempt_run("$function","$action",...): $@)) if $@;
-  return $result;
+  warning(qq(Executing "${run_file}" attempt_run("$function","$action",...): $@)),
+  return { error => 'internal error' } if $@;
+
+  return $result ? { params => $result } : undef;
 }
 
 sub attempt_on_roles_and_functions {
@@ -243,6 +255,7 @@ sub attempt_on_roles_and_functions {
   });
 }
 
-use constant xmpp_restart_all => 'restart_all';
+use constant api_rendezvous_host => '127.0.0.1';
+use constant api_rendezvous_port => 9090;
 
 1;

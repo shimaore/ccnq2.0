@@ -1,0 +1,1 @@
+The manager is an XMPP robot which receives individual Requests and converts them into individual Activities, which are then submitted to the proper XMPP agents (generally via MUC rooms).

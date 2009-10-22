@@ -26,11 +26,6 @@ use Logger::Syslog;
 
 use JSON;
 
-sub restart {
-  error('restart');
-  die 'restart'; # Intercepted by xmpp_agent.pl
-}
-
 =pod
 if($muc) {
   my $room = $muc->get_room ($con, $dest);
@@ -46,33 +41,74 @@ if($muc) {
 }
 =cut
 
-sub send_message {
+use constant handler_timeout => 20;
+
+=pod
+  Message format:
+
+  activity : the activity UUID
+  auth : activity submission authentication token
+  action : action requested
+  params : parameters sent to / from the action
+  error : if present, an error occurred (activity submission failed)
+
+=cut
+
+sub _send_message {
   my ($con,$dest,$content) = @_;
   my $msg = encode_json($content);
   my $immsg = new AnyEvent::XMPP::IM::Message(to => $dest, body => $msg);
   $immsg->send($con);
 }
 
-sub handle_message {
-  my ($con,$function,$msg) = @_;
-  my $content = decode_json($msg);
-  debug("Decoded $content");
-  error("Object received is not an hashref") unless ref($content) eq 'HASH';
+sub authenticate_message {
+  my ($content,$partner) = @_;
+  # XXX Currently a noop
+  return $response->{auth} eq 'authenticated';
+}
 
-  # XXX Need transaction and auth handling here.
+sub authenticate_response {
+  my ($response,$partner) = @_;
+  $response->{auth} = 'authenticated';
+}
+
+sub handle_message {
+  my ($context,$function,$msg) = @_;
+  my $request = decode_json($msg);
+  debug("Decoded $request");
+
+  error("Object received is not an hashref"),
+  return unless defined($request) && ref($request) eq 'HASH';
+
+  error("Message contains no activity UUID"),
+  return unless $request->{activity};
+
+  error("Message authentication failed"),
+  return unless authenticate_message($request,$msg->from);
 
   # Try to process the command.
-  my $action = $content->{action};
-  my $result = CCNQ::Install::attempt_run($function,$action,$content);
+  my $action = $request->{action};
+  error("No action was defined"), return unless defined $request;
 
-  if($result) {
-    # XXX Need transaction and auth handling here.
-    send_message($con,$msg->from,$result);
-  }
+  our $response = {};
+
+  my $w = AnyEvent->timer( after => handler_timeout, cb => sub {
+    undef $w;
+    if($response) {
+      $response->{activity} = $query->{activity};
+      $response->{action} = $query->{action};
+      authenticate_response($response,$msg->from);
+      _send_message($context->{connection},$msg->from,$response);
+    }
+  });
+
+  $response = CCNQ::Install::attempt_run($function,$action,$request->{params},$context);
+  $w->send;
+  return $response;
 }
 
 sub start {
-  my ($function,$j) = @_;
+  our ($function,$j) = @_;
 
   debug("Attempting to start XMPPAgent for function $function");
 
@@ -82,9 +118,9 @@ sub start {
   # *** The Async::Interrupt module is highly recommended to efficiently avoid
   # *** race conditions in/with other event loops.
 
-  our $disco  = new AnyEvent::XMPP::Ext::Disco or restart();
-  our $muc    = new AnyEvent::XMPP::Ext::MUC( disco => $disco ) or restart();
-  our $pubsub = new AnyEvent::XMPP::Ext::Pubsub() or restart();
+  our $disco  = new AnyEvent::XMPP::Ext::Disco or return;
+  our $muc    = new AnyEvent::XMPP::Ext::MUC( disco => $disco ) or return;
+  our $pubsub = new AnyEvent::XMPP::Ext::Pubsub() or return;
 
   my $username = CCNQ::Install::host_name;
   my $domain   = CCNQ::Install::domain_name;
@@ -108,19 +144,25 @@ sub start {
   $con->add_extension($muc);
   $con->add_extension($pubsub);
 
+  our $context = {
+    connection => $con,
+    muc        => $muc,
+    username   => $username,
+    domain     => $domain,
+    resource   => $resource,
+  };
+
   $con->reg_cb (
      session_ready => sub {
         our ($con) = @_;
         debug("Connected as " . $con->jid);
         $con->send_presence("present");
-        for my $muc_room (@{CCNQ::Install::cluster_names}) {
-          $muc->join_room($con,$muc_room);
-        }
+        CCNQ::Install::attempt_run($function,'_session_ready',$context);
      },
      message => sub {
         my ($con, $msg) = @_;
         debug("Message from " . $msg->from . ":\n" . $msg->any_body . "\n---\n");
-        handle_message($con,$function,$msg);
+        handle_message($context,$function,$msg);
      },
      error => sub {
         my ($con, $error) = @_;
@@ -129,7 +171,7 @@ sub start {
      disconnect => sub {
         my ($con, $h, $p, $reason) = @_;
         error("Disconnected from $h:$p: $reason\n");
-        $j->broadcast;
+        $j->send;
      },
 
      # MUC-specific
@@ -144,7 +186,7 @@ sub start {
      join_error => sub {
        my ($con,$room,$error) = @_;
        error("Error: " . $error->string . "\n");
-       $j->broadcast;
+       $j->send;
      },
      presence => sub {
        my ($con,$room,$user) = @_;
