@@ -65,6 +65,8 @@
   # Response to requests
   _default => sub {
     use AnyEvent::CouchDB;
+    use CCNQ::Manager;
+
     my ($action,$response) = @_;
 
     debug("Trying to locate action=$action activity=$response->{activity}");
