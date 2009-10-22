@@ -48,7 +48,7 @@
     for my $muc_room (@{CCNQ::Install::cluster_names()}) {
       my $muc_jid = ${muc_room}.'@conference.'.CCNQ::Install::domain_name;
       info("Attempting to join $muc_jid");
-      $context->{muc}->join_room($context->{connection},$muc_jid,undef,{
+      $context->{muc}->join_room($context->{connection},$muc_jid,rand(),{
         history => {seconds=>3600},
         create_instant => 1,
       });
