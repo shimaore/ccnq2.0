@@ -186,7 +186,7 @@ sub start {
     # AnyEvent::XMPP::IM::Connection
     session_ready => sub {
       my $con = shift;
-      debug("Connected as " . $con->jid);
+      debug("Connected as " . $con->jid . " in function $function");
       $con->send_presence("present");
       CCNQ::Install::attempt_run($function,'_session_ready',$context);
     },
