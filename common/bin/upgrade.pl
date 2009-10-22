@@ -58,7 +58,7 @@ sub run {
   if($@) {
     error("upgrade.pl: $@");
   } else {
-    info("updgrade.pl done.");
+    info("upgrade.pl done.");
   }
 }
 
