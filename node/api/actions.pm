@@ -22,8 +22,10 @@
     our ($context) = @_;
 
     our $muc_room = CCNQ::Install::manager_cluster_jid;
-    # This should have been done by 'node':
-    $context->{muc}->join_room($context->{connection},$muc_room);
+    $context->{muc}->join_room($context->{connection},$muc_room,rand(),{
+      history => {seconds=>0},
+      create_instant => 1,
+    });
 
     my $host = CCNQ::Install::api_rendezvous_host;
     my $port = CCNQ::Install::api_rendezvous_port;
