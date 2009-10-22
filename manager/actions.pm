@@ -21,7 +21,7 @@
 
     my ($request,$context) = @_;
 
-    my $db = $couchdb(CCNQ::Manager::manager_db);
+    my $db = couchdb(CCNQ::Manager::manager_db);
 
     # Log the request.
     $db->save_doc($request)->recv;
@@ -50,7 +50,7 @@
   _default => sub {
     my ($action,$response) = @_;
 
-    my $db = $couchdb(CCNQ::Manager::manager_db);
+    my $db = couchdb(CCNQ::Manager::manager_db);
 
     my $activity = $db->open_doc($response->{activity})->recv;
     if($activity) {
