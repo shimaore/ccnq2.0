@@ -24,7 +24,7 @@
   },
 
   # Send requests out
-  'request' => sub {
+  request => sub {
     use AnyEvent::CouchDB;
     use CCNQ::Manager;
 
@@ -59,6 +59,11 @@
       $db->save_doc($request);
     });
 
+    return;
+  },
+
+  _session_ready => sub {
+    debug("Manager _session_ready");
     return;
   },
 

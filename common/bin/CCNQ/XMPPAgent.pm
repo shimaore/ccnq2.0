@@ -237,7 +237,7 @@ sub start {
     },
   );
 
-  info("Trying to connect...\n");
+  info("Trying to connect...");
   $con->connect ();
 }
 
