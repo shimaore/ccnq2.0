@@ -41,7 +41,7 @@
 
         CCNQ::XMPPAgent::authenticate_response($response,$muc_room);
 
-        my $room = $muc->get_room ($context->{connection}, $muc_room);
+        my $room = $context->{muc}->get_room ($context->{connection}, $muc_room);
         if($room) {
           my $msg = encode_json($response);
           $immsg = $room->make_message(body => $msg);
