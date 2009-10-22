@@ -149,7 +149,7 @@ sub make_muc_jid {
 }
 
 # XXX This assumes the "manager" cluster is called "manager".
-use constant manager_cluster_jic => make_muc_jid('manager');
+use constant manager_cluster_jid => make_muc_jid('manager');
 
 use constant xmpp_tag => 'xmpp-agent';
 
