@@ -14,6 +14,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 {
+  install => sub {
+    use AnyEvent::CouchDB;
+    use CCNQ::Manager;
+    my $db = couchdb(CCNQ::Manager::manager_db);
+    $db->create();
+    return;
+  },
+
   # Send requests out
   request => sub {
     use AnyEvent::CouchDB;
@@ -68,6 +76,6 @@
     } else {
       error("Activity $response->{activity} does not exist!");
     }
-    return { _no_response => 1 };
+    return;
   },
 }

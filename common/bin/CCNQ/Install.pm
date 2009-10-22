@@ -236,8 +236,10 @@ sub attempt_run {
   eval {
     if($run->{$action}) {
       $result = $run->{$action}->($params,$context);
-    } else {
+    } elsif($run->{_default}) {
       $result = $run->{_default}->($action,$params,$context);
+    } else {
+      error("attempt_run: No action available for $function $action");
     }
   };
   warning(qq(Executing "${run_file}" attempt_run("$function","$action",...): $@)),
