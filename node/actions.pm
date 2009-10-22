@@ -46,8 +46,9 @@
   _session_ready => sub {
     my ($context) = @_;
     for my $muc_room (@{CCNQ::Install::cluster_names()}) {
-      info("Attempting to join $muc_room");
-      $context->{muc}->join_room($context->{connection},$muc_room,undef,{
+      my $muc_jid = ${muc_room}.'@conference.'.CCNQ::Install::domain_name;
+      info("Attempting to join $muc_jid");
+      $context->{muc}->join_room($context->{connection},$muc_jid,undef,{
         history => {seconds=>3600},
         create_instant => 1,
       });
