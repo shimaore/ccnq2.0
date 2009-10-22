@@ -61,8 +61,8 @@ sub authenticate_response {
 }
 
 sub handle_message {
-  my ($context,$function,$msg) = @_;
-  my $request = decode_json($msg->any_body);
+  our ($context,$function,$msg) = @_;
+  our $request = decode_json($msg->any_body);
 
   error("Object received is not an hashref"),
   return unless defined($request) && ref($request) eq 'HASH';
