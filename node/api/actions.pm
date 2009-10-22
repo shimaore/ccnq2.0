@@ -34,6 +34,14 @@
     );
 
     $context->{httpd}->reg_cb(
+      'request' => sub {
+        debug("node/api: Got web request");
+      },
+
+      '' => sub {
+        debug("node/api: Junking web request");
+      },
+
       '/request' => sub {
         my ($httpd, $req) = @_;
 
