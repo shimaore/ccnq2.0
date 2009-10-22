@@ -45,9 +45,9 @@
 
   _session_ready => sub {
     my ($context) = @_;
-    for my $muc_room (@{CCNQ::Install::cluster_names}) {
+    for my $muc_room (@{CCNQ::Install::cluster_names()}) {
       info("Attempting to join $muc_room");
-      $context->{muc}->join_room($con,$muc_room);
+      $context->{muc}->join_room($context->{connection},$muc_room);
     }
     return { ok => 1 };
   }

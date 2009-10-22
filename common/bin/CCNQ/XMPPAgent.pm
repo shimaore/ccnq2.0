@@ -26,21 +26,6 @@ use Logger::Syslog;
 
 use JSON;
 
-=pod
-if($muc) {
-  my $room = $muc->get_room ($con, $dest);
-  if($room) {
-    $immsg = $room->make_message(body => $input);
-    $immsg->send();
-  } else {
-    warn("Not joined yet");
-  }
-} else {
-  $immsg = new AnyEvent::XMPP::IM::Message(to => $dest, body => $input);
-  $immsg->send($con);
-}
-=cut
-
 use constant handler_timeout => 20;
 
 =pod
