@@ -63,7 +63,6 @@ sub authenticate_response {
 sub handle_message {
   my ($context,$function,$msg) = @_;
   my $request = decode_json($msg->any_body);
-  debug("Decoded $request");
 
   error("Object received is not an hashref"),
   return unless defined($request) && ref($request) eq 'HASH';
@@ -244,8 +243,8 @@ sub start {
     message => sub {
       my $muc = shift;
       my ($room,$msg,$is_echo) = @_;
-      debug("Message from " . $msg->from . ":\n" . $msg->any_body . "\n---\n");
-      my ($user, $host, $res) = split_jid ($msg->to);
+      debug("MUC " . $room->jid . " Message from " . $msg->from . ":\n" . $msg->any_body . "\n---\n");
+      # my ($user, $host, $res) = split_jid ($msg->to);
       handle_message($context,$function,$msg);
     },
   );
