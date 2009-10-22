@@ -21,6 +21,7 @@ use AnyEvent::XMPP::IM::Connection;
 use AnyEvent::XMPP::Ext::Disco;
 use AnyEvent::XMPP::Ext::MUC;
 use AnyEvent::XMPP::Ext::Pubsub;
+use AnyEvent::XMPP::Util qw/split_jid/;
 
 use Logger::Syslog;
 
@@ -132,8 +133,9 @@ sub start {
     },
     message => sub {
       my $muc = shift;
-      my ($msg) = @_;
+      my ($room,$msg,$is_echo) = @_;
       debug("Message from " . $msg->from . ":\n" . $msg->any_body . "\n---\n");
+      my ($user, $host, $res) = split_jid ($msg->to);
       handle_message($context,$function,$msg);
     },
   );
@@ -143,7 +145,6 @@ sub start {
   my $username = CCNQ::Install::host_name;
   my $domain   = CCNQ::Install::domain_name;
   my $resource = $function;
-  $resource =~ s/\//_/g;
   my $password = CCNQ::Install::make_password(CCNQ::Install::xmpp_tag);
 
   debug("Attempting XMPP Connection for ${username}\@${domain}/${resource} using password $password.");
@@ -195,7 +196,8 @@ sub start {
       my $con = shift;
       debug("Connected as " . $con->jid . " in function $function");
       $con->send_presence("present");
-      CCNQ::Install::attempt_run($function,'_session_ready',$context);
+      my ($user, $host, $res) = split_jid ($msg->to);
+      CCNQ::Install::attempt_run($res,'_session_ready',$context);
     },
     session_error => sub {
       my $con = shift;
