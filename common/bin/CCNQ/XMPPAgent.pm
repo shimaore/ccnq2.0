@@ -106,7 +106,7 @@ sub start {
   our $disco  = new AnyEvent::XMPP::Ext::Disco or return;
   our $muc    = new AnyEvent::XMPP::Ext::MUC( disco => $disco ) or return;
 
-  $muc->reg_cb {
+  $muc->reg_cb (
     # AnyEvent::XMPP::Ext::MUC
     enter => sub {
       my $muc = shift;
@@ -139,7 +139,7 @@ sub start {
       my ($room,$user) = @_;
       debug($user->nick . " left $room");
     },
-  }
+  );
 
   our $pubsub = new AnyEvent::XMPP::Ext::Pubsub() or return;
 
