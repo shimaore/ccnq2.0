@@ -106,7 +106,7 @@ sub join_cluster_room {
   my ($context) = @_;
   my $muc_jid = CCNQ::Install::make_muc_jid($context->{cluster});
   info("Attempting to join $muc_jid as $context->{function}");
-  $context->{muc}->join_room($context->{connection},$muc_jid,rand(),{
+  $context->{muc}->join_room($context->{connection},$muc_jid,$context->{function}.rand(),{
     history => {seconds=>3600},
     create_instant => 1,
   });

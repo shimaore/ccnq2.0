@@ -22,7 +22,7 @@
     our ($context) = @_;
 
     our $muc_room = CCNQ::Install::manager_cluster_jid;
-    $context->{muc}->join_room($context->{connection},$muc_room,rand(),{
+    $context->{muc}->join_room($context->{connection},$muc_room,$context->{function}.rand(),{
       history => {seconds=>0},
       create_instant => 1,
     });
