@@ -160,6 +160,7 @@ use constant roles_to_functions => {
   'router'          => [qw( proxy/registrar proxy/router proxy/base node )],
   # ...
   'portal'          => [qw( portal/base node/api node )],
+  'api'             => [qw( node/api )],
   'manager'         => [qw( manager node )],
   'aggregator'      => [qw( billing/aggregator node/api node )],
   # ...
