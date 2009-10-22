@@ -121,7 +121,7 @@ sub start {
         resource          => $resource,
         password          => $password,
         # host              => HOST,
-        initial_presence  => -10,
+        initial_presence  => 10,
         'debug'           => 1,
      );
 
@@ -138,59 +138,91 @@ sub start {
   };
 
   $con->reg_cb (
-     session_ready => sub {
-        our ($con) = @_;
-        debug("Connected as " . $con->jid);
-        $con->send_presence("present");
-        CCNQ::Install::attempt_run($function,'_session_ready',$context);
-     },
-     message => sub {
-        my ($con, $msg) = @_;
-        debug("Message from " . $msg->from . ":\n" . $msg->any_body . "\n---\n");
-        handle_message($context,$function,$msg);
-     },
-     error => sub {
-        my ($con, $error) = @_;
-        error("Error: " . $error->string . "\n");
-     },
-     disconnect => sub {
-        my ($con, $h, $p, $reason) = @_;
-        error("Disconnected from $h:$p: $reason\n");
-        $j->send;
-     },
 
-     # MUC-specific
-     enter => sub {
-        my ($con,$room,$user) = @_;
-        debug($user->nick . " (me) joined $room\n");
-     },
-     leave => sub {
-        my ($con,$room,$user) = @_;
-        debug($user->nick . " (me) left $room\n");
-     },
-     join_error => sub {
-       my ($con,$room,$error) = @_;
-       error("Error: " . $error->string . "\n");
-       $j->send;
-     },
-     presence => sub {
-       my ($con,$room,$user) = @_;
-       debug("presence");
-     },
-     join => sub {
-        my ($con,$room,$user) = @_;
-        debug($user->nick . " joined $room\n");
-     },
-     part => sub {
-       my ($con,$room,$user) = @_;
-       debug($user->nick . " left $room\n");
-     },
+    # AnyEvent::XMPP::Connection
+    error => sub {
+      my $con = shift;
+      my ($error) = @_;
+      error("xmpp error: " . $error->string);
+    },
+    connect => sub {
+      my $con = shift;
+      my ($host,$port) = @_;
+      debug("connected to ${host}:${port}");
+    },
+    disconnect => sub {
+      my $con = shift;
+      my ($host,$port,$message) = @_;
+      debug("disconnected from ${host}:${port}: ${message}");
+    },
 
-     # PubSub-specific
-     pubsub_recv => sub {
-       my ($con) = @_;
-       debug("pubsub_recv");
-     },
+    # AnyEvent::XMPP::IM::Connection
+    session_ready => sub {
+      my $con = shift;
+      debug("Connected as " . $con->jid);
+      $con->send_presence("present");
+      CCNQ::Install::attempt_run($function,'_session_ready',$context);
+    },
+    session_error => sub {
+      my $con = shift;
+      my ($error) = @_;
+      error("session_error");
+      $j->send;       
+    },
+    presence_update => sub {
+      my $con = shift;
+      my ($roster, $contact, $old_presence, $new_presence)= @_;
+      debug('presence_update');
+    },
+    presence_error => sub {
+      my $con = shift;
+      my ($error) = @_;
+      error("presence_error: " . $error->string);
+    }
+    message => sub {
+      my $con = shift; # Might be $room if the message is a MUC message.
+      my ($msg) = @_;
+      debug("Message from " . $msg->from . ":\n" . $msg->any_body . "\n---\n");
+      handle_message($context,$function,$msg);
+    },
+    message_error => sub {
+      my $con = shift;
+      my ($error) = @_;
+      error("message_error: " . $error->string);
+    },
+
+    # AnyEvent::XMPP::Ext::MUC
+    enter => sub {
+      my ($con,$room,$user) = @_;
+      debug($user->nick . " (me) joined $room");
+    },
+    leave => sub {
+      my ($con,$room,$user) = @_;
+      debug($user->nick . " (me) left $room");
+    },
+    join_error => sub {
+      my ($con,$room,$error) = @_;
+      error("Error: " . $error->string);
+      $j->send;
+    },
+    presence => sub {
+      my ($con,$room,$user) = @_;
+      debug("presence");
+    },
+    join => sub {
+      my ($con,$room,$user) = @_;
+      debug($user->nick . " joined $room");
+    },
+    part => sub {
+      my ($con,$room,$user) = @_;
+      debug($user->nick . " left $room");
+    },
+
+    # PubSub-specific
+    pubsub_recv => sub {
+      my ($con) = @_;
+      debug("pubsub_recv");
+    },
   );
 
   info("Trying to connect...\n");
