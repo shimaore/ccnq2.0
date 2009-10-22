@@ -99,7 +99,7 @@ sub handle_message {
 sub start {
   our ($function,$j) = @_;
 
-  debug("Attempting to start XMPPAgent for function $function");
+  debug("Starting XMPPAgent for function $function");
 
   # AnyEvent says:
   # *** The EV module is recommended for even better performance, unless you
@@ -107,17 +107,17 @@ sub start {
   # *** The Async::Interrupt module is highly recommended to efficiently avoid
   # *** race conditions in/with other event loops.
 
-  our $disco  = new AnyEvent::XMPP::Ext::Disco or return;
-  our $muc    = new AnyEvent::XMPP::Ext::MUC( disco => $disco ) or return;
+  my $disco  = new AnyEvent::XMPP::Ext::Disco or return;
+  my $muc    = new AnyEvent::XMPP::Ext::MUC( disco => $disco ) or return;
 
-  our $pubsub = new AnyEvent::XMPP::Ext::Pubsub() or return;
+  my $pubsub = new AnyEvent::XMPP::Ext::Pubsub() or return;
 
   my $username = CCNQ::Install::host_name;
   my $domain   = CCNQ::Install::domain_name;
   my $resource = $function;
   my $password = CCNQ::Install::make_password(CCNQ::Install::xmpp_tag);
 
-  debug("Attempting XMPP Connection for ${username}\@${domain}/${resource} using password $password.");
+  debug("Creating XMPP Connection for ${username}\@${domain}/${resource} using password $password.");
 
   my $con =
      AnyEvent::XMPP::IM::Connection->new (
@@ -136,7 +136,9 @@ sub start {
 
   our $context = {
     connection => $con,
+    disco      => $disco,
     muc        => $muc,
+    pubsub     => $pubsub,
     username   => $username,
     domain     => $domain,
     resource   => $resource,

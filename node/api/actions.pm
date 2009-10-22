@@ -63,6 +63,7 @@
 
       },
     );
+    $context->{httpd}->connect();
     return { ok => 1 };
   },
 
