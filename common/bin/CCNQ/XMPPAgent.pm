@@ -178,7 +178,7 @@ sub start {
       my $con = shift;
       my ($error) = @_;
       error("presence_error: " . $error->string);
-    }
+    },
     message => sub {
       my $con = shift; # Might be $room if the message is a MUC message.
       my ($msg) = @_;
