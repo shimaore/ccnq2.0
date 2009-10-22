@@ -52,7 +52,7 @@ sub _send_message {
 sub authenticate_message {
   my ($content,$partner) = @_;
   # XXX Currently a noop
-  return $response->{auth} eq 'authenticated';
+  return $content->{auth} eq 'authenticated';
 }
 
 sub authenticate_response {
@@ -80,11 +80,12 @@ sub handle_message {
 
   our $response = {};
 
-  my $w = AnyEvent->timer( after => handler_timeout, cb => sub {
+  my $w;
+  $w = AnyEvent->timer( after => handler_timeout, cb => sub {
     undef $w;
     if($response) {
-      $response->{activity} = $query->{activity};
-      $response->{action} = $query->{action};
+      $response->{activity} = $request->{activity};
+      $response->{action} = $request->{action};
       authenticate_response($response,$msg->from);
       _send_message($context->{connection},$msg->from,$response);
     }
@@ -108,39 +109,6 @@ sub start {
 
   our $disco  = new AnyEvent::XMPP::Ext::Disco or return;
   our $muc    = new AnyEvent::XMPP::Ext::MUC( disco => $disco ) or return;
-
-  $muc->reg_cb (
-    # AnyEvent::XMPP::Ext::MUC
-    # Can't register enter and join_error because join_room() already does
-    # (and breaks if we try to).
-    leave => sub {
-      my $muc = shift;
-      my ($room,$user) = @_;
-      debug($user->nick . " (me) left ".$room->jid);
-    },
-    presence => sub {
-      my $muc = shift;
-      my ($room,$user) = @_;
-      debug("presence");
-    },
-    join => sub {
-      my $muc = shift;
-      my ($room,$user) = @_;
-      debug($user->nick . " joined ".$room->jid);
-    },
-    part => sub {
-      my $muc = shift;
-      my ($room,$user) = @_;
-      debug($user->nick . " left ".$room->jid);
-    },
-    message => sub {
-      my $muc = shift;
-      my ($room,$msg,$is_echo) = @_;
-      debug("Message from " . $msg->from . ":\n" . $msg->any_body . "\n---\n");
-      my ($user, $host, $res) = split_jid ($msg->to);
-      handle_message($context,$function,$msg);
-    },
-  );
 
   our $pubsub = new AnyEvent::XMPP::Ext::Pubsub() or return;
 
@@ -233,6 +201,39 @@ sub start {
     pubsub_recv => sub {
       my ($con) = @_;
       debug("pubsub_recv");
+    },
+  );
+
+  $muc->reg_cb (
+    # AnyEvent::XMPP::Ext::MUC
+    # Can't register enter and join_error because join_room() already does
+    # (and breaks if we try to).
+    leave => sub {
+      my $muc = shift;
+      my ($room,$user) = @_;
+      debug($user->nick . " (me) left ".$room->jid);
+    },
+    presence => sub {
+      my $muc = shift;
+      my ($room,$user) = @_;
+      debug("presence");
+    },
+    join => sub {
+      my $muc = shift;
+      my ($room,$user) = @_;
+      debug($user->nick . " joined ".$room->jid);
+    },
+    part => sub {
+      my $muc = shift;
+      my ($room,$user) = @_;
+      debug($user->nick . " left ".$room->jid);
+    },
+    message => sub {
+      my $muc = shift;
+      my ($room,$msg,$is_echo) = @_;
+      debug("Message from " . $msg->from . ":\n" . $msg->any_body . "\n---\n");
+      my ($user, $host, $res) = split_jid ($msg->to);
+      handle_message($context,$function,$msg);
     },
   );
 
