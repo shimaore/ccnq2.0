@@ -35,25 +35,26 @@
     my $db = couchdb(CCNQ::Manager::manager_db);
 
     # Log the request.
-    $db->save_doc($request)->recv;
+    $db->save_doc($request)->cb(sub{
+      # We use CouchDB's ID as the Request ID.
+      $request->{request} = $request->{_id};
 
-    # We use CouchDB's ID as the Request ID.
-    $request->{request} = $request->{_id};
+      # Now split the request into independent activities
+      for my $activity (CCNQ::Manager::activities_for_request($request)) {
+        $activity->{_parent} = $request->{request};
+        $db->save_doc($activity)->cb(sub{
+          # We use CouchDB's ID as the Activity ID.
+          $activity->{activity} = $activity->{_id};
 
-    # Now split the request into independent activities
-    for my $activity (CCNQ::Manager::activities_for_request($request)) {
-      $activity->{_parent} = $request->{request};
-      $db->save_doc($activity)->recv;
+          # Submit the activity to the proper recipient.
+          CCNQ::Manager::submit_activity($context,$activity);
+          $db->save_doc($activity);
+        });
+      }
 
-      # We use CouchDB's ID as the Activity ID.
-      $activity->{activity} = $activity->{_id};
+      $db->save_doc($request);
+    });
 
-      # Submit the activity to the proper recipient.
-      CCNQ::Manager::submit_activity($context,$activity);
-      $db->save_doc($activity)->recv;
-    }
-
-    $db->save_doc($request)->recv;
     return;
   },
 
@@ -63,22 +64,24 @@
 
     my $db = couchdb(CCNQ::Manager::manager_db);
 
-    my $activity = $db->open_doc($response->{activity})->recv;
-    if($activity) {
-      $activity->{response} = $response->{params};
-      warning("Activity $response->{activity} response action $response->{action} does not match requested action $activity->{action}")
-        if $response->{action} ne $activity->{action};
+    $db->open_doc($response->{activity})->cb(sub{
+      my ($activity) = @_;
+      if($activity) {
+        $activity->{response} = $response->{params};
+        warning("Activity $response->{activity} response action $response->{action} does not match requested action $activity->{action}")
+          if $response->{action} ne $activity->{action};
 
-      if($response->{error}) {
-        warning("Activity $response->{activity} failed with error $response->{error}");
-        $activity->{status} = 'error';
+        if($response->{error}) {
+          warning("Activity $response->{activity} failed with error $response->{error}");
+          $activity->{status} = 'error';
+        } else {
+          $activity->{status} = 'completed';
+        }
+        $db->save_doc($activity)->recv;
       } else {
-        $activity->{status} = 'completed';
+        error("Activity $response->{activity} does not exist!");
       }
-      $db->save_doc($activity)->recv;
-    } else {
-      error("Activity $response->{activity} does not exist!");
-    }
+    });
     return;
   },
 }
