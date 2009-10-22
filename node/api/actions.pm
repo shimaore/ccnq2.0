@@ -24,15 +24,19 @@
     # This should have been done by 'node':
     # $context->{muc}->join_room($context->{connection},$muc_room);
 
+    my $host = CCNQ::Install::api_rendezvous_host;
+    my $port = CCNQ::Install::api_rendezvous_port;
+    info("node/api: Starting web API on ${host}:${port}");
     my $httpd = AnyEvent::HTTPD->new (
-      host => api_rendezvous_host,
-      port => api_rendezvous_port,
+      host => $host,
+      port => $port,
     );
 
     $httpd->reg_cb(
       '/request' => sub {
         my ($httpd, $req) = @_;
 
+        debug("node/api: Processing web request");
         my $response = {
           activity => 1, # initial activity, meaning: new request
           action => 'request',
@@ -43,11 +47,13 @@
 
         my $room = $context->{muc}->get_room ($context->{connection}, $muc_room);
         if($room) {
+          debug("node/api: Forwarding request");
           my $msg = encode_json($response);
           my $immsg = $room->make_message(body => $msg);
           $immsg->send();
           return $req->respond([200,'OK']);
         } else {
+          debug("node/api: Not joined yet");
           return $req->respond([500,'Not joined yet']);
         }
 
