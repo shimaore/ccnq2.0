@@ -59,7 +59,7 @@
         if $response->{action} ne $activity->{action};
 
       if($response->{error}) {
-        warning("Activity $response->{activity} failed with error $response->{error}")
+        warning("Activity $response->{activity} failed with error $response->{error}");
         $activity->{status} = 'error';
       } else {
         $activity->{status} = 'completed';
