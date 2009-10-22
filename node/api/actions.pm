@@ -16,6 +16,7 @@
 {
   _session_ready => sub {
     use JSON;
+    use AnyEvent;
     use AnyEvent::HTTPD;
 
     our ($context) = @_;
@@ -35,7 +36,6 @@
     $context->{httpd}->reg_cb(
       '/request' => sub {
         my ($httpd, $req) = @_;
-        $httpd->recv;
 
         debug("node/api: Processing web request");
         my $response = {
@@ -63,7 +63,6 @@
 
       },
     );
-    $context->{httpd}->connect();
     return { ok => 1 };
   },
 

@@ -43,6 +43,7 @@ sub run {
     error($@) if $@;
   });
 
+  info("xmpp_agent.pl started");
   $j->recv;
   undef $j;
 
