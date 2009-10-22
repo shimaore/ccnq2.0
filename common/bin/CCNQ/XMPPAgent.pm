@@ -93,12 +93,12 @@ sub handle_message {
   $w = AnyEvent->timer( after => handler_timeout, cb => sub {
     undef $w;
     info("function $function action $action Timed Out");
-    process_reponse();
+    process_response();
   });
 
   $response = CCNQ::Install::attempt_run($function,$action,$request->{params},$context);
   undef $w;
-  process_reponse();
+  process_response();
   return $response;
 }
 
