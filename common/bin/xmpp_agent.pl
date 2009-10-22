@@ -30,6 +30,7 @@ use constant seconds_before_restarting => 2;
 #       agents may need to be running as specific userids (for e.g. opensips or freeswitch).
 
 sub run {
+  info("xmpp_agent.pl starting");
   # Loop until we are asked to restart ourselves (e.g. after upgrade)
   # or until something breaks (e.g. server died).
   my $j = AnyEvent->condvar;

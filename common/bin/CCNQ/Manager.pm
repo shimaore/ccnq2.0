@@ -4,7 +4,7 @@ use CCNQ::Install;
 use File::Spec;
 
 use constant manager_db => 'manager';
-use consatnt manager_requests_dir => File::Spec->catfile(CCNQ::Install::SRC,qw( manager requests ));
+use constant manager_requests_dir => File::Spec->catfile(CCNQ::Install::SRC,qw( manager requests ));
 
 sub request_to_activity {
   my ($request_type) = @_;
