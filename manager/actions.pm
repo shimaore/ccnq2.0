@@ -30,7 +30,9 @@
 
     my ($request,$context) = @_;
 
-    debug("Manager handling request $request");
+    error("No request!"), return unless $request;
+
+    debug("Manager handling request");
 
     my $db = couchdb(CCNQ::Manager::manager_db);
 
