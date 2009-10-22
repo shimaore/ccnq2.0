@@ -44,7 +44,7 @@
         my $room = $context->{muc}->get_room ($context->{connection}, $muc_room);
         if($room) {
           my $msg = encode_json($response);
-          $immsg = $room->make_message(body => $msg);
+          my $immsg = $room->make_message(body => $msg);
           $immsg->send();
           return $req->respond([200,'OK']);
         } else {
