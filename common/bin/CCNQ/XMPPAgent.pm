@@ -79,19 +79,26 @@ sub handle_message {
 
   our $response = {};
 
-  my $w;
-  $w = AnyEvent->timer( after => handler_timeout, cb => sub {
-    undef $w;
+  sub process_response {
     if($response) {
       $response->{activity} = $request->{activity};
       $response->{action} = $request->{action};
       authenticate_response($response,$msg->from);
       _send_message($context->{connection},$msg->from,$response);
+      $response = undef;
     }
+  }
+
+  my $w;
+  $w = AnyEvent->timer( after => handler_timeout, cb => sub {
+    undef $w;
+    info("function $function action $action Timed Out");
+    process_reponse();
   });
 
   $response = CCNQ::Install::attempt_run($function,$action,$request->{params},$context);
-  $w->send;
+  undef $w;
+  process_reponse();
   return $response;
 }
 
@@ -180,7 +187,6 @@ sub start {
       my $con = shift;
       debug("Connected as " . $con->jid . " in function $function");
       $con->send_presence("present");
-      join_cluster_room($context);
       # my ($user, $host, $res) = split_jid ($con->jid);
       CCNQ::Install::attempt_run($context->{function},'_session_ready',$context);
     },
