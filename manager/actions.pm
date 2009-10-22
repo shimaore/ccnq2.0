@@ -17,6 +17,7 @@
   install => sub {
     use AnyEvent::CouchDB;
     use CCNQ::Manager;
+    info("Creating CouchDB database ".CCNQ::Manager::manager_db);
     my $db = couchdb(CCNQ::Manager::manager_db);
     $db->create();
     return;
@@ -28,6 +29,8 @@
     use CCNQ::Manager;
 
     my ($request,$context) = @_;
+
+    debug("Manager handling request $request");
 
     my $db = couchdb(CCNQ::Manager::manager_db);
 
