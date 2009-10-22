@@ -62,7 +62,7 @@ sub authenticate_response {
 
 sub handle_message {
   my ($context,$function,$msg) = @_;
-  my $request = decode_json($msg);
+  my $request = decode_json($msg->any_body);
   debug("Decoded $request");
 
   error("Object received is not an hashref"),
