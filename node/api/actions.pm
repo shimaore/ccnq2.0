@@ -13,11 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use JSON;
-use AnyEvent::HTTPD;
-
 {
-  _session_ready => {
+  _session_ready => sub {
+    use JSON;
+    use AnyEvent::HTTPD;
 
     our ($context) = @_;
 
