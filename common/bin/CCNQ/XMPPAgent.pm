@@ -178,7 +178,7 @@ sub start {
     presence_update => sub {
       my $con = shift;
       my ($roster, $contact, $old_presence, $new_presence)= @_;
-      debug('presence_update');
+      debug('presence_update '.$contact->jid);
     },
     presence_error => sub {
       my $con = shift;
