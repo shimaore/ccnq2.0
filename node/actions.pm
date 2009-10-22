@@ -47,7 +47,10 @@
     my ($context) = @_;
     for my $muc_room (@{CCNQ::Install::cluster_names()}) {
       info("Attempting to join $muc_room");
-      $context->{muc}->join_room($context->{connection},$muc_room);
+      $context->{muc}->join_room($context->{connection},$muc_room,undef,{
+        history => {seconds=>3600},
+        create_instant => 1,
+      });
     }
     return { ok => 1 };
   }
