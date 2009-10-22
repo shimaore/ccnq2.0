@@ -14,6 +14,8 @@ package CCNQ::XMPPAgent;
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use strict; use warnings;
+
 use CCNQ::Install;
 
 use AnyEvent;
@@ -196,7 +198,7 @@ sub start {
       my $con = shift;
       debug("Connected as " . $con->jid . " in function $function");
       $con->send_presence("present");
-      my ($user, $host, $res) = split_jid ($msg->to);
+      my ($user, $host, $res) = split_jid ($con->jid);
       CCNQ::Install::attempt_run($res,'_session_ready',$context);
     },
     session_error => sub {
