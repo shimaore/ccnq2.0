@@ -24,7 +24,7 @@
   },
 
   # Send requests out
-  request => sub {
+  'request' => sub {
     use AnyEvent::CouchDB;
     use CCNQ::Manager;
 
@@ -36,8 +36,7 @@
 
     # Log the request.
     $db->save_doc($request)->cb(sub{
-      my ($cv) = @_;
-      $cv->recv;
+      $_[0]->recv;
 
       # We use CouchDB's ID as the Request ID.
       $request->{request} = $request->{_id};
@@ -46,8 +45,7 @@
       for my $activity (CCNQ::Manager::activities_for_request($request)) {
         $activity->{_parent} = $request->{request};
         $db->save_doc($activity)->cb(sub{
-          my ($cv) = @_;
-          $cv->recv;
+          $_[0]->recv;
 
           # We use CouchDB's ID as the Activity ID.
           $activity->{activity} = $activity->{_id};
@@ -66,13 +64,16 @@
 
   # Response to requests
   _default => sub {
+    use AnyEvent::CouchDB;
     my ($action,$response) = @_;
+
+    debug("Trying to locate action=$action activity=$response->{activity}");
+    # return if $response->{activity} eq 'node/api'; # Not a real response.
 
     my $db = couchdb(CCNQ::Manager::manager_db);
 
     $db->open_doc($response->{activity})->cb(sub{
-      my ($cv) = @_;
-      my $activity = $cv->recv;
+      my $activity = $_[0]->recv;
       if($activity) {
         $activity->{response} = $response->{params};
         warning("Activity $response->{activity} response action $response->{action} does not match requested action $activity->{action}")
@@ -84,7 +85,7 @@
         } else {
           $activity->{status} = 'completed';
         }
-        $db->save_doc($activity)->recv;
+        $db->save_doc($activity);
       } else {
         error("Activity $response->{activity} does not exist!");
       }

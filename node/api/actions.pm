@@ -35,10 +35,11 @@
     $httpd->reg_cb(
       '/request' => sub {
         my ($httpd, $req) = @_;
+        $httpd->recv;
 
         debug("node/api: Processing web request");
         my $response = {
-          activity => 1, # initial activity, meaning: new request
+          activity => 'node/api',
           action => 'request',
           params => $req->vars,
         };
