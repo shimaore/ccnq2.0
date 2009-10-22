@@ -36,6 +36,9 @@
 
     # Log the request.
     $db->save_doc($request)->cb(sub{
+      my ($cv) = @_;
+      $cv->recv;
+
       # We use CouchDB's ID as the Request ID.
       $request->{request} = $request->{_id};
 
@@ -43,6 +46,9 @@
       for my $activity (CCNQ::Manager::activities_for_request($request)) {
         $activity->{_parent} = $request->{request};
         $db->save_doc($activity)->cb(sub{
+          my ($cv) = @_;
+          $cv->recv;
+
           # We use CouchDB's ID as the Activity ID.
           $activity->{activity} = $activity->{_id};
 
@@ -65,7 +71,8 @@
     my $db = couchdb(CCNQ::Manager::manager_db);
 
     $db->open_doc($response->{activity})->cb(sub{
-      my ($activity) = @_;
+      my ($cv) = @_;
+      my $activity = $cv->recv;
       if($activity) {
         $activity->{response} = $response->{params};
         warning("Activity $response->{activity} response action $response->{action} does not match requested action $activity->{action}")
