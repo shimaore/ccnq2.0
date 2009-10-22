@@ -13,6 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+our $httpd = undef;
+
 {
   _session_ready => sub {
     use JSON;
@@ -27,7 +29,7 @@
     my $host = CCNQ::Install::api_rendezvous_host;
     my $port = CCNQ::Install::api_rendezvous_port;
     info("node/api: Starting web API on ${host}:${port}");
-    my $httpd = AnyEvent::HTTPD->new (
+    $httpd = AnyEvent::HTTPD->new (
       host => $host,
       port => $port,
     );
