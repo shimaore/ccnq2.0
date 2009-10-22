@@ -34,12 +34,10 @@
     );
 
     $context->{httpd}->reg_cb(
-      'request' => sub {
-        debug("node/api: Got web request");
-      },
-
       '' => sub {
+        my ($httpd, $req) = @_;
         debug("node/api: Junking web request");
+        return $req->respond([404,'Not found']);
       },
 
       '/request' => sub {
