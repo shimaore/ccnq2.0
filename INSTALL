@@ -1,0 +1,43 @@
+
+These instructions are for Debian/Lenny.
+
+
+Here I am assuming you use sudo to gain root access.
+(The program does too.)
+
+* On all servers, install the program:
+
+sudo aptitude install libjson-perl libnet-libidn-perl libauthen-sasl-perl libxml-writer-perl libwww-perl libyaml-perl libexpat-dev liblogger-syslog-perl libio-stringy-perl git-core libnet-ssleay-perl build-essential
+sudo cpan EV
+sudo cpan AnyEvent::XMPP
+sudo cpan AnyEvent::Watchdog
+
+sudo aptitude install git-core
+mkdir -p ~/src && (cd ~/src && git clone git://github.com/stephanealnet/ccnq2.0.git)
+
+
+* On the API server:
+sudo cpan AnyEvent::HTTPD
+
+* On the manager server:
+  CouchDB 0.9.x or above is required
+sudo cpan AnyEvent::CouchDB
+
+* On the proxy servers:
+  Install OpenSIPS
+sudo aptitude install mysql-server
+# Also I do:
+sudo aptitude --purge remove portmap
+sudo aptitude install postfix
+
+  Part of the syslog information (during upgrade.pl) are to run some MySQL commands to initialize the database.	
+
+* On the SBC servers:
+  Install FreeSwitch
+
+
+
+sudo $HOME/src/ccnq2.0/common/bin/upgrade.pl
+
+Monitor syslog during the execution of the scripts.
+

@@ -159,9 +159,9 @@ use constant roles_to_functions => {
   'complete-transparent-proxy' => [qw( proxy/registrar proxy/mediaproxy proxy/complete-transparent proxy/base node )],
   'router'          => [qw( proxy/registrar proxy/router proxy/base node )],
   # ...
-  'portal'          => [qw( portal/base node/api )],
-  'manager'         => [qw( manager )],
-  'aggregator'      => [qw( billing/aggregator node/api )],
+  'portal'          => [qw( portal/base node/api node )],
+  'manager'         => [qw( manager node )],
+  'aggregator'      => [qw( billing/aggregator node/api node )],
   # ...
 };
 

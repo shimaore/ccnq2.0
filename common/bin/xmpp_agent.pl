@@ -16,7 +16,7 @@
 
 use strict; use warnings;
 
-use AnyEvent::WatchDog autorestart => 1, heartbeat => 30;
+use AnyEvent::Watchdog autorestart => 1, heartbeat => 30;
 
 use CCNQ::Install;
 use CCNQ::XMPPAgent;

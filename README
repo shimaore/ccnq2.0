@@ -13,16 +13,6 @@ Pre-built Debian packages for the various components are made available at:
   http://carrierclass.net/
 
 
-aptitude install   libnet-libidn-perl libauthen-sasl-perl libxml-writer-perl libwww-perl libyaml-perl libexpat-dev liblogger-syslog-perl libio-stringy-perl git-core libnet-ssleay-perl build-essential
-cpan EV
-cpan AnyEvent::XMPP
-cpan AnyEvent::Watchdog
-cpan AnyEvent::HTTPD
-cpan AnyEvent::CouchDB (on the manager; CouchDB 0.9.x is required on the same server)
-(libxml-parser-expat-perl libobject-event-perl )
-
-
-
 This work is supported by Sotel Systems LLC, http://www.sotelsystems.com
 who provide servers and network infrastructure for the development environment,
 and provide financial support for the main developper.
