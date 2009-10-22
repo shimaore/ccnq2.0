@@ -63,8 +63,10 @@
   },
 
   _session_ready => sub {
+    my ($context) = @_;
+    use CCNQ::XMPPAgent;
     debug("Manager _session_ready");
-    return;
+    CCNQ::XMPPAgent::join_cluster_room($context);
   },
 
   # Response to requests

@@ -96,8 +96,8 @@ sub handle_message {
 }
 
 sub join_cluster_room {
-  my ($context,$cluster_name) = @_;
-  my $muc_jid = CCNQ::Install::make_muc_jid($cluster_name);
+  my ($context) = @_;
+  my $muc_jid = CCNQ::Install::make_muc_jid($context->{cluster});
   info("Attempting to join $muc_jid");
   $context->{muc}->join_room($context->{connection},$muc_jid,rand(),{
     history => {seconds=>3600},
@@ -151,6 +151,9 @@ sub start {
     username   => $username,
     domain     => $domain,
     resource   => $resource,
+    cluster    => $cluster_name,
+    role       => $role,
+    function   => $function,
   };
 
   $con->reg_cb (
@@ -177,9 +180,9 @@ sub start {
       my $con = shift;
       debug("Connected as " . $con->jid . " in function $function");
       $con->send_presence("present");
-      join_cluster_room($context,$cluster_name);
-      my ($user, $host, $res) = split_jid ($con->jid);
-      CCNQ::Install::attempt_run($res,'_session_ready',$context);
+      join_cluster_room($context);
+      # my ($user, $host, $res) = split_jid ($con->jid);
+      CCNQ::Install::attempt_run($context->{function},'_session_ready',$context);
     },
     session_error => sub {
       my $con = shift;
@@ -201,7 +204,7 @@ sub start {
       my $con = shift;
       my ($msg) = @_;
       debug("Message from " . $msg->from . ":\n" . $msg->any_body . "\n---\n");
-      handle_message($context,$function,$msg);
+      handle_message($context,$context->{function},$msg);
     },
     message_error => sub {
       my $con = shift;
@@ -245,7 +248,7 @@ sub start {
       my ($room,$msg,$is_echo) = @_;
       debug("MUC " . $room->jid . " Message from " . $msg->from . ":\n" . $msg->any_body . "\n---\n");
       # my ($user, $host, $res) = split_jid ($msg->to);
-      handle_message($context,$function,$msg);
+      handle_message($context,$context->{function},$msg);
     },
   );
 
