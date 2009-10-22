@@ -39,7 +39,7 @@ sub run {
 
   CCNQ::Install::resolve_roles_and_functions(sub{
     my ($cluster_name,$role,$function) = @_;
-    eval { CCNQ::XMPPAgent::start($function,$j); };
+    eval { CCNQ::XMPPAgent::start($cluster_name,$role,$function,$j); };
     error($@) if $@;
   });
 

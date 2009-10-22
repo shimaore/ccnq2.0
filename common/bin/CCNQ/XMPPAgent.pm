@@ -96,8 +96,18 @@ sub handle_message {
   return $response;
 }
 
+sub join_cluster_room {
+  my ($context,$cluster_name) = @_;
+  my $muc_jid = CCNQ::Install::make_muc_jid($cluster_name);
+  info("Attempting to join $muc_jid");
+  $context->{muc}->join_room($context->{connection},$muc_jid,rand(),{
+    history => {seconds=>3600},
+    create_instant => 1,
+  });
+}
+
 sub start {
-  our ($function,$j) = @_;
+  our ($cluster_name,$role,$function,$j) = @_;
 
   debug("Starting XMPPAgent for function $function");
 
@@ -168,6 +178,7 @@ sub start {
       my $con = shift;
       debug("Connected as " . $con->jid . " in function $function");
       $con->send_presence("present");
+      join_cluster_room($context,$cluster_name);
       my ($user, $host, $res) = split_jid ($con->jid);
       CCNQ::Install::attempt_run($res,'_session_ready',$context);
     },
