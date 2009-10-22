@@ -46,9 +46,7 @@
   _session_ready => sub {
     my ($context) = @_;
     for my $muc_room (@{CCNQ::Install::cluster_names()}) {
-      # XXX This assumes default ejabberd mod_muc configuration and needs
-      #     to be documented / modified.
-      my $muc_jid = ${muc_room}.'@conference.'.CCNQ::Install::domain_name;
+      my $muc_jid = CCNQ::Install::make_muc_jid(${muc_room});
       info("Attempting to join $muc_jid");
       $context->{muc}->join_room($context->{connection},$muc_jid,rand(),{
         history => {seconds=>3600},

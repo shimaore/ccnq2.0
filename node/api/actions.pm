@@ -23,7 +23,7 @@
 
     our $muc_room = CCNQ::Install::manager_cluster_name;
     # This should have been done by 'node':
-    $context->{muc}->join_room($context->{connection},$muc_room);
+    # $context->{muc}->join_room($context->{connection},$muc_room);
 
     my $host = CCNQ::Install::api_rendezvous_host;
     my $port = CCNQ::Install::api_rendezvous_port;
@@ -53,6 +53,7 @@
 
         CCNQ::XMPPAgent::authenticate_response($response,$muc_room);
 
+        debug("node/api: Contacting $muc_room");
         my $room = $context->{muc}->get_room ($context->{connection}, $muc_room);
         if($room) {
           debug("node/api: Forwarding request");

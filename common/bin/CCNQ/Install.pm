@@ -140,7 +140,14 @@ sub catdns {
 }
 
 use constant fqdn => catdns(host_name,domain_name);
-use constant manager_cluster_name => 'manager';
+
+# XXX This assumes default ejabberd mod_muc configuration and needs
+#     to be documented / modified.
+sub make_muc_jid {
+  my $cluster_name = shift;
+  return $cluster_name.'@conference.'.domain_name;
+}
+use constant manager_cluster_name => make_muc_jid('manager');
 
 use constant xmpp_tag => 'xmpp-agent';
 
