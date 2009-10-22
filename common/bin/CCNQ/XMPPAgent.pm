@@ -130,6 +130,12 @@ sub start {
       my ($room,$user) = @_;
       debug($user->nick . " left ".$room->jid);
     },
+    message => sub {
+      my $muc = shift;
+      my ($msg) = @_;
+      debug("Message from " . $msg->from . ":\n" . $msg->any_body . "\n---\n");
+      handle_message($context,$function,$msg);
+    },
   );
 
   our $pubsub = new AnyEvent::XMPP::Ext::Pubsub() or return;
@@ -137,6 +143,7 @@ sub start {
   my $username = CCNQ::Install::host_name;
   my $domain   = CCNQ::Install::domain_name;
   my $resource = $function;
+  $resource =~ s/\//_/g;
   my $password = CCNQ::Install::make_password(CCNQ::Install::xmpp_tag);
 
   debug("Attempting XMPP Connection for ${username}\@${domain}/${resource} using password $password.");
@@ -207,7 +214,7 @@ sub start {
       error("presence_error: " . $error->string);
     },
     message => sub {
-      my $con = shift; # Might be $room if the message is a MUC message.
+      my $con = shift;
       my ($msg) = @_;
       debug("Message from " . $msg->from . ":\n" . $msg->any_body . "\n---\n");
       handle_message($context,$function,$msg);
