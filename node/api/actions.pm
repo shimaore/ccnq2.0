@@ -39,7 +39,7 @@
           params => $req->vars,
         };
 
-        CCNQ::XMPPAgent::authenticate_response($response,$recipient);
+        CCNQ::XMPPAgent::authenticate_response($response,$muc_room);
 
         my $room = $muc->get_room ($context->{connection}, $muc_room);
         if($room) {
