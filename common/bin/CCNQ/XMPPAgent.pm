@@ -108,21 +108,12 @@ sub start {
 
   $muc->reg_cb (
     # AnyEvent::XMPP::Ext::MUC
-    enter => sub {
-      my $muc = shift;
-      my ($room,$user) = @_;
-      debug($user->nick . " (me) joined ".$room->jid);
-    },
+    # Can't register enter and join_error because join_room() already does
+    # (and breaks if we try to).
     leave => sub {
       my $muc = shift;
       my ($room,$user) = @_;
       debug($user->nick . " (me) left ".$room->jid);
-    },
-    join_error => sub {
-      my $muc = shift;
-      my ($room,$error) = @_;
-      error("Error: " . $error->string);
-      $j->send;
     },
     presence => sub {
       my $muc = shift;

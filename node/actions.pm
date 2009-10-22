@@ -50,10 +50,10 @@
       #     to be documented / modified.
       my $muc_jid = ${muc_room}.'@conference.'.CCNQ::Install::domain_name;
       info("Attempting to join $muc_jid");
-      debug($context->{muc}->join_room($context->{connection},$muc_jid,rand(),{
+      $context->{muc}->join_room($context->{connection},$muc_jid,rand(),{
         history => {seconds=>3600},
         create_instant => 1,
-      }));
+      });
     }
     return { ok => 1 };
   }
