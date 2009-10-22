@@ -105,6 +105,42 @@ sub start {
 
   our $disco  = new AnyEvent::XMPP::Ext::Disco or return;
   our $muc    = new AnyEvent::XMPP::Ext::MUC( disco => $disco ) or return;
+
+  $muc->reg_cb {
+    # AnyEvent::XMPP::Ext::MUC
+    enter => sub {
+      my $muc = shift;
+      my ($room,$user) = @_;
+      debug($user->nick . " (me) joined $room");
+    },
+    leave => sub {
+      my $muc = shift;
+      my ($room,$user) = @_;
+      debug($user->nick . " (me) left $room");
+    },
+    join_error => sub {
+      my $muc = shift;
+      my ($room,$error) = @_;
+      error("Error: " . $error->string);
+      $j->send;
+    },
+    presence => sub {
+      my $muc = shift;
+      my ($room,$user) = @_;
+      debug("presence");
+    },
+    join => sub {
+      my $muc = shift;
+      my ($room,$user) = @_;
+      debug($user->nick . " joined $room");
+    },
+    part => sub {
+      my $muc = shift;
+      my ($room,$user) = @_;
+      debug($user->nick . " left $room");
+    },
+  }
+
   our $pubsub = new AnyEvent::XMPP::Ext::Pubsub() or return;
 
   my $username = CCNQ::Install::host_name;
@@ -167,7 +203,7 @@ sub start {
       my $con = shift;
       my ($error) = @_;
       error("session_error");
-      $j->send;       
+      $j->send;
     },
     presence_update => sub {
       my $con = shift;
@@ -189,33 +225,6 @@ sub start {
       my $con = shift;
       my ($error) = @_;
       error("message_error: " . $error->string);
-    },
-
-    # AnyEvent::XMPP::Ext::MUC
-    enter => sub {
-      my ($con,$room,$user) = @_;
-      debug($user->nick . " (me) joined $room");
-    },
-    leave => sub {
-      my ($con,$room,$user) = @_;
-      debug($user->nick . " (me) left $room");
-    },
-    join_error => sub {
-      my ($con,$room,$error) = @_;
-      error("Error: " . $error->string);
-      $j->send;
-    },
-    presence => sub {
-      my ($con,$room,$user) = @_;
-      debug("presence");
-    },
-    join => sub {
-      my ($con,$room,$user) = @_;
-      debug($user->nick . " joined $room");
-    },
-    part => sub {
-      my ($con,$room,$user) = @_;
-      debug($user->nick . " left $room");
     },
 
     # PubSub-specific
