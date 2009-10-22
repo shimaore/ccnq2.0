@@ -37,7 +37,8 @@
       '' => sub {
         my ($httpd, $req) = @_;
         debug("node/api: Junking web request");
-        return $req->respond([404,'Not found']);
+        $req->respond([404,'Not found']);
+        $httpd->stop_request;
       },
 
       '/request' => sub {
@@ -58,15 +59,18 @@
           my $msg = encode_json($response);
           my $immsg = $room->make_message(body => $msg);
           $immsg->send();
-          return $req->respond([200,'OK']);
+          $req->respond([200,'OK']);
         } else {
           debug("node/api: Not joined yet");
-          return $req->respond([500,'Not joined yet']);
+          $req->respond([500,'Not joined yet']);
         }
-
+        $httpd->stop_request;
       },
       '/node' => sub {
-
+        my ($httpd, $req) = @_;
+        debug("node/api: Junking web request");
+        $req->respond([404,'Not found']);
+        $httpd->stop_request;
       },
     );
     return { ok => 1 };
