@@ -77,12 +77,13 @@
     my ($action,$response) = @_;
 
     debug("Trying to locate action=$action activity=$response->{activity}");
-    # return if $response->{activity} eq 'node/api'; # Not a real response.
+    return if $response->{activity} eq 'node/api'; # Not a real response.
 
     my $db = couchdb(CCNQ::Manager::manager_db);
 
     $db->open_doc($response->{activity})->cb(sub{
       my $activity = $_[0]->recv;
+      debug("Found activity");
       if($activity) {
         $activity->{response} = $response->{params};
         warning("Activity $response->{activity} response action $response->{action} does not match requested action $activity->{action}")
