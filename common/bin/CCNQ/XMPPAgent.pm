@@ -111,12 +111,12 @@ sub start {
     enter => sub {
       my $muc = shift;
       my ($room,$user) = @_;
-      debug($user->nick . " (me) joined $room");
+      debug($user->nick . " (me) joined ".$room->jid);
     },
     leave => sub {
       my $muc = shift;
       my ($room,$user) = @_;
-      debug($user->nick . " (me) left $room");
+      debug($user->nick . " (me) left ".$room->jid);
     },
     join_error => sub {
       my $muc = shift;
@@ -132,12 +132,12 @@ sub start {
     join => sub {
       my $muc = shift;
       my ($room,$user) = @_;
-      debug($user->nick . " joined $room");
+      debug($user->nick . " joined ".$room->jid);
     },
     part => sub {
       my $muc = shift;
       my ($room,$user) = @_;
-      debug($user->nick . " left $room");
+      debug($user->nick . " left ".$room->jid);
     },
   );
 
