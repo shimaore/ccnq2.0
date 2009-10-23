@@ -2,6 +2,8 @@ package CCNQ::Manager;
 
 use CCNQ::Install;
 use File::Spec;
+use JSON;
+use Logger::Syslog;
 
 use constant manager_db => 'manager';
 use constant manager_requests_dir => File::Spec->catfile(CCNQ::Install::SRC,qw( manager requests ));
