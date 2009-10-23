@@ -47,12 +47,18 @@ sub run {
   debug("Starting from ".script_path."\n");
   eval q{
     use CCNQ::Install;
+    use AnyEvent;
+
+    my $j = AnyEvent->condvar;
 
     # Upgrade the code
     CCNQ::Install::attempt_run('node','upgrade');
 
     # Run the installer.
     CCNQ::Install::attempt_run('node','install_all');
+
+    $j->send;
+    $j->recv;
   };
 
   if($@) {
