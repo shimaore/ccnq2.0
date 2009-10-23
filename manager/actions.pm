@@ -19,10 +19,12 @@
     use CCNQ::Manager;
     info("Creating CouchDB database ".CCNQ::Manager::manager_db);
     my $db = couchdb(CCNQ::Manager::manager_db);
-    $db->create()->cb(sub{
+    my $cv = $db->create();
+    $cv->cb(sub{
       $_[0]->recv;
       info("Done");
-    })->send;
+    });
+    $cv->send;
     return;
   },
 
