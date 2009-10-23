@@ -23,6 +23,7 @@
       $_[0]->recv;
       info("Done");
     });
+    $db->send;
     return;
   },
 
