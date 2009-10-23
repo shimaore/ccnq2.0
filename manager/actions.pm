@@ -28,7 +28,7 @@
     use AnyEvent::CouchDB;
     use CCNQ::Manager;
 
-    our ($request,$context) = @_;
+    my ($request,$context) = @_;
 
     error("No request!"), return unless $request;
 
@@ -50,8 +50,8 @@
       for my $activity (CCNQ::Manager::activities_for_request($request)) {
         debug("Creating new activity");
         $activity->{_parent} = $request->{request};
-        my $cv = $db->save_doc($activity);
-        $cv->cb(sub{
+        my $cv2 = $db->save_doc($activity);
+        $cv2->cb(sub{
           $_[0]->recv;
 
           # We use CouchDB's ID as the Activity ID.
@@ -61,7 +61,7 @@
           CCNQ::Manager::submit_activity($context,$activity);
           $db->save_doc($activity)->send;
         });
-        $cv->send;
+        $cv2->send;
       }
 
       $db->save_doc($request)->send;
