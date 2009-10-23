@@ -28,7 +28,7 @@
     use AnyEvent::CouchDB;
     use CCNQ::Manager;
 
-    my ($request,$context) = @_;
+    our ($request,$context) = @_;
 
     error("No request!"), return unless $request;
 
