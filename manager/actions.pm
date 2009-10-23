@@ -40,11 +40,14 @@
     $db->save_doc($request)->cb(sub{
       $_[0]->recv;
 
+      debug("Saved request with ID=$request->{_id}.");
+
       # We use CouchDB's ID as the Request ID.
       $request->{request} = $request->{_id};
 
       # Now split the request into independent activities
       for my $activity (CCNQ::Manager::activities_for_request($request)) {
+        debug("Creating new activity");
         $activity->{_parent} = $request->{request};
         $db->save_doc($activity)->cb(sub{
           $_[0]->recv;

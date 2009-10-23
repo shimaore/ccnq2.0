@@ -14,6 +14,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 {
+  request => sub {
+    # Silently ignore.
+  },
+
   _session_ready => sub {
     use JSON;
     use AnyEvent;
