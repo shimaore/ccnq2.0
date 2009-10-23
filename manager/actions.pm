@@ -22,8 +22,7 @@
     $db->create()->cb(sub{
       $_[0]->recv;
       info("Done");
-    });
-    $db->send;
+    })->send;
     return;
   },
 
