@@ -50,7 +50,7 @@
         my $response = {
           activity => 'node/api',
           action => 'request',
-          params => $req->vars,
+          params => {$req->vars},
         };
 
         CCNQ::XMPPAgent::authenticate_response($response,$muc_room);
