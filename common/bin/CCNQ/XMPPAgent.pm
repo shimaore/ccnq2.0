@@ -48,7 +48,7 @@ use constant handler_timeout => 20;
 sub _send_muc_message {
   my ($context,$dest,$subject,$body) = @_;
 
-  my $room = $muc->get_room ($context->{connection}, $dest);
+  my $room = $context->{muc}->get_room ($context->{connection}, $dest);
   if($room) {
     authenticate_response($subject);
     my $json_subject = encode_json($subject);
@@ -58,7 +58,7 @@ sub _send_muc_message {
     $subject->{submitted} = time;
     return ['ok'];
   } else {
-    warning("$activity->{cluster_name}: Not joined yet");
+    warning("$dest: Not joined yet");
     return ['error','Not joined yet'];
   }
 }
@@ -89,9 +89,9 @@ sub submit_activity {
 
   # Forward the activity to the proper MUC
   if($subject->{cluster_name}) {
-    return _send_muc_message($context,$subject->{cluster_name},$subject,$body);
+    return _send_muc_message($context,$subject->{cluster_name},$subject,$activity);
   } elsif($subject->{node_name}) {
-    return _send_im_message($context,$subject->{node_name},$subject,$body);
+    return _send_im_message($context,$subject->{node_name},$subject,$activity);
   }
   return ['error','No destination specified'];
 }
@@ -120,22 +120,21 @@ sub handle_message {
   return unless defined($request_subject) && ref($request_subject) eq 'HASH';
 
   error("Message contains no activity UUID"),
-  return unless $request->{activity};
+  return unless $request_subject->{activity};
+
+  error("Message contains no action"),
+  return unless $request_subject->{action};
 
   error("Message authentication failed"),
-  return unless authenticate_message($request,$msg->from);
+  return unless authenticate_message($request_subject,$msg->from);
 
   # Try to process the command.
-  my $action = $request->{action};
-  error("No action was defined"), return unless defined $action;
+  my $action = $request_subject->{action};
 
   my $process_response = sub {
     my $response = shift;
     if($response) {
-      my $subject = {
-        activity => $request->{activity},
-        action   => $request->{action},
-      };
+      my $subject = { map { $_=>$request_subject->{$_} } qw(activity action) };
       _send_im_message($context->{connection},$msg->from,$subject,$response);
     }
   };
