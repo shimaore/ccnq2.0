@@ -46,20 +46,26 @@
     my $db = couchdb(CCNQ::Manager::manager_db);
 
     # Log the request.
-    $db->save_doc($request)->send;
+    my $cv1 = $db->save_doc($request);
+    $cv1->cb(sub{$_[0]->recv});
+    $cv1->send;
 
     # We use CouchDB's ID as the Request ID.
     $request->{request} = $_[0]->{id};
     debug("Saved request with ID=$request->{request}.");
 
-    $db->save_doc($request)->send;
+    my $cv2 = $db->save_doc($request);
+    $cv2->cb(sub{$_[0]->recv});
+    $cv2->send;
 
     # Now split the request into independent activities
     for my $activity (CCNQ::Manager::activities_for_request($request)) {
       debug("Creating new activity");
       $activity->{_parent} = $request->{request};
 
-      $db->save_doc($activity)->send;
+      my $cv3 = $db->save_doc($activity);
+      $cv3->cb(sub{$_[0]->recv});
+      $cv3->send;
 
       # We use CouchDB's ID as the Activity ID.
       $activity->{activity} = $_[0]->{id};
@@ -69,7 +75,9 @@
       CCNQ::XMPPAgent::submit_activity($context,$activity);
       debug("New activity ID=$activity->{activity} was submitted");
 
-      $db->save_doc($activity)->send;
+      my $cv4 = $db->save_doc($activity);
+      $cv4->cb(sub{$_[0]->recv});
+      $cv4->send;
     }
 
     debug("Request ID=$request->{request} submitted");
