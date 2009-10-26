@@ -70,7 +70,8 @@ sub _send_im_message {
   my $json_subject = encode_json($subject);
   my $json_body    = encode_json($body);
   my $immsg = new AnyEvent::XMPP::IM::Message(to => $dest, subject => $json_subject, body => $json_body);
-  croak("No connection") unless $context->{connection};
+  use Carp;
+  confess("No connection") unless $context->{connection};
   $immsg->send($context->{connection});
   $subject->{submitted} = time;
   return ['ok'];
