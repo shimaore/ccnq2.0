@@ -8,8 +8,20 @@ use Logger::Syslog;
 use constant manager_db => 'manager';
 use constant manager_requests_dir => File::Spec->catfile(CCNQ::Install::SRC,qw( manager requests ));
 
+=pod
+
+  request_to_activity($request_type)
+    If the request_type can be handled, returns a sub() to be used to handle the request.
+    Otherwise return undef.
+
+    Note: The sub() MUST return an array of activities (or an empty array).
+
+=cut
+
 sub request_to_activity {
   my ($request_type) = @_;
+
+  # Try to find a file in manager/requests to handle the request.
   my $request_file = File::Spec->catfile(manager_requests_dir,"${request_type}.pm");
   if( -e $request_file ) {
     my $eval = CCNQ::Install::content_of($request_file);
@@ -25,6 +37,14 @@ sub request_to_activity {
   }
 }
 
+=pod
+
+  activities_for_request($request)
+    Returns the list of activities to be completed to handle the request,
+    if any.
+
+=cut
+
 sub activities_for_request {
   my ($request) = @_;
   my @result = ();
@@ -38,29 +58,7 @@ sub activities_for_request {
   } else {
     $request->{status} = 'No action specified';
   }
-}
-
-sub submit_activity {
-  my ($context,$activity) = @_;
-
-  my $msg = encode_json($activity);
-
-  # Forward the activity to the proper MUC
-  if($activity->{cluster_name}) {
-    my $room = $muc->get_room ($context->{connection}, $activity->{cluster_name});
-    if($room) {
-      my $immsg = $room->make_message(body => $msg);
-      $immsg->send();
-      $activity->{submitted} = time;
-    } else {
-      warning("$activity->{cluster_name}: Not joined yet");
-    }
-  } elsif($activity->{node_name}) {
-    my $dest = $activity->{node_name};
-    my $immsg = new AnyEvent::XMPP::IM::Message(to => $dest, body => $msg);
-    $immsg->send($context->{connection});
-    $activity->{submitted} = time;
-  }
+  return ();
 }
 
 1;

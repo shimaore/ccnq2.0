@@ -23,9 +23,11 @@
     use AnyEvent;
     use AnyEvent::HTTPD;
 
-    our ($context) = @_;
+    use CCNQ::XMPPAgent;
 
-    our $muc_room = CCNQ::Install::manager_cluster_jid;
+    my ($context) = @_;
+
+    my $muc_room = CCNQ::Install::manager_cluster_jid;
     $context->{muc}->join_room($context->{connection},$muc_room,$context->{function}.','.rand(),{
       history => {seconds=>0},
       create_instant => 1,
@@ -51,25 +53,19 @@
         my ($httpd, $req) = @_;
 
         debug("node/api: Processing web request");
-        my $response = {
+        my $subject = encode_json({
           activity => 'node/api',
           action => 'request',
-          params => {$req->vars},
-        };
-
-        CCNQ::XMPPAgent::authenticate_response($response,$muc_room);
+        });
+        my $body = encode_json({$req->vars});
 
         debug("node/api: Contacting $muc_room");
-        my $room = $context->{muc}->get_room ($context->{connection}, $muc_room);
-        if($room) {
-          debug("node/api: Forwarding request");
-          my $msg = encode_json($response);
-          my $immsg = $room->make_message(body => $msg);
-          $immsg->send();
+        CCNQ::XMPPAgent::authenticate_response($subject,$muc_room);
+        my $r = CCNQ::XMPPAgent::_send_muc_message($context,$muc_room,$subject,$body);
+        if($r->[0] eq 'ok') {
           $req->respond([200,'OK']);
         } else {
-          debug("node/api: Not joined yet");
-          $req->respond([500,'Not joined yet']);
+          $req->respond([500,$r->[1]]);
         }
         $httpd->stop_request;
       },

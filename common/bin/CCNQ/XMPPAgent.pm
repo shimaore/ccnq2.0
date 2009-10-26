@@ -32,22 +32,71 @@ use JSON;
 use constant handler_timeout => 20;
 
 =pod
-  Message format:
+  Subject format:
 
   activity : the activity UUID
-  auth : activity submission authentication token
   action : action requested
+  auth : activity submission authentication token
+
+  Body format:
+
   params : parameters sent to / from the action
   error : if present, an error occurred (activity submission failed)
 
 =cut
 
-sub _send_message {
-  my ($con,$dest,$content) = @_;
-  my $msg = encode_json($content);
-  my $immsg = new AnyEvent::XMPP::IM::Message(to => $dest, body => $msg);
-  $immsg->send($con);
+sub _send_muc_message {
+  my ($context,$dest,$subject,$body) = @_;
+
+  my $room = $muc->get_room ($context->{connection}, $dest);
+  if($room) {
+    authenticate_response($subject);
+    my $json_subject = encode_json($subject);
+    my $json_body    = encode_json($body);
+    my $immsg = $room->make_message(subject => $json_subject, body => $json_body);
+    $immsg->send();
+    $subject->{submitted} = time;
+    return ['ok'];
+  } else {
+    warning("$activity->{cluster_name}: Not joined yet");
+    return ['error','Not joined yet'];
+  }
 }
+
+sub _send_im_message {
+  my ($context,$dest,$subject,$body) = @_;
+  authenticate_response($subject);
+  my $json_subject = encode_json($subject);
+  my $json_body    = encode_json($body);
+  my $immsg = new AnyEvent::XMPP::IM::Message(to => $dest, subject => $json_subject, body => $json_body);
+  $immsg->send($context->{connection});
+  $subject->{submitted} = time;
+  return ['ok'];
+}
+
+=pod
+
+  submit_activity($context,$subject,$body)
+    Submit the specified activity into the XMPP bus
+    Can send a message to a room or an individual node.
+
+=cut
+
+sub submit_activity {
+  my ($context,$activity) = @_;
+
+  my $subject = { map { $_ => $activity->{$_} } qw( activity action ) };
+
+  # Forward the activity to the proper MUC
+  if($subject->{cluster_name}) {
+    return _send_muc_message($context,$subject->{cluster_name},$subject,$body);
+  } elsif($subject->{node_name}) {
+    return _send_im_message($context,$subject->{node_name},$subject,$body);
+  }
+  return ['error','No destination specified'];
+}
+
+
 
 sub authenticate_message {
   my ($content,$partner) = @_;
@@ -56,16 +105,19 @@ sub authenticate_message {
 }
 
 sub authenticate_response {
-  my ($response,$partner) = @_;
-  $response->{auth} = 'authenticated';
+  my ($subject,$partner) = @_;
+  $subject->{auth} = 'authenticated';
 }
 
 sub handle_message {
-  our ($context,$function,$msg) = @_;
-  our $request = decode_json($msg->any_body);
+  my ($context,$msg) = @_;
+  my $function = $context->{function};
+
+  my $request_subject = decode_json($msg->subject);
+  my $request_body    = decode_json($msg->any_body);
 
   error("Object received is not an hashref"),
-  return unless defined($request) && ref($request) eq 'HASH';
+  return unless defined($request_subject) && ref($request_subject) eq 'HASH';
 
   error("Message contains no activity UUID"),
   return unless $request->{activity};
@@ -75,30 +127,31 @@ sub handle_message {
 
   # Try to process the command.
   my $action = $request->{action};
-  error("No action was defined"), return unless defined $request;
-
-  our $response = {};
+  error("No action was defined"), return unless defined $action;
 
   sub process_response {
+    my $response = shift;
     if($response) {
-      $response->{activity} = $request->{activity};
-      $response->{action} = $request->{action};
-      authenticate_response($response,$msg->from);
-      _send_message($context->{connection},$msg->from,$response);
-      $response = undef;
+      my $subject = {
+        activity => $request->{activity},
+        action   => $request->{action},
+      };
+      _send_im_message($context->{connection},$msg->from,$subject,$response);
     }
   }
+
+  my $response = {};
 
   my $w;
   $w = AnyEvent->timer( after => handler_timeout, cb => sub {
     undef $w;
     info("function $function action $action Timed Out");
-    process_response();
+    process_response($response);
   });
 
-  $response = CCNQ::Install::attempt_run($function,$action,$request->{params},$context);
+  $response = CCNQ::Install::attempt_run($function,$action,$request_body,$context);
   undef $w;
-  process_response();
+  process_response($response);
   return $response;
 }
 
@@ -210,7 +263,7 @@ sub start {
     message => sub {
       my $con = shift;
       my ($msg) = @_;
-      debug("Message from " . $msg->from . ":\n" . $msg->any_body . "\n---\n");
+      debug("IM Message from: " . $msg->from . "; subject: " . $msg->subject . "; body: " . $msg->any_body);
       handle_message($context,$context->{function},$msg);
     },
     message_error => sub {
@@ -253,7 +306,7 @@ sub start {
     message => sub {
       my $muc = shift;
       my ($room,$msg,$is_echo) = @_;
-      debug("MUC " . $room->jid . " Message from " . $msg->from . ":\n" . $msg->any_body . "\n---\n");
+      debug("In MUC room: " . $room->jid . ", message from: " . $msg->from . "; subject: " . $msg->subject . "; body: " $msg->any_body);
       # my ($user, $host, $res) = split_jid ($msg->to);
       handle_message($context,$context->{function},$msg);
     },

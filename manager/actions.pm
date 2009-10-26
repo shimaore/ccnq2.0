@@ -13,6 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# manager/actions.pm
+
 {
   install => sub {
     use AnyEvent::CouchDB;
@@ -23,7 +25,14 @@
     return;
   },
 
-  # Send requests out
+  _session_ready => sub {
+    my ($context) = @_;
+    use CCNQ::XMPPAgent;
+    debug("Manager _session_ready");
+    CCNQ::XMPPAgent::join_cluster_room($context);
+  },
+
+  # Send requests out (message received e.g. from node/api/actions.pm)
   request => sub {
     use AnyEvent::CouchDB;
     use CCNQ::Manager;
@@ -42,7 +51,7 @@
       $_[0]->recv;
 
       debug("Saved request with ID=$request->{_id}.");
-
+      debug("request=".join(';',%{$request}));
       # We use CouchDB's ID as the Request ID.
       $request->{request} = $request->{_id};
 
@@ -54,28 +63,27 @@
         $cv2->cb(sub{
           $_[0]->recv;
 
+          debug("New activity ID $activity->{_id} was created");
+
           # We use CouchDB's ID as the Activity ID.
           $activity->{activity} = $activity->{_id};
 
           # Submit the activity to the proper recipient.
-          CCNQ::Manager::submit_activity($context,$activity);
+          CCNQ::XMPPAgent::submit_activity($context,$activity);
           $db->save_doc($activity)->send;
+          debug("Activity ID $activity->{_id} was saved");
         });
         $cv2->send;
+        debug("New activity completed");
       }
 
       $db->save_doc($request)->send;
+      debug("Request saved");
     });
     $cv->send;
 
+    debug("Request completed");
     return;
-  },
-
-  _session_ready => sub {
-    my ($context) = @_;
-    use CCNQ::XMPPAgent;
-    debug("Manager _session_ready");
-    CCNQ::XMPPAgent::join_cluster_room($context);
   },
 
   # Response to requests
@@ -84,6 +92,9 @@
     use CCNQ::Manager;
 
     my ($action,$response) = @_;
+
+    error("No action defined"), return unless $action;
+    error("No activity defined for action $action"), return unless $response->{activity};
 
     debug("Trying to locate action=$action activity=$response->{activity}");
     return if $response->{activity} eq 'node/api'; # Not a real response.
