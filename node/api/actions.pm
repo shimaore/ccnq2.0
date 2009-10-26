@@ -53,14 +53,13 @@
         my ($httpd, $req) = @_;
 
         debug("node/api: Processing web request");
-        my $subject = encode_json({
+        my $subject = {
           activity => 'node/api',
           action => 'request',
-        });
-        my $body = encode_json({$req->vars});
+        };
+        my $body = {$req->vars};
 
         debug("node/api: Contacting $muc_room");
-        CCNQ::XMPPAgent::authenticate_response($subject,$muc_room);
         my $r = CCNQ::XMPPAgent::_send_muc_message($context,$muc_room,$subject,$body);
         if($r->[0] eq 'ok') {
           $req->respond([200,'OK']);
