@@ -29,7 +29,7 @@
     $cv->cb(sub{
       info("Created CouchDB '${db_name}' database");
     });
-    AnyEvent->idle(sub { $cv->recv });
+    $context->{install_manager_db} = $cv;
     return;
   },
 

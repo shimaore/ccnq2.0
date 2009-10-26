@@ -236,6 +236,7 @@ sub attempt_run {
   return { error => 'invalid action' } unless -e $run_file;
   my $eval = content_of($run_file);
 
+  $context->{condvar}->begin;
   return sub {
     # The script should return a hashref, which keys are the actions and
     # the values are sub().
@@ -253,6 +254,7 @@ sub attempt_run {
         error("attempt_run: No action available for function $function action $action");
       }
     };
+    $context->{condvar}->end;
     warning(qq(Executing "${run_file}" attempt_run("$function","$action",...): $@)),
     return { error => 'internal error' } if $@;
 

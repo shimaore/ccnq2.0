@@ -218,6 +218,7 @@ sub start {
     cluster    => $cluster_name,
     role       => $role,
     function   => $function,
+    condvar    => $program,
   };
 
   my $session_ready_sub = CCNQ::Install::attempt_run($function,'_session_ready',$context);
