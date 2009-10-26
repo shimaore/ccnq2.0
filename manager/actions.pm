@@ -75,12 +75,16 @@
             debug("New activity ID=$activity->{activity} was created.");
 
             # Submit the activity to the proper recipient.
-            CCNQ::XMPPAgent::submit_activity($context,$activity);
-            debug("New activity ID=$activity->{activity} was submitted.");
+            my $res = CCNQ::XMPPAgent::submit_activity($context,$activity);
+            if($res->[0] eq 'ok') {
+              debug("New activity ID=$activity->{activity} was submitted.");
 
-            $db->save_doc($activity)->cb(sub{$_[0]->recv;
-              debug("New activity ID=$activity->{activity} was saved.");
-            });
+              $db->save_doc($activity)->cb(sub{$_[0]->recv;
+                debug("New activity ID=$activity->{activity} was saved.");
+              });
+            } else {
+              error("Submission failed: $res->[1] for activity ID=$activity->{activity}");
+            }
           });
         }
 
