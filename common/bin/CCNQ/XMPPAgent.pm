@@ -86,8 +86,9 @@ sub _send_im_message {
 sub submit_activity {
   my ($context,$activity) = @_;
 
-  my $subject = $activity->{qw( activity action )};
-  delete $activity->{qw(activity action)};
+  my $subject;
+  @$subject{qw(activity action)} = @$activity{qw( activity action )};
+  delete @$activity{qw(activity action)};
 
   # Forward the activity to the proper MUC
   if($activity->{cluster_name}) {
