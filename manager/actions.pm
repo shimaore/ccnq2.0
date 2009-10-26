@@ -28,7 +28,7 @@
     $cv->cb(sub{
       info("Created CouchDB '${db_name}' database");
     });
-    $context->{manager_db_install} = $cv;
+    $context->{connection}->event( run => $cv );
     return;
   },
 

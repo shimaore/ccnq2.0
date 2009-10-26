@@ -280,6 +280,11 @@ sub start {
       my ($con) = @_;
       debug("pubsub_recv");
     },
+
+    run => sub {
+      my ($cv) = @_;
+      $cv->recv;
+    },
   );
 
   $muc->reg_cb (
