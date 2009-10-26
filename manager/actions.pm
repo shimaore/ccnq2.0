@@ -21,7 +21,7 @@
     use CCNQ::Manager;
     info("Creating CouchDB database ".CCNQ::Manager::manager_db);
     my $db = couchdb(CCNQ::Manager::manager_db);
-    $db->create()->send;
+    $db->create()->cb( sub {$_[0]->recv} );
     return;
   },
 
@@ -46,41 +46,38 @@
     my $db = couchdb(CCNQ::Manager::manager_db);
 
     # Log the request.
-    my $cv1 = $db->save_doc($request);
-    $cv1->cb(sub{$_[0]->recv});
-    $cv1->send;
+    $db->save_doc($request)->cb(sub{ $_[0]->recv;
+      # We use CouchDB's ID as the Request ID.
+      $request->{request} = $_[0]->{id};
+      debug("Saved request with ID=$request->{request}.");
 
-    # We use CouchDB's ID as the Request ID.
-    $request->{request} = $_[0]->{id};
-    debug("Saved request with ID=$request->{request}.");
+      $db->save_doc($request)->cb(sub{ $_[0]->recv;
 
-    my $cv2 = $db->save_doc($request);
-    $cv2->cb(sub{$_[0]->recv});
-    $cv2->send;
+        # Now split the request into independent activities
+        for my $activity (CCNQ::Manager::activities_for_request($request)) {
+          debug("Creating new activity");
+          $activity->{_parent} = $request->{request};
 
-    # Now split the request into independent activities
-    for my $activity (CCNQ::Manager::activities_for_request($request)) {
-      debug("Creating new activity");
-      $activity->{_parent} = $request->{request};
+          $db->save_doc($activity)->cb(sub{ $_[0]->recv;
 
-      my $cv3 = $db->save_doc($activity);
-      $cv3->cb(sub{$_[0]->recv});
-      $cv3->send;
+            # We use CouchDB's ID as the Activity ID.
+            $activity->{activity} = $_[0]->{id};
+            debug("New activity ID=$activity->{activity} was created");
 
-      # We use CouchDB's ID as the Activity ID.
-      $activity->{activity} = $_[0]->{id};
-      debug("New activity ID=$activity->{activity} was created");
+            # Submit the activity to the proper recipient.
+            CCNQ::XMPPAgent::submit_activity($context,$activity);
+            debug("New activity ID=$activity->{activity} was submitted");
 
-      # Submit the activity to the proper recipient.
-      CCNQ::XMPPAgent::submit_activity($context,$activity);
-      debug("New activity ID=$activity->{activity} was submitted");
+            $db->save_doc($activity)->cb(sub{$_[0]->recv});
+          });
+        }
 
-      my $cv4 = $db->save_doc($activity);
-      $cv4->cb(sub{$_[0]->recv});
-      $cv4->send;
-    }
+        debug("Request ID=$request->{request} submitted");
 
-    debug("Request ID=$request->{request} submitted");
+      });
+
+    });
+
     return;
   },
 
@@ -99,8 +96,7 @@
 
     my $db = couchdb(CCNQ::Manager::manager_db);
 
-    my $cv = $db->open_doc($response->{activity});
-    $cv->cb(sub{
+    $db->open_doc($response->{activity})->cb(sub{
       my $activity = $_[0]->recv;
       debug("Found activity");
       if($activity) {
@@ -114,12 +110,11 @@
         } else {
           $activity->{status} = 'completed';
         }
-        $db->save_doc($activity)->send;
+        $db->save_doc($activity)->cb(sub{$_[0]->recv;});
       } else {
         error("Activity $response->{activity} does not exist!");
       }
     });
-    $cv->send;
     return;
   },
 }
