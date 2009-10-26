@@ -37,6 +37,8 @@ sub run {
   # or until something breaks (e.g. server died).
   my $restart = AnyEvent->condvar;
 
+  $restart->begin;
+
   CCNQ::Install::resolve_roles_and_functions(sub{
     my ($cluster_name,$role,$function) = @_;
     eval { CCNQ::XMPPAgent::start($cluster_name,$role,$function,$restart); };

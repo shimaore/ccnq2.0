@@ -26,7 +26,7 @@ use Logger::Syslog;
 # Where the local configuration information is kept.
 use constant CCN => q(/etc/ccn);
 
-
+# Could use AnyEvent::Util::run_cmd, but there are issues with Cwd.
 sub _execute {
   my $command = join(' ',@_);
   my $ret = system(@_);

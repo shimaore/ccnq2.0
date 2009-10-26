@@ -20,13 +20,15 @@
     my ($params,$context) = @_;
     use AnyEvent::CouchDB;
     use CCNQ::Manager;
-    info("Creating CouchDB database ".CCNQ::Manager::manager_db);
+    my $db_name = CCNQ::Manager::manager_db;
+    info("Creating CouchDB '${db_name}' database");
     my $couch = couch;
-    my $db = $couch->db(CCNQ::Manager::manager_db);
-    $context->{manager_couchdb_create} = $db->create();
-    $context->{manager_couchdb_create}->cb(sub{$_[0]->recv;
-      info("Created CouchDB database");
+    my $db = $couch->db($db_name);
+    my $cv = $db->create();
+    $cv->cb(sub{
+      info("Created CouchDB '${db_name}' database");
     });
+    $context->{manager_db_install} = $cv;
     return;
   },
 

@@ -169,7 +169,7 @@ sub join_cluster_room {
 }
 
 sub start {
-  my ($cluster_name,$role,$function,$j) = @_;
+  my ($cluster_name,$role,$function,$condvar) = @_;
 
   debug("Starting XMPPAgent for function $function");
 
@@ -217,6 +217,7 @@ sub start {
     cluster    => $cluster_name,
     role       => $role,
     function   => $function,
+    condvar    => $condvar,
   };
 
   $con->reg_cb (
@@ -250,7 +251,7 @@ sub start {
       my $con = shift;
       my ($error) = @_;
       error("session_error");
-      $j->send;
+      $condvar->end;
     },
     presence_update => sub {
       my $con = shift;
