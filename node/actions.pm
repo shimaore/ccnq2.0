@@ -16,7 +16,7 @@
 {
   install_all => sub {
     my ($params,$context) = @_;
-    CCNQ::Install::attempt_on_roles_and_functions('install',$context);
+    CCNQ::Install::attempt_on_roles_and_functions('install',$params,$context);
     return { ok => 1 };
   },
 

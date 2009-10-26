@@ -53,7 +53,7 @@ sub run {
     my $context = {
       condvar => $program,
     };
-    CCNQ::Install::attempt_run('node','upgrade',undef,$context)->();
+    # CCNQ::Install::attempt_run('node','upgrade',undef,$context)->();
     CCNQ::Install::attempt_run('node','install_all',undef,$context)->();
     $program->recv;
   };
