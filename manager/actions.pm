@@ -21,8 +21,10 @@
     use AnyEvent::CouchDB;
     use CCNQ::Manager;
     info("Creating CouchDB database ".CCNQ::Manager::manager_db);
-    my $db = couchdb(CCNQ::Manager::manager_db);
-    $context->{manager_db_create} = $db->create()->cb(sub{$_[0]->recv});
+    $context->{couch_db} = couch;
+    my $db = $couch->db(CCNQ::Manager::manager_db);
+    $context->{manager_couchdb_create} = $db->create();
+    $context->{manager_couchdb_create}->cb(sub{$_[0]->recv});
     return;
   },
 
