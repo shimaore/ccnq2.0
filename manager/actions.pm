@@ -29,7 +29,7 @@
     $cv->cb(sub{
       info("Created CouchDB '${db_name}' database");
     });
-    $context->{install_manager_db} = $cv;
+    $context->{condvar}->cb($cv);
     return;
   },
 
