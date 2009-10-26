@@ -236,26 +236,28 @@ sub attempt_run {
   return { error => 'invalid action' } unless -e $run_file;
   my $eval = content_of($run_file);
 
-  # The script should return a hashref, which keys are the actions and
-  # the values are sub().
-  my $run = eval($eval);
-  warning(qq(Loading "${run_file}" in attempt_run("$function","$action",...): $@)),
-  return { error => 'internal error' } if $@;
+  return sub {
+    # The script should return a hashref, which keys are the actions and
+    # the values are sub().
+    my $run = eval($eval);
+    warning(qq(Loading "${run_file}" in attempt_run("$function","$action",...): $@)),
+    return { error => 'internal error' } if $@;
 
-  my $result = undef;
-  eval {
-    if($run->{$action}) {
-      $result = $run->{$action}->($params,$context);
-    } elsif($run->{_default}) {
-      $result = $run->{_default}->($action,$params,$context);
-    } else {
-      error("attempt_run: No action available for function $function action $action");
-    }
+    my $result = undef;
+    eval {
+      if($run->{$action}) {
+        $result = $run->{$action}->($params,$context);
+      } elsif($run->{_default}) {
+        $result = $run->{_default}->($action,$params,$context);
+      } else {
+        error("attempt_run: No action available for function $function action $action");
+      }
+    };
+    warning(qq(Executing "${run_file}" attempt_run("$function","$action",...): $@)),
+    return { error => 'internal error' } if $@;
+
+    return $result ? { params => $result } : undef;
   };
-  warning(qq(Executing "${run_file}" attempt_run("$function","$action",...): $@)),
-  return { error => 'internal error' } if $@;
-
-  return $result ? { params => $result } : undef;
 }
 
 sub attempt_on_roles_and_functions {

@@ -15,6 +15,7 @@
 
 # manager/actions.pm
 
+
 {
   install => sub {
     my ($params,$context) = @_;
@@ -28,7 +29,7 @@
     $cv->cb(sub{
       info("Created CouchDB '${db_name}' database");
     });
-    $context->{connection}->event( run => $cv );
+    AnyEvent->idle($cv);
     return;
   },
 

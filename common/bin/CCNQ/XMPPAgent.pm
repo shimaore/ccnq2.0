@@ -151,7 +151,8 @@ sub handle_message {
     $process_response->($response);
   });
 
-  $response = CCNQ::Install::attempt_run($function,$action,$request_body,$context);
+  my $sub = CCNQ::Install::attempt_run($function,$action,$request_body,$context);
+  $response = $sub->();
   undef $w;
   $process_response->($response);
   return $response;
@@ -169,7 +170,7 @@ sub join_cluster_room {
 }
 
 sub start {
-  my ($cluster_name,$role,$function,$condvar) = @_;
+  my ($cluster_name,$role,$function,$program) = @_;
 
   debug("Starting XMPPAgent for function $function");
 
@@ -217,8 +218,9 @@ sub start {
     cluster    => $cluster_name,
     role       => $role,
     function   => $function,
-    condvar    => $condvar,
   };
+
+  my $session_ready_sub = CCNQ::Install::attempt_run($function,'_session_ready',$context);
 
   $con->reg_cb (
 
@@ -245,13 +247,13 @@ sub start {
       debug("Connected as " . $con->jid . " in function $context->{function}");
       $con->send_presence("present");
       # my ($user, $host, $res) = split_jid ($con->jid);
-      CCNQ::Install::attempt_run($context->{function},'_session_ready',$context);
+      $session_ready_sub->();
     },
     session_error => sub {
       my $con = shift;
       my ($error) = @_;
       error("session_error");
-      $condvar->end;
+      $program->end;
     },
     presence_update => sub {
       my $con = shift;
@@ -281,10 +283,6 @@ sub start {
       debug("pubsub_recv");
     },
 
-    run => sub {
-      my ($cv) = @_;
-      $cv->recv;
-    },
   );
 
   $muc->reg_cb (

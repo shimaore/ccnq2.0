@@ -35,19 +35,19 @@ sub run {
   info("xmpp_agent.pl starting");
   # Loop until we are asked to restart ourselves (e.g. after upgrade)
   # or until something breaks (e.g. server died).
-  my $restart = AnyEvent->condvar;
+  my $program = AnyEvent->condvar;
 
-  $restart->begin;
+  $program->begin;
 
   CCNQ::Install::resolve_roles_and_functions(sub{
     my ($cluster_name,$role,$function) = @_;
-    eval { CCNQ::XMPPAgent::start($cluster_name,$role,$function,$restart); };
+    eval { CCNQ::XMPPAgent::start($cluster_name,$role,$function,$program); };
     error($@) if $@;
   });
 
   info("xmpp_agent.pl started");
-  $restart->recv;
-  undef $restart;
+  $program->recv;
+  undef $program;
 
   info("xmpp_agent.pl restarting");
   sleep(seconds_before_restarting);

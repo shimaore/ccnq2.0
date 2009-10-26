@@ -48,22 +48,8 @@ sub run {
   eval q{
     use CCNQ::Install;
     use AnyEvent;
-
-    my $context = {
-      condvar => AnyEvent->condvar,
-    }
-
-    # Upgrade the code
-    $context->{condvar}->begin;
-    CCNQ::Install::attempt_run('node','upgrade',undef,$context);
-    $context{condvar}->end;
-
-    # Run the installer.
-    $context->{condvar}->begin;
-    CCNQ::Install::attempt_run('node','install_all',undef,$context);
-    $context{condvar}->end;
-
-    $context{condvar}->recv;
+    CCNQ::Install::attempt_run('node','upgrade')->();
+    CCNQ::Install::attempt_run('node','install_all')->();
   };
 
   if($@) {
