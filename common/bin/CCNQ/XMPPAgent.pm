@@ -113,6 +113,9 @@ sub handle_message {
   my ($context,$msg) = @_;
   my $function = $context->{function};
 
+  error("No subject, ignoring message"),
+  return unless $msg->subject;
+
   my $request_subject = decode_json($msg->subject);
   my $request_body    = decode_json($msg->any_body);
 
