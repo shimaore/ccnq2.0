@@ -263,7 +263,7 @@ sub start {
       my $con = shift;
       my ($msg) = @_;
       debug("IM Message from: " . $msg->from . "; subject: " . $msg->subject . "; body: " . $msg->any_body);
-      handle_message($context,$context->{function},$msg);
+      handle_message($context,$msg);
     },
     message_error => sub {
       my $con = shift;
@@ -307,7 +307,7 @@ sub start {
       my ($room,$msg,$is_echo) = @_;
       debug("In MUC room: " . $room->jid . ", message from: " . $msg->from . "; subject: " . $msg->subject . "; body: " . $msg->any_body);
       # my ($user, $host, $res) = split_jid ($msg->to);
-      handle_message($context,$context->{function},$msg);
+      handle_message($context,$msg);
     },
   );
 
