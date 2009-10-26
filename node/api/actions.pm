@@ -44,7 +44,7 @@
     $context->{httpd}->reg_cb(
       '' => sub {
         my ($httpd, $req) = @_;
-        debug("node/api: Junking web request");
+        debug("node/api: Junking web request (no path)");
         $req->respond([404,'Not found']);
         $httpd->stop_request;
       },
@@ -54,7 +54,7 @@
 
         debug("node/api: Processing web request");
         my $subject = {
-          activity => 'node/api/'.random(),
+          activity => 'node/api/'.rand(),
           action => 'request',
         };
         my $body = {$req->vars};
