@@ -306,7 +306,7 @@ sub start {
     message => sub {
       my $muc = shift;
       my ($room,$msg,$is_echo) = @_;
-      debug("In MUC room: " . $room->jid . ", message from: " . $msg->from . "; subject: " . $msg->subject . "; body: " $msg->any_body);
+      debug("In MUC room: " . $room->jid . ", message from: " . $msg->from . "; subject: " . $msg->subject . "; body: " . $msg->any_body);
       # my ($user, $host, $res) = split_jid ($msg->to);
       handle_message($context,$context->{function},$msg);
     },
