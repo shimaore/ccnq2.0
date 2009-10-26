@@ -255,6 +255,7 @@ sub attempt_run {
       }
     };
     $context->{condvar}->end;
+
     warning(qq(Executing "${run_file}" attempt_run("$function","$action",...): $@)),
     return { error => 'internal error' } if $@;
 
@@ -265,9 +266,10 @@ sub attempt_run {
 sub attempt_on_roles_and_functions {
   my $action = shift;
   my $params = shift || {};
+  my $context = shift;
   resolve_roles_and_functions(sub {
     my ($cluster_name,$role,$function) = @_;
-    attempt_run($function,$action,{ %{$params}, cluster_name => $cluster_name, role => $role });
+    attempt_run($function,$action,{ %{$params}, cluster_name => $cluster_name, role => $role },$context);
   });
 }
 
