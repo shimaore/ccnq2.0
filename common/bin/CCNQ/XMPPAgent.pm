@@ -47,7 +47,7 @@ use constant handler_timeout => 20;
 
 sub _send_muc_message {
   my ($context,$dest,$subject,$body) = @_;
-
+  debug("_send_muc_message(): dest=$dest");
   my $room = $context->{muc}->get_room ($context->{connection}, $dest);
   if($room) {
     authenticate_response($subject);
@@ -65,6 +65,7 @@ sub _send_muc_message {
 
 sub _send_im_message {
   my ($context,$dest,$subject,$body) = @_;
+  debug("_send_im_message(): dest=$dest");
   authenticate_response($subject);
   my $json_subject = encode_json($subject);
   my $json_body    = encode_json($body);

@@ -54,7 +54,7 @@
 
         debug("node/api: Processing web request");
         my $subject = {
-          activity => 'node/api',
+          activity => 'node/api/'.random(),
           action => 'request',
         };
         my $body = {$req->vars};

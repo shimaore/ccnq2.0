@@ -1,5 +1,6 @@
 sub {
   my $request = shift;
+  debug("node_status request");
   # Return list of activities required to complete this request.
   return (
     {

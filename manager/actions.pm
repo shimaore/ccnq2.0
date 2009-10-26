@@ -103,7 +103,7 @@
     error("No activity defined for action $action"), return unless $response->{activity};
 
     debug("Trying to locate action=$action activity=$response->{activity}");
-    return if $response->{activity} eq 'node/api'; # Not a real response.
+    return if $response->{activity} =~ qr{^node/api}; # Not a real response.
 
     my $db = couchdb(CCNQ::Manager::manager_db);
 
