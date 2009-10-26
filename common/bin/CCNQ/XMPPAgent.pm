@@ -86,13 +86,18 @@ sub _send_im_message {
 sub submit_activity {
   my ($context,$activity) = @_;
 
-  my $subject = { map { $_ => $activity->{$_} } qw( activity action ) };
+  my $subject = $activity{qw( activity action )};
+  delete $activity{qw(activity action)};
 
   # Forward the activity to the proper MUC
-  if($subject->{cluster_name}) {
-    return _send_muc_message($context,$subject->{cluster_name},$subject,$activity);
-  } elsif($subject->{node_name}) {
-    return _send_im_message($context,$subject->{node_name},$subject,$activity);
+  if($activity->{cluster_name}) {
+    my $dest = $activity->{cluster_name};
+    delete $activity->{cluster_name};
+    return _send_muc_message($context,$dest,$subject,$activity);
+  } elsif($activity->{node_name}) {
+    my $dest = $activity->{node_name};
+    delete $activity->{node_name};
+    return _send_im_message($context,$dest,$subject,$activity);
   }
   return ['error','No destination specified'];
 }

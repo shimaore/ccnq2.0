@@ -20,15 +20,6 @@
     return { ok => 1 };
   },
 
-  upgrade => sub {
-    # Update the code from the Git repository.
-    chdir(CCNQ::Install::SRC) or die "chdir(".CCNQ::Install::SRC."): $!";
-    CCNQ::Install::_execute(qw( git pull ));
-    # Switch back to the directory we normally run from.
-    chdir(CCNQ::Install::install_script_dir) or die "chdir(".CCNQ::Install::install_script_dir."): $!";
-    return { ok => 1 };
-  },
-
   # Used to provide server-wide status information.
   status => sub {
     return {
