@@ -117,8 +117,8 @@ sub do_query
 {
     my ($self,$params) = @_;
 
-    our $result = {};
-    our @rows = ();
+    my $result = {};
+    my @rows = ();
 
     my $sql_callback = sub
     {

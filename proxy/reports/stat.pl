@@ -19,17 +19,17 @@ our %stats = ();
 while(<>)
 {
   chomp;
-  our @d = split(/\|/);
+  my @d = split(/\|/);
 
   # Set variables
-  our $s = $d[6];
+  my $s = $d[6];
   ## warn($_), 
   next unless defined $s;
 
   my $hour = localtime(int($s/3600)*3600);
   $stats{"messages ^ $hour"}++;
 
-  our $uniq_id = $d[3];
+  my $uniq_id = $d[3];
   my $method = $d[0];
 
   # Start processing
@@ -65,8 +65,7 @@ while(<>)
   # the number of concurrent call paths.
   # This is different from billing where we would use the 200
   # as the start time.
-  sub set_start
-  {
+  my $set_start = sub {
     $stats{start}++;
     return
       if exists $call{$uniq_id}
@@ -77,9 +76,9 @@ while(<>)
     $call{$uniq_id}->{start} = $s;
     $call{$uniq_id}->{src} = $d[11];
     $call{$uniq_id}->{dst} = $d[10];
-  }
+  };
 
-  set_start()
+  $set_start->()
     if $method eq 'INVITE' and grep { $d[4] eq $_ } ('200','183','180');
 
   $call{$uniq_id}->{connect} = $s,
@@ -136,12 +135,11 @@ for my $uniq_id (keys %call)
   }
 }
 
-for our $s ($min..$max)
+for my $s ($min..$max)
 {
-  our $hour = localtime(int($s/3600)*3600);
+  my $hour = localtime(int($s/3600)*3600);
 
-  sub max_
-  {
+  my $max_ = sub {
     my ($name,$v) = @_;
 
     $v ||= 0;
@@ -161,25 +159,25 @@ for our $s ($min..$max)
       $stats{$n2} = $s;
       $stats{$n3} = $v;
     }
-  }
+  };
 
   # Messages
-  max_(q(messages),$d{$s});
+  $max_->(q(messages),$d{$s});
 
   # INVITEs
-  max_(q(invite),$i{$s});
+  $max_->(q(invite),$i{$s});
 
   # 503s
-  max_(q(503),$t{$s});
+  $max_->(q(503),$t{$s});
 
   # Callpaths
-  max_(q(callpaths),$callpaths{$s});
+  $max_->(q(callpaths),$callpaths{$s});
 
   # Callpaths per source
   for my $src (keys %callpaths_src)
   {
-    max_("callpaths < $src",$callpaths_src{$src}->{$s});
-    max_("callpaths > $src",$callpaths_src{$src}->{$s});
+    $max_->("callpaths < $src",$callpaths_src{$src}->{$s});
+    $max_->("callpaths > $src",$callpaths_src{$src}->{$s});
   }
 }
 

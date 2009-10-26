@@ -129,7 +129,7 @@ sub handle_message {
   my $action = $request->{action};
   error("No action was defined"), return unless defined $action;
 
-  sub process_response {
+  my $process_response = sub {
     my $response = shift;
     if($response) {
       my $subject = {
@@ -138,7 +138,7 @@ sub handle_message {
       };
       _send_im_message($context->{connection},$msg->from,$subject,$response);
     }
-  }
+  };
 
   my $response = {};
 
@@ -146,12 +146,12 @@ sub handle_message {
   $w = AnyEvent->timer( after => handler_timeout, cb => sub {
     undef $w;
     info("function $function action $action Timed Out");
-    process_response($response);
+    $process_response->($response);
   });
 
   $response = CCNQ::Install::attempt_run($function,$action,$request_body,$context);
   undef $w;
-  process_response($response);
+  $process_response->($response);
   return $response;
 }
 

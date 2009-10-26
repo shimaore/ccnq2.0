@@ -44,7 +44,7 @@ sub run_as_tab  { my $self = shift; print $self->_cgi->header(-type=>'text/tab-s
 
 sub _do_command_table
 {
-    our $self = shift;
+    my $self = shift;
     my $command = shift;
     my $command_args = join(' ', map { qq("$_") } @_);
 
