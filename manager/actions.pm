@@ -46,42 +46,34 @@
     my $db = couchdb(CCNQ::Manager::manager_db);
 
     # Log the request.
-    my $cv = $db->save_doc($request);
-    $cv->cb(sub{
-      debug($_[0]->recv);
-
-      debug("Saved request with ID=$request->{_id}.");
+    $db->save_doc($request, { success => sub {
       # We use CouchDB's ID as the Request ID.
-      $request->{request} = $request->{_id};
+      $request->{request} = $_[0]->{id};
+    }})->send;
+    debug("Saved request with ID=$request->{request}.");
 
+    $db->save_doc($request,{ success => sub {
       # Now split the request into independent activities
       for my $activity (CCNQ::Manager::activities_for_request($request)) {
         debug("Creating new activity");
         $activity->{_parent} = $request->{request};
-        my $cv2 = $db->save_doc($activity);
-        $cv2->cb(sub{
-          debug($_[0]->recv);
 
-          debug("New activity ID=$activity->{_id} was created");
-
+        $db->save_doc($activity,{ success => sub {
           # We use CouchDB's ID as the Activity ID.
-          $activity->{activity} = $activity->{_id};
+          $activity->{activity} = $_[0]->{id};
+        }})->send;
+        debug("New activity ID=$activity->{activity} was created");
 
+        $db->save_doc($activity,{ success => sub {
           # Submit the activity to the proper recipient.
           CCNQ::XMPPAgent::submit_activity($context,$activity);
-          $db->save_doc($activity)->send;
-          debug("Activity ID=$activity->{_id} was saved");
-        });
-        $cv2->send;
-        debug("New activity ID=$activity->{_id} completed");
-      };
+        }})->send;
+        debug("New activity ID=$activity->{activity} was submitted");
 
-      $db->save_doc($request)->send;
-      debug("Request ID=$request->{_id} saved");
-    });
-    $cv->send;
+      } # for $activity
+    }})->send;
+    debug("Request ID=$request->{request} saved");
 
-    debug("Request completed");
     return;
   },
 
