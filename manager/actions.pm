@@ -54,9 +54,9 @@
     my $db = couchdb(CCNQ::Manager::manager_db);
 
     # Log the request.
-    $context->{manager_request_handler} = $db->save_doc($request);
+    my $cv = $db->save_doc($request);
 
-    $context->{manager_request_handler}->cb( sub{ $_[0]->recv;
+    $cv->cb( sub{ $_[0]->recv;
       # We use CouchDB's ID as the Request ID.
       $request->{request} = $request->{_id};
       debug("Saved request with ID=$request->{request}.");
@@ -88,6 +88,7 @@
 
     });
 
+    $context->{condvar}->cb($cv);
     return;
   },
 
