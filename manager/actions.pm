@@ -53,6 +53,9 @@
 
     my $db = couchdb(CCNQ::Manager::manager_db);
 
+    # XXX Use the original's Activity's ID (+random) as the new Request ID
+    # XXX Use the Request ID + sequential number as the Activity ID.
+
     # Log the request.
     my $cv = $db->save_doc($request);
 

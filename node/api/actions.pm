@@ -13,6 +13,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+=pod
+
+  Example valid query:
+    GET http://127.0.0.1:9090/request?node_name=couchdb1&action=node_status
+  Note how "couchdb1" is a short name; the domain name is automatically
+  appended in submit_activity() (after the request went through the
+  request manager).
+
+=cut
+
 {
   request => sub {
     # Silently ignore. (These come to us because we are subscribed to the manager MUC.)

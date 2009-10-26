@@ -93,11 +93,11 @@ sub submit_activity {
 
   # Forward the activity to the proper MUC
   if($activity->{cluster_name}) {
-    my $dest = $activity->{cluster_name};
+    my $dest = $activity->{cluster_name}.'@'.$context->{domain};
     debug("submit_activity(): send_muc_message($dest,$subject->{activity},$subject->{action})");
     return _send_muc_message($context,$dest,$subject,$activity);
   } elsif($activity->{node_name}) {
-    my $dest = $activity->{node_name};
+    my $dest = $activity->{node_name}.'@'.$context->{domain};
     debug("submit_activity(): send_muc_message($dest,$subject->{activity},$subject->{action})");
     return _send_im_message($context,$dest,$subject,$activity);
   }
