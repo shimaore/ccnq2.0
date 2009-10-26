@@ -72,13 +72,15 @@
 
             # We use CouchDB's ID as the Activity ID.
             $activity->{activity} = $activity->{_id};
-            debug("New activity ID=$activity->{activity} was created");
+            debug("New activity ID=$activity->{activity} was created.");
 
             # Submit the activity to the proper recipient.
             CCNQ::XMPPAgent::submit_activity($context,$activity);
-            debug("New activity ID=$activity->{activity} was submitted");
+            debug("New activity ID=$activity->{activity} was submitted.");
 
-            $db->save_doc($activity)->cb(sub{$_[0]->recv});
+            $db->save_doc($activity)->cb(sub{$_[0]->recv;
+              debug("New activity ID=$activity->{activity} was saved.");
+            });
           });
         }
 
@@ -122,7 +124,9 @@
         } else {
           $activity->{status} = 'completed';
         }
-        $db->save_doc($activity)->cb(sub{$_[0]->recv;});
+        $db->save_doc($activity)->cb(sub{$_[0]->recv;
+          debug("Activity $response->{activity} updated.")
+        });
       } else {
         error("Activity $response->{activity} does not exist!");
       }
