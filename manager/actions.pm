@@ -17,11 +17,12 @@
 
 {
   install => sub {
+    my ($params,$context) = @_;
     use AnyEvent::CouchDB;
     use CCNQ::Manager;
     info("Creating CouchDB database ".CCNQ::Manager::manager_db);
     my $db = couchdb(CCNQ::Manager::manager_db);
-    $db->create()->cb( sub {$_[0]->recv} );
+    $context->{manager_db_create} = $db->create();
     return;
   },
 
@@ -46,9 +47,11 @@
     my $db = couchdb(CCNQ::Manager::manager_db);
 
     # Log the request.
-    $db->save_doc($request)->cb(sub{ $_[0]->recv;
+    $context->{manager_request_handler} = $db->save_doc($request);
+
+    $context->{manager_request_handler}->cb( sub{ $_[0]->recv;
       # We use CouchDB's ID as the Request ID.
-      $request->{request} = $_[0]->{id};
+      $request->{request} = $request->{_id};
       debug("Saved request with ID=$request->{request}.");
 
       $db->save_doc($request)->cb(sub{ $_[0]->recv;
@@ -61,7 +64,7 @@
           $db->save_doc($activity)->cb(sub{ $_[0]->recv;
 
             # We use CouchDB's ID as the Activity ID.
-            $activity->{activity} = $_[0]->{id};
+            $activity->{activity} = $activity->{_id};
             debug("New activity ID=$activity->{activity} was created");
 
             # Submit the activity to the proper recipient.
@@ -86,7 +89,7 @@
     use AnyEvent::CouchDB;
     use CCNQ::Manager;
 
-    my ($action,$response) = @_;
+    my ($action,$response,$context) = @_;
 
     error("No action defined"), return unless $action;
     error("No activity defined for action $action"), return unless $response->{activity};
@@ -96,7 +99,8 @@
 
     my $db = couchdb(CCNQ::Manager::manager_db);
 
-    $db->open_doc($response->{activity})->cb(sub{
+    $context->{response_handler} = $db->open_doc($response->{activity});
+    $context->{response_handler}->cb(sub{
       my $activity = $_[0]->recv;
       debug("Found activity");
       if($activity) {
