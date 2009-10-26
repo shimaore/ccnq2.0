@@ -24,7 +24,9 @@
     my $couch = couch;
     my $db = $couch->db(CCNQ::Manager::manager_db);
     $context->{manager_couchdb_create} = $db->create();
-    $context->{manager_couchdb_create}->cb(sub{$_[0]->recv});
+    $context->{manager_couchdb_create}->cb(sub{$_[0]->recv;
+      info("Created CouchDB database");
+    });
     return;
   },
 
