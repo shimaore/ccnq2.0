@@ -229,7 +229,7 @@ use constant actions_file_name => 'actions.pm';
 sub attempt_run {
   my ($function,$action,$params,$context) = @_;
 
-  debug(qq(Attempting "${action}" in function "${function}".));
+  debug(qq(Creating "${action}" in function "${function}".));
   my $run_file = File::Spec->catfile(CCNQ::Install::SRC,$function,actions_file_name);
 
   warning(qq(No such file "${run_file}", skipping)),
@@ -241,7 +241,7 @@ sub attempt_run {
     # The script should return a hashref, which keys are the actions and
     # the values are sub().
     my $run = eval($eval);
-    warning(qq(Loading "${run_file}" in attempt_run("$function","$action",...): $@)),
+    warning(qq(Executing "${run_file}" in attempt_run("$function","$action",...) returned: $@)),
     return { error => 'internal error' } if $@;
 
     my $result = undef;
@@ -269,7 +269,7 @@ sub attempt_on_roles_and_functions {
   my $context = shift;
   resolve_roles_and_functions(sub {
     my ($cluster_name,$role,$function) = @_;
-    attempt_run($function,$action,{ %{$params}, cluster_name => $cluster_name, role => $role },$context);
+    attempt_run($function,$action,{ %{$params}, cluster_name => $cluster_name, role => $role },$context)->();
   });
 }
 
