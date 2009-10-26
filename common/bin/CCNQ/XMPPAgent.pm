@@ -79,7 +79,7 @@ sub _send_im_message {
 
 =pod
 
-  submit_activity($context,$subject,$body)
+  submit_activity($context,$activity)
     Submit the specified activity into the XMPP bus
     Can send a message to a room or an individual node.
 
@@ -146,7 +146,7 @@ sub handle_message {
     my $response = shift;
     if($response) {
       my $subject = { map { $_=>$request_subject->{$_} } qw(activity action) };
-      _send_im_message($context->{connection},$msg->from,$subject,$response);
+      _send_im_message($context,$msg->from,$subject,$response);
     }
   };
 
