@@ -94,10 +94,12 @@ sub submit_activity {
   if($activity->{cluster_name}) {
     my $dest = $activity->{cluster_name};
     delete $activity->{cluster_name};
+    debug("submit_activity(): send_muc_message($dest,$subject->{activity},$subject->{action})");
     return _send_muc_message($context,$dest,$subject,$activity);
   } elsif($activity->{node_name}) {
     my $dest = $activity->{node_name};
     delete $activity->{node_name};
+    debug("submit_activity(): send_muc_message($dest,$subject->{activity},$subject->{action})");
     return _send_im_message($context,$dest,$subject,$activity);
   }
   return ['error','No destination specified'];
