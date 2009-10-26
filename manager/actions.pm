@@ -66,7 +66,7 @@
         # Now split the request into independent activities
         for my $activity (CCNQ::Manager::activities_for_request($request)) {
           debug("Creating new activity");
-          $activity->{_parent} = $request->{request};
+          $activity->{activity_parent} = $request->{request};
 
           $db->save_doc($activity)->cb(sub{ $_[0]->recv;
 
