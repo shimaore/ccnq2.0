@@ -107,8 +107,8 @@
 
     my $db = couchdb(CCNQ::Manager::manager_db);
 
-    $context->{response_handler} = $db->open_doc($response->{activity});
-    $context->{response_handler}->cb(sub{
+    my $cv = $db->open_doc($response->{activity});
+    $cv->cb(sub{
       my $activity = $_[0]->recv;
       debug("Found activity");
       if($activity) {
@@ -127,6 +127,7 @@
         error("Activity $response->{activity} does not exist!");
       }
     });
+    $context->{condvar}->cb($cv);
     return;
   },
 }
