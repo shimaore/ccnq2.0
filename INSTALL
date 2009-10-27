@@ -21,15 +21,15 @@ sudo cpan AnyEvent::HTTPD
 
 * On the manager server:
   CouchDB 0.9.x or above is required
-	sudo aptitude install ncurses-dev
-	wget http://erlang.org/download/otp_src_R13B02-1.tar.gz
-	(configure, make, sudo make install)
+  sudo aptitude install ncurses-dev
+  wget http://erlang.org/download/otp_src_R13B02-1.tar.gz
+  (configure, make, sudo make install)
 
-	sudo aptitude install build-essential spidermonkey-bin libmozjs-dev libicu-dev libcurl4-openssl-dev
-	sudo adduser --gecos '' --disabled-password couchdb
-	wget http://www.apache.org/dist/couchdb/0.10.0/apache-couchdb-0.10.0.tar.gz
-	(configure, make, sudo make install)
-	sudo chown couchdb /usr/local/var/*/couchdb
+  sudo aptitude install build-essential spidermonkey-bin libmozjs-dev libicu-dev libcurl4-openssl-dev
+  sudo adduser --gecos '' --disabled-password couchdb
+  wget http://www.apache.org/dist/couchdb/0.10.0/apache-couchdb-0.10.0.tar.gz
+  (configure, make, sudo make install)
+  sudo chown couchdb /usr/local/var/*/couchdb
 
 
 sudo cpan AnyEvent::CouchDB
@@ -41,15 +41,25 @@ wget http://opensource.sotelips.net/~stephane/osip-1.5.3-tls/opensips_1.5.3-0_am
 wget http://opensource.sotelips.net/~stephane/osip-1.5.3-tls/opensips-mysql-module_1.5.3-0_amd64.deb
 sudo dpkg -i opensips_1.5.3-0_amd64.deb
 sudo dpkg -i opensips-mysql-module_1.5.3-0_amd64.deb
-	Edit /etc/default/opensips
-	XXX -> our installer should do this
+# XXX -> our installer should do this
+sudo sed -i -e 's/^RUN_OPENSIPS=no$/RUN_OPENSIPS=yes/' /etc/default/opensips
+
 
 sudo aptitude install mysql-server
 # Also I do:
 sudo aptitude --purge remove portmap
 sudo aptitude install postfix
 
-  Part of the syslog information (during upgrade.pl) are to run some MySQL commands to initialize the database.	
+# Part of the syslog information (during upgrade.pl) are to run some MySQL commands to initialize the database.
+# Typically these are equivalent to:
+sudo mysql <<SQL
+  CREATE DATABASE opensips;
+  CONNECT opensips;
+  CREATE USER opensips IDENTIFIED BY 'opensips';
+  GRANT ALL ON opensips.* TO opensips;
+SQL
+sudo /bin/sh -c 'mysql opensips < /etc/opensips/opensips.sql'
+
 
 * On the SBC servers:
   Install FreeSwitch
