@@ -100,8 +100,8 @@ sub clean_cfg {
 
   warning("Found $route routes");
 
-  $t =~ s{ \b route \( ([^\)]+) \) \s* ([;\#\)]) }{ "route($route{$1}) $2" }gsxe;
-  $t =~ s{ \b route \[ ([^\]]+) \] \s* ([\{\#]) }{ "route[$route{$1}] $2" }gsxe;
+  $t =~ s{ \b route \( ([^\)]+) \) \s* ([;\#\)]|$) }{ "route($route{$1}) $2" }gsxe;
+  $t =~ s{ \b route \[ ([^\]]+) \] \s* ([\{\#]|$) }{ "route[$route{$1}] $2" }gsxe;
 
   $t .= "\n".join('', map { "# route($route{$_}) => route($_)\n" } sort keys %route);
 
