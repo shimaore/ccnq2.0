@@ -8,4 +8,5 @@ invite
 loose-route
 non-loose-route
 routing-trunkside-transparent
+invite-trunk-side
 register-ignore

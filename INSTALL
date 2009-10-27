@@ -35,7 +35,15 @@ sudo cpan AnyEvent::HTTPD
 sudo cpan AnyEvent::CouchDB
 
 * On the proxy servers:
-  Install OpenSIPS
+  Install OpenSIPS (note: we provide "amd64"-type Debian packages only)
+cd ~/src
+wget http://opensource.sotelips.net/~stephane/osip-1.5.3-tls/opensips_1.5.3-0_amd64.deb
+wget http://opensource.sotelips.net/~stephane/osip-1.5.3-tls/opensips-mysql-module_1.5.3-0_amd64.deb
+sudo dpkg -i opensips_1.5.3-0_amd64.deb
+sudo dpkg -i opensips-mysql-module_1.5.3-0_amd64.deb
+	Edit /etc/default/opensips
+	XXX -> our installer should do this
+
 sudo aptitude install mysql-server
 # Also I do:
 sudo aptitude --purge remove portmap
@@ -45,6 +53,7 @@ sudo aptitude install postfix
 
 * On the SBC servers:
   Install FreeSwitch
+wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch_1.0.4-1_amd64.deb
 
 
 
