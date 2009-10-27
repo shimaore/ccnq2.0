@@ -100,14 +100,14 @@ sub clean_cfg {
 
   warning("Found $route routes");
 
-  $t =~ s{ \b route \( ([^\)]+) \) \s* ([;\#\)]|$) }{ "route($route{$1}) $2" }gsxe;
-  $t =~ s{ \b route \[ ([^\]]+) \] \s* ([\{\#]|$) }{ "route[$route{$1}] $2" }gsxe;
+  $t =~ s{ \b route \( ([^\)]+) \) \s* ([;\#\)]) }{ "route($route{$1}) $2" }gsxe;
+  $t =~ s{ \b route \[ ([^\]]+) \] \s* ([\{\#]) }{ "route[$route{$1}] $2" }gsxe;
 
   $t .= "\n".join('', map { "# route($route{$_}) => route($_)\n" } sort keys %route);
 
   # Macro pre-processing
   my %defines = ();
-  $t =~ s{ \#define \s+ (\w+) \b }{ $defines{$1} = 1 }gsxe;
+  $t =~ s{ \#define \s+ (\w+) \b }{ $defines{$1} = 1, '' }gsxe;
   $t =~ s{ \#ifdef \s+ (\w+) \b (.*?) \#endifdef \s+ \1 \b }{ exists($defines{$1}) ? $2 : '' }gsxe;
   $t =~ s{ \#ifnotdef \s+ (\w+) \b (.*?) \#endifnotdef \s+ \1 \b }{ exists($defines{$1}) ? '' : $2 }gsxe;
 
