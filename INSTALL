@@ -21,21 +21,21 @@ sudo cpan AnyEvent::HTTPD
 
 * On the manager server:
   CouchDB 0.9.x or above is required
-  sudo aptitude install ncurses-dev
-  wget http://erlang.org/download/otp_src_R13B02-1.tar.gz
+sudo aptitude install ncurses-dev
+wget http://erlang.org/download/otp_src_R13B02-1.tar.gz
   (configure, make, sudo make install)
 
-  sudo aptitude install build-essential spidermonkey-bin libmozjs-dev libicu-dev libcurl4-openssl-dev
-  sudo adduser --gecos '' --disabled-password couchdb
-  wget http://www.apache.org/dist/couchdb/0.10.0/apache-couchdb-0.10.0.tar.gz
+sudo aptitude install build-essential spidermonkey-bin libmozjs-dev libicu-dev libcurl4-openssl-dev
+sudo adduser --gecos '' --disabled-password couchdb
+wget http://www.apache.org/dist/couchdb/0.10.0/apache-couchdb-0.10.0.tar.gz
   (configure, make, sudo make install)
-  sudo chown couchdb /usr/local/var/*/couchdb
-
+sudo chown couchdb /usr/local/var/*/couchdb
 
 sudo cpan AnyEvent::CouchDB
 
 * On the proxy servers:
-  Install OpenSIPS (note: we provide "amd64"-type Debian packages only)
+
+# Install OpenSIPS (note: we provide "amd64"-type Debian packages only)
 cd ~/src
 wget http://opensource.sotelips.net/~stephane/osip-1.5.3-tls/opensips_1.5.3-0_amd64.deb
 wget http://opensource.sotelips.net/~stephane/osip-1.5.3-tls/opensips-mysql-module_1.5.3-0_amd64.deb
@@ -44,6 +44,7 @@ sudo dpkg -i opensips-mysql-module_1.5.3-0_amd64.deb
 # XXX -> our installer should do this
 sudo sed -i -e 's/^RUN_OPENSIPS=no$/RUN_OPENSIPS=yes/' /etc/default/opensips
 
+sudo cpan AnyEvent::DBI
 
 sudo aptitude install mysql-server
 # Also I do:
