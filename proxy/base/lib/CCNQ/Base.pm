@@ -22,6 +22,8 @@ use strict; use warnings;
 
 use base qw(CCNQ::SQL);
 
+use Logger::Syslog;
+
 =pod
     sub new_precondition($params)
         Returns true if the parameters are valid for insertion, false otherwise.
@@ -43,12 +45,12 @@ sub do_insert()
     {
         $self->run_sql($self->insert($params));
         $self->_db->commit;
-        return [200];
+        return ['ok'];
     }
     else
     {
         $self->_db->rollback;
-        return [500,'Precondition failed'];
+        return ['error','Precondition failed'];
     }
 }
 
@@ -58,7 +60,7 @@ sub do_delete()
     $self->_db->begin_work;
     $self->run_sql($self->delete($params));
     $self->_db->commit;
-    return [200];
+    return ['ok'];
 }
 
 sub do_modify
@@ -87,7 +89,24 @@ sub do_modify
     $self->run_sql($self->delete($old_params));
     $self->run_sql($self->insert($new_params));
     $self->_db->commit;
-    return [200];
+    return ['ok'];
+}
+
+sub do_update
+{
+    my ($self,$params) = @_;
+
+    # Split the parameters into two lists: one with the old values
+    # (used to delete the existing record) and one with the new values
+    # (used to create a new record).
+    my $old_params = {%{$params}};
+    my $new_params = {%{$params}};
+
+    $self->_db->begin_work;
+    $self->run_sql($self->delete($old_params));
+    $self->run_sql($self->insert($new_params));
+    $self->_db->commit;
+    return ['ok'];
 }
 
 sub do_list
@@ -162,24 +181,23 @@ sub do_query
     $result->{total_rows} = $nb_rows;
     $result->{rows} = [@rows];
 
-    return [200,$result];
+    return ['ok',$result];
 }
 
 sub run()
 {
     my $self = shift;
-    my ($params) = @_;
-
-    my $method = $params->{method};
+    my ($action,$params) = @_;
 
     # This would need an eval() to collect error messages,
     # unless I rewrite the code to work properly.
-    return $self->do_delete($params) if $method eq 'delete';
-    return $self->do_insert($params) if $method eq 'insert';
-    return $self->do_modify($params) if $method eq 'modify';
-    return $self->do_query($params) if $method eq 'query';
+    return $self->do_delete($params) if $action eq 'delete';
+    return $self->do_insert($params) if $action eq 'insert';
+    return $self->do_modify($params) if $action eq 'modify';
+    return $self->do_update($params) if $action eq 'update';
+    return $self->do_query($params)  if $action eq 'query';
 
-    return [404,'Invalid method'];
+    return ['error','Invalid action'];
 }
 
 1;
