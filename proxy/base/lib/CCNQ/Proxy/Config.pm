@@ -149,8 +149,8 @@ sub configure_opensips {
 
   # End of parameters
 
-  my $template_text = compile_cfg(opensips_base_lib,$model);
-  my $sql_text      = compile_sql(opensips_base_lib,$model);
+  my $template_text = compile_cfg(CCNQ::Proxy::opensips_base_lib,$model);
+  my $sql_text      = compile_sql(CCNQ::Proxy::opensips_base_lib,$model);
 
   my $template = new IO::Scalar \$template_text;
 
@@ -173,21 +173,24 @@ sub configure_opensips {
 
   # Move the temp files to their final destinations
   info("Installing new configuration");
-  CCNQ::Install::_execute('cp',$cfg_file,runtime_opensips_cfg);
-  CCNQ::Install::_execute('cp',$sql_file,runtime_opensips_sql);
+  CCNQ::Install::_execute('cp',$cfg_file,CCNQ::Proxy::runtime_opensips_cfg);
+  CCNQ::Install::_execute('cp',$sql_file,CCNQ::Proxy::runtime_opensips_sql);
 
   # Print out some info on how to use the SQL file.
-  my $runtime_opensips_sql = runtime_opensips_sql;
+  my $runtime_opensips_sql = CCNQ::Proxy::runtime_opensips_sql;
+  my $db_name = CCNQ::Proxy::Configuration::db_name;
+  my $db_login = CCNQ::Proxy::Configuration::db_login;
+  my $db_password = CCNQ::Proxy::Configuration::db_password;
   info(<<TXT);
 Please run the following commands:
 mysql <<SQL
-  CREATE DATABASE ${configuration::db_name};
-  CONNECT ${configuration::db_name};
-  CREATE USER ${configuration::db_login} IDENTIFIED BY '${configuration::db_password}';
-  GRANT ALL ON ${configuration::db_name}.* TO ${configuration::db_login};
+  CREATE DATABASE ${db_name};
+  CONNECT ${db_name};
+  CREATE USER ${db_login} IDENTIFIED BY '${db_password}';
+  GRANT ALL ON ${db_name}.* TO ${db_login};
 SQL
 
-mysql ${configuration::db_name} < ${runtime_opensips_sql}
+mysql ${db_name} < ${runtime_opensips_sql}
 
 TXT
 

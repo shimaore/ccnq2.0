@@ -127,7 +127,7 @@ sub run_from_class {
     my \$b = new CCNQ::Proxy::${class} (ae_dbi_db);
     return \$b->run(\$action,\$params,\$context);
   };
-  warning($@) if $@;
+  error($@) if $@;
   return undef;
 }
 
