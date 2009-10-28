@@ -9,7 +9,7 @@ Provisioning:
 
   A request is completed when all its descendents are completed.
   A request can only be deleted if all its descendents are new.
-  
+
 
 Activity queueing and distribution:
 
@@ -24,7 +24,7 @@ Common Billing Element Format (CBEF)
   The aggregated files are classified by type (e.g. FreeSwitch CDRs, etc.) and then fed to different Mediation processors based on their content.
   There is a Null Mediation processor for records which are already in CBEF format.
 
-  The Billing Elements are then fed into the Rating engine. The Rating engine will use 
+  The Billing Elements are then fed into the Rating engine (using the CBEF format).
 
   The file format is tab-delimited UTF-8 data. The first line in each file is used to indicate the fields names.
   (If a Mediation processor doesn't know which fields will be needed, it should provide all the fields it knows about.)
@@ -41,17 +41,59 @@ Common Billing Element Format (CBEF)
   event_description     (plain-text description of the event that caused the Element to be created)
   request_uuid          (uuid of the Request that created the Element)
 
-    For some events we might need to collect an event count:
-  count           number of events
+    For all events we collect an event count:
+  count           number of events (e.g. number of SMS, number of Mo transfered, etc.)
+                  normally "1" for duration-based events
 
     For calls we need to collect the following information:
-  duration        duration in seconds
+  duration        duration in seconds (zero duration might mean failed call)
   from_e164       +....
   to_e164         +....
 
+    The Rating engine will locate the following information in the ERC-DB for each number involved in a call
+    (i.e. from and to, mostly); the actual field names are "from_label", etc.:
 
-  The Rating engine will use the rules in the ERC-DB in order to build a new file which will provide for each element the following additional information:
-  
+  _label          a "human readable" label for the number
+  _country        country of the number
+  _state          state of the number (used for US intra- vs inter-state billing)
+
+    Additionally, calling/called tax jurisdictions might be located at that time.
+
+    At this point extra parameters are computed in order to locate a proper rate for the call.
+    For example:
+
+  intrastate
+  interstate
+  distance
+  time_of_day_rule
+
+    A "rate" is a set of filters and a set of parameters. A filter will map a given call into a unique rating table
+    which will provide the proper parameters for the call.
+
+    Filters:
+      time-of-day
+      intra-state vs inter-state
+      etc.
+
+    Parameters: (these are the values provided in the "rating tables" generated from the ERC-DB)
+
+  currency
+  initial_duration
+  initial_cost
+  additional_duration
+  additional_cost
+  count_cost
+
+    Additionally, tax jurisdictions might be located inside the parameters.
+
+    The following values are then computed:
+
+  billable_count      for countable events
+  billable_duration   for duration-based events
+
+    The Rating engine does billing at the account_sub level (e.g. contract), if available.
+    It will use the rules in the ERC-DB in order to build a new file which will provide for each element the following additional information:
+
   currency              USD, EUR, etc.
   amount                (standard float with . decimal separator)
   tax_count             (how many tax_rate and tax_amount)
@@ -62,5 +104,5 @@ Common Billing Element Format (CBEF)
   tax_rate_2            (in %)
    (etc.)
 
-  The Rating engine might generate 0 amount records if (e.g.) the call is included in a plan, or is a toll-free call.
+   The Rating engine might generate 0 amount records if (e.g.) the call is included in a plan, or is a toll-free call.
 
