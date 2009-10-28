@@ -120,15 +120,15 @@ sub ae_dbi_db {
   
 sub run_from_class {
   my ($class,$action,$params,$context) = @_;
-  eval {
+  eval qq{
     use lib proxy_base_lib;
     use CCNQ::Proxy::${class};
 
-    my $db = ae_dbi_db;
-    my $b = new CCNQ::Proxy::${class} ($db);
-    return $b->run($action,$params,$context);
+    my \$b = new CCNQ::Proxy::${class} (ae_dbi_db);
+    return \$b->run(\$action,\$params,\$context);
   };
   warning($@) if $@;
+  return undef;
 }
 
 1;
