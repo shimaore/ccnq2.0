@@ -144,8 +144,8 @@ sub configure_opensips {
 
   my %values = CCNQ::Proxy::Configuration::parameters();
 
-  my $accounting_pattern   = '#IF_ACCT_'.uc($configuration::accounting);
-  my $authenticate_pattern = '#IF_AUTH_'.uc($configuration::authenticate);
+  my $accounting_pattern   = '#IF_ACCT_'.uc(CCNQ::Proxy::Configuration::accounting);
+  my $authenticate_pattern = '#IF_AUTH_'.uc(CCNQ::Proxy::Configuration::authenticate);
 
   # End of parameters
 
@@ -160,8 +160,8 @@ sub configure_opensips {
       s/\$\{([A-Z_]+)\}/defined $values{$1} ? $values{$1} : (warning("Undefined $1"),'')/eg;
       s/^\s*${accounting_pattern}//;
       s/^\s*${authenticate_pattern}//;
-      s/^\s*#IF_USE_NODE_ID// if $configuration::node_id;
-      s/^\s*#USE_PROXY_IP\s*// if $configuration::sip_host;
+      s/^\s*#IF_USE_NODE_ID// if CCNQ::Proxy::Configuration::node_id;
+      s/^\s*#USE_PROXY_IP\s*// if CCNQ::Proxy::Configuration::sip_host;
       $cfg_text .= $_;
   }
 

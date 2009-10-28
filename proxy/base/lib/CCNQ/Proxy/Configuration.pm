@@ -38,6 +38,7 @@ use constant db_login     => $configuration::db_login     || 'opensips';
 use constant db_password  => $configuration::db_password  || 'opensips';
 use constant db_host      => $configuration::db_host      || '127.0.0.1';
 use constant db_name      => $configuration::db_name      || 'opensips';
+use constant node_id      => $configuration::node_id      || '';
 
 use constant proxy_ip     => $configuration::sip_host       || '';
 use constant proxy_port   => $configuration::sip_port       || '5060';
@@ -97,7 +98,7 @@ sub parameters {
     MAX_HOPS    => (defined $configuration::max_hops && $configuration::max_hops ne '') ? $configuration::max_hops : '10',
     # If multiple servers are chained it may be necessary to use different names for the VSF parameter.
     UAC_VSF     => (defined $configuration::uac_vsf && $configuration::uac_vsf ne '') ? $configuration::uac_vsf : 'vsf',
-    NODE_ID     => $configuration::node_id || '',
+    NODE_ID     => node_id,
     INV_TIMER   => $configuration::inv_timer || 60,
   );
 
