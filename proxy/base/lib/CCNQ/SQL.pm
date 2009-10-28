@@ -21,8 +21,8 @@ use base qw(CCNQ::Object);
 sub _init
 {
     my $self = shift;
-    my ($json,$db) = @_;
-    $self->{_db}       = $db;
+    my ($db) = @_;
+    $self->{_db} = $db;
 }
 
 sub class { my $c = ref(shift); $c =~ s/^.*:://; return $c; }
