@@ -168,8 +168,8 @@ sub configure_opensips {
   # Save the configurations to temp files
   my $cfg_file = new File::Temp;
   my $sql_file = new File::Temp;
-  print_to($cfg_file,$cfg_text);
-  print_to($sql_file,$sql_text);
+  CCNQ::Install::print_to($cfg_file,$cfg_text);
+  CCNQ::Install::print_to($sql_file,$sql_text);
 
   # Move the temp files to their final destinations
   info("Installing new configuration");
