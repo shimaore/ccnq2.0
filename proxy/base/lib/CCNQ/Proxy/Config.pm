@@ -161,7 +161,7 @@ sub configure_opensips {
       s/^\s*${accounting_pattern}//;
       s/^\s*${authenticate_pattern}//;
       s/^\s*#IF_USE_NODE_ID// if CCNQ::Proxy::Configuration::node_id;
-      s/^\s*#USE_PROXY_IP\s*// if CCNQ::Proxy::Configuration::sip_host;
+      s/^\s*#USE_PROXY_IP\s*// if CCNQ::Proxy::Configuration::proxy_ip;
       $cfg_text .= $_;
   }
 
