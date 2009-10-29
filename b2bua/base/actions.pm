@@ -20,24 +20,24 @@ EOT
     });
 
     # autoload_configs
-    for my $name qw(
+    for my $name (qw(
       acl                    logfile
       cdr_csv                modules
       console                post_load_modules
       event_socket           sofia
       fifo                   switch
       local_stream           timezones
-    ) {
+    )) {
       CCNQ::B2BUA::copy_file(base_name,qw( autoload_configs ),"${name}.conf.xml");
     }
 
     # dialplan/template
-    for my $name qw( ) {
+    for my $name (qw( )) {
       CCNQ::B2BUA::copy_file(base_name,qw( dialplan template ),"${name}.xml");
     }
 
     # sip_profile/template
-    for my $name qw( public sbc-media sbc-nomedia ) {
+    for my $name (qw( public sbc-media sbc-nomedia )) {
       CCNQ::B2BUA::copy_file(base_name,qw( sip_profiles template ),"${name}.xml");
     }
   },

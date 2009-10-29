@@ -22,11 +22,11 @@ sub install_file {
   $txt = $cb->($txt) if $cb;
   CCNQ::Install::print_to($dst,$txt);
   CCNQ::Install::_execute('chown','freeswitch.daemon',$dst);
-};
+}
 
 sub copy_file {
   install_file(@_,undef);
-};
+}
 
 
 1;
