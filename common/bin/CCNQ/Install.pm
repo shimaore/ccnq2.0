@@ -236,7 +236,7 @@ sub attempt_run {
   my $run_file = File::Spec->catfile(CCNQ::Install::SRC,$function,actions_file_name);
 
   warning(qq(No such file "${run_file}", skipping)),
-  return { error => 'invalid action' } unless -e $run_file;
+  return sub { return { error => 'invalid action' } } unless -e $run_file;
   my $eval = content_of($run_file);
 
   return sub {
