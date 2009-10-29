@@ -19,6 +19,9 @@ use constant vars_xml => 'vars.xml';
 EOT
     });
 
+    # freeswitch.xml
+    CCNQ::B2BUA::copy_file(base_name,"freeswitch.xml");
+
     # autoload_configs
     for my $name (qw(
       acl                    logfile
