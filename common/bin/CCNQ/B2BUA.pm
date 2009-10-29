@@ -1,4 +1,4 @@
-package CCNQ::Proxy;
+package CCNQ::B2BUA;
 
 use CCNQ::Install;
 use File::Spec;
