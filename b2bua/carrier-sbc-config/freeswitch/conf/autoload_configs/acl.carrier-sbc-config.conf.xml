@@ -1,18 +1,3 @@
-<configuration name="acl.conf" description="Network Lists">
-  <network-lists>
-
-    <list name="dl-candidates" default="allow">
-      <node type="deny" cidr="10.0.0.0/8"/>
-      <node type="deny" cidr="172.16.0.0/12"/>
-      <node type="deny" cidr="192.168.0.0/16"/>
-    </list>
-
-    <list name="rfc1918" default="deny">
-      <node type="allow" cidr="10.0.0.0/8"/>
-      <node type="allow" cidr="172.16.0.0/12"/>
-      <node type="allow" cidr="192.168.0.0/16"/>
-    </list>
-
     <!-- This ACL should contain one entry for each OpenSIPS egress host. -->
     <!-- This should complement, not replace, a firewall or iptables. -->
     <list name="proxies" default="deny">
@@ -36,7 +21,7 @@
       <node type="allow" cidr="208.94.157.10/32"/>
       <node type="allow" cidr="208.94.159.10/32"/>
     </list>
-    
+
     <list name="sbc-dash-911" default="deny">
       <!-- old gateways -->
       <node type="allow" cidr="63.214.44.25/32"/>
@@ -51,6 +36,3 @@
 
     <list name="sbc-global-crossing-sbc1" default="deny">
     </list>
-
-  </network-lists>
-</configuration>
