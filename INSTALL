@@ -64,10 +64,32 @@ sudo /bin/sh -c 'mysql opensips < /etc/opensips/opensips.sql'
 
 * On the SBC servers:
   Install FreeSwitch
+cd ~/src
 wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch_1.0.4-1_amd64.deb
+wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch-lang-en_1.0.4-1_amd64.deb
+wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch-lua_1.0.4-1_amd64.deb
+wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch-sounds-en-us-callie-8000_1.0.4-1_amd64.deb
+wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch-codec-passthru-g729_1.0.4-1_amd64.deb
+
+sudo aptitude install unixodbc libasound2 libcurl3 libvorbis0a 
+
+sudo dpkg -i freeswitch_1.0.4-1_amd64.deb
+sudo dpkg -i freeswitch-lang-en_1.0.4-1_amd64.deb
+sudo dpkg -i freeswitch-lua_1.0.4-1_amd64.deb
+sudo dpkg -i freeswitch-sounds-en-us-callie-8000_1.0.4-1_amd64.deb
+sudo dpkg -i freeswitch-codec-passthru-g729_1.0.4-1_amd64.deb
 
 
 
+* Finally:
+
+# Install /etc/ccn/cookie
+sudo mkdir /etc/ccn
+hexdump -C /dev/urandom | head -1 | md5sum | sudo tee /etc/ccn/cookie
+
+sudo tail -f /var/log/syslog &
+
+# Then, many times:
 sudo $HOME/src/ccnq2.0/common/bin/upgrade.pl
 
 Monitor syslog during the execution of the scripts.
