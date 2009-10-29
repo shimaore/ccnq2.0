@@ -94,3 +94,8 @@ sudo $HOME/src/ccnq2.0/common/bin/upgrade.pl
 
 Monitor syslog during the execution of the scripts.
 
+* On upgrades:
+
+cd ~/src/ccnq2.0
+git pull
+sudo $HOME/src/ccnq2.0/common/bin/upgrade.pl
