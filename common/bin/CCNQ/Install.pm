@@ -140,6 +140,9 @@ sub catdns {
 }
 
 use constant fqdn => catdns(host_name,domain_name);
+sub cluster_fqdn {
+  return catdns($_[0],domain_name);
+}
 
 # XXX This assumes default ejabberd mod_muc configuration and needs
 #     to be documented / modified.
