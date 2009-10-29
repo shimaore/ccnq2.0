@@ -1,0 +1,32 @@
+package CCNQ::Proxy;
+
+use CCNQ::Install;
+use File::Spec;
+use File::Path;
+
+use constant b2bua_directory => File::Spec->catfile(CCNQ::Install::SRC,qw( b2bua ));
+
+use constant freeswitch_install_conf => '/opt/freeswitch/conf'; # Debian
+
+sub install_file {
+  my $cb = pop;
+  my $function = shift;
+  my @path = @_;
+  my $src_dir = File::Spec->catfile(b2bua_directory,$function,qw( freeswitch conf ));
+  my $src = File::Spec->catfile($src_dir,@path);
+  my @dst_dir = (@path);
+  pop @dst_dir;
+  File::Path::mkpath([@dst_dir]);
+  my $dst = File::Spec->catfile(CCNQ::B2BUA::freeswitch_install_conf,@path);
+  my $txt = CCNQ::Install::content_of($src);
+  $txt = $cb->($txt) if $cb;
+  CCNQ::Install::print_to($dst,$txt);
+  CCNQ::Install::_execute('chown','freeswitch.daemon',$dst);
+};
+
+sub copy_file {
+  install_file(@_,undef);
+};
+
+
+1;
