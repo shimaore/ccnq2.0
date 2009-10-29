@@ -20,7 +20,7 @@ EOT
     });
 
     # freeswitch.xml
-    CCNQ::B2BUA::copy_file(base_name,"freeswitch.xml");
+    CCNQ::B2BUA::copy_file(base_name,'freeswitch.xml');
 
     # autoload_configs
     for my $name (qw(

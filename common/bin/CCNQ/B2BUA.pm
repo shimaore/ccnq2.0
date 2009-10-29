@@ -18,10 +18,11 @@ sub install_file {
   my $src = File::Spec->catfile($src_dir,@path);
   my @dst_dir = (@path);
   pop @dst_dir;
-  my $dst_dir = File::Spec->catfile(@dst_dir);
-  debug("Creating directory $dst_dir");
+  my $dst_dir = File::Spec->catfile(CCNQ::B2BUA::freeswitch_install_conf,@dst_dir);
+  debug("Creating target directory $dst_dir");
   File::Path::mkpath([$dst_dir]);
   my $dst = File::Spec->catfile(CCNQ::B2BUA::freeswitch_install_conf,@path);
+  debug("Installing $src as $dst");
   my $txt = CCNQ::Install::content_of($src);
   $txt = $cb->($txt) if $cb;
   CCNQ::Install::print_to($dst,$txt);
