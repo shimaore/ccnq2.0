@@ -20,7 +20,7 @@ EOT
     });
 
     # autoload_configs
-    for my $name in qw(
+    for my $name qw(
       acl                    logfile
       cdr_csv                modules
       console                post_load_modules
@@ -32,12 +32,12 @@ EOT
     }
 
     # dialplan/template
-    for my $name in qw( ) {
+    for my $name qw( ) {
       CCNQ::B2BUA::copy_file(base_name,qw( dialplan template ),"${name}.xml");
     }
 
     # sip_profile/template
-    for my $name in qw( public sbc-media sbc-nomedia ) {
+    for my $name qw( public sbc-media sbc-nomedia ) {
       CCNQ::B2BUA::copy_file(base_name,qw( sip_profiles template ),"${name}.xml");
     }
   },
