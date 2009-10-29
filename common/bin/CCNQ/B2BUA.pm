@@ -4,6 +4,8 @@ use CCNQ::Install;
 use File::Spec;
 use File::Path;
 
+use Logger::Syslog;
+
 use constant b2bua_directory => File::Spec->catfile(CCNQ::Install::SRC,qw( b2bua ));
 
 use constant freeswitch_install_conf => '/opt/freeswitch/conf'; # Debian
@@ -16,7 +18,9 @@ sub install_file {
   my $src = File::Spec->catfile($src_dir,@path);
   my @dst_dir = (@path);
   pop @dst_dir;
-  File::Path::mkpath([@dst_dir]);
+  my $dst_dir = File::Spec->catfile(@dst_dir);
+  debug("Creating directory $dst_dir");
+  File::Path::mkpath([$dst_dir]);
   my $dst = File::Spec->catfile(CCNQ::B2BUA::freeswitch_install_conf,@path);
   my $txt = CCNQ::Install::content_of($src);
   $txt = $cb->($txt) if $cb;
