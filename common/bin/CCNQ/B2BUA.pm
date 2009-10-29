@@ -25,7 +25,8 @@ sub install_file {
   my $txt = CCNQ::Install::content_of($src);
   $txt = $cb->($txt) if $cb;
   CCNQ::Install::print_to($dst,$txt);
-  CCNQ::Install::_execute('chown','freeswitch.daemon',$dst);
+  CCNQ::Install::_execute('chown','-R','freeswitch.daemon',freeswitch_install_conf);
+  # XXX also sed on /etc/default/freeswitch
 }
 
 sub copy_file {
