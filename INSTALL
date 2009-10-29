@@ -79,6 +79,7 @@ sudo dpkg -i freeswitch-lua_1.0.4-1_amd64.deb
 sudo dpkg -i freeswitch-sounds-en-us-callie-8000_1.0.4-1_amd64.deb
 sudo dpkg -i freeswitch-codec-passthru-g729_1.0.4-1_amd64.deb
 
+sudo mv /opt/freeswitch/conf /opt/freeswitch/conf.orig
 
 
 * Finally:
