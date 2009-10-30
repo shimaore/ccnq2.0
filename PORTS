@@ -22,6 +22,7 @@ SIP ports (Sofia profiles):
 
   FeatureServer:  5100
 
-  Cust SBC:     5200 and up
+  Cust SBC:     15200:15299 (internal -- towards customer proxy)
+                5200:5299 (external -- towards inbound/outbound proxy)
 
   OpenSIPS:     5060 *
