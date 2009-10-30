@@ -32,55 +32,12 @@ Plus the following CBEF elements which are generally not used for rating:
 
 
 
-First the various fields are expanded as needed; e.g.
-
-
-  # Could use Number::Phone, otherwise use our own DB for states, etc.
-  sub expand_number {
-    my ($cbef,$role) = @_;
-    my $info = locate_number_info($cbef->{$role.'_e164');
-    $cbef->{$role.'_label'}   = $info->{label};
-    $cbef->{$role.'_country'} = $info->{country};
-    $cbef->{$role.'_state'}   = $info->{state}; # Mostly useful in the US for intra-state vs inter-state determination
-    return;
-  }
-
-  expand_number($cbef,'from');
-  expand_number($cbef,'to');
-
-
 Then the account+account_sub is used to locate a specific Plan; the Plan is then used to run the rating.
 
 
   my $plan = lookup_plan_for($cbef->{account},$cbef->{account_sub});
   $plan->apply($cbef);
   return $cbef; # A Rated CBEF
-
-
-
-
-
-
-
-
-
-use constant mappers => {
-  zero => {
-    my ($value) = @_;
-    return 0;
-  },
-  base => {
-    my ($value,$base_cost) = @_;
-    return $base_cost;
-  },
-  base_increment => {
-    my ($value,$base,$base_cost,$increment,$increment_cost) = @_;
-    return $base_cost + $increment_cost * max( 0, ceiling( ($value-$base) / $increment ) );
-  }
-}
-
-
-
 
 
 
@@ -116,44 +73,4 @@ category: e.g. voice alls, SMS, internet connection
 rates:
   essentially a duration is first converted (once the rate is determined)
   into a billable_base (based on call minimum duration) + billable_count
-  
-  
-sub duration_to_count {
-  my ($duration,$minimum_duration,$)
-}
-
-
-
-
-
-
-
-use constant record_handler = {
-  # "event_type_handler"
-  'sms' => sub {
-    my ($cbef) = @_;
-    my $rate = locate_rate_single($cbef->{account},$cbef->{account_sub},$cbef->{}, ...)
-  },
-  'connected_call' => sub {
-    my ($cbef) = @_;
-    my $filters = compute_filters($cbef);
-    my $rate = locate_rate_filtered($cbef->{account},$cbef->{account_sub},$filters,...)
-  },
-};
-
-sub rate_handler {
-  my ($cbef,$rate) = @_;
-  $cbef->{currency} = $rate->{currency};
-
-  $cbef->{count_cost}    = $cbef->{billable_count} * $rate->{count_cost} + $rate-> if $cbef->{billable_count};
-  $cebf->{duration_cost} = $cbef->{billable_duration} * $rate
-}
-
-
-sub rater {
-  my ($cbef) = @_;
-
-  my $event_type = $cbef->{event_type};
-  return record_handler->{$event_type}->($cbef);
-}
 
