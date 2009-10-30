@@ -31,6 +31,6 @@ use CCNQ::Proxy::Config;
 
     # Restart OpenSIPS using the new configuration.
     info("Restarting OpenSIPS");
-    CCNQ::Install::_execute('sudo','/etc/init.d/opensips','restart');
+    CCNQ::Install::_execute('/etc/init.d/opensips','restart');
   },
 }

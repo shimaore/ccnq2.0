@@ -44,5 +44,10 @@ EOT
     for my $name (qw( public sbc-media sbc-nomedia )) {
       CCNQ::B2BUA::copy_file($b2bua_name,qw( sip_profiles template ),"${name}.xml");
     }
+
+    # Restart FreeSwitch using the new configuration.
+    info("Restarting FreeSwitch");
+    CCNQ::Install::_execute('/etc/init.d/freeswitch','stop');
+    CCNQ::Install::_execute('/etc/init.d/freeswitch','start');
   },
 }
