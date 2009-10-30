@@ -41,8 +41,6 @@ wget http://opensource.sotelips.net/~stephane/osip-1.5.3-tls/opensips_1.5.3-0_am
 wget http://opensource.sotelips.net/~stephane/osip-1.5.3-tls/opensips-mysql-module_1.5.3-0_amd64.deb
 sudo dpkg -i opensips_1.5.3-0_amd64.deb
 sudo dpkg -i opensips-mysql-module_1.5.3-0_amd64.deb
-# XXX -> our installer should do this
-sudo sed -i -e 's/^RUN_OPENSIPS=no$/RUN_OPENSIPS=yes/' /etc/default/opensips
 
 sudo cpan AnyEvent::DBI
 
