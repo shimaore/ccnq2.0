@@ -1,13 +1,14 @@
 use CCNQ::B2BUA;
 
-use constant base_name => 'base';
 use constant vars_xml => 'vars.xml';
 
 {
   install => sub {
     my ($params,$context) = @_;
 
-    CCNQ::B2BUA::install_file(base_name,vars_xml, sub {
+    my $b2bua_name = 'base';
+
+    CCNQ::B2BUA::install_file($b2bua_name,vars_xml, sub {
       my $txt = shift;
       my $host_fqdn    = CCNQ::Install::fqdn;
       my $domain_name  = CCNQ::Install::domain_name;
@@ -20,7 +21,7 @@ EOT
     });
 
     # freeswitch.xml
-    CCNQ::B2BUA::copy_file(base_name,'freeswitch.xml');
+    CCNQ::B2BUA::copy_file($b2bua_name,'freeswitch.xml');
 
     # autoload_configs
     for my $name (qw(
@@ -31,17 +32,17 @@ EOT
       fifo                   switch
       local_stream           timezones
     )) {
-      CCNQ::B2BUA::copy_file(base_name,qw( autoload_configs ),"${name}.conf.xml");
+      CCNQ::B2BUA::copy_file($b2bua_name,qw( autoload_configs ),"${name}.conf.xml");
     }
 
     # dialplan/template
     for my $name (qw( )) {
-      CCNQ::B2BUA::copy_file(base_name,qw( dialplan template ),"${name}.xml");
+      CCNQ::B2BUA::copy_file($b2bua_name,qw( dialplan template ),"${name}.xml");
     }
 
     # sip_profile/template
     for my $name (qw( public sbc-media sbc-nomedia )) {
-      CCNQ::B2BUA::copy_file(base_name,qw( sip_profiles template ),"${name}.xml");
+      CCNQ::B2BUA::copy_file($b2bua_name,qw( sip_profiles template ),"${name}.xml");
     }
   },
 }
