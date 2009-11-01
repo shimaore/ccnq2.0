@@ -1,0 +1,46 @@
+The CA, CRL, certificates and private keys must be named like below (names
+are not configurable, only the path where they reside can be configured):
+
+ca.pem, crl.pem, dispatcher.crt, dispatcher.key, relay.crt, relay.key
+
+
+[TLS]
+; Path to the certificates. If relative, it will be looked up in both the
+; application directory (for a standalone installation) and /etc/mediaproxy,
+; the former taking precedence if found.
+;
+certs_path = /etc/mediaproxy/tls
+
+; How often (in seconds) to verify the peer certificate for expiration and
+; revocation. Default value is 300 seconds (5 minutes)
+;
+;verify_interval = 300
+
+
+[Database]
+; This section needs to be configured if database accounting is enabled
+
+; Database URI in the form: scheme://user:password@host/database
+;dburi = mysql://mediaproxy:CHANGEME@localhost/mediaproxy
+
+; Name for the table.
+;sessions_table = media_sessions
+
+; Column names. Columns are strings except for info which is a BLOB
+;
+;callid_column = call_id
+;fromtag_column = from_tag
+;totag_column = to_tag
+;info_column = info
+
+[Radius]
+; This section needs to be configured if radius accounting is enabled
+
+; OpenSIPS RADIUS configuration file. All RADIUS cofiguration parameters will
+; be read from this file, including dictionary files.
+;
+;config_file = /etc/opensips/radius/client.conf
+
+; Additional dictionary file with MediaProxy specific attributes.
+;additional_dictionary = radius/dictionary
+

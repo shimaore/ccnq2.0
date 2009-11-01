@@ -1,0 +1,99 @@
+[Dispatcher]
+; Local socket on which to communicate with OpenSIPS. The OpenSIPS mediaproxy
+; module should be configured to connect to this socket. If a relative path,
+; /var/run/mediaproxy will be prepended. Default value is dispatcher.sock.
+;
+;socket_path = dispatcher.sock
+
+; Listen address for incoming connections from the relays. The format is
+; "ip[:port]". If the ip is "0.0.0.0" or the keyword "any", the dispatcher
+; will listen on all interfaces of this host. If the port is not specified,
+; the dispatcher will listen on the default port of 25060.
+;
+;listen = 0.0.0.0
+
+; Listen address for incoming management interface connections. Clients can
+; connect to this and issue commands to query the status of the relays and
+; their sessions. The format is "ip[:port]". If the ip is "0.0.0.0" or the
+; keyword "any", the dispatcher will listen on all interfaces of this host.
+; If the port is not specified, the dispatcher will listen on the default
+; port of 25061.
+;
+;listen_management = 0.0.0.0
+
+; Whether or not to use TLS on the management interface. Note that the same
+; TLS credentials are used for both the relay and the management interface
+; connections.
+;
+; Default value is yes.
+;
+;management_use_tls = yes
+
+; Specify extra checks to be performed on the relay TLS credentials before
+; considering the connection with the relay succesful. The passport is
+; specified as a list of attribute/value pairs in the form:
+;   AN:value[, AN:value...]
+; where the attribute name (AN) is one of the available attribute names from
+; the X509 certificate subject: O, OU, CN, C, L, ST, EMAIL. The value is a
+; string that has to match with the corresponding attribute value from the
+; relay certificate. A wildcard (*) can be used in the value at the beginning
+; or the end of the string to indicate that the corresponding attribute from
+; the relay certificate must end with respectively to start with the given
+; string (excluding the wildcard).
+; For example using this passport:
+;   passport = O:AG Projects, CN:relay*
+; means that a connection with a relay will only be accepted if the relay
+; certificate subject has organization set to "AG Projects" and the common
+; name starts with "relay". To specify that no additional identity checks
+; need to be performed, use the keyword None. If passport is None, then only
+; the certificate signature is verified agains the certificate authority in
+; tls/ca.pem (signature is always verified even when passport is None).
+;
+; Default value is None.
+;
+;passport = None
+
+; This option is similar to passport above, but applies to the management
+; interface connections instead of relay connections. It specifies extra
+; checks to be performed on the TLS credentials suplied by an entity that
+; connects to the management interface. Please consult passport above for
+; a detailed description of the possible values for this option.
+;
+; If management_use_tls is false, this option is ignored.
+;
+; Default value is None.
+;
+;management_passport = None
+
+; The minimum level log messages need to have in order to appear in syslog
+; or on the console, depending on the mode the dispatcher is running in.
+; In order of severity, this can be one of CRITICAL, ERROR, WARNING, INFO or
+; DEBUG.
+;log_level = DEBUG
+
+; Timeout value in second for individual relays. When a command is sent from
+; the dispatcher to a relay it will wait this amount of seconds for a reply.
+; The default is 5 seconds.
+;
+;relay_timeout = 5
+
+; A comma separated list of accounting backends that will be used to save
+; accounting data with the session information once a session has finished.
+; Currently 2 backends are available: "radius" and "database". If enabled
+; they can be configured below in their respective sections. The default
+; is to use no accounting backend.
+;
+;accounting =
+
+[OpenSIPS]
+; Configure interaction between the media dispatcher and OpenSIPS
+
+; Path to OpenSIPS's UNIX filesystem socket from the mi_datagram module.
+;socket_path = /var/run/mediaproxy/dispatcher.sock
+
+; Maximum number of connections to open with OpenSIPS's mi_datagram socket.
+; Please note that connections will be opened on a need basis depending on
+; load, but never more than the number configured below.
+;
+;max_connections = 10
+

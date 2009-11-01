@@ -26,3 +26,6 @@ SIP ports (Sofia profiles):
                 5200:5299 (external -- towards inbound/outbound proxy)
 
   OpenSIPS:     5060 *
+
+Other ports:
+  MediaProxy  25060
