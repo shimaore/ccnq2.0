@@ -3,98 +3,149 @@ These instructions are for Debian/Lenny.
 
 
 Here I am assuming you use sudo to gain root access.
-(The program does too.)
+
+* Update apt's sources.list to import testing (needed for some packages):
+
+  cat <<EOT | sudo tee -a /etc/apt/sources.list
+deb     http://ftp.us.debian.org/debian/   testing main contrib
+EOT
+  cat <<EOT | sudo tee /etc/apt/preferences
+# Install Debian/Lenny packages by default
+Package: *
+Pin: release a=lenny
+Pin-Priority: 700
+
+# Although testing is available, do not attempt to automatically upgrade to it.
+Package: *
+Pin: release a=testing
+Pin-Priority: -1
+EOT
+
+  sudo aptitude update
+  sudo aptitude dist-upgrade
 
 * On all servers, install the program:
 
-sudo aptitude install libjson-perl libnet-libidn-perl libauthen-sasl-perl libxml-writer-perl libwww-perl libyaml-perl libexpat-dev liblogger-syslog-perl libio-stringy-perl git-core libnet-ssleay-perl build-essential
-sudo cpan EV
-sudo cpan AnyEvent::XMPP
-sudo cpan AnyEvent::Watchdog
-
-sudo aptitude install git-core
-mkdir -p ~/src && (cd ~/src && git clone git://github.com/stephanealnet/ccnq2.0.git)
+  sudo aptitude update
+  sudo aptitude install libjson-perl libnet-libidn-perl libauthen-sasl-perl libxml-writer-perl libwww-perl libyaml-perl libexpat-dev liblogger-syslog-perl libio-stringy-perl git-core libnet-ssleay-perl build-essential
+  sudo cpan EV
+  sudo cpan AnyEvent::XMPP
+  sudo cpan AnyEvent::Watchdog
+  mkdir -p ~/src && (cd ~/src && git clone git://github.com/stephanealnet/ccnq2.0.git)
 
 
 * On the API server:
-sudo cpan AnyEvent::HTTPD
+
+  # The API server is the one that pushes HTTP request into the XMPP bus.
+  sudo cpan AnyEvent::HTTPD
 
 * On the manager server:
-  CouchDB 0.9.x or above is required
-sudo aptitude install ncurses-dev
-wget http://erlang.org/download/otp_src_R13B02-1.tar.gz
-  (configure, make, sudo make install)
 
-sudo aptitude install build-essential spidermonkey-bin libmozjs-dev libicu-dev libcurl4-openssl-dev
-sudo adduser --gecos '' --disabled-password couchdb
-wget http://www.apache.org/dist/couchdb/0.10.0/apache-couchdb-0.10.0.tar.gz
-  (configure, make, sudo make install)
-sudo chown couchdb /usr/local/var/*/couchdb
+  # The manager server is the one that takes generic Requests and splices them into per-server Activities.
+  # It uses CouchDB to store the Requests & Activities.
 
-sudo cpan AnyEvent::CouchDB
+  # CouchDB 0.9.x or above is required, but is not present in Debian/Lenny.
+
+  # First compile the latest release of Erlang
+  #    sudo aptitude install ncurses-dev
+  #    cd ~/src && wget http://erlang.org/download/otp_src_R13B02-1.tar.gz
+  #    tar xzf otp_src_R13B02-1.tar.gz
+  #    cd otp_src_R13B02*
+  #    ./configure
+  #    make && sudo make install
+  aptitude install erlang/testing
+
+  # Then install CouchDB itself
+  sudo aptitude install build-essential spidermonkey-bin libmozjs-dev libicu-dev libcurl4-openssl-dev
+  cd ~/src && wget http://www.apache.org/dist/couchdb/0.10.0/apache-couchdb-0.10.0.tar.gz
+  tar xzf apache-couchdb-0.10.0.tar.gz
+  cd apache-couchdb-0.10.0*
+  ./configure
+  make && sudo make install
+
+  sudo adduser --gecos '' --disabled-password couchdb
+  sudo chown couchdb /usr/local/var/*/couchdb
+
+  # Our client also needs this module:
+  sudo cpan AnyEvent::CouchDB
 
 * On the proxy servers:
 
-# Install OpenSIPS (note: we provide "amd64"-type Debian packages only)
-cd ~/src
-wget http://opensource.sotelips.net/~stephane/osip-1.5.3-tls/opensips_1.5.3-0_amd64.deb
-wget http://opensource.sotelips.net/~stephane/osip-1.5.3-tls/opensips-mysql-module_1.5.3-0_amd64.deb
-sudo dpkg -i opensips_1.5.3-0_amd64.deb
-sudo dpkg -i opensips-mysql-module_1.5.3-0_amd64.deb
+  # Install OpenSIPS (note: we provide "amd64"-type Debian packages only)
+  cd ~/src
+  wget http://opensource.sotelips.net/~stephane/osip-1.5.3-tls/opensips_1.5.3-0_amd64.deb
+  wget http://opensource.sotelips.net/~stephane/osip-1.5.3-tls/opensips-mysql-module_1.5.3-0_amd64.deb
+  sudo dpkg -i opensips_1.5.3-0_amd64.deb
+  sudo dpkg -i opensips-mysql-module_1.5.3-0_amd64.deb
 
-sudo cpan AnyEvent::DBI
+  # Install MediaProxy dispatcher (if using MediaProxy)
+  sudo aptitude install python python-support libnetfilter-conntrack1 python-cjson python-twisted-core python-twisted-names python-zopeinterface
+  # Versions required for mediaproxy-common include python-application (>= 1.1.5) and python-gnutls (>= 1.1.8) which are not in Debian/Lenny
+  sudo aptitude install python-application/testing python-gnutls/testing
+  cd ~/src
+  wget http://opensource.sotelips.net/~stephane/mp-2.3.8/mediaproxy-common_2.3.8_amd64.deb
+  wget http://opensource.sotelips.net/~stephane/mp-2.3.8/mediaproxy-dispatcher_2.3.8_all.deb
+  sudo dpkg -i mediaproxy-common_2.3.8_amd64.deb
+  sudo dpkg -i mediaproxy-dispatcher_2.3.8_all.deb
 
-sudo aptitude install mysql-server
-# Also I do:
-sudo aptitude --purge remove portmap
-sudo aptitude install postfix
+  # Continue installation for the proxy:
 
-# Part of the syslog information (during upgrade.pl) are to run some MySQL commands to initialize the database.
-# Typically these are equivalent to:
-sudo mysql <<SQL
-  CREATE DATABASE opensips;
-  CONNECT opensips;
-  CREATE USER opensips IDENTIFIED BY 'opensips';
-  GRANT ALL ON opensips.* TO opensips;
+  sudo cpan AnyEvent::DBI
+
+  sudo aptitude install mysql-server
+  # Also I do:
+  sudo aptitude --purge remove portmap
+  sudo aptitude install postfix
+
+  # Part of the syslog information (during upgrade.pl) are to run some MySQL commands to initialize the database.
+  # Typically these are equivalent to:
+  sudo mysql <<SQL
+    CREATE DATABASE opensips;
+    CONNECT opensips;
+    CREATE USER opensips IDENTIFIED BY 'opensips';
+    GRANT ALL ON opensips.* TO opensips;
 SQL
-sudo /bin/sh -c 'mysql opensips < /etc/opensips/opensips.sql'
+  sudo /bin/sh -c 'mysql opensips < /etc/opensips/opensips.sql'
 
 
 * On the SBC servers:
-  Install FreeSwitch
-cd ~/src
-wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch_1.0.4-1_amd64.deb
-wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch-lang-en_1.0.4-1_amd64.deb
-wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch-lua_1.0.4-1_amd64.deb
-wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch-sounds-en-us-callie-8000_1.0.4-1_amd64.deb
-wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch-codec-passthru-g729_1.0.4-1_amd64.deb
 
-sudo aptitude install unixodbc libasound2 libcurl3 libvorbis0a 
+  # Install FreeSwitch
 
-sudo dpkg -i freeswitch_1.0.4-1_amd64.deb
-sudo dpkg -i freeswitch-lang-en_1.0.4-1_amd64.deb
-sudo dpkg -i freeswitch-lua_1.0.4-1_amd64.deb
-sudo dpkg -i freeswitch-sounds-en-us-callie-8000_1.0.4-1_amd64.deb
-sudo dpkg -i freeswitch-codec-passthru-g729_1.0.4-1_amd64.deb
+  sudo aptitude install unixodbc libasound2 libcurl3 libvorbis0a
 
-sudo mv /opt/freeswitch/conf /opt/freeswitch/conf.orig
+  cd ~/src
+  wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch_1.0.4-1_amd64.deb
+  wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch-lang-en_1.0.4-1_amd64.deb
+  wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch-lua_1.0.4-1_amd64.deb
+  wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch-sounds-en-us-callie-8000_1.0.4-1_amd64.deb
+  wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch-codec-passthru-g729_1.0.4-1_amd64.deb
+
+
+  sudo dpkg -i freeswitch_1.0.4-1_amd64.deb
+  sudo dpkg -i freeswitch-lang-en_1.0.4-1_amd64.deb
+  # sudo dpkg -i freeswitch-lua_1.0.4-1_amd64.deb
+  # sudo dpkg -i freeswitch-sounds-en-us-callie-8000_1.0.4-1_amd64.deb
+  # sudo dpkg -i freeswitch-codec-passthru-g729_1.0.4-1_amd64.deb
+
+  sudo mv /opt/freeswitch/conf /opt/freeswitch/conf.orig
 
 
 * Finally:
 
-# Install /etc/ccn/cookie
-sudo mkdir /etc/ccn
-hexdump -C /dev/urandom | head -1 | md5sum | sudo tee /etc/ccn/cookie
+  # Install /etc/ccn/cookie
+  sudo mkdir /etc/ccn
+  hexdump -C /dev/urandom | head -1 | md5sum | sudo tee /etc/ccn/cookie
 
-sudo tail -f /var/log/syslog &
+  sudo tail -f /var/log/syslog &
 
-# Then, many times:
-sudo $HOME/src/ccnq2.0/common/bin/upgrade.pl
+  # Then, many times:
+  sudo $HOME/src/ccnq2.0/common/bin/upgrade.pl
 
-Monitor syslog during the execution of the scripts.
+  # Monitor syslog during the execution of the scripts to know what to do next.
 
 * On upgrades:
 
-cd ~/src/ccnq2.0
-git pull
-sudo $HOME/src/ccnq2.0/common/bin/upgrade.pl
+  cd ~/src/ccnq2.0
+  git pull
+  sudo $HOME/src/ccnq2.0/common/bin/upgrade.pl
