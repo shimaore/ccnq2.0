@@ -13,8 +13,9 @@ use File::Copy;
 sub try_install {
   my ($src,$dst) = @_;
   if( -e $dst ) {
-    warning("Not overwriting existing $dst");
+    info("Not overwriting existing $dst");
   } else {
+    debug("Copying $src to $dst");
     copy($src,$dst) or warning("Copying $src to $dst failed: $!");
   }
 }
