@@ -6,10 +6,11 @@ Here I am assuming you use sudo to gain root access.
 
 * Update apt's sources.list to import testing (needed for some packages):
 
-  cat <<EOT | sudo tee -a /etc/apt/sources.list
+  cat <<EOT | sudo tee -a /etc/apt/sources.list > /dev/null
+# Testing packages required for Erlang/CouchDB, MediaProxy
 deb     http://ftp.us.debian.org/debian/   testing main contrib
 EOT
-  cat <<EOT | sudo tee /etc/apt/preferences
+  cat <<EOT | sudo tee /etc/apt/preferences > /dev/null
 # Install Debian/Lenny packages by default
 Package: *
 Pin: release a=lenny
@@ -73,6 +74,7 @@ EOT
 
   # Install OpenSIPS (note: we provide "amd64"-type Debian packages only)
   cd ~/src
+  sudo aptitude install libmysqlclient15off mysql-client
   wget http://opensource.sotelips.net/~stephane/osip-1.5.3-tls/opensips_1.5.3-0_amd64.deb
   wget http://opensource.sotelips.net/~stephane/osip-1.5.3-tls/opensips-mysql-module_1.5.3-0_amd64.deb
   sudo dpkg -i opensips_1.5.3-0_amd64.deb
@@ -105,6 +107,7 @@ EOT
     CREATE USER opensips IDENTIFIED BY 'opensips';
     GRANT ALL ON opensips.* TO opensips;
 SQL
+  # Run this AFTER upgrade.pl, otherwise /etc/opensips/opensips.sql will not be present.
   sudo /bin/sh -c 'mysql opensips < /etc/opensips/opensips.sql'
 
 
@@ -117,9 +120,9 @@ SQL
   cd ~/src
   wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch_1.0.4-1_amd64.deb
   wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch-lang-en_1.0.4-1_amd64.deb
-  wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch-lua_1.0.4-1_amd64.deb
-  wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch-sounds-en-us-callie-8000_1.0.4-1_amd64.deb
-  wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch-codec-passthru-g729_1.0.4-1_amd64.deb
+  # wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch-lua_1.0.4-1_amd64.deb
+  # wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch-sounds-en-us-callie-8000_1.0.4-1_amd64.deb
+  # wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch-codec-passthru-g729_1.0.4-1_amd64.deb
 
 
   sudo dpkg -i freeswitch_1.0.4-1_amd64.deb
@@ -128,6 +131,7 @@ SQL
   # sudo dpkg -i freeswitch-sounds-en-us-callie-8000_1.0.4-1_amd64.deb
   # sudo dpkg -i freeswitch-codec-passthru-g729_1.0.4-1_amd64.deb
 
+  # Important: move the original configuration files out of the way.
   sudo mv /opt/freeswitch/conf /opt/freeswitch/conf.orig
 
 
@@ -135,7 +139,7 @@ SQL
 
   # Install /etc/ccn/cookie
   sudo mkdir /etc/ccn
-  hexdump -C /dev/urandom | head -1 | md5sum | sudo tee /etc/ccn/cookie
+  hexdump -C /dev/urandom | head -1 | md5sum | sudo tee /etc/ccn/cookie > /dev/null
 
   sudo tail -f /var/log/syslog &
 
