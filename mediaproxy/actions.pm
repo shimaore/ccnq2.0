@@ -12,7 +12,7 @@
     my $relay_file      = CCNQ::MediaProxy::mediaproxy_config.'.relay'
     my $config_dispatcher = CCNQ::Install::content_of($dispatcher_file) || '';
     my $config_relay      = CCNQ::Install::content_of($relay_file)      || '';
-    my $config = <<EOT;
+    my $config = <<'EOT';
 [TLS]
 certs_path = /etc/mediaproxy/tls
 ;verify_interval = 300

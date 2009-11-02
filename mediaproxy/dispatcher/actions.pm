@@ -2,7 +2,7 @@
   install => sub {
     use CCNQ::MediaProxy;
     CCNQ::MediaProxy::install_default_key('dispatcher');
-    my $config = <<EOT;
+    my $config = <<'EOT';
 # start dispatcher configuration
 
 [Dispatcher]

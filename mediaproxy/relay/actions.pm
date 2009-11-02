@@ -6,7 +6,7 @@
 
     my $cluster_fqdn = CCNQ::Install::cluster_fqdn($params->{cluster_name});
 
-    my $config = <<EOT;
+    my $config = <<"EOT";
 # start relay configuration
 
 [Relay]
