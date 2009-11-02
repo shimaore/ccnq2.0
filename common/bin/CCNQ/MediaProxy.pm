@@ -23,7 +23,7 @@ sub try_install {
 sub install_default_key {
   my ($file) = @_;
   for my $prefix (qw( .crt .key )) {
-    my $src = File::Spec::catfile(CCNQ::MediaProxy::mediaproxy_directory,$file,$file.$prefix;
+    my $src = File::Spec::catfile(CCNQ::MediaProxy::mediaproxy_directory,$file,$file.$prefix);
     my $dst = File::Spec::catfile(CCNQ::MediaProxy::mediaproxy_install_conf,'tls',$file.$prefix);
     try_install($src,$dst);
   }
