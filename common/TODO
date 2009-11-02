@@ -1,1 +1,1 @@
-Migrate CCNQ::SQL / CCNQ::Base to AnyEvent::DBI.
+XXX Using mediaproxy/relay and mediaproxy/dispatcher in two different roles does not work: calling "mediaproxy/actions.pm" overwrites the configuration.

@@ -168,7 +168,7 @@ use constant roles_to_functions => {
   'client-sbc'      => [qw( b2bua/cdr b2bua/client-sbc-config  b2bua/base node )],
   'inbound-proxy'   => [qw( proxy/inbound-proxy proxy/base node )],
   'outbound-proxy'  => [qw( proxy/outbound-proxy proxy/base node )],
-  'complete-transparent-proxy' => [qw( proxy/registrar proxy/mediaproxy proxy/complete-transparent proxy/base mediaproxy/dispatcher mediaproxy node )],
+  'complete-transparent-proxy' => [qw( proxy/registrar proxy/complete-transparent proxy/base mediaproxy/dispatcher mediaproxy node )],
   'router'          => [qw( proxy/registrar proxy/router proxy/base node )],
   # ...
   'portal'          => [qw( portal/base node/api node )],
