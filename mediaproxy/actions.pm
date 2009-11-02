@@ -9,7 +9,7 @@
       CCNQ::MediaProxy::try_install($dst,$src);
     }
     my $dispatcher_file = CCNQ::MediaProxy::mediaproxy_config.'.dispatcher';
-    my $relay_file      = CCNQ::MediaProxy::mediaproxy_config.'.relay'
+    my $relay_file      = CCNQ::MediaProxy::mediaproxy_config.'.relay';
     my $config_dispatcher = CCNQ::Install::content_of($dispatcher_file) || '';
     my $config_relay      = CCNQ::Install::content_of($relay_file)      || '';
     my $config = <<'EOT';
