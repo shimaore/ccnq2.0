@@ -4,8 +4,8 @@
     use File::Spec;
     use File::Copy;
     for my $file (qw( ca.pem crl.pem )) {
-      my $src = File::Spec::catfile(CCNQ::MediaProxy::mediaproxy_directory,$file);
-      my $dst = File::Spec::catfile(CCNQ::MediaProxy::mediaproxy_install_conf,'tls',$file);
+      my $src = File::Spec->catfile(CCNQ::MediaProxy::mediaproxy_directory,$file);
+      my $dst = File::Spec->catfile(CCNQ::MediaProxy::mediaproxy_install_conf,'tls',$file);
       CCNQ::MediaProxy::try_install($dst,$src);
     }
     my $dispatcher_file = CCNQ::MediaProxy::mediaproxy_config.'.dispatcher';

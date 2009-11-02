@@ -134,7 +134,7 @@ use constant host_name =>
 use constant domain_name =>
   get_variable(domain_name_tag,domain_name_file,sub {Net::Domain::hostdomain()});
 
-# Like File::Spec::catfile, but for DNS names.
+# Like File::Spec->catfile, but for DNS names.
 sub catdns {
   return join('.',@_);
 }
