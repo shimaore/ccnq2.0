@@ -9,6 +9,7 @@ use constant mediaproxy_config => File::Spec->catfile(mediaproxy_install_conf,'c
 
 use File::Spec;
 use File::Copy;
+use Logger::Syslog;
 
 sub try_install {
   my ($src,$dst) = @_;
