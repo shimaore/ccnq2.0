@@ -30,7 +30,7 @@ use CCNQ::Proxy::Base;
 
 # Use sensible defaults if no configuration.pm is found.
 eval { require (CCNQ::Install::CCN.'/configuration.pm'); };
-warning($@) if $@;
+warning('(probably harmless) '.$@) if $@;
 
 use constant accounting   => $configuration::accounting   || 'flatstore';
 use constant authenticate => $configuration::authenticate || 'db';
