@@ -105,27 +105,24 @@ sub parameters {
   return %values;
 }
 
-our $__ae_dbi_db = undef;
+use AnyEvent::DBI;
+
 sub ae_dbi_db {
-  if(!defined $__ae_dbi_db) {
-    use AnyEvent::DBI;
-    $__ae_dbi_db = new AnyEvent::DBI dbd_uri, db_login, db_password,
-      exec_server => 1,
-      on_error => sub {
-        my ($dbh,$filename,$line,$fatal) = @_;
-        error("${filename}/${line}: $@");
-      };
-  }
-  return $__ae_dbi_db;
+  return new AnyEvent::DBI dbd_uri, db_login, db_password,
+    exec_server => 1,
+    on_error => sub {
+      my ($dbh,$filename,$line,$fatal) = @_;
+      error("${filename}/${line}: $@");
+    };
 }
 
 sub run_from_class {
   my ($class,$action,$params,$context) = @_;
+  $context->{ae_dbi_db} ||= ae_dbi_db();
   eval qq{
     use lib proxy_base_lib;
     use CCNQ::Proxy::${class};
-
-    my \$b = new CCNQ::Proxy::${class} (ae_dbi_db);
+    my \$b = new CCNQ::Proxy::${class} (\$context->{ae_dbi_db});
     return \$b->run(\$action,\$params,\$context);
   };
   error($@) if $@;

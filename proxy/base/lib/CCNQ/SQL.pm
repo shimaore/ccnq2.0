@@ -22,6 +22,7 @@ sub _init
 {
     my $self = shift;
     my ($db) = @_;
+    die "No database" unless $db;
     $self->{_db} = $db;
 }
 
