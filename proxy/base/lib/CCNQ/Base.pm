@@ -36,8 +36,9 @@ sub do_sql {
   };
 
   while(@cmds) {
-    my $sql = shift @cmds;
+    my $sql  = shift @cmds;
     my $args = shift @cmds;
+    debug("Postponing $sql with ".join(',',@{$args}));
     my $new_run = sub {
       debug("Executing $sql with ".join(',',@{$args}));
       $self->_db->exec($sql,@{$args},$run);
@@ -193,7 +194,8 @@ sub run
     return $self->do_query($params)  if $action eq 'query';
 =cut
 
-    return ['error','Invalid action'];
+    error("Invalid action $action");
+    return undef;
 }
 
 1;

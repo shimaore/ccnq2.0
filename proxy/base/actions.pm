@@ -53,7 +53,7 @@ use CCNQ::Proxy::Config;
 
     use CCNQ::Proxy::Configuration;
     my $cv = CCNQ::Proxy::Configuration::run_from_class($module,$command,$request->{params},$context);
-    $context->{condvar}->cb($cv);
+    $context->{condvar}->cb($cv) if $cv;
     return;
   },
 
