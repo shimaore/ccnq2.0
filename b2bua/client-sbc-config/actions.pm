@@ -23,5 +23,7 @@ use CCNQ::B2BUA;
     for my $name (qw( cnam.pl )) {
       CCNQ::B2BUA::copy_file($b2bua_name,qw( scripts ),${name});
     }
+    
+    return;
   },
 }

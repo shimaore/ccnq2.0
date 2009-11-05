@@ -34,6 +34,7 @@ use CCNQ::Proxy::Config;
     info("Restarting OpenSIPS");
     CCNQ::Install::_execute($context,'/bin/sed','-i','-e','s/^RUN_OPENSIPS=no$/RUN_OPENSIPS=yes/','/etc/default/opensips');
     CCNQ::Install::_execute($context,'/etc/init.d/opensips','restart');
+    return;
   },
 
   _session_ready => sub {
@@ -41,6 +42,7 @@ use CCNQ::Proxy::Config;
     use CCNQ::XMPPAgent;
     debug("Proxy _session_ready");
     CCNQ::XMPPAgent::join_cluster_room($context);
+    return;
   },
 
   _default => sub {
@@ -52,10 +54,12 @@ use CCNQ::Proxy::Config;
     use CCNQ::Proxy::Configuration;
     my $cv = CCNQ::Proxy::Configuration::run_from_class($module,$command,$request->{params},$context);
     $context->{condvar}->cb($cv);
+    return;
   },
 
   dr_reload => sub {
     my ($params,$context) = @_;
     CCNQ::Install::_execute($context,qw( /usr/sbin/opensipsctl fifo dr_reload ));
+    return;
   }
 }

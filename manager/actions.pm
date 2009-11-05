@@ -38,6 +38,7 @@
     use CCNQ::XMPPAgent;
     debug("Manager _session_ready");
     CCNQ::XMPPAgent::join_cluster_room($context);
+    return;
   },
 
   # Send requests out (message received e.g. from node/api/actions.pm)

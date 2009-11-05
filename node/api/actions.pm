@@ -26,6 +26,7 @@
 {
   request => sub {
     # Silently ignore. (These come to us because we are subscribed to the manager MUC.)
+    return;
   },
 
   _session_ready => sub {

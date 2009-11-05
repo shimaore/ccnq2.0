@@ -23,5 +23,7 @@ use CCNQ::B2BUA;
     for my $name qw( dash-911 dash-sbc1 global-crossing-sbc1 level3-sbc1 sotel-sbc1 ) {
       CCNQ::B2BUA::copy_file($b2bua_name,qw( sip_profiles ),"${name}.xml");
     }
+    
+    return;
   },
 }
