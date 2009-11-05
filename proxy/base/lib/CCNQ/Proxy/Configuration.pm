@@ -116,8 +116,9 @@ sub ae_dbi_db {
 sub run_from_class {
   my ($class,$action,$params,$context) = @_;
   debug("run_from_class($class,$action)");
-  $context->{ae_dbi_db}->{$class} ||= ae_dbi_db();
-  my $db = $context->{ae_dbi_db}->{$class};
+  # $context->{ae_dbi_db}->{$class} ||= ae_dbi_db();
+  # my $db = $context->{ae_dbi_db}->{$class};
+  my $db = ae_dbi_db();
   my $challenge = challenge;
   eval qq{
     use lib proxy_base_lib;
