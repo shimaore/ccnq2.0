@@ -119,12 +119,14 @@ sub ae_dbi_db {
 
 sub run_from_class {
   my ($class,$action,$params,$context) = @_;
+  debug("run_from_class($class,$action)");
   $context->{ae_dbi_db}->{$class} ||= ae_dbi_db();
   my $db = $context->{ae_dbi_db}->{$class};
+  my $challenge = challenge;
   eval qq{
     use lib proxy_base_lib;
     use CCNQ::Proxy::${class};
-    my \$b = new CCNQ::Proxy::${class} (\$db);
+    my \$b = new CCNQ::Proxy::${class} (\$db,\$challenge);
     return \$b->run(\$action,\$params,\$context);
   };
   error($@) if $@;
