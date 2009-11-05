@@ -30,42 +30,43 @@ sub class { my $c = ref(shift); $c =~ s/^.*:://; return $c; }
 
 sub _db  { shift->{_db} }
 
+use AnyEvent;
+
 sub run_sql
 {
     my $self = shift;
     while(my $sql = shift)
     {
         my $params = shift;
-        $self->run_sql_command($sql,$params);
+        my $cv = AnyEvent->condvar;
+        $self->_db->exec(@_,sub {
+          $cv->send();
+        });
+        $cv->recv;
     }
 }
 
 sub run_sql_once
 {
     my $self = shift;
-    my $sth = $self->run_sql_command(@_);
-    return undef if not defined $sth;
-    my $val = $sth->fetchrow_arrayref->[0];
-    $sth->finish();
-    $sth = undef;
-    return $val;
+    my $cv = AnyEvent->condvar;
+    $self->_db->exec(@_,sub {
+      my ($dbh,$arry,$rv) = @_;
+      $cv->send($arry->[0]->[0]) if $arry && $arry->[0];
+    });
+    return $cv->recv;
 }
 
-sub run_sql_command
+sub run_sql_all
 {
-    my $self = shift;
-    my $cmd = shift;
-    my $params = shift || [];
-    my $sth = $self->_db->prepare($cmd);
+  my $self = shift;
 
-    if(!$sth || !$sth->execute(@{$params}))
-    {
-        use Carp;
-        confess("$cmd(".join(',',@{$params})."): ".$self->_db->errstr);
-    }
-
-    warn "$cmd(".join(',',@{$params}).")\n";
-    return $sth;
+  my $cv = AnyEvent->condvar;
+  $self->_db->exec(@_,sub {
+    my ($dbh,$arry,$rv) = @_;
+    $cv->send($arry);
+  });
+  return $cv->recv;
 }
 
 1;

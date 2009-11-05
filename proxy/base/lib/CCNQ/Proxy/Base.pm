@@ -44,8 +44,7 @@ sub list_of_domains
         [map { $_->[0] }
         @{
         $self
-          ->run_sql_command('SELECT domain FROM domain ORDER BY domain ASC')
-          ->fetchall_arrayref([0])
+          ->run_sql_all('SELECT domain FROM domain ORDER BY domain ASC');
         }];
     }
     return @{$self->{list_of_domains}};

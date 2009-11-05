@@ -48,8 +48,7 @@ sub list_of_gateways
       [ map { ($->[0], $->[1]) }
         @{
           $self
-            ->run_sql_command('SELECT gwid, address FROM dr_gateways ORDER BY address ASC')
-            ->fetchall_arrayref([0,1]);
+            ->run_sql_all('SELECT gwid, address FROM dr_gateways ORDER BY address ASC');
         }
       ];
     }
