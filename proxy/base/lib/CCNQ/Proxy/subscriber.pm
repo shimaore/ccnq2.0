@@ -90,30 +90,6 @@ sub form
 
 =cut
 
-sub new_precondition
-{
-    my ($self,$params) = @_;
-
-    my $username = $params->{username};
-    my $domain   = $params->{domain};
-
-    warn("No username provided.") if not defined $username or $username eq '';
-    warn("Username must be a-z0-9_-.") unless $username =~ /^[\w-]+$/;
-    warn("No domain provided.") if not defined $domain or $domain eq '';
-
-    my $count = 0;
-
-    $count += $self->run_sql_once(<<'SQL',$username,$domain);
-        SELECT COUNT(*) FROM subscriber WHERE username = ? AND domain = ?
-SQL
-
-    $count += $self->run_sql_once(<<'SQL',$username,$domain,$self->avp->{src_subs});
-        SELECT COUNT(*) FROM avpops WHERE value = ? AND domain = ? AND attribute = ?
-SQL
-
-    return $count == 0;
-}
-
 use Digest::MD5 qw(md5_hex);
 
 sub insert

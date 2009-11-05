@@ -39,22 +39,6 @@ sub form
 
 =cut
 
-sub list_of_gateways
-{
-    my $self = shift;
-    unless( exists $self->{list_of_gateways} )
-    {
-      $self->{list_of_gateways} =
-      [ map { ($->[0], $->[1]) }
-        @{
-          $self
-            ->run_sql_all('SELECT gwid, address FROM dr_gateways ORDER BY address ASC');
-        }
-      ];
-    }
-    return $self->{list_of_gateways};
-}
-
 
 sub insert
 {
