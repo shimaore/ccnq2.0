@@ -110,11 +110,7 @@ use AnyEvent::DBI;
 sub ae_dbi_db {
   debug("Creating new ae_dbi_db for ".dbd_uri);
   return new AnyEvent::DBI dbd_uri, db_login, db_password,
-    exec_server => 1,
-    on_error => sub {
-      my ($dbh,$filename,$line,$fatal) = @_;
-      error("ae_dbi_db Error: ${filename}/${line}: $@");
-    };
+    exec_server => 1;
 }
 
 sub run_from_class {
