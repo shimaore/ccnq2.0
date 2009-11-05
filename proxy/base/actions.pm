@@ -51,6 +51,8 @@ use CCNQ::Proxy::Config;
     my ($module,$command) = ($action =~ m{^(.*)/(delete|insert|modify|update|query)$});
     error("Invalid action $action"), return unless $module && $command;
 
+    debug("Ignoring response") if $request->{status};
+
     use CCNQ::Proxy::Configuration;
     my $cv = CCNQ::Proxy::Configuration::run_from_class($module,$command,$request->{params},$context);
     $context->{condvar}->cb($cv) if $cv;

@@ -24,29 +24,35 @@ use base qw(CCNQ::SQL);
 
 use Logger::Syslog;
 
+sub _build_callback {
+  my ($db,$sql,$args,$cb) = @_;
+  debug("Postponing $sql with (".join(',',@{$args}).") and callback $cb");
+  return sub {
+    debug("Executing $sql with (".join(',',@{$args}).") and callback $cb");
+    $db->exec($sql,@{$args},$cb);
+  };
+}
+
 sub do_sql {
   my ($self,@cmds) = @_;
+
+  my $db = $self->_db;
 
   my $cv = AnyEvent->condvar;
 
   my $run = sub {
-    $self->_db->commit( sub {
+    $db->commit( sub {
       $cv->send(['ok']);
     });
   };
 
   while(@cmds) {
-    my $sql  = shift @cmds;
-    my $args = shift @cmds;
-    debug("Postponing $sql with ".join(',',@{$args}));
-    my $new_run = sub {
-      debug("Executing $sql with ".join(',',@{$args}));
-      $self->_db->exec($sql,@{$args},$run);
-    };
-    $run = $new_run;
+    my $sql  = shift(@cmds);
+    my $args = shift(@cmds) || [];
+    $run = _build_callback($db,$sql,$args,$run);
   }
 
-  $self->_db->begin_work( $run );
+  $db->begin_work( $run );
 
   return $cv;
 }
