@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <include>
   <!-- egress towards carrier -->
-  <context name="from-proxy-for-$${profile_name}">
+  <context name="egress-$${profile_name}">
 
     <extension name="unloop">
       <condition field="${unroll_loops}" expression="^true$"/>
@@ -28,7 +28,7 @@
   </context>
 
   <!-- ingres from carrier -->
-  <context name="from-sbc-$${profile_name}">
+  <context name="ingress-$${profile_name}">
 
     <extension name="unloop">
       <condition field="${unroll_loops}" expression="^true$"/>
