@@ -237,7 +237,7 @@ sub attempt_run {
   my $run_file = File::Spec->catfile(CCNQ::Install::SRC,$function,actions_file_name);
 
   warning(qq(No such file "${run_file}", skipping)),
-  return sub { return { error => 'invalid action' } } unless -e $run_file;
+  return sub { return { status => 'error', error => 'invalid action' } } unless -e $run_file;
   my $eval = content_of($run_file);
 
   return sub {
@@ -245,7 +245,7 @@ sub attempt_run {
     # the values are sub().
     my $run = eval($eval);
     warning(qq(Executing "${run_file}" in attempt_run("$function","$action",...) returned: $@)),
-    return { error => 'internal error' } if $@;
+    return { status => 'error', error => 'internal error' } if $@;
 
     my $result = undef;
     eval {
@@ -259,9 +259,9 @@ sub attempt_run {
     };
 
     warning(qq(Executing "${run_file}" attempt_run("$function","$action",...): $@)),
-    return { error => 'internal error' } if $@;
+    return { status => 'error', error => 'internal error' } if $@;
 
-    return $result ? { params => $result } : undef;
+    return $result ? { status => 'completed', params => $result } : undef;
   };
 }
 

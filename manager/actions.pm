@@ -110,6 +110,9 @@
 
     error("No action defined"), return unless $action;
     error("No activity defined for action $action"), return unless $response->{activity};
+    # In a MUC, we will see copies of our own submissions, ignore them.
+    # Note: this might also be the case if attempt_run() did not find a proper function.
+    debug("No status returned for action $action"), return unless $response->{status};
 
     debug("Trying to locate action=$action activity=$response->{activity}");
     return if $response->{activity} =~ qr{^node/api}; # Not a real response.
@@ -125,11 +128,9 @@
         warning("Activity $response->{activity} response action $response->{action} does not match requested action $activity->{action}")
           if $response->{action} ne $activity->{action};
 
+        $activity->{status} = $response->{status};
         if($response->{error}) {
           warning("Activity $response->{activity} failed with error $response->{error}");
-          $activity->{status} = 'error';
-        } else {
-          $activity->{status} = 'completed';
         }
         $db->save_doc($activity)->cb(sub{$_[0]->recv;
           debug("Activity $response->{activity} updated.")
