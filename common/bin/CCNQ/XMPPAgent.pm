@@ -69,6 +69,8 @@ sub send_muc_message {
     debug("send_muc_message(): queuing for dest=$dest");
     $context->{pending_muc}->{$dest} ||= [];
     push @{$context->{pending_muc}->{$dest}}, { subject => $subject, body => $body };
+    _join_room($context,$dest) unless exists $context->{joined_muc}->{$dest};
+    $context->{joined_muc}->{$dest} = 0;
     return ['warning','Message queued'];
   }
 }
@@ -194,15 +196,20 @@ sub handle_message {
   return $response;
 }
 
-sub join_cluster_room {
-  my ($context) = @_;
-  my $muc_jid = CCNQ::Install::make_muc_jid($context->{cluster});
+sub _join_room {
+  my ($context,$dest) = @_;
   my $nick = $context->{function}.','.rand();
-  info("Attempting to join $muc_jid as $context->{function}");
-  $context->{muc}->join_room($context->{connection},$muc_jid,$nick,{
+  info("Attempting to join $dest as $context->{function}");
+  $context->{muc}->join_room($context->{connection},$dest,$nick,{
     history => {seconds=>3600},
     create_instant => 1,
   });
+}
+
+sub join_cluster_room {
+  my ($context) = @_;
+  my $muc_jid = CCNQ::Install::make_muc_jid($context->{cluster});
+  _join_room($context,$muc_jid);
 }
 
 sub start {
