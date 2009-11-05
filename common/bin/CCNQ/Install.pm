@@ -169,7 +169,7 @@ use constant roles_to_functions => {
   'inbound-proxy'   => [qw( proxy/inbound-proxy proxy/base node )],
   'outbound-proxy'  => [qw( proxy/outbound-proxy proxy/base node )],
   'complete-transparent-proxy' => [qw( proxy/registrar proxy/complete-transparent proxy/base mediaproxy/dispatcher mediaproxy node )],
-  'router'          => [qw( proxy/registrar proxy/router proxy/base node )],
+  'router-no-registrar' => [qw( proxy/router-no-registrar proxy/base node )],
   # ...
   'portal'          => [qw( portal/base node/api node )],
   'api'             => [qw( node/api )],
