@@ -4,7 +4,7 @@ These instructions are for Debian/Lenny.
 
 Here I am assuming you use sudo to gain root access.
 
-* Update apt's sources.list to import testing (needed for some packages):
+* Update apt's sources.list to import testing (needed for some packages on the API and MediaProxy servers):
 
   cat <<EOT | sudo tee -a /etc/apt/sources.list > /dev/null
 # Testing packages required for Erlang/CouchDB, MediaProxy
@@ -80,6 +80,16 @@ EOT
   sudo dpkg -i opensips_1.5.3-0_amd64.deb
   sudo dpkg -i opensips-mysql-module_1.5.3-0_amd64.deb
 
+  # Continue installation for the proxy:
+  sudo cpan AnyEvent::DBI
+
+  sudo aptitude install mysql-server
+  # (leave the MySQL root password empty)
+  # Also I do:
+  sudo aptitude --purge remove portmap fam
+  sudo aptitude install postfix
+
+
   # Install MediaProxy dispatcher (if using MediaProxy)
   sudo aptitude install python python-support libnetfilter-conntrack1 python-cjson python-twisted-core python-twisted-names python-zopeinterface
   # Versions required for mediaproxy-common include python-application (>= 1.1.5) and python-gnutls (>= 1.1.8) which are not in Debian/Lenny
@@ -90,26 +100,10 @@ EOT
   sudo dpkg -i mediaproxy-common_2.3.8_amd64.deb
   sudo dpkg -i mediaproxy-dispatcher_2.3.8_all.deb
 
-  # Continue installation for the proxy:
-
-  sudo cpan AnyEvent::DBI
-
-  sudo aptitude install mysql-server
-  # Also I do:
-  sudo aptitude --purge remove portmap
-  sudo aptitude install postfix
-
-  # Part of the syslog information (during upgrade.pl) are to run some MySQL commands to initialize the database.
-  # Typically these are equivalent to:
-  sudo mysql <<SQL
-    CREATE DATABASE opensips;
-    CONNECT opensips;
-    CREATE USER opensips IDENTIFIED BY 'opensips';
-    GRANT ALL ON opensips.* TO opensips;
-SQL
-  # Run this AFTER upgrade.pl, otherwise /etc/opensips/opensips.sql will not be present.
-  sudo /bin/sh -c 'mysql opensips < /etc/opensips/opensips.sql'
-
+  # Also make sure that the user which will be running xmpp_agent.pl is a member of the "opensips" group.
+  # (This is required so that xmpp_agent.pl can get access to the OpenSIPS FIFO.)
+  # The following command adds the current user to group "opensips":
+  sudo adduser `whoami` opensips
 
 * On the SBC servers:
 
@@ -134,6 +128,10 @@ SQL
   # Important: move the original configuration files out of the way.
   sudo mv /opt/freeswitch/conf /opt/freeswitch/conf.orig
 
+  # Also make sure that the user which will be running xmpp_agent.pl is a member of the "daemon" group.
+  # (This is required so that xmpp_agent.pl can get access to the FreeSwitch CLI and FIFO.)
+  # The following command adds the current user to group "daemon":
+  sudo adduser `whoami` daemon
 
 * Finally:
 
@@ -148,8 +146,46 @@ SQL
 
   # Monitor syslog during the execution of the scripts to know what to do next.
 
+* On the proxy:
+
+
+  # Part of the syslog information (during upgrade.pl) ask to run some MySQL commands to initialize the database.
+  # Typically these are equivalent to:
+  sudo mysql <<SQL
+    CREATE DATABASE opensips;
+    CONNECT opensips;
+    CREATE USER opensips IDENTIFIED BY 'opensips';
+    GRANT ALL ON opensips.* TO opensips;
+SQL
+  # Run this AFTER upgrade.pl, otherwise /etc/opensips/opensips.sql will not be present.
+  sudo /bin/sh -c 'mysql opensips < /etc/opensips/opensips.sql'
+
+
 * On upgrades:
 
   cd ~/src/ccnq2.0
   git pull
   sudo $HOME/src/ccnq2.0/common/bin/upgrade.pl
+
+* Using the manager process (this will be rewritten once we have a proper installer):
+
+  # The connection to the jabber server(s) is done using the xmpp_agent.pl script:
+
+  cd ~/src/ccnq2.0/common/bin
+  ./xmpp_agent.pl
+
+  # Please monitor /var/log/syslog for the connection information:
+  #   Creating XMPP Connection for <host_name>@<domain_name>/.../... using password <password>
+  # and add a user <host_name> with password <password> in your jabber server.
+
+  # Try again. This time the user should connect properly.
+  # Then run xmpp_agent.pl in the background.
+
+  # The "API" and "Manager" servers are functions inside the xmpp_agent tool which
+  # are automatically started on "api" and "manager" nodes.
+
+  # IMPORTANT: The user which is running xmpp_agent.pl MUST BE a member of the following groups:
+  #
+  #     opensips   (for access to the OpenSIPS FIFO)
+  #     daemon     (for access to the FreeSwitch CLI / FIFO)
+  #
