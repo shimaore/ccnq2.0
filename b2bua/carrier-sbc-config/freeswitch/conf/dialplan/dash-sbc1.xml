@@ -4,7 +4,7 @@
 <X-PRE-PROCESS cmd="set" data="external_sip_port=5066"/>
 
 <!-- These are defined here -->
-<X-PRE-PROCESS cmd="set" data="ingress_target=sbc-inbound.$${cluster_name}.$${domain_name}"/>
+<X-PRE-PROCESS cmd="set" data="ingress_target=inbound-proxy.$${cluster_name}.$${domain_name}"/>
 <X-PRE-PROCESS cmd="set" data="egress_target=208.94.157.10"/>
 <!-- <X-PRE-PROCESS cmd="set" data="egress_target=208.94.159.10"/> -->
 <X-PRE-PROCESS cmd="include" data="template/dash.xml"/>
