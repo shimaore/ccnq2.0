@@ -248,6 +248,7 @@ sub start {
       my $con = shift;
       my ($host,$port,$message) = @_;
       debug("disconnected from ${host}:${port}: ${message}");
+      $program->end;
     },
 
     # AnyEvent::XMPP::IM::Connection
