@@ -38,10 +38,11 @@ sub do_sql {
   while(@cmds) {
     my $sql = shift @cmds;
     my $args = shift @cmds;
-    $run = sub {
+    my $new_run = sub {
       debug("Executing $sql with ".join(',',@{$args}));
       $self->_db->exec($sql,@{$args},$run);
     };
+    $run = $new_run;
   }
 
   $self->_db->begin_work( $run );
