@@ -10,6 +10,7 @@
     <param name="legs" value="ab"/>
   </settings>
   <templates>
-    <template name="ccnq">"${caller_id_name}","${caller_id_number}","${destination_number}","${context}","${start_stamp}","${answer_stamp}","${end_stamp}","${duration}","${billsec}","${hangup_cause}","${uuid}","${bleg_uuid}","${accountcode}","${read_codec}","${write_codec}"</template>
+    <!-- &#009; is TAB -->
+    <template name="ccnq">start=${start_stamp}&#009;account=${ccnq_account}&#009;account_sub=${ccnq_account_sub}&#009;from_e164=${ccnq_from_e164}&#009;to_e164=${ccnq_to_e164}&#009;count=1&#009;duration=${billsec}</template>
   </templates>
 </configuration>
