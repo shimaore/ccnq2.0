@@ -35,6 +35,7 @@ sub _build_callback {
 
 sub do_sql {
   my ($self,@cmds) = @_;
+  @cmds = reverse @cmds;
 
   my $db = $self->_db;
 
@@ -47,8 +48,8 @@ sub do_sql {
   };
 
   while(@cmds) {
-    my $sql  = shift(@cmds);
     my $args = shift(@cmds) || [];
+    my $sql  = shift(@cmds);
     $run = _build_callback($db,$sql,$args,$run);
   }
 
