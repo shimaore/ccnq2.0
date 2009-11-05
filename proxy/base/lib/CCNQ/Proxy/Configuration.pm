@@ -108,21 +108,23 @@ sub parameters {
 use AnyEvent::DBI;
 
 sub ae_dbi_db {
+  debug("Creating new ae_dbi_db for ".dbd_uri);
   return new AnyEvent::DBI dbd_uri, db_login, db_password,
     exec_server => 1,
     on_error => sub {
       my ($dbh,$filename,$line,$fatal) = @_;
-      error("${filename}/${line}: $@");
+      error("ae_dbi_db Error: ${filename}/${line}: $@");
     };
 }
 
 sub run_from_class {
   my ($class,$action,$params,$context) = @_;
-  $context->{ae_dbi_db} ||= ae_dbi_db();
+  $context->{ae_dbi_db}->{$class} ||= ae_dbi_db();
+  my $db = $context->{ae_dbi_db}->{$class};
   eval qq{
     use lib proxy_base_lib;
     use CCNQ::Proxy::${class};
-    my \$b = new CCNQ::Proxy::${class} (\$context->{ae_dbi_db});
+    my \$b = new CCNQ::Proxy::${class} (\$db);
     return \$b->run(\$action,\$params,\$context);
   };
   error($@) if $@;
