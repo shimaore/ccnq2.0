@@ -50,7 +50,7 @@ Common Billing Element Format (CBEF)
 * start_date            YYYYMMDD (local time)
 * start_time            HHMMSS   (local time)
 * timestamp             (unix epoch-based timestamp, used for correlation with e.g. logs)
-* collecting_node       (DNS, IP, or other name for the node that collected the element)
+* collecting_node       (DNS, IP, or other name for the node that collected the element) -- inserted by the aggregator
 
 * account               (opaque account number)
   account_sub           (opaque sub account, e.g. SIP trunk ID)
