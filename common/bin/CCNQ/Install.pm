@@ -254,7 +254,7 @@ sub attempt_run {
       } elsif($run->{_default}) {
         $result = $run->{_default}->($action,$params,$context);
       } else {
-        error("attempt_run: No action available for function $function action $action");
+        warning("attempt_run: No action available for function $function action $action");
       }
     };
 
