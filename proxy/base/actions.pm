@@ -35,6 +35,13 @@ use CCNQ::Proxy::Config;
     CCNQ::Install::_execute('/etc/init.d/opensips','restart');
   },
 
+  _session_ready => sub {
+    my ($context) = @_;
+    use CCNQ::XMPPAgent;
+    debug("Proxy _session_ready");
+    CCNQ::XMPPAgent::join_cluster_room($context);
+  },
+
   _default => sub {
     my ($action,$request,$context) = @_;
     error("No action defined"), return unless $action;

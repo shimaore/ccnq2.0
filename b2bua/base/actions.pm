@@ -51,4 +51,12 @@ EOT
     CCNQ::Install::_execute('/etc/init.d/freeswitch','stop');
     CCNQ::Install::_execute('/etc/init.d/freeswitch','start');
   },
+
+  _session_ready => sub {
+    my ($context) = @_;
+    use CCNQ::XMPPAgent;
+    debug("B2BUA _session_ready");
+    CCNQ::XMPPAgent::join_cluster_room($context);
+  },
+
 }
