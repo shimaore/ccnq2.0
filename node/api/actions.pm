@@ -70,7 +70,7 @@
         my $body = {$req->vars};
 
         debug("node/api: Contacting $muc_room");
-        my $r = CCNQ::XMPPAgent::_send_muc_message($context,$muc_room,$subject,$body);
+        my $r = CCNQ::XMPPAgent::send_muc_message($context,$muc_room,$subject,$body);
         if($r->[0] eq 'ok') {
           $req->respond([200,'OK']);
         } else {

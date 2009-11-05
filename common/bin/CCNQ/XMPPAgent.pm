@@ -45,6 +45,34 @@ use constant handler_timeout => 20;
 
 =cut
 
+sub _joined_muc {
+  my ($context,$dest) = @_;
+  $context->{joined_muc}->{$dest} = 1;
+  if($context->{pending_muc}->{$dest}) {
+    while(@{$context->{pending_muc}->{$dest}}) {
+      my $ref = shift @{$context->{pending_muc}->{$dest}};
+      _send_muc_message($context,$dest,$ref->{subject},$ref->{body});
+    }
+  }
+}
+
+sub _left_muc {
+  my ($context,$dest) = @_;
+  delete $context->{joined_muc}->{$dest};
+}
+
+sub send_muc_message {
+  my ($context,$dest,$subject,$body) = @_;
+  if($context->{joined_muc}->{$dest}) {
+    return _send_muc_message($context,$dest,$subject,$body);
+  } else {
+    debug("send_muc_message(): queuing for dest=$dest");
+    $context->{pending_muc}->{$dest} ||= [];
+    push @{$context->{pending_muc}->{$dest}}, { subject => $subject, body => $body };
+    return ['warning','Message queued'];
+  }
+}
+
 sub _send_muc_message {
   my ($context,$dest,$subject,$body) = @_;
   debug("_send_muc_message(): dest=$dest");
@@ -95,10 +123,10 @@ sub submit_activity {
   if($activity->{cluster_name}) {
     my $dest = $activity->{cluster_name}.'@'.$context->{domain};
     debug("submit_activity(): send_muc_message($dest,$subject->{activity},$subject->{action})");
-    return _send_muc_message($context,$dest,$subject,$activity);
+    return send_muc_message($context,$dest,$subject,$activity);
   } elsif($activity->{node_name}) {
     my $dest = $activity->{node_name}.'@'.$context->{domain};
-    debug("submit_activity(): send_muc_message($dest,$subject->{activity},$subject->{action})");
+    debug("submit_activity(): send_im_message($dest,$subject->{activity},$subject->{action})");
     return _send_im_message($context,$dest,$subject,$activity);
   }
   return ['error','No destination specified'];
@@ -227,6 +255,8 @@ sub start {
     role       => $role,
     function   => $function,
     condvar    => $program,
+    joined_muc  => {},
+    pending_muc => {},
   };
 
   my $session_ready_sub = CCNQ::Install::attempt_run($function,'_session_ready',$context);
@@ -299,10 +329,17 @@ sub start {
     # AnyEvent::XMPP::Ext::MUC
     # Can't register enter and join_error because join_room() already does
     # (and breaks if we try to).
+    enter => sub {
+      my $muc = shift;
+      my ($room,$user) = @_;
+      debug($user->nick . " (me) entered ".$room->jid);
+      _joined_muc($context,$room->jid);
+    },
     leave => sub {
       my $muc = shift;
       my ($room,$user) = @_;
       debug($user->nick . " (me) left ".$room->jid);
+      _left_muc($context,$room->jid);
     },
     presence => sub {
       my $muc = shift;
