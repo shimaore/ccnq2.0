@@ -109,7 +109,7 @@ our $__ae_dbi_db = undef;
 sub ae_dbi_db {
   if(!defined $__ae_dbi_db) {
     use AnyEvent::DBI;
-    $__ae_dbi_db = new AnyEvent::DBI dbd_uri, db_login, db_password, 
+    $__ae_dbi_db = new AnyEvent::DBI dbd_uri, db_login, db_password,
       exec_server => 1,
       on_error => sub {
         my ($dbh,$filename,$line,$fatal) = @_;
@@ -118,7 +118,7 @@ sub ae_dbi_db {
   }
   return $__ae_dbi_db;
 }
-  
+
 sub run_from_class {
   my ($class,$action,$params,$context) = @_;
   eval qq{
