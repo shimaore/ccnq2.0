@@ -39,14 +39,14 @@ sub _execute {
     return 1 if $ret == 0;
     # Happily lifted from perlfunc.
     if ($ret == -1) {
-        error("Failed to execute ${command}: $!\n");
+        error("Failed to execute ${command}: $!");
     }
     elsif ($ret & 127) {
-        error(sprintf "Child command ${command} died with signal %d, %s coredump\n",
+        error(sprintf "Child command ${command} died with signal %d, %s coredump",
             ($ret & 127),  ($ret & 128) ? 'with' : 'without');
     }
     else {
-        info(sprintf "Child command ${command} exited with value %d\n", $ret >> 8);
+        info(sprintf "Child command ${command} exited with value %d", $ret >> 8);
     }
     return 0;
   });
