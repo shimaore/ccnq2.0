@@ -12,6 +12,7 @@
 
     <extension name="default-egress">
       <condition field="destination_number" expression="^(.*)$">
+        <action application="set" data="direction=egress"/>
         <action application="set" data="bypass_media=true"/>
         <action application="set" data="progress_timeout=12"/>
         <action application="set" data="effective_caller_id_name=_undef_"/>
@@ -39,6 +40,7 @@
 
     <extension name="default-ingress">
       <condition field="destination_number" expression="^\+(.*)$">
+        <action application="set" data="direction=ingress"/>
         <action application="set" data="bypass_media=true"/>
         <action application="set" data="progress_timeout=12"/>
         <action application="set" data="effective_caller_id_number=${regex(${caller_id_number}|^\\+(.*)|%1)}"/>
