@@ -34,4 +34,18 @@ use CCNQ::Proxy::Config;
     CCNQ::Install::_execute('/bin/sed','-i','-e','s/^RUN_OPENSIPS=no$/RUN_OPENSIPS=yes/','/etc/default/opensips');
     CCNQ::Install::_execute('/etc/init.d/opensips','restart');
   },
+
+  _default => sub {
+    my ($action,$request,$context) = @_;
+    error("No action defined"), return unless $action;
+    my ($module,$command) = ($action =~ m{^(.*)/(delete|insert|modify|update|query)$});
+    error("Invalid action $action"), return unless $module && $command;
+
+    use CCNQ::Proxy::Configuration;
+    CCNQ::Proxy::Configuration::run_from_class($module,$command,$request->{params},$context);
+  },
+
+  dr_reload => sub {
+    CCNQ::Install::_execute(qw( /usr/sbin/opensipsctl fifo dr_reload ));
+  }
 }
