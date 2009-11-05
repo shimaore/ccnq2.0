@@ -11,6 +11,7 @@ use constant b2bua_directory => File::Spec->catfile(CCNQ::Install::SRC,qw( b2bua
 use constant freeswitch_install_conf => '/opt/freeswitch/conf'; # Debian
 
 sub install_file {
+  my $context = shift;
   my $cb = pop;
   my $function = shift;
   my @path = @_;
@@ -26,7 +27,7 @@ sub install_file {
   my $txt = CCNQ::Install::content_of($src);
   $txt = $cb->($txt) if $cb;
   CCNQ::Install::print_to($dst,$txt);
-  CCNQ::Install::_execute('chown','-R','freeswitch.daemon',freeswitch_install_conf);
+  CCNQ::Install::_execute($context,'chown','-R','freeswitch.daemon',freeswitch_install_conf);
 }
 
 sub copy_file {

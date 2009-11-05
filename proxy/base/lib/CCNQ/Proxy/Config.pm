@@ -140,7 +140,7 @@ use CCNQ::Proxy::Configuration;
 use IO::Scalar;
 
 sub configure_opensips {
-  my ($model) = @_;
+  my ($context,$model) = @_;
 
   my %values = CCNQ::Proxy::Configuration::parameters();
 
@@ -173,8 +173,8 @@ sub configure_opensips {
 
   # Move the temp files to their final destinations
   info("Installing new configuration");
-  CCNQ::Install::_execute('cp',$cfg_file,CCNQ::Proxy::runtime_opensips_cfg);
-  CCNQ::Install::_execute('cp',$sql_file,CCNQ::Proxy::runtime_opensips_sql);
+  CCNQ::Install::_execute($context,'cp',$cfg_file,CCNQ::Proxy::runtime_opensips_cfg);
+  CCNQ::Install::_execute($context,'cp',$sql_file,CCNQ::Proxy::runtime_opensips_sql);
 
   # Print out some info on how to use the SQL file.
   my $runtime_opensips_sql = CCNQ::Proxy::runtime_opensips_sql;

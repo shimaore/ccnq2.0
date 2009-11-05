@@ -8,7 +8,7 @@ use constant vars_xml => 'vars.xml';
 
     my $b2bua_name = 'base';
 
-    CCNQ::B2BUA::install_file($b2bua_name,vars_xml, sub {
+    CCNQ::B2BUA::install_file($context,$b2bua_name,vars_xml, sub {
       my $txt = shift;
       my $host_fqdn    = CCNQ::Install::fqdn;
       my $domain_name  = CCNQ::Install::domain_name;
@@ -47,9 +47,9 @@ EOT
 
     # Restart FreeSwitch using the new configuration.
     info("Restarting FreeSwitch");
-    CCNQ::Install::_execute('/bin/sed','-i','-e','s/^FREESWITCH_ENABLED="false"$/FREESWITCH_ENABLED="true"/','/etc/default/freeswitch');
-    CCNQ::Install::_execute('/etc/init.d/freeswitch','stop');
-    CCNQ::Install::_execute('/etc/init.d/freeswitch','start');
+    CCNQ::Install::_execute($context,'/bin/sed','-i','-e','s/^FREESWITCH_ENABLED="false"$/FREESWITCH_ENABLED="true"/','/etc/default/freeswitch');
+    CCNQ::Install::_execute($context,'/etc/init.d/freeswitch','stop');
+    CCNQ::Install::_execute($context,'/etc/init.d/freeswitch','start');
   },
 
   _session_ready => sub {

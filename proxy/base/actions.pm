@@ -4,6 +4,7 @@ use CCNQ::Proxy::Config;
 
 {
   install => sub {
+    my ($params,$context) = @_;
 
     use constant proxy_mode => 'proxy_mode';
     use constant proxy_mode_file => File::Spec->catfile(CCNQ::Install::CCN,proxy_mode);
@@ -26,13 +27,13 @@ use CCNQ::Proxy::Config;
 
     # Reconfigure the local system (includes installing the new opensips.cfg file in /etc/opensips)
     info("Reconfiguring the local system");
-    eval { CCNQ::Proxy::Config::configure_opensips($model); };
+    eval { CCNQ::Proxy::Config::configure_opensips($context,$model); };
     info($@) if $@;
 
     # Restart OpenSIPS using the new configuration.
     info("Restarting OpenSIPS");
-    CCNQ::Install::_execute('/bin/sed','-i','-e','s/^RUN_OPENSIPS=no$/RUN_OPENSIPS=yes/','/etc/default/opensips');
-    CCNQ::Install::_execute('/etc/init.d/opensips','restart');
+    CCNQ::Install::_execute($context,'/bin/sed','-i','-e','s/^RUN_OPENSIPS=no$/RUN_OPENSIPS=yes/','/etc/default/opensips');
+    CCNQ::Install::_execute($context,'/etc/init.d/opensips','restart');
   },
 
   _session_ready => sub {
@@ -54,6 +55,7 @@ use CCNQ::Proxy::Config;
   },
 
   dr_reload => sub {
-    CCNQ::Install::_execute(qw( /usr/sbin/opensipsctl fifo dr_reload ));
+    my ($params,$context) = @_;
+    CCNQ::Install::_execute($context,qw( /usr/sbin/opensipsctl fifo dr_reload ));
   }
 }

@@ -20,6 +20,7 @@ use Digest::SHA1 qw(sha1_hex);
 
 use AnyEvent;
 use AnyEvent::DNS;
+use AnyEvent::Util;
 
 use Logger::Syslog;
 
@@ -28,21 +29,29 @@ use constant CCN => q(/etc/ccn);
 
 # Could use AnyEvent::Util::run_cmd, but there are issues with Cwd.
 sub _execute {
+  my $context = shift;
   my $command = join(' ',@_);
-  my $ret = system(@_);
-  return 1 if $ret == 0;
-  # Happily lifted from perlfunc.
-  if ($? == -1) {
-      error("Failed to execute ${command}: $!\n");
-  }
-  elsif ($? & 127) {
-      error(sprintf "Child command ${command} died with signal %d, %s coredump\n",
-          ($? & 127),  ($? & 128) ? 'with' : 'without');
-  }
-  else {
-      info(sprintf "Child command ${command} exited with value %d\n", $? >> 8);
-  }
-  return 0;
+
+  my $cv = AnyEvent::Util::run_cmd([@_]);
+
+  $cv->cb( sub {
+    my $ret = shift->recv;
+    return 1 if $ret == 0;
+    # Happily lifted from perlfunc.
+    if ($ret == -1) {
+        error("Failed to execute ${command}: $!\n");
+    }
+    elsif ($ret & 127) {
+        error(sprintf "Child command ${command} died with signal %d, %s coredump\n",
+            ($ret & 127),  ($ret & 128) ? 'with' : 'without');
+    }
+    else {
+        info(sprintf "Child command ${command} exited with value %d\n", $ret >> 8);
+    }
+    return 0;
+  });
+
+  $context->{condvar}->cb($cv);
 }
 
 sub first_line_of {
