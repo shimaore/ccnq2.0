@@ -39,12 +39,14 @@ sub form
 
 =cut
 
+=pod
 sub id_of_gateway {
   my ($self,$target) = @_;
   my $id = $self->run_sql_once('SELECT gwid FROM dr_gateways WHERE target = ?',$target);
   warning("Unknown gateway/target $target") if !defined $id;
   return defined($id) ? $id : $target;
 }
+=cut
 
 sub insert
 {
@@ -54,18 +56,20 @@ sub insert
     my $prefix      = $params->{prefix};
     my $priority    = $params->{priority};
     my $gwlist      = $params->{target};
+=pod
     my $gwlist = join(';', map {
                     join(',', map {
                       id_of_gateway($_)
                     } split(/,/))
                   } split(/;/,$gwlist));
+=cut
 
     my @res;
     push @res,
         <<'SQL',[$group,$prefix,'',$priority,'',$gwlist,$description];
-        INSERT INTO dr_rules(groupid,prefix,timerec,priority,routeid,gwlist,description) VALUES (?,?,?,?,?,?,?)
+        INSERT INTO dr_rules(groupid,prefix,timerec,priority,routeid,gwlist,description) VALUES (?,?,?,?,?,(SELECT gwid FROM dr_gateways WHERE target = ?),?)
 SQL
-
+    return @res;
 }
 
 sub delete
@@ -80,7 +84,7 @@ sub delete
         <<'SQL',[$groupid,$prefix,$priority];
         DELETE FROM dr_gateways WHERE groupid = ? AND prefix = ? AND priority = ?
 SQL
-
+    return @res;
 }
 
 sub list

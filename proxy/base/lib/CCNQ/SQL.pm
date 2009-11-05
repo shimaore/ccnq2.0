@@ -30,43 +30,4 @@ sub class { my $c = ref(shift); $c =~ s/^.*:://; return $c; }
 
 sub _db  { shift->{_db} }
 
-use AnyEvent;
-
-sub run_sql
-{
-    my $self = shift;
-    while(my $sql = shift)
-    {
-        my $params = shift;
-        my $cv = AnyEvent->condvar;
-        $self->_db->exec(@_,sub {
-          $cv->send();
-        });
-        $cv->recv;
-    }
-}
-
-sub run_sql_once
-{
-    my $self = shift;
-    my $cv = AnyEvent->condvar;
-    $self->_db->exec(@_,sub {
-      my ($dbh,$arry,$rv) = @_;
-      $cv->send($arry->[0]->[0]) if $arry && $arry->[0];
-    });
-    return $cv->recv;
-}
-
-sub run_sql_all
-{
-  my $self = shift;
-
-  my $cv = AnyEvent->condvar;
-  $self->_db->exec(@_,sub {
-    my ($dbh,$arry,$rv) = @_;
-    $cv->send($arry);
-  });
-  return $cv->recv;
-}
-
 1;

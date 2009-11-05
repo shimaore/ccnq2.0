@@ -35,21 +35,6 @@ sub list_of_servers
     return split ' ', ${configuration::sip_servers};
 }
 
-sub list_of_domains
-{
-    my $self = shift;
-    unless( exists $self->{list_of_domains} )
-    {
-      $self->{list_of_domains} =
-        [map { $_->[0] }
-        @{
-        $self
-          ->run_sql_all('SELECT domain FROM domain ORDER BY domain ASC');
-        }];
-    }
-    return @{$self->{list_of_domains}};
-}
-
 sub avp
 {
     return

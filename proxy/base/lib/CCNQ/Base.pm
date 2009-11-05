@@ -24,43 +24,41 @@ use base qw(CCNQ::SQL);
 
 use Logger::Syslog;
 
-=pod
-    sub new_precondition($params)
-        Returns true if the parameters are valid for insertion, false otherwise.
+sub do_sql {
+  my ($self,@cmds) = @_;
 
-=cut
+  my $cv = AnyEvent->condvar;
 
-sub new_precondition
-{
-    my ($self,$params) = @_;
+  my $run = sub {
+    $self->_db->commit( sub {
+      $cv->send(['ok']);
+    });
+  };
 
-    return 1;
+  while(@cmds) {
+    my $sql = shift @cmds;
+    my $args = shift @cmds;
+    $run = sub {
+      debug("Executing $sql with ".join(',',@{$args}));
+      $self->_db->exec($sql,@{$args},$run);
+    };
+  }
+
+  $self->_db->begin_work( $run );
+
+  return $cv;
 }
 
-sub do_insert()
+sub do_insert
 {
     my ($self,$params) = @_;
-    $self->_db->begin_work;
-    if($self->new_precondition($params))
-    {
-        $self->run_sql($self->insert($params));
-        $self->_db->commit;
-        return ['ok'];
-    }
-    else
-    {
-        $self->_db->rollback;
-        return ['error','Precondition failed'];
-    }
+    return $self->do_sql($self->insert($params));
 }
 
-sub do_delete()
+sub do_delete
 {
     my ($self,$params) = @_;
-    $self->_db->begin_work;
-    $self->run_sql($self->delete($params));
-    $self->_db->commit;
-    return ['ok'];
+    return $self->do_sql($self->delete($params));
 }
 
 sub do_modify
@@ -85,11 +83,7 @@ sub do_modify
         }
     }
 
-    $self->_db->begin_work;
-    $self->run_sql($self->delete($old_params));
-    $self->run_sql($self->insert($new_params));
-    $self->_db->commit;
-    return ['ok'];
+    return $self->do_sql($self->delete($old_params),$self->insert($new_params));
 }
 
 sub do_update
@@ -102,13 +96,10 @@ sub do_update
     my $old_params = {%{$params}};
     my $new_params = {%{$params}};
 
-    $self->_db->begin_work;
-    $self->run_sql($self->delete($old_params));
-    $self->run_sql($self->insert($new_params));
-    $self->_db->commit;
-    return ['ok'];
+    return $self->do_sql($self->delete($old_params),$self->insert($new_params));
 }
 
+=pod
 sub do_list
 {
     my $self = shift;
@@ -118,6 +109,7 @@ sub do_list
 
     $sql = $sql_callback->($sql);
 
+    ## XXX Replace with callback
     my $sth = $self->run_sql_command($sql,$params);
     return if not $sth;
     my $names = $sth->{NAME};
@@ -183,8 +175,9 @@ sub do_query
 
     return ['ok',$result];
 }
+=cut
 
-sub run()
+sub run
 {
     my $self = shift;
     my ($action,$params) = @_;
@@ -195,7 +188,9 @@ sub run()
     return $self->do_insert($params) if $action eq 'insert';
     return $self->do_modify($params) if $action eq 'modify';
     return $self->do_update($params) if $action eq 'update';
+=pod
     return $self->do_query($params)  if $action eq 'query';
+=cut
 
     return ['error','Invalid action'];
 }

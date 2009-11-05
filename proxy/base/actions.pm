@@ -49,7 +49,8 @@ use CCNQ::Proxy::Config;
     error("Invalid action $action"), return unless $module && $command;
 
     use CCNQ::Proxy::Configuration;
-    CCNQ::Proxy::Configuration::run_from_class($module,$command,$request->{params},$context);
+    my $cv = CCNQ::Proxy::Configuration::run_from_class($module,$command,$request->{params},$context);
+    $context->{condvar}->cb($cv);
   },
 
   dr_reload => sub {
