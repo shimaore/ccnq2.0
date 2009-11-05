@@ -44,8 +44,8 @@ sub insert
 {
     my ($self,$params) = @_;
     my $address     = $params->{target};
-    my $strip       = $params->{strip_digit};
-    my $pri_prefix  = $params->{prefix};
+    my $strip       = $params->{strip_digit} || 0;
+    my $pri_prefix  = $params->{prefix} || '';
     my $uac_realm   = $params->{realm};
     my $uac_user    = $params->{login};
     my $uac_pass    = $params->{password};
