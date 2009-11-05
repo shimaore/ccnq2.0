@@ -21,6 +21,7 @@ package CCNQ::Proxy::dr_rule;
 use strict; use warnings;
 
 use base qw(CCNQ::Proxy::Base);
+use Logger::Syslog;
 
 =pod
 
@@ -38,6 +39,13 @@ sub form
 
 =cut
 
+sub id_of_gateway {
+  my ($self,$target) = @_;
+  my $id = $self->run_sql_once('SELECT gwid FROM dr_gateways WHERE target = ?',$target);
+  warning("Unknown gateway/target $target") if !defined $id;
+  return defined($id) ? $id : $target;
+}
+
 sub insert
 {
     my ($self,$params) = @_;
@@ -46,6 +54,11 @@ sub insert
     my $prefix      = $params->{prefix};
     my $priority    = $params->{priority};
     my $gwlist      = $params->{target};
+    my $gwlist = join(';', map {
+                    join(',', map {
+                      id_of_gateway($_)
+                    } split(/,/))
+                  } split(/;/,$gwlist));
 
     my @res;
     push @res,
