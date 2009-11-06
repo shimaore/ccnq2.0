@@ -32,6 +32,7 @@ use JSON;
 use constant handler_timeout => 20;
 
 =pod
+
   Subject format:
 
   activity : the activity UUID
@@ -42,6 +43,10 @@ use constant handler_timeout => 20;
 
   params : parameters sent to / from the action
   error : if present, an error occurred (activity submission failed)
+  status : set to 'completed' or 'failed'; only found in responses
+
+  A message is a request if no "status" body field is present.
+  A message is a response if the "status" body field is present.
 
 =cut
 
@@ -177,7 +182,8 @@ sub handle_message {
   my $cv = AnyEvent->condvar;
   $cv->cb(sub {
     my $response = shift->recv;
-    if($response) {
+    # Only send a response if the message we received was not already a response.
+    if(!$request_body->{status}) {
       my $subject = { map { $_=>$request_subject->{$_} } qw(activity action) };
       _send_im_message($context,$msg->from,$subject,$response);
     }
