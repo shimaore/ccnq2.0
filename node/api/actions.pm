@@ -70,6 +70,24 @@
         };
         my $body = {$req->vars};
 
+        if(!defined($body->{action}) || $body->{action} !~ /^\w+$/) {
+          $req->respond([404,'Invalid action']);
+          $httpd->stop_request;
+          return;
+        }
+
+        if($req->method eq 'GET') {
+          $body->{action} .= '_query';
+        } elsif ($req->method eq 'PUT') {
+          $body->{action} .= '_update';
+        } elsif ($req->method eq 'DELETE') {
+          $body->{action} .= '_delete';
+        } else {
+          $req->respond([501,'Invalid method']);
+          $httpd->stop_request;
+          return;
+        }
+
         debug("node/api: Contacting $muc_room");
         my $r = CCNQ::XMPPAgent::send_muc_message($context,$muc_room,$subject,$body);
         if($r->[0] eq 'ok') {
