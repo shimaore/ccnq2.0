@@ -64,6 +64,7 @@
 
     # Log the request.
     my $cv = $db->save_doc($request);
+    $request->{_id} = $request->{request} if $request->{request};
 
     $cv->cb( sub{ $_[0]->recv;
       # We use CouchDB's ID as the Request ID.
