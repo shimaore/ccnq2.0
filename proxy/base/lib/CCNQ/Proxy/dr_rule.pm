@@ -67,7 +67,7 @@ sub insert
     my @res;
     push @res,
         <<'SQL',[$groupid,$prefix,'',$priority,'',$gwlist,$description];
-        INSERT INTO dr_rules(groupid,prefix,timerec,priority,routeid,gwlist,description) VALUES (?,?,?,?,?,(SELECT gwid FROM dr_gateways WHERE target = ?),?)
+        INSERT INTO dr_rules(groupid,prefix,timerec,priority,routeid,gwlist,description) VALUES (?,?,?,?,?,(SELECT gwid FROM dr_gateways WHERE address = ?),?)
 SQL
     return @res;
 }
@@ -82,7 +82,7 @@ sub delete
     my @res;
     push @res,
         <<'SQL',[$groupid,$prefix,$priority];
-        DELETE FROM dr_gateways WHERE groupid = ? AND prefix = ? AND priority = ?
+        DELETE FROM dr_rules WHERE groupid = ? AND prefix = ? AND priority = ?
 SQL
     return @res;
 }
