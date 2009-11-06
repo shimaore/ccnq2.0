@@ -54,7 +54,7 @@ EOT
   },
 
   _session_ready => sub {
-    my ($context) = @_;
+    my ($params,$context) = @_;
     use CCNQ::XMPPAgent;
     debug("B2BUA _session_ready");
     CCNQ::XMPPAgent::join_cluster_room($context);

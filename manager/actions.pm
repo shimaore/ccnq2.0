@@ -34,7 +34,7 @@
   },
 
   _session_ready => sub {
-    my ($context) = @_;
+    my ($params,$context) = @_;
     use CCNQ::XMPPAgent;
     debug("Manager _session_ready");
     CCNQ::XMPPAgent::join_cluster_room($context);

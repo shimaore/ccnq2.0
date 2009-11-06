@@ -36,7 +36,7 @@
 
     use CCNQ::XMPPAgent;
 
-    my ($context) = @_;
+    my ($params,$context) = @_;
 
     my $muc_room = CCNQ::Install::manager_cluster_jid;
     $context->{muc}->join_room($context->{connection},$muc_room,$context->{function}.','.rand(),{
