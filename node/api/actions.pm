@@ -64,11 +64,11 @@
         my ($httpd, $req) = @_;
 
         debug("node/api: Processing web request");
-        my $subject = {
+        my $body = {
           activity => 'node/api/'.rand(),
           action => '_request',
+          $req->vars
         };
-        my $body = {$req->vars};
 
         if(!defined($body->{action}) || $body->{action} !~ /^\w+$/) {
           $req->respond([404,'Invalid action']);
@@ -89,7 +89,7 @@
         }
 
         debug("node/api: Contacting $muc_room");
-        my $r = CCNQ::XMPPAgent::send_muc_message($context,$muc_room,$subject,$body);
+        my $r = CCNQ::XMPPAgent::send_muc_message($context,$muc_room,$body);
         if($r->[0] eq 'ok') {
           $req->respond([200,'OK']);
         } else {

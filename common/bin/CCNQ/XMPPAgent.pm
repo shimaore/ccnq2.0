@@ -33,13 +33,11 @@ use constant handler_timeout => 20;
 
 =pod
 
-  Subject format:
+  Body format:
 
   activity : the activity UUID
   action : action requested
   auth : activity submission authentication token
-
-  Body format:
 
   params : parameters sent to / from the action
   error : if present, an error occurred (activity submission failed)
@@ -56,7 +54,7 @@ sub _joined_muc {
   if($context->{pending_muc}->{$dest}) {
     while(@{$context->{pending_muc}->{$dest}}) {
       my $ref = shift @{$context->{pending_muc}->{$dest}};
-      _send_muc_message($context,$dest,$ref->{subject},$ref->{body});
+      _send_muc_message($context,$dest,$ref->{body});
     }
   }
 }
@@ -67,13 +65,13 @@ sub _left_muc {
 }
 
 sub send_muc_message {
-  my ($context,$dest,$subject,$body) = @_;
+  my ($context,$dest,$body) = @_;
   if($context->{joined_muc}->{$dest}) {
-    return _send_muc_message($context,$dest,$subject,$body);
+    return _send_muc_message($context,$dest,$body);
   } else {
     debug("send_muc_message(): queuing for dest=$dest");
     $context->{pending_muc}->{$dest} ||= [];
-    push @{$context->{pending_muc}->{$dest}}, { subject => $subject, body => $body };
+    push @{$context->{pending_muc}->{$dest}}, { body => $body };
     _join_room($context,$dest) unless exists $context->{joined_muc}->{$dest};
     $context->{joined_muc}->{$dest} = 0;
     return ['warning','Message queued'];
@@ -81,16 +79,15 @@ sub send_muc_message {
 }
 
 sub _send_muc_message {
-  my ($context,$dest,$subject,$body) = @_;
+  my ($context,$dest,$body) = @_;
   debug("_send_muc_message(): dest=$dest");
   my $room = $context->{muc}->get_room ($context->{connection}, $dest);
   if($room) {
-    authenticate_response($subject);
-    my $json_subject = encode_json($subject);
+    authenticate_response($body);
     my $json_body    = encode_json($body);
-    my $immsg = $room->make_message(subject => $json_subject, body => $json_body);
+    my $immsg = $room->make_message(body => $json_body);
     $immsg->send();
-    $subject->{submitted} = time;
+    $body->{submitted} = time;
     return ['ok'];
   } else {
     warning("$dest: Not joined yet");
@@ -99,16 +96,15 @@ sub _send_muc_message {
 }
 
 sub _send_im_message {
-  my ($context,$dest,$subject,$body) = @_;
+  my ($context,$dest,$body) = @_;
   debug("_send_im_message(): dest=$dest");
-  authenticate_response($subject);
-  my $json_subject = encode_json($subject);
+  authenticate_response($body);
   my $json_body    = encode_json($body);
-  my $immsg = new AnyEvent::XMPP::IM::Message(to => $dest, subject => $json_subject, body => $json_body);
+  my $immsg = new AnyEvent::XMPP::IM::Message(to => $dest, body => $json_body);
   use Carp;
   confess("No connection") unless $context->{connection};
   $immsg->send($context->{connection});
-  $subject->{submitted} = time;
+  $body->{submitted} = time;
   return ['ok'];
 }
 
@@ -123,18 +119,15 @@ sub _send_im_message {
 sub submit_activity {
   my ($context,$activity) = @_;
 
-  my $subject;
-  @$subject{qw(activity action)} = @$activity{qw( activity action )};
-
   # Forward the activity to the proper MUC
   if($activity->{cluster_name}) {
     my $dest = CCNQ::Install::make_muc_jid($activity->{cluster_name});
-    debug("submit_activity(): send_muc_message($dest,$subject->{activity},$subject->{action})");
-    return send_muc_message($context,$dest,$subject,$activity);
+    debug("submit_activity(): send_muc_message($dest,$activity->{activity},$activity->{action})");
+    return send_muc_message($context,$dest,$activity);
   } elsif($activity->{node_name}) {
     my $dest = $activity->{node_name}.'@'.$context->{domain};
-    debug("submit_activity(): send_im_message($dest,$subject->{activity},$subject->{action})");
-    return _send_im_message($context,$dest,$subject,$activity);
+    debug("submit_activity(): send_im_message($dest,$activity->{activity},$activity->{action})");
+    return _send_im_message($context,$dest,$activity);
   }
   return ['error','No destination specified'];
 }
@@ -148,43 +141,33 @@ sub authenticate_message {
 }
 
 sub authenticate_response {
-  my ($subject,$partner) = @_;
-  $subject->{auth} = 'authenticated';
+  my ($body,$partner) = @_;
+  $body->{auth} = 'authenticated';
 }
 
 sub handle_message {
   my ($context,$msg) = @_;
   my $function = $context->{function};
 
-  error("No subject, ignoring message"),
-  return unless $msg->subject;
-
-  my $request_subject = decode_json($msg->subject);
   my $request_body    = decode_json($msg->any_body);
 
   error("Object received is not an hashref"),
-  return unless defined($request_subject) && ref($request_subject) eq 'HASH';
+  return unless defined($request_body) && ref($request_body) eq 'HASH';
 
   error("Message contains no activity UUID"),
-  return unless $request_subject->{activity};
+  return unless $request_body->{activity};
 
   error("Message contains no action"),
-  return unless $request_subject->{action};
+  return unless $request_body->{action};
 
   error("Message authentication failed"),
-  return unless authenticate_message($request_subject,$msg->from);
+  return unless authenticate_message($request_body,$msg->from);
 
   # Try to process the command.
-  my $action = $request_subject->{action};
+  my $action = $request_body->{action};
 
   my $handler = undef;
   if($request_body->{status}) {
-    # The added fields are required for the manager to be able to locate the parameters in a response.
-    my $response = {
-      activity => $request_subject->{activity},
-      action   => $action,
-      %{$request_body}
-    };
     # This is a response.
     $handler = CCNQ::Install::attempt_run($function,'_response',$response,$context);
   } else {
@@ -197,8 +180,8 @@ sub handle_message {
     my $response = shift->recv;
     # Only send a response if the message we received was not already a response.
     if(!$request_body->{status}) {
-      my $subject = { map { $_=>$request_subject->{$_} } qw(activity action) };
-      _send_im_message($context,$msg->from,$subject,$response);
+      my $response = { map { $_=>$request_body->{$_} } qw(activity action) };
+      _send_im_message($context,$msg->from,$response);
     }
   });
   # Run the handler.
