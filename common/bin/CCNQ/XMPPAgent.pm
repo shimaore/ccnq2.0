@@ -176,7 +176,7 @@ sub handle_message {
 
   my $cv = AnyEvent->condvar;
   $cv->cb(sub {
-    my $response = shift;
+    my $response = shift->recv;
     if($response) {
       my $subject = { map { $_=>$request_subject->{$_} } qw(activity action) };
       _send_im_message($context,$msg->from,$subject,$response);

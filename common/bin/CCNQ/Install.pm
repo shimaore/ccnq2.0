@@ -285,7 +285,7 @@ sub attempt_run {
       } elsif($run->{_default}) {
         $result = $run->{_default}->($action,$params,$context,$cv);
       } else {
-        info("attempt_run: No action available for function $function action $action");
+        debug("attempt_run: No action available for function $function action $action");
         # Mark completed, still.
       }
     };
