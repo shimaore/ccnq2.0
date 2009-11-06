@@ -47,7 +47,7 @@
     my $host = CCNQ::Install::api_rendezvous_host;
     my $port = CCNQ::Install::api_rendezvous_port;
     info("node/api: Starting web API on ${host}:${port}");
-    $context->{httpd} = AnyEvent::HTTPD->new (
+    $context->{httpd} = CCNQ::HTTPD->new (
       host => $host,
       port => $port,
     );
