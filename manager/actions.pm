@@ -81,6 +81,8 @@
           $activity->{parent_request} = $request->{request};
           $activity->{rank} = $rank;
           $activity->{activity} = $activity->{_id};
+          $activity->{next_activity} = $request->{request}.'.'.($rank+1)
+            unless $rank == $#activities;
 
           $mcv->begin;
           $db->save_doc($activity)->cb(sub{ $_[0]->recv;
@@ -158,7 +160,12 @@
             }
             $mcv->end;
           } else {
-            my $next_activity_id = $activity->{parent_request}.'.'.($activity->{rank}+1);
+            # Process the next activity, if any.
+            my $next_activity_id = $activity->{next_activity};
+            if(!$next_activity_id) {
+              $mcv->end;
+              return;
+            };
             debug("Locating next activity $next_activity_id");
             $db->open_doc($next_activity_id)->cb(sub{
               my $next_activity = $_[0]->recv;
