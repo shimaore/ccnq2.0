@@ -31,6 +31,12 @@ use CCNQ::Proxy::Config;
     eval { CCNQ::Proxy::Config::configure_opensips($context,$model); };
     info($@) if $@;
 
+    # Create the directory for the CDRs.
+    use CCNQ::Proxy::Configuration;
+    use File::Path;
+    File::Path::mkpath([CCNQ::Proxy::Configuration::cdr_directory]);
+    CCNQ::Install::_execute($context,'chown','opensips',CCNQ::Proxy::Configuration::cdr_directory);
+
     # Restart OpenSIPS using the new configuration.
     info("Restarting OpenSIPS");
     CCNQ::Install::_execute($context,'/bin/sed','-i','-e','s/^RUN_OPENSIPS=no$/RUN_OPENSIPS=yes/','/etc/default/opensips');

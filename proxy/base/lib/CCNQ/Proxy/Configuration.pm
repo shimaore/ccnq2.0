@@ -47,6 +47,8 @@ use constant challenge    => $configuration::sip_challenge  || '';
 use constant opensips_uri => join('','mysql://',db_login,':',db_password,'@',db_host,'/'.db_name);
 use constant dbd_uri      => join('','DBI:mysql:database=',db_name,';host=',db_host); # .';port='.$port
 
+use constant cdr_directory => '/var/log/opensips';
+
 sub parameters {
 
   # Evaluate the parameters
