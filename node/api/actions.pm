@@ -32,7 +32,7 @@
   _session_ready => sub {
     use JSON;
     use AnyEvent;
-    use AnyEvent::HTTPD;
+    use CCNQ::HTTPD;
 
     use CCNQ::XMPPAgent;
 
