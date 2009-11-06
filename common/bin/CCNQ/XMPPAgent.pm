@@ -149,8 +149,9 @@ sub handle_message {
   my ($context,$msg) = @_;
   my $function = $context->{function};
 
+  my $request_body;
   eval {
-    my $request_body    = decode_json($msg->any_body);
+    $request_body    = decode_json($msg->any_body);
   };
   error("Invalid body: $@"),
   return if $@;
