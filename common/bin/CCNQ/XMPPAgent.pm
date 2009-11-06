@@ -172,28 +172,19 @@ sub handle_message {
   # Try to process the command.
   my $action = $request_subject->{action};
 
-  my $process_response = sub {
+  my $handler = CCNQ::Install::attempt_run($function,$action,$request_body,$context);
+
+  my $cv = AnyEvent->condvar;
+  $cv->cb(sub {
     my $response = shift;
     if($response) {
       my $subject = { map { $_=>$request_subject->{$_} } qw(activity action) };
       _send_im_message($context,$msg->from,$subject,$response);
     }
-  };
-
-  my $response = {};
-
-  my $w;
-  $w = AnyEvent->timer( after => handler_timeout, cb => sub {
-    undef $w;
-    info("function $function action $action Timed Out");
-    $process_response->($response);
   });
 
-  my $sub = CCNQ::Install::attempt_run($function,$action,$request_body,$context);
-  $response = $sub->();
-  undef $w;
-  $process_response->($response);
-  return $response;
+  $handler->($cv);
+  $context->{condvar}->cb($cv);
 }
 
 sub _join_room {

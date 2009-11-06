@@ -239,38 +239,62 @@ sub resolve_roles_and_functions {
 
 use constant actions_file_name => 'actions.pm';
 
+=pod
+
+  attempt_run locates an "actions.pm" module and returns a sub() that
+  will execute an action in it.
+  "actions.pm" modules must return a hashred, which keys are the action
+  names, and the values are sub()s.
+
+  The sub($cv) returned by attempt_run expects one argument, an AnyEvent
+  condvar, which will be sent the result, in the form:
+
+  { status => 'completed', params => $results }
+  { status => 'failed', error => $error_msg }
+
+=cut
+
 sub attempt_run {
   my ($function,$action,$params,$context) = @_;
 
   debug(qq(Creating "${action}" in function "${function}".));
   my $run_file = File::Spec->catfile(CCNQ::Install::SRC,$function,actions_file_name);
 
+  my $failed = sub {
+    warning(qq(Executing "${run_file}" in attempt_run("$function","$action",...) returned: $@)) if $@;
+    shift->send({ status => 'failed', error => 'internal error' });
+  };
+
   warning(qq(No such file "${run_file}", skipping)),
-  return sub { return { status => 'error', error => 'invalid action' } } unless -e $run_file;
+  return $failed unless -e $run_file;
   my $eval = content_of($run_file);
+  return $failed if !defined($eval);
+
+  # The script should return a hashref, which keys are the actions and
+  # the values are sub().
+  my $run = eval($eval);
+  return $failed if $@;
 
   return sub {
-    # The script should return a hashref, which keys are the actions and
-    # the values are sub().
-    my $run = eval($eval);
-    warning(qq(Executing "${run_file}" in attempt_run("$function","$action",...) returned: $@)),
-    return { status => 'error', error => 'internal error' } if $@;
+    my $cv = shift;
 
     my $result = undef;
     eval {
       if($run->{$action}) {
-        $result = $run->{$action}->($params,$context);
+        $result = $run->{$action}->($params,$context,$cv);
       } elsif($run->{_default}) {
-        $result = $run->{_default}->($action,$params,$context);
+        $result = $run->{_default}->($action,$params,$context,$cv);
       } else {
         warning("attempt_run: No action available for function $function action $action");
+        $failed->($cv);
       }
     };
 
-    warning(qq(Executing "${run_file}" attempt_run("$function","$action",...): $@)),
-    return { status => 'error', error => 'internal error' } if $@;
-
-    return $result ? { status => 'completed', params => $result } : undef;
+    if($@) {
+      $failed->($cv);
+    } else {
+      $cv->send({ status => 'completed', params => $result });
+    }
   };
 }
 
@@ -280,7 +304,9 @@ sub attempt_on_roles_and_functions {
   my $context = shift;
   resolve_roles_and_functions(sub {
     my ($cluster_name,$role,$function) = @_;
-    attempt_run($function,$action,{ %{$params}, cluster_name => $cluster_name, role => $role },$context)->();
+    my $cv = AnyEvent->condvar;
+    attempt_run($function,$action,{ %{$params}, cluster_name => $cluster_name, role => $role },$context)->($cv);
+    $context->{condvar}->cb($cv);
   });
 }
 

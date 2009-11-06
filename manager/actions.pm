@@ -18,7 +18,7 @@
 
 {
   install => sub {
-    my ($params,$context) = @_;
+    my ($params,$context,$mcv) = @_;
     use AnyEvent::CouchDB;
     use CCNQ::Manager;
     my $db_name = CCNQ::Manager::manager_db;
@@ -29,7 +29,7 @@
     $cv->cb(sub{
       info("Created CouchDB '${db_name}' database");
     });
-    $context->{condvar}->cb($cv);
+    $mcv->cb($cv);
     return;
   },
 
@@ -46,7 +46,7 @@
     use AnyEvent::CouchDB;
     use CCNQ::Manager;
 
-    my ($request,$context) = @_;
+    my ($request,$context,$mcv) = @_;
 
     error("No request!"), return unless $request;
 
@@ -98,7 +98,7 @@
 
     });
 
-    $context->{condvar}->cb($cv);
+    $mcv->cb($cv);
     return;
   },
 
@@ -107,7 +107,7 @@
     use AnyEvent::CouchDB;
     use CCNQ::Manager;
 
-    my ($action,$response,$context) = @_;
+    my ($action,$response,$context,$mcv) = @_;
 
     error("No action defined"), return unless $action;
     error("No activity defined for action $action"), return unless $response->{activity};
@@ -140,7 +140,7 @@
         error("Activity $response->{activity} does not exist!");
       }
     });
-    $context->{condvar}->cb($cv);
+    $mcv->cb($cv);
     return;
   },
 }
