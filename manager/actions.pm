@@ -74,7 +74,7 @@
         # Now split the request into independent activities
         my @activities = CCNQ::Manager::activities_for_request($request);
         for my $rank (0..$#activities) {
-          my $actitivy = $activities[$rank];
+          my $activity = $activities[$rank];
 
           debug("Creating new activity");
           $activity->{_id} = $request->{request}.'.'.$rank;
