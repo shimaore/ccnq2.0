@@ -185,7 +185,10 @@ sub handle_message {
     my $response = shift->recv;
     # Only send a response if the message we received was not already a response.
     if(!$request_body->{status}) {
-      my $response = { map { $_=>$request_body->{$_} } qw(activity action) };
+      my $response = {
+        (map { $_=>$request_body->{$_} } qw(activity action)),
+        %{$response}
+      };
       _send_im_message($context,$msg->from,$response);
     }
   });
@@ -316,7 +319,7 @@ sub start {
     message => sub {
       my $con = shift;
       my ($msg) = @_;
-      debug("IM Message from: " . $msg->from . "; subject: " . $msg->subject . "; body: " . $msg->any_body);
+      debug("IM Message from: " . $msg->from . "; body: " . $msg->any_body);
       handle_message($context,$msg);
     },
     message_error => sub {
@@ -367,7 +370,7 @@ sub start {
     message => sub {
       my $muc = shift;
       my ($room,$msg,$is_echo) = @_;
-      debug("In MUC room: " . $room->jid . ", message from: " . $msg->from . "; subject: " . $msg->subject . "; body: " . $msg->any_body);
+      debug("In MUC room: " . $room->jid . ", message from: " . $msg->from . "; body: " . $msg->any_body);
       # my ($user, $host, $res) = split_jid ($msg->to);
       handle_message($context,$msg);
     },
