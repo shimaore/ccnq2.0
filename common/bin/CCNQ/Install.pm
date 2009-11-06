@@ -285,8 +285,8 @@ sub attempt_run {
       } elsif($run->{_default}) {
         $result = $run->{_default}->($action,$params,$context,$cv);
       } else {
-        warning("attempt_run: No action available for function $function action $action");
-        $failed->($cv);
+        info("attempt_run: No action available for function $function action $action");
+        # Mark completed, still.
       }
     };
 

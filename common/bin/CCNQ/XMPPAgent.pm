@@ -184,6 +184,7 @@ sub handle_message {
   });
 
   $handler->($cv);
+  # Trigger the response.
   $context->{condvar}->cb($cv);
 }
 
@@ -285,7 +286,9 @@ sub start {
       debug("Connected as " . $con->jid . " in function $context->{function}");
       $con->send_presence("present");
       # my ($user, $host, $res) = split_jid ($con->jid);
-      $session_ready_sub->();
+      my $cv = AnyEvent->condvar;
+      $session_ready_sub->($cv);
+      undef $cv;
     },
     session_error => sub {
       my $con = shift;
