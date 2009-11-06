@@ -109,15 +109,13 @@
   },
 
   # Response to requests
-  _default => sub {
+  _response => sub {
     use AnyEvent::CouchDB;
     use CCNQ::Manager;
 
-    my ($action,$response,$context,$mcv) = @_;
+    my ($response,$context,$mcv) = @_;
 
-    # In a MUC, we will see copies of our own submissions, ignore them.
-    debug("Dropping request"), return unless $response->{status};
-
+    my $action = $response->{action};
     error("No action defined"), return unless $action;
     error("No activity defined for action $action"), return unless $response->{activity};
 

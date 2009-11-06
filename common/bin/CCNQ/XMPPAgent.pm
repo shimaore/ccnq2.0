@@ -177,7 +177,20 @@ sub handle_message {
   # Try to process the command.
   my $action = $request_subject->{action};
 
-  my $handler = CCNQ::Install::attempt_run($function,$action,$request_body,$context);
+  my $handler = undef;
+  if($request_body->{status}) {
+    # The added fields are required for the manager to be able to locate the parameters in a response.
+    my $response = {
+      activity => $request_subject->{activity},
+      action   => $action,
+      %{$request_body}
+    };
+    # This is a response.
+    $handler = CCNQ::Install::attempt_run($function,'_response',$response,$context);
+  } else {
+    # This is a request.
+    $handler = CCNQ::Install::attempt_run($function,$action,$request_body,$context);
+  }
 
   my $cv = AnyEvent->condvar;
   $cv->cb(sub {
@@ -188,7 +201,7 @@ sub handle_message {
       _send_im_message($context,$msg->from,$subject,$response);
     }
   });
-
+  # Run the handler.
   $handler->($cv);
   # Trigger the response.
   $context->{condvar}->cb($cv);
