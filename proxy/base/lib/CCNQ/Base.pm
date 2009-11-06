@@ -57,41 +57,10 @@ sub do_sql {
   return $cv;
 }
 
-sub do_insert
-{
-    my ($self,$params) = @_;
-    return $self->do_sql($self->insert($params));
-}
-
 sub do_delete
 {
     my ($self,$params) = @_;
     return $self->do_sql($self->delete($params));
-}
-
-sub do_modify
-{
-    my ($self,$params) = @_;
-
-    # Split the parameters into two lists: one with the old values
-    # (used to delete the existing record) and one with the new values
-    # (used to create a new record).
-    my $old_params = {};
-    my $new_params = {};
-    while( my ($name,$value) = each %{$params} )
-    {
-        if($name =~ /:old$/)
-        {
-            $name =~ s/:old$//;
-            $old_params->{$name} = $value;
-        }
-        else
-        {
-            $new_params->{$name} = $value;
-        }
-    }
-
-    return $self->do_sql($self->delete($old_params),$self->insert($new_params));
 }
 
 sub do_update
@@ -193,8 +162,6 @@ sub run
     # This would need an eval() to collect error messages,
     # unless I rewrite the code to work properly.
     return $self->do_delete($params) if $action eq 'delete';
-    return $self->do_insert($params) if $action eq 'insert';
-    return $self->do_modify($params) if $action eq 'modify';
     return $self->do_update($params) if $action eq 'update';
 =pod
     return $self->do_query($params)  if $action eq 'query';

@@ -49,7 +49,7 @@ use CCNQ::Proxy::Config;
   _default => sub {
     my ($action,$request,$context) = @_;
     error("No action defined"), return unless $action;
-    my ($module,$command) = ($action =~ m{^(.*)/(delete|insert|modify|update|query)$});
+    my ($module,$command) = ($action =~ m{^(.*)/(delete|update|query)$});
     error("Invalid action $action"), return unless $module && $command;
 
     debug("Ignoring response") if $request->{status};
