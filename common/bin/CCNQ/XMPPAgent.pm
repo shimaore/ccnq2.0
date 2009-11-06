@@ -183,8 +183,13 @@ sub handle_message {
   my $cv = AnyEvent->condvar;
   $cv->cb(sub {
     my $response = shift->recv;
-    # Only send a response if the message we received was not already a response.
-    if(!$request_body->{status}) {
+    # Only send a response if:
+    # - one was provided (i.e. method is a valid local method), and
+    # - the message we received was not already a response.
+    # The first test is required since multiple local resources may get
+    # the same message, but only one should reply (the one that implements
+    # the requested action).
+    if($response && !$request_body->{status}) {
       my $response = {
         (map { $_=>$request_body->{$_} } qw(activity action)),
         %{$response}

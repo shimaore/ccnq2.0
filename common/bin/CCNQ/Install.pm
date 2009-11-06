@@ -260,20 +260,21 @@ sub attempt_run {
   debug(qq(Creating "${action}" in function "${function}".));
   my $run_file = File::Spec->catfile(CCNQ::Install::SRC,$function,actions_file_name);
 
-  my $failed = sub {
-    warning(qq(Executing "${run_file}" in attempt_run("$function","$action",...) returned: $@)) if $@;
-    shift->send({ status => 'failed', error => 'internal error' });
-  };
+  # Errors which lead to not being able to submit the request are not reported.
+  my $cancel = sub { shift->send(); };
 
+  # No "actions.pm" for the selected function.
   warning(qq(No such file "${run_file}", skipping)),
-  return $failed unless -e $run_file;
-  my $eval = content_of($run_file);
-  return $failed if !defined($eval);
+  return $cancel unless -e $run_file;
 
-  # The script should return a hashref, which keys are the actions and
-  # the values are sub().
+  # An error occurred while reading the file.
+  my $eval = content_of($run_file);
+  return $cancel if !defined($eval);
+
+  # An error occurred while parsing the file.
   my $run = eval($eval);
-  return $failed if $@;
+  warning(qq(Executing "${run_file}" in attempt_run("$function","$action",...) returned: $@)),
+  return $cancel if $@;
 
   return sub {
     my $cv = shift;
@@ -286,12 +287,13 @@ sub attempt_run {
         $result = $run->{_default}->($action,$params,$context,$cv);
       } else {
         debug("attempt_run: No action available for function $function action $action");
-        # Mark completed, still.
+        $cancel->($cv);
+        return;
       }
     };
 
     if($@) {
-      $failed->($cv);
+      $cv->send({ status => 'failed', error => $@ });
     } else {
       $cv->send({ status => 'completed', params => $result });
     }
