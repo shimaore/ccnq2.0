@@ -3,9 +3,9 @@ package CCNQ::HTTPD;
 use common::sense;
 use Scalar::Util qw/weaken/;
 use URI;
-use AnyEvent::HTTPD::Request;
+use CCNQ::HTTPD::Request;
 
-use base qw/AnyEvent::HTTPD::HTTPServer/;
+use base qw/CCNQ::HTTPD::HTTPServer/;
 
 =pod
   This is basically AnyEvent::HTTPD.pm
@@ -32,7 +32,7 @@ sub new {
 
                if ($meth eq 'GET' or $meth eq 'PUT' or $meth eq 'DELETE') {
                   $cont =
-                     AnyEvent::HTTPD::HTTPConnection::_parse_urlencoded ($url->query);
+                     CCNQ::HTTPD::HTTPConnection::_parse_urlencoded ($url->query);
                }
 
                if ($meth eq 'GET' or $meth eq 'PUT' or $meth eq 'DELETE') {
@@ -65,7 +65,7 @@ sub handle_app_req {
    my ($self, $meth, $url, $hdr, $cont, $host, $port, $respcb) = @_;
 
    my $req =
-      AnyEvent::HTTPD::Request->new (
+      CCNQ::HTTPD::Request->new (
          httpd   => $self,
          method  => $meth,
          url     => $url,

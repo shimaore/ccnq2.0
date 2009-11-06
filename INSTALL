@@ -38,7 +38,7 @@ EOT
 * On the API server:
 
   # The API server is the one that pushes HTTP request into the XMPP bus.
-  sudo cpan AnyEvent::HTTPD
+  # sudo cpan CCNQ::HTTPD  # Actually it's too broken.
 
 * On the manager server:
 
