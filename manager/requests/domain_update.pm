@@ -10,9 +10,5 @@ sub {
         map { $_ => $request->{$_} } qw( domain )
       }
     },
-    {
-      action => 'restart_proxy',
-      cluster_name => $request->{cluster_name},
-    }
   );
 }
