@@ -66,7 +66,7 @@ sub insert
 
     my @res;
     push @res,
-        <<'SQL',[$group,$prefix,'',$priority,'',$gwlist,$description];
+        <<'SQL',[$groupid,$prefix,'',$priority,'',$gwlist,$description];
         INSERT INTO dr_rules(groupid,prefix,timerec,priority,routeid,gwlist,description) VALUES (?,?,?,?,?,(SELECT gwid FROM dr_gateways WHERE target = ?),?)
 SQL
     return @res;
