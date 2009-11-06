@@ -24,7 +24,7 @@
 =cut
 
 {
-  request => sub {
+  _request => sub {
     # Silently ignore. (These come to us because we are subscribed to the manager MUC.)
     return;
   },
@@ -66,7 +66,7 @@
         debug("node/api: Processing web request");
         my $subject = {
           activity => 'node/api/'.rand(),
-          action => 'request',
+          action => '_request',
         };
         my $body = {$req->vars};
 

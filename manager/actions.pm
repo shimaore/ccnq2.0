@@ -43,8 +43,8 @@
     return;
   },
 
-  # Send requests out (message received e.g. from node/api/actions.pm)
-  request => sub {
+  # Send requests out (message received from node/api/actions.pm)
+  _request => sub {
     use AnyEvent::CouchDB;
     use CCNQ::Manager;
 
