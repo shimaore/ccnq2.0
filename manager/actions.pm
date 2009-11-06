@@ -25,11 +25,13 @@
     info("Creating CouchDB '${db_name}' database");
     my $couch = couch;
     my $db = $couch->db($db_name);
+    $mcv->begin;
     my $cv = $db->create();
     $cv->cb(sub{
       info("Created CouchDB '${db_name}' database");
+      $mcv->end;
     });
-    $mcv->cb($cv);
+    $context->{condvar}->cb($cv);
     return;
   },
 
@@ -57,6 +59,8 @@
     # XXX Use the original's Activity's ID (+random) as the new Request ID
     # XXX Use the Request ID + sequential number as the Activity ID.
 
+    $mcv->begin;
+
     # Log the request.
     my $cv = $db->save_doc($request);
 
@@ -66,12 +70,12 @@
       debug("Saved request with ID=$request->{request}.");
 
       $db->save_doc($request)->cb(sub{ $_[0]->recv;
-
         # Now split the request into independent activities
         for my $activity (CCNQ::Manager::activities_for_request($request)) {
           debug("Creating new activity");
           $activity->{activity_parent} = $request->{request};
 
+          $mcv->begin;
           $db->save_doc($activity)->cb(sub{ $_[0]->recv;
 
             # We use CouchDB's ID as the Activity ID.
@@ -84,6 +88,7 @@
               debug("New activity ID=$activity->{activity} was submitted.");
 
               $db->save_doc($activity)->cb(sub{$_[0]->recv;
+                $mcv->end;
                 debug("New activity ID=$activity->{activity} was saved.");
               });
             } else {
@@ -92,13 +97,14 @@
           });
         }
 
+        $mcv->end;
         debug("Request ID=$request->{request} submitted");
 
       });
 
     });
 
-    $mcv->cb($cv);
+    $context->{condvar}->cb($cv);
     return;
   },
 
@@ -120,6 +126,8 @@
 
     my $db = couchdb(CCNQ::Manager::manager_db);
 
+    $mcv->begin;
+
     my $cv = $db->open_doc($response->{activity});
     $cv->cb(sub{
       my $activity = $_[0]->recv;
@@ -134,13 +142,14 @@
           warning("Activity $response->{activity} failed with error $response->{error}");
         }
         $db->save_doc($activity)->cb(sub{$_[0]->recv;
+          $mcv->end;
           debug("Activity $response->{activity} updated.")
         });
       } else {
         error("Activity $response->{activity} does not exist!");
       }
     });
-    $mcv->cb($cv);
+    $context->{condvar}->cb($cv);
     return;
   },
 }
