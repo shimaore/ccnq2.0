@@ -115,10 +115,11 @@
 
     my ($action,$response,$context,$mcv) = @_;
 
+    # In a MUC, we will see copies of our own submissions, ignore them.
+    debug("Dropping request"), return unless $response->{status};
+
     error("No action defined"), return unless $action;
     error("No activity defined for action $action"), return unless $response->{activity};
-    # In a MUC, we will see copies of our own submissions, ignore them.
-    debug("No status returned for action $action"), return unless $response->{status};
 
     debug("Trying to locate action=$action activity=$response->{activity}");
     return if $response->{activity} =~ qr{^node/api}; # Not a real response.
