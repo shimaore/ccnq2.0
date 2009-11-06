@@ -261,7 +261,7 @@ sub attempt_run {
   my $run_file = File::Spec->catfile(CCNQ::Install::SRC,$function,actions_file_name);
 
   # Errors which lead to not being able to submit the request are not reported.
-  my $cancel = sub { shift->send(); };
+  my $cancel = sub { shift->send({}); };
 
   # No "actions.pm" for the selected function.
   warning(qq(No such file "${run_file}", skipping)),

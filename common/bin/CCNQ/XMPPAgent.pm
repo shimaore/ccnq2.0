@@ -189,7 +189,7 @@ sub handle_message {
     # The first test is required since multiple local resources may get
     # the same message, but only one should reply (the one that implements
     # the requested action).
-    if($response && !$request_body->{status}) {
+    if($response->{status} && !$request_body->{status}) {
       my $response = {
         (map { $_=>$request_body->{$_} } qw(activity action)),
         %{$response}
