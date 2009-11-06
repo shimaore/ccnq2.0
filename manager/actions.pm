@@ -50,7 +50,8 @@
 
     my ($request,$context,$mcv) = @_;
 
-    error("No request!"), return unless $request;
+    error("No request!"), return unless $request and $request->{params};
+    $request = $request->{params};
 
     debug("Manager handling request");
 
