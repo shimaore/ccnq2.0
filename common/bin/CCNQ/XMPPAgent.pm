@@ -97,9 +97,9 @@ sub _send_muc_message {
 
 sub _send_im_message {
   my ($context,$dest,$body) = @_;
-  debug("_send_im_message(): dest=$dest");
   authenticate_response($body);
   my $json_body    = encode_json($body);
+  debug("_send_im_message(): dest=$dest, body=$json_body");
   my $immsg = new AnyEvent::XMPP::IM::Message(to => $dest, body => $json_body);
   use Carp;
   confess("No connection") unless $context->{connection};
@@ -181,22 +181,23 @@ sub handle_message {
   }
 
   my $cv = AnyEvent->condvar;
+  # Only send a response if:
+  # - one was provided (i.e. method is a valid local method), and
+  # - the message we received was not already a response.
+  # The first test is required since multiple local resources may get
+  # the same message, but only one should reply (the one that implements
+  # the requested action).
   $cv->cb(sub {
     my $response = shift->recv;
-    # Only send a response if:
-    # - one was provided (i.e. method is a valid local method), and
-    # - the message we received was not already a response.
-    # The first test is required since multiple local resources may get
-    # the same message, but only one should reply (the one that implements
-    # the requested action).
-    if($response->{status} && !$request_body->{status}) {
+    if($response->{status}) {
+      debug("Sending response");
       my $response = {
         (map { $_=>$request_body->{$_} } qw(activity action)),
         %{$response}
       };
       _send_im_message($context,$msg->from,$response);
     }
-  });
+  }) if !$request_body->{status};
   # Run the handler.
   $handler->($cv);
   # Trigger the response.
