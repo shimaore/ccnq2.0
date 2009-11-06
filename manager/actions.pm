@@ -152,6 +152,8 @@
 
           if($response->{error}) {
             info("Activity $response->{activity} failed with error $response->{error}, re-submitting");
+            delete $activity->{status};
+            delete $activity->{error};
             my $res = CCNQ::XMPPAgent::submit_activity($context,$activity);
             if($res->[0] eq 'ok') {
               debug("Activity was re-submitted.");
