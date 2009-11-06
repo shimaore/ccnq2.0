@@ -169,7 +169,7 @@ sub handle_message {
   my $handler = undef;
   if($request_body->{status}) {
     # This is a response.
-    $handler = CCNQ::Install::attempt_run($function,'_response',$response,$context);
+    $handler = CCNQ::Install::attempt_run($function,'_response',$request_body,$context);
   } else {
     # This is a request.
     $handler = CCNQ::Install::attempt_run($function,$action,$request_body,$context);
