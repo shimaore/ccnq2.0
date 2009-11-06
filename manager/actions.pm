@@ -72,29 +72,37 @@
 
       $db->save_doc($request)->cb(sub{ $_[0]->recv;
         # Now split the request into independent activities
-        for my $activity (CCNQ::Manager::activities_for_request($request)) {
+        my @activities = CCNQ::Manager::activities_for_request($request);
+        for my $rank (0..$#activities) {
+          my $actitivy = $activities[$rank];
+
           debug("Creating new activity");
-          $activity->{activity_parent} = $request->{request};
+          $activity->{_id} = $request->{request}.'.'.$rank;
+          $activity->{parent_request} = $request->{request};
+          $activity->{rank} = $rank;
+          $activity->{activity} = $activity->{_id};
 
           $mcv->begin;
           $db->save_doc($activity)->cb(sub{ $_[0]->recv;
 
-            # We use CouchDB's ID as the Activity ID.
-            $activity->{activity} = $activity->{_id};
             debug("New activity ID=$activity->{activity} was created.");
 
             # Submit the activity to the proper recipient.
-            my $res = CCNQ::XMPPAgent::submit_activity($context,$activity);
-            if($res->[0] eq 'ok') {
-              debug("New activity ID=$activity->{activity} was submitted.");
-
-              $db->save_doc($activity)->cb(sub{$_[0]->recv;
-                $mcv->end;
-                debug("New activity ID=$activity->{activity} was saved.");
-              });
-            } else {
-              error("Submission failed: $res->[1] for activity ID=$activity->{activity}");
+            # Should only be done for the first activity in the request.
+            # The other ones will be processed when a positive response is received.
+            if($rank == 0) {
+              my $res = CCNQ::XMPPAgent::submit_activity($context,$activity);
+              if($res->[0] eq 'ok') {
+                debug("New activity ID=$activity->{activity} was submitted.");
+              } else {
+                error("Submission failed: $res->[1] for activity ID=$activity->{activity}");
+              }
             }
+
+            $db->save_doc($activity)->cb(sub{$_[0]->recv;
+              $mcv->end;
+              debug("New activity ID=$activity->{activity} was saved.");
+            });
           });
         }
 
@@ -137,12 +145,35 @@
           if $response->{action} ne $activity->{action};
 
         $activity->{status} = $response->{status};
-        if($response->{error}) {
-          warning("Activity $response->{activity} failed with error $response->{error}");
-        }
         $db->save_doc($activity)->cb(sub{$_[0]->recv;
-          $mcv->end;
           debug("Activity $response->{activity} updated.")
+
+          if($response->{error}) {
+            info("Activity $response->{activity} failed with error $response->{error}, re-submitting");
+            my $res = CCNQ::XMPPAgent::submit_activity($context,$activity);
+            if($res->[0] eq 'ok') {
+              debug("Activity was re-submitted.");
+            } else {
+              error("Re-submission failed: $res->[1]");
+            }
+            $mcv->end;
+          } else {
+            my $next_activity_id = $activity->{parent_request}.'.'.($activity->{rank}+1);
+            debug("Locating next activity $next_activity_id");
+            $db->open_doc($next_activity_id)->cb(sub{
+              my $next_activity = $_[0]->recv;
+              my $res = CCNQ::XMPPAgent::submit_activity($context,$next_activity);
+              if($res->[0] eq 'ok') {
+                debug("Next activity ID=$next_activity_id was submitted.");
+              } else {
+                error("Submission failed: $res->[1] for activity ID=$next_activity_id");
+              }
+              $db->save_doc($next_activity)->cb(sub{$_[0]->recv;
+                debug("Next activity ID=$next_activity_id submitted.");
+                $mcv->end;
+              });
+            });
+          }
         });
       } else {
         error("Activity $response->{activity} does not exist!");
