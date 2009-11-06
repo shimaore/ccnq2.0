@@ -381,9 +381,9 @@ sub push_header_line {
       if ($line =~ /(\S+) \040 (\S+) \040 HTTP\/(\d+)\.(\d+)/xs) {
          my ($meth, $url, $vm, $vi) = ($1, $2, $3, $4);
 
-         if (not grep { $meth eq $_ } qw/GET HEAD POST/) {
+         if (not grep { $meth eq $_ } qw/GET PUT DELETE/) {
             $self->error (405, "method not allowed",
-                          { Allow => "GET,HEAD,POST" });
+                          { Allow => "GET,PUT,DELETE" });
             return;
          }
 
