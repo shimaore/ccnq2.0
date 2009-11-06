@@ -67,8 +67,7 @@
     $request->{_id} = $request->{request} if $request->{request};
 
     $cv->cb( sub{ $_[0]->recv;
-      # We use CouchDB's ID as the Request ID.
-      $request->{request} = $request->{_id};
+      $request->{request} ||= $request->{_id};
       debug("Saved request with ID=$request->{request}.");
 
       $db->save_doc($request)->cb(sub{ $_[0]->recv;
