@@ -116,9 +116,9 @@ sub insert
 
     my $always_mp   = $params->{always_proxy_media} || 0;
 
-    $ip = undef unless $ip =~ /^[\d.]+$/;
+    $ip = undef unless defined($ip) && $ip =~ /^[\d.]+$/;
 
-    $strip_digit = undef unless $strip_digit =~ /^\d$/;
+    $strip_digit = undef unless defined($strip_digit) && $strip_digit =~ /^\d$/;
 
     my @res;
     if( defined $password and $password ne '' )
