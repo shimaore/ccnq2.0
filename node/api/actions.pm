@@ -67,21 +67,23 @@
         my $body = {
           activity => 'node/api/'.rand(),
           action => '_request',
-          $req->vars
+          params => {
+            $req->vars
+          },
         };
 
-        if(!defined($body->{action}) || $body->{action} !~ /^\w+$/) {
+        if(!defined($body->{params}->{action}) || $body->{params}->{action} !~ /^\w+$/) {
           $req->respond([404,'Invalid action']);
           $httpd->stop_request;
           return;
         }
 
         if($req->method eq 'GET') {
-          $body->{action} .= '_query';
+          $body->{params}->{action} .= '_query';
         } elsif ($req->method eq 'PUT') {
-          $body->{action} .= '_update';
+          $body->{params}->{action} .= '_update';
         } elsif ($req->method eq 'DELETE') {
-          $body->{action} .= '_delete';
+          $body->{params}->{action} .= '_delete';
         } else {
           $req->respond([501,'Invalid method']);
           $httpd->stop_request;
