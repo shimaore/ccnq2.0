@@ -2,7 +2,6 @@ sub {
   my $request = shift;
   debug("update_dr_gateway request");
   # Return list of activities required to complete this request.
-  my @activities = ();
   return (
     {
       action => 'dr_gateway/update',
