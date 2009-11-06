@@ -65,5 +65,15 @@ use CCNQ::Proxy::Config;
     my ($params,$context) = @_;
     CCNQ::Install::_execute($context,qw( /usr/sbin/opensipsctl fifo dr_reload ));
     return;
+  },
+  trusted_reload => sub {
+    my ($params,$context) = @_;
+    CCNQ::Install::_execute($context,qw( /usr/sbin/opensipsctl fifo trusted_reload ));
+    return;
+  }
+  restart_proxy => sub {
+    my ($params,$context) = @_;
+    CCNQ::Install::_execute($context,qw( /usr/sbin/opensipsctl restart ));
+    return;
   }
 }
