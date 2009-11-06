@@ -146,7 +146,7 @@
 
         $activity->{status} = $response->{status};
         $db->save_doc($activity)->cb(sub{$_[0]->recv;
-          debug("Activity $response->{activity} updated.")
+          debug("Activity $response->{activity} updated.");
 
           if($response->{error}) {
             info("Activity $response->{activity} failed with error $response->{error}, re-submitting");
