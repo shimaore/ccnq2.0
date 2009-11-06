@@ -149,7 +149,11 @@ sub handle_message {
   my ($context,$msg) = @_;
   my $function = $context->{function};
 
-  my $request_body    = decode_json($msg->any_body);
+  eval {
+    my $request_body    = decode_json($msg->any_body);
+  };
+  error("Invalid body: $@"),
+  return if $@;
 
   error("Object received is not an hashref"),
   return unless defined($request_body) && ref($request_body) eq 'HASH';
