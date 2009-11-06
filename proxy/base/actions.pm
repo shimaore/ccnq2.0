@@ -20,6 +20,7 @@ use CCNQ::Proxy::Config;
     #    router
 
     my $model = first_line_of(proxy_mode_file);
+    die if !defined $model;
     my $template_dir = CCNQ::Install::CCN;
 
     # We install opensips.cfg and opensips.sql into /etc/ccn/

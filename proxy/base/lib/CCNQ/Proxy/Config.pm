@@ -66,7 +66,7 @@ EOH
   for my $extension qw(variables modules cfg) {
     for my $building_block (@recipe) {
       my $file = File::Spec->catfile($base_dir,'src',"${building_block}.${extension}");
-      if( -e $file ) {
+      if( -f $file ) {
         $result .= "\n## ---  Start ${file}  --- ##\n\n";
         $result .= CCNQ::Install::content_of($file);
         $result .= "\n## ---  End ${file}  --- ##\n\n";
@@ -85,7 +85,7 @@ sub compile_sql {
   my $extension = 'sql';
   for my $building_block (@recipe) {
     my $file = File::Spec->catfile($base_dir,'src',"${building_block}.${extension}");
-    if( -e $file ) {
+    if( -f $file ) {
       $result .= CCNQ::Install::content_of($file);
     }
   }

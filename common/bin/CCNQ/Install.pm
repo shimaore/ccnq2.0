@@ -55,18 +55,18 @@ sub _execute {
 }
 
 sub first_line_of {
-  open(my $fh, '<', $_[0]) or croak "$_[0]: $!";
+  open(my $fh, '<', $_[0]) or error("$_[0]: $!"), return undef;
   my $result = <$fh>;
   chomp($result);
-  close($fh) or croak "$_[0]: $!";
+  close($fh) or error("$_[0]: $!"), return undef;
   return $result;
 }
 
 sub content_of {
-  open(my $fh, '<', $_[0]) or croak "$_[0]: $!";
+  open(my $fh, '<', $_[0]) or error("$_[0]: $!"), return undef;
   local $/;
   my $result = <$fh>;
-  close($fh) or croak "$_[0]: $!";
+  close($fh) or error("$_[0]: $!"), return undef;
   return $result;
 }
 
@@ -79,7 +79,7 @@ sub print_to {
 sub get_variable {
   my ($what,$file,$guess_tool) = @_;
   my $result;
-  if(-e $file) {
+  if(-f $file) {
     $result = first_line_of($file);
     info("Using existing ${what} ${result}.");
   } else {

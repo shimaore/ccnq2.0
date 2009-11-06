@@ -25,6 +25,7 @@ sub install_file {
   my $dst = File::Spec->catfile(CCNQ::B2BUA::freeswitch_install_conf,@path);
   debug("Installing $src as $dst");
   my $txt = CCNQ::Install::content_of($src);
+  return error("No file $src") if !defined($txt);
   $txt = $cb->($txt) if $cb;
   CCNQ::Install::print_to($dst,$txt);
   CCNQ::Install::_execute($context,'chown','-R','freeswitch.daemon',freeswitch_install_conf);

@@ -25,6 +25,7 @@ sub request_to_activity {
   my $request_file = File::Spec->catfile(manager_requests_dir,"${request_type}.pm");
   if( -e $request_file ) {
     my $eval = CCNQ::Install::content_of($request_file);
+    return undef if !defined($eval);
     my $sub = eval($eval);
     if($@) {
       error("Request ${request_type} code is invalid: $@");
