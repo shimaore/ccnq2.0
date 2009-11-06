@@ -285,6 +285,7 @@ sub attempt_run {
         $result = $run->{$action}->($params,$context,$cv);
       } elsif($run->{_default}) {
         $result = $run->{_default}->($action,$params,$context,$cv);
+        $cancel->($cv) if not defined $result;
       } else {
         debug("attempt_run: No action available for function $function action $action");
         $cancel->($cv);

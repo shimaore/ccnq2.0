@@ -57,7 +57,8 @@ use CCNQ::Proxy::Config;
     use CCNQ::Proxy::Configuration;
     my $cv = CCNQ::Proxy::Configuration::run_from_class($module,$command,$request->{params},$context);
     $context->{condvar}->cb($cv) if $cv;
-    return;
+    # _default must always return a value (undef means that the action was not handled)
+    return {};
   },
 
   dr_reload => sub {
