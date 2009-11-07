@@ -133,6 +133,23 @@ EOT
   # The following command adds the current user to group "daemon":
   sudo adduser `whoami` daemon
 
+  #############################
+  #  IMPORTANT SECURITY NOTE  #
+  #############################
+
+  I install a host-based firewall (like shorewall or arno-iptables-firewall) on all my servers.
+  I use customized rules for filtering access between servers (see the PORTS document for more
+  information on which ports are used where).
+  Specifically, since the B2BUA (FreeSwitch) systems are never customer-facing,
+  I can do one-to-one ACLs (between the adjacent proxies and/or provider's systems) and
+  restrict access to FreeSwitch that way.
+  This might not be the case for you, and if you have not installed a firewall, or have left
+  open the ports used by the B2BUA, you will be open to the risk of fraudulent calls.
+
+  Review b2bua/carrier-sbc-config/freeswitch/conf/autoload_configs/acl.carrier-sbc-config.conf.xml
+  and    b2bua/client-sbc-config/freeswitch/conf/autoload_configs/acl.client-sbc-config.conf.xml
+  to ensure in that case that FreeSwitch will only accept calls from the specified systems.
+
 * Finally:
 
   # Install /etc/ccn/cookie
