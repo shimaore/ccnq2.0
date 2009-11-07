@@ -2,14 +2,9 @@
     <!-- This should complement, not replace, a firewall or iptables. -->
 
     <!-- List the IP addresses of each OpenSIPS egress server. -->
-    <!--
     <list name="proxies" default="deny">
-      <node type="allow" cidr="${__OPENSIPS_HOST__}/32"/>
-    </list>
-    -->
-
-    <!-- Personally I rely more on host-based firewalls for this -->
-    <list name="proxies" default="allow">
+      <node type="allow" cidr="${__OPENSIPS_HOST_1__}/32"/>
+      <node type="allow" cidr="${__OPENSIPS_HOST_2__}/32"/>
     </list>
 
 
