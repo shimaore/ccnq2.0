@@ -1,9 +1,17 @@
-    <!-- This ACL should contain one entry for each OpenSIPS egress host. -->
+    <!-- The "proxies" ACL should contain one entry for each OpenSIPS proxy host. -->
     <!-- This should complement, not replace, a firewall or iptables. -->
+
+    <!-- List the IP addresses of each OpenSIPS egress server. -->
+    <!--
     <list name="proxies" default="deny">
-      <!-- List the IP addresses of each OpenSIPS egress server. -->
       <node type="allow" cidr="${__OPENSIPS_HOST__}/32"/>
     </list>
+    -->
+
+    <!-- Personally I rely more on host-based firewalls for this -->
+    <list name="proxies" default="allow">
+    </list>
+
 
     <!-- Create one ACL for each carrier profile. They should be called "sbc-${profile_name}" -->
     <!-- This should complement, not replace, a firewall or iptables. -->
