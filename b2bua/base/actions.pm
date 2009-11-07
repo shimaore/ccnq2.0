@@ -8,7 +8,7 @@ use constant vars_xml => 'vars.xml';
 
     my $b2bua_name = 'base';
 
-    CCNQ::B2BUA::install_file($context,$b2bua_name,vars_xml, sub {
+    CCNQ::B2BUA::install_file($b2bua_name,vars_xml, sub {
       my $txt = shift;
       my $host_fqdn    = CCNQ::Install::fqdn;
       my $domain_name  = CCNQ::Install::domain_name;

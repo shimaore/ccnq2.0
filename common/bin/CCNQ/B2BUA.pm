@@ -11,7 +11,6 @@ use constant b2bua_directory => File::Spec->catfile(CCNQ::Install::SRC,qw( b2bua
 use constant freeswitch_install_conf => '/opt/freeswitch/conf'; # Debian
 
 sub install_file {
-  my $context = shift;
   my $cb = pop;
   my $function = shift;
   my @path = @_;
