@@ -4,6 +4,6 @@
 <X-PRE-PROCESS cmd="set" data="external_sip_port=5066"/>
 
 <!-- These are defined here -->
-<X-PRE-PROCESS cmd="set" data="ingress_target=inbound-proxy.$${cluster_name}.$${domain_name}"/>
+<X-PRE-PROCESS cmd="set" data="ingress_target=inbound-proxy.$${cluster_name}"/>
 <X-PRE-PROCESS cmd="set" data="egress_target=termination.sotelips.net"/>
 <X-PRE-PROCESS cmd="include" data="template/transparent.xml"/>

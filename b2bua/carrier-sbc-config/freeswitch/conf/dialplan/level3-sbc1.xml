@@ -4,6 +4,6 @@
 <X-PRE-PROCESS cmd="set" data="external_sip_port=5060"/>
 
 <!-- These are defined only here -->
-<X-PRE-PROCESS cmd="set" data="ingress_target=inbound-proxy.$${cluster_name}.$${domain_name}"/>
+<X-PRE-PROCESS cmd="set" data="ingress_target=inbound-proxy.$${cluster_name}"/>
 <X-PRE-PROCESS cmd="set" data="egress_target="/> <!-- Your Level3 IP here -->
 <X-PRE-PROCESS cmd="include" data="template/level3.xml"/>
