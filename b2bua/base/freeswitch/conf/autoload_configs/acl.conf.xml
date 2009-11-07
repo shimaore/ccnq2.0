@@ -14,7 +14,7 @@
       <node type="allow" cidr="192.168.0.0/16"/>
     </list>
 
-    <X-PRE-PROCESS cmd="include" data="acl.*.conf.xml"/>
+    <X-PRE-PROCESS cmd="include" data="*.acl.xml"/>
 
   </network-lists>
 </configuration>

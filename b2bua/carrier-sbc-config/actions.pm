@@ -5,8 +5,8 @@ use CCNQ::B2BUA;
     my $b2bua_name = 'carrier-sbc-config';
 
     # autoload_configs
-    for my $name (qw( acl.carrier-sbc-config )) {
-      CCNQ::B2BUA::copy_file($b2bua_name,qw( autoload_configs ),"${name}.conf.xml");
+    for my $name (qw( carrier-sbc-config )) {
+      CCNQ::B2BUA::copy_file($b2bua_name,qw( autoload_configs ),"${name}.acl.xml");
     }
 
     # dialplan

@@ -4,9 +4,9 @@ use CCNQ::B2BUA;
   install => sub {
     my $b2bua_name = 'client-sbc-config';
 
-    # autoload_configs
-    for my $name (qw( acl.client-sbc-config )) {
-      CCNQ::B2BUA::copy_file($b2bua_name,qw( autoload_configs ),"${name}.conf.xml");
+    # acls
+    for my $name (qw( client-sbc-config )) {
+      CCNQ::B2BUA::copy_file($b2bua_name,qw( autoload_configs ),"${name}.acl.xml");
     }
 
     # dialplan
@@ -28,7 +28,7 @@ use CCNQ::B2BUA;
     for my $name (qw( cnam.pl )) {
       CCNQ::B2BUA::copy_file($b2bua_name,qw( scripts ),${name});
     }
-    
+
     return;
   },
 }

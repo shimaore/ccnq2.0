@@ -2,19 +2,33 @@
   <!-- This should complement, not replace, a firewall or iptables. -->
 
   <!-- List the IP addresses of each OpenSIPS egress server. -->
+<!--
   <list name="proxies" default="deny">
     <node type="allow" cidr="${__OPENSIPS_HOST_1__}/32"/>
     <node type="allow" cidr="${__OPENSIPS_HOST_2__}/32"/>
   </list>
+-->
 
   <!-- Same thing, this time for the "plain" profile -->
+<!--
   <list name="sbc-plain" default="deny">
     <node type="allow" cidr="${__INBOUND_PROXY_1__}/32"/>
     <node type="allow" cidr="${__INBOUND_PROXY_2__}/32"/>
   </list>
+-->
 
   <!-- Same thing, this time for the "plain-cnam" profile -->
+<!--
   <list name="sbc-plain-cnam" default="deny">
     <node type="allow" cidr="${__INBOUND_PROXY_1__}/32"/>
     <node type="allow" cidr="${__INBOUND_PROXY_2__}/32"/>
+  </list>
+-->
+
+  <!-- Default: This REQUIRES a host-based firewall -->
+  <list name="proxies" default="allow">
+  </list>
+  <list name="sbc-plain" default="allow">
+  </list>
+  <list name="sbc-plain-cnam" default="allow">
   </list>
