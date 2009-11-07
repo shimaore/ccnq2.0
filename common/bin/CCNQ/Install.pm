@@ -27,7 +27,7 @@ use Logger::Syslog;
 # Where the local configuration information is kept.
 use constant CCN => q(/etc/ccn);
 
-# Could use AnyEvent::Util::run_cmd, but there are issues with Cwd.
+# Non-blocking version
 sub _execute {
   my $context = shift;
   my $command = join(' ',@_);
@@ -52,6 +52,25 @@ sub _execute {
   });
 
   $context->{condvar}->cb($cv);
+}
+
+# Blocking version (used in "install" blocks)
+sub execute {
+  my $command = join(' ',@_);
+
+  my $ret = system(@_);
+  # Happily lifted from perlfunc.
+  if ($ret == -1) {
+      error("Failed to execute ${command}: $!");
+  }
+  elsif ($ret & 127) {
+      error(sprintf "Child command ${command} died with signal %d, %s coredump",
+          ($ret & 127),  ($ret & 128) ? 'with' : 'without');
+  }
+  else {
+      info(sprintf "Child command ${command} exited with value %d", $ret >> 8);
+  }
+  return 0;
 }
 
 sub first_line_of {

@@ -28,7 +28,7 @@ sub install_file {
   return error("No file $src") if !defined($txt);
   $txt = $cb->($txt) if $cb;
   CCNQ::Install::print_to($dst,$txt);
-  CCNQ::Install::_execute($context,'chown','-R','freeswitch.daemon',freeswitch_install_conf);
+  CCNQ::Install::execute('chown','-R','freeswitch.daemon',freeswitch_install_conf);
 }
 
 sub copy_file {

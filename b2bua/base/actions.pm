@@ -47,9 +47,9 @@ EOT
 
     # Restart FreeSwitch using the new configuration.
     info("Restarting FreeSwitch");
-    CCNQ::Install::_execute($context,'/bin/sed','-i','-e','s/^FREESWITCH_ENABLED="false"$/FREESWITCH_ENABLED="true"/','/etc/default/freeswitch');
-    CCNQ::Install::_execute($context,'/etc/init.d/freeswitch','stop');
-    CCNQ::Install::_execute($context,'/etc/init.d/freeswitch','start');
+    CCNQ::Install::execute('/bin/sed','-i','-e','s/^FREESWITCH_ENABLED="false"$/FREESWITCH_ENABLED="true"/','/etc/default/freeswitch');
+    CCNQ::Install::execute('/etc/init.d/freeswitch','stop');
+    CCNQ::Install::execute('/etc/init.d/freeswitch','start');
     return;
   },
 
