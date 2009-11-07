@@ -27,8 +27,11 @@
 
   <!-- Default: This REQUIRES a host-based firewall -->
   <list name="proxies" default="allow">
+    <node type="allow" cidr="0.0.0.0/0"/>
   </list>
   <list name="sbc-plain" default="allow">
+    <node type="allow" cidr="0.0.0.0/0"/>
   </list>
   <list name="sbc-plain-cnam" default="allow">
+    <node type="allow" cidr="0.0.0.0/0"/>
   </list>
