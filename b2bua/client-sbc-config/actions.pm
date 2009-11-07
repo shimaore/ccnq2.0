@@ -4,6 +4,11 @@ use CCNQ::B2BUA;
   install => sub {
     my $b2bua_name = 'client-sbc-config';
 
+    # autoload_configs
+    for my $name (qw( acl.client-sbc-config )) {
+      CCNQ::B2BUA::copy_file($b2bua_name,qw( autoload_configs ),"${name}.conf.xml");
+    }
+
     # dialplan
     for my $name (qw( plain plain-cnam )) {
       CCNQ::B2BUA::copy_file($b2bua_name,qw( dialplan ),"${name}.xml");
