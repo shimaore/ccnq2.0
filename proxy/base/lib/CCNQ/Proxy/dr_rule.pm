@@ -29,7 +29,7 @@ sub form
 {
     my $self = shift;
     return (
-        'Group'       => 'text', # 0 for default, otherwise user-specific (via dr_groups)
+        'Outbound_Route' => 'text', # 0 for default, otherwise user-specific (via dr_groups)
         'Description' => 'text',
         'Prefix'      => 'text',
         'Priority'    => 'text',
@@ -51,7 +51,7 @@ sub id_of_gateway {
 sub insert
 {
     my ($self,$params) = @_;
-    my $groupid     = $params->{group};
+    my $groupid     = $params->{outbound_route};
     my $description = $groupid == 0 ? 'Default' : $params->{description};
     my $prefix      = $params->{prefix};
     my $priority    = $params->{priority};
@@ -75,7 +75,7 @@ SQL
 sub delete
 {
     my ($self,$params) = @_;
-    my $groupid     = $params->{group};
+    my $groupid     = $params->{outbound_route};
     my $prefix      = $params->{prefix};
     my $priority    = $params->{priority};
 
@@ -92,7 +92,7 @@ sub list
     my $self = shift;
 
     return (<<'SQL',[],undef);
-            SELECT DISTINCT groupid AS "Group", description AS "Description", prefix AS "Prefix", priority AS "Priority", gwlist AS "Target"
+            SELECT DISTINCT groupid AS "Outbound_Route", description AS "Description", prefix AS "Prefix", priority AS "Priority", gwlist AS "Target"
             FROM dr_rules main
             ORDER BY groupid, prefix, priority ASC
 SQL
