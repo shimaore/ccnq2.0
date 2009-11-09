@@ -1,0 +1,6 @@
+<!--
+  La decision pour le routage des numeros non-internationaux est d'utiliser
+  le carré (#) comme séparateur.
+  
+  Par exemple (+)33#112 route un numero d'urgence, (+)33#3615, etc.
+-->

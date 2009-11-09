@@ -1,7 +1,11 @@
-use Tree::Trie;
-
-
-
+- peering
+- prepaid realtime rating module (with buckets)
+- automatic number release (e.g. prepaid)
+- prepaid number release trigger (e.g. one month after last payment)
+- export rating tables for pre-paid
+- email alertes for usage
+- whisper 30s before disconnect (prepaid)
+- more than one month rollover
 
 
 
