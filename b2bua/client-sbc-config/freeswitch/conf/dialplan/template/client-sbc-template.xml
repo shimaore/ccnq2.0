@@ -1,0 +1,96 @@
+<!--
+  Internally we route french numbers like any international number,
+  e.g. 33+national number (without the "0" or "E" prefix)
+  however in France the dialing plan cannot be readily mapped into
+  the international numbering plan because special codes, etc. in the
+  national dialing plan do interfere with national prefixes.
+  (For example, 112 and 3615 are prefixes for geographic numbers.)
+
+  We use the carré / hash (#) sign to mark such special numbers.
+  For example:
+    3615 (french national dialing plan) is mapped to 33#3615 (international numbering plan)
+    112 (french national dialing plan) is mapped to 33#112 (international numbering plan)
+
+  See http://www.arcep.fr/index.php?id=8652
+-->
+
+<?xml version="1.0" encoding="utf-8"?>
+<include>
+  <!-- egress  -->
+  <context name="egress-$${profile_name}">
+
+    <extension name="unloop">
+      <condition field="${unroll_loops}" expression="^true$"/>
+      <condition field="${sip_looped_call}" expression="^true$">
+        <action application="deflect" data="${destination_number}"/>
+      </condition>
+    </extension>
+
+    <!-- billing data -->
+    <extension name="save" continue="true">
+      <condition field="destination_number" expression="">
+        <action application="set" data="ccnq_account=${sip_h_ccnq_account}"/>
+        <action application="set" data="ccnq_account_sub=${sip_h_ccnq_account_sub}"/>
+      </condition>
+    </extension>
+
+    <X-PRE-PROCESS cmd="include" data="$${profile_name}-egress.xml"/>
+
+    <!-- Place the call -->
+    <extension name="place-call">
+      <condition field="destination_number" expression="^call-(.*)$">
+        <action application="set" data="direction=egress"/>
+        <action application="set" data="progress_timeout=12"/>
+        <action application="bridge" data="sofia/sbc-$${profile_name}/$1@$${egress_target}"/>
+      </condition>
+    </extension>
+
+    <!-- invalid number -->
+    <extension name="invalid-number">
+      <condition field="destination_number" expression="">
+        <action application="hangup"/>
+      </condition>
+    </extension>
+
+  </context>
+
+  <!-- ingress  -->
+  <context name="ingress-$${profile_name}">
+
+    <extension name="unloop">
+      <condition field="${unroll_loops}" expression="^true$"/>
+      <condition field="${sip_looped_call}" expression="^true$">
+        <action application="deflect" data="${destination_number}"/>
+      </condition>
+    </extension>
+
+    <!-- billing data -->
+    <extension name="save" continue="true">
+      <condition field="destination_number" expression="">
+        <action application="set" data="ccnq_from_e164=${caller_id_number}"/>
+        <action application="set" data="ccnq_to_e164=${destination_number}"/>
+        <action application="set" data="ccnq_account=${sip_h_ccnq_account}"/>
+        <action application="set" data="ccnq_account_sub=${sip_h_ccnq_account_sub}"/>
+      </condition>
+    </extension>
+
+    <X-PRE-PROCESS cmd="include" data="$${profile_name}-ingress.xml"/>
+
+    <!-- Place the call -->
+    <extension name="default-ingress">
+      <condition field="destination_number" expression="^call-(.*)$">
+        <action application="set" data="direction=ingress"/>
+        <action application="set" data="progress_timeout=12"/>
+        <action application="bridge" data="sofia/internal-$${profile_name}/$1@$${ingress_target}"/>
+      </condition>
+    </extension>
+
+    <!-- invalid number -->
+    <extension name="invalid-number">
+      <condition field="destination_number" expression="">
+        <action application="hangup"/>
+      </condition>
+    </extension>
+
+  </context>
+</include>
