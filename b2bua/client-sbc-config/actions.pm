@@ -10,17 +10,17 @@ use CCNQ::B2BUA;
     }
 
     # dialplan
-    for my $name (qw( plain plain-cnam )) {
+    for my $name (qw( all )) {
       CCNQ::B2BUA::copy_file($b2bua_name,qw( dialplan ),"${name}.xml");
     }
 
     # dialplan/template
-    for my $name (qw( plain plain-cnam )) {
+    for my $name (qw( client-sbc-template france-egress france-ingress usa-cnam-egress usa-cnam-ingress usa-egress usa-ingress )) {
       CCNQ::B2BUA::copy_file($b2bua_name,qw( dialplan template ),"${name}.xml");
     }
 
     # sip_profile
-    for my $name (qw( plain plain-cnam )) {
+    for my $name (qw( usa usa-cnam france )) {
       CCNQ::B2BUA::copy_file($b2bua_name,qw( sip_profiles ),"${name}.xml");
     }
 

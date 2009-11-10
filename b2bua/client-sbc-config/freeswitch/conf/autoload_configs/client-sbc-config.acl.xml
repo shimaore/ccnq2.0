@@ -9,17 +9,25 @@
   </list>
 -->
 
-  <!-- Same thing, this time for the "plain" profile -->
+  <!-- Same thing, this time for the "usa" profile -->
 <!--
-  <list name="sbc-plain" default="deny">
+  <list name="sbc-usa" default="deny">
     <node type="allow" cidr="${__INBOUND_PROXY_1__}/32"/>
     <node type="allow" cidr="${__INBOUND_PROXY_2__}/32"/>
   </list>
 -->
 
-  <!-- Same thing, this time for the "plain-cnam" profile -->
+  <!-- Same thing, this time for the "usa-cnam" profile -->
 <!--
-  <list name="sbc-plain-cnam" default="deny">
+  <list name="sbc-usa-cnam" default="deny">
+    <node type="allow" cidr="${__INBOUND_PROXY_1__}/32"/>
+    <node type="allow" cidr="${__INBOUND_PROXY_2__}/32"/>
+  </list>
+-->
+
+  <!-- Same thing, this time for the "france" profile -->
+<!--
+  <list name="sbc-france" default="deny">
     <node type="allow" cidr="${__INBOUND_PROXY_1__}/32"/>
     <node type="allow" cidr="${__INBOUND_PROXY_2__}/32"/>
   </list>
@@ -29,9 +37,12 @@
   <list name="proxies" default="allow">
     <node type="allow" cidr="0.0.0.0/0"/>
   </list>
-  <list name="sbc-plain" default="allow">
+  <list name="sbc-usa" default="allow">
     <node type="allow" cidr="0.0.0.0/0"/>
   </list>
-  <list name="sbc-plain-cnam" default="allow">
+  <list name="sbc-usa-cnam" default="allow">
+    <node type="allow" cidr="0.0.0.0/0"/>
+  </list>
+  <list name="sbc-france" default="allow">
     <node type="allow" cidr="0.0.0.0/0"/>
   </list>

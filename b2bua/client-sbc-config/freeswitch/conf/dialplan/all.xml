@@ -1,9 +1,6 @@
 <X-PRE-PROCESS cmd="set" data="ingress_target=ingress-proxy.$${cluster_name}"/>
 <X-PRE-PROCESS cmd="set" data="egress_target=egress-proxy.$${cluster_name}"/>
 
-<X-PRE-PROCESS cmd="set" data="profile_name=plain"/>
-<X-PRE-PROCESS cmd="include" data="template/client-sbc-template.xml"/>
-
 <X-PRE-PROCESS cmd="set" data="profile_name=usa"/>
 <X-PRE-PROCESS cmd="include" data="template/client-sbc-template.xml"/>
 

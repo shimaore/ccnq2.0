@@ -1,0 +1,7 @@
+<extension name="apply-cnam" continue="true">
+    <condition field="destination_number" expression="^(.*)$">
+      <action application="perl" data="cnam.pl"/>
+    </condition>
+</extension>
+
+<X-PRE-PROCESS cmd="include" data="usa-egress.xml"/>
