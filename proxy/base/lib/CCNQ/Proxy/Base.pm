@@ -41,11 +41,6 @@ sub avp
     {
         received_avp    => 42, # customarily
 
-        # nanpa-rewriting
-        local_npanxx    => 160,
-        premium_npa     => 161,
-        premium_nxx     => 162,
-
         # Outbound-trunks
         dr_ruri         => 155,
         dr_attrs        => 156,
@@ -57,7 +52,6 @@ sub avp
 
         # by username
         src_subs        => 170, # IP to username
-        default_npa     => 171,
         user_ip         => 174, # IP to use if not registered and no CFNR
         user_port       => 175, # port to use if not registered and no CFNR
         user_srv        => 178, # used instead of IP if present
@@ -66,13 +60,9 @@ sub avp
         # by username, force media-proxy
         user_force_mp   => 140,
         user_forbid_mp  => 141, # NOT implemented
-        user_recording  => 142,
-        dest_domain     => 143, # used for user_recording
+        dest_domain     => 143, # override destination domain
         # by username: auth (nanpa-style)
-        allow_local     => 200,
-        allow_premium   => 201,
-        allow_ld        => 202,
-        allow_intl      => 203,
+        allow_onnet     => 200,
 
         # by number
         dst_subs        => 180, # DID to username
@@ -87,6 +77,9 @@ sub avp
         src_type        => 190,
         dst_type        => 191,
         account         => 192,
+        account_sub     => 193,
+        number_account  => 194, # used in inbound-proxy
+        number_account_sub => 195, # used in inbound-proxy
     }
 }
 
@@ -107,8 +100,8 @@ sub cdr_extra
         ruri_user       =>  '$rU',
         ruri_domain     =>  '$rd',
         src_ip          =>  '$si',
-        src_type        =>  '$avp(src_type)', # PSTN, ONNET, ROUTE
-        dst_type        =>  '$avp(dst_type)', # ALIAS, ONNET, LOCAL, NANP, PREMIUM, INTL
+        src_type        =>  '$avp(src_type)', # PSTN, ONNET
+        dst_type        =>  '$avp(dst_type)', # ALIAS, ONNET
         src_subs        =>  '$avp(src_subs)',
         dst_subs        =>  '$avp(dst_subs)',
         account         =>  '$avp(account)',
@@ -145,7 +138,7 @@ sub radius_extra
     return
     [
         'OpenSER-Src-Type'  =>  '$avp(src_type)', # PSTN, ONNET, ROUTE
-        'OpenSER-Dst-Type'  =>  '$avp(dst_type)', # ALIAS, ONNET, LOCAL, NANP, PREMIUM, INTL
+        'OpenSER-Dst-Type'  =>  '$avp(dst_type)', # ALIAS, ONNET
         'OpenSER-Src-Subs'  =>  '$avp(src_subs)',
         'OpenSER-Dst-Subs'  =>  '$avp(dst_subs)',
     ];

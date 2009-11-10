@@ -29,8 +29,8 @@
     <!-- billing data -->
     <extension name="save" continue="true">
       <condition field="destination_number" expression="">
-        <action application="set" data="ccnq_account=${sip_h_ccnq_account}"/>
-        <action application="set" data="ccnq_account_sub=${sip_h_ccnq_account_sub}"/>
+        <action application="set" data="ccnq_account=${sip_h_x_ccnq_account}"/>
+        <action application="set" data="ccnq_account_sub=${sip_h_x_ccnq_account_sub}"/>
       </condition>
     </extension>
 
@@ -69,8 +69,8 @@
       <condition field="destination_number" expression="">
         <action application="set" data="ccnq_from_e164=${caller_id_number}"/>
         <action application="set" data="ccnq_to_e164=${destination_number}"/>
-        <action application="set" data="ccnq_account=${sip_h_ccnq_account}"/>
-        <action application="set" data="ccnq_account_sub=${sip_h_ccnq_account_sub}"/>
+        <action application="set" data="ccnq_account=${sip_h_x_ccnq_account}"/>
+        <action application="set" data="ccnq_account_sub=${sip_h_x_ccnq_account_sub}"/>
       </condition>
     </extension>
 

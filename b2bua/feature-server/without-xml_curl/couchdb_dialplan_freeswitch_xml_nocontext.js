@@ -25,9 +25,14 @@ function(doc) {
       "<action application=\"set\" data=\"target_domain=\""+doc.domain+"\"/>";
   }
 
-  if(doc.accountcode) {
+  if(doc.account) {
     xml_header +=
-      "<action application=\"export\" data=\"accountcode="+doc.accountcode+"\"/>";
+      "<action application=\"export\" data=\"ccnq_account="+doc.account+"\"/>";
+  }
+
+  if(doc.account_sub) {
+    xml_header +=
+      "<action application=\"export\" data=\"ccnq_account_sub="+doc.account_sub+"\"/>";
   }
 
   if(doc.caller_id_name) {
@@ -75,7 +80,7 @@ function(doc) {
   //    leg_progress_timeout (integer)    timeout for any media on this leg
   //    leg_timeout          (integer)    timeout until answer
   //    leg_confirm          (integer)    if present, confirm the call (value doesn't matter)
-  //  
+  //
 
   if(doc.followme)
   {

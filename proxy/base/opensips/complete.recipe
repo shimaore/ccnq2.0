@@ -14,5 +14,5 @@ loose-route
 non-loose-route
 routing-logic
 routing-lineside
-routing-trunkside
+routing-trunkside-transparent
 register-colocated

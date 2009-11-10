@@ -10,7 +10,7 @@ and can do so:
  - if with rollover, the rollover can be capped (maximum value stored in the bucket)
 and are referenced by:
  - a bucket name (arbitrary)
- - combined with an account or a sub_account (depending on the bucket)
+ - combined with an account or an account_sub (depending on the bucket)
 
 Buckets only store integer values.
 =cut
@@ -27,7 +27,7 @@ sub name {
   my ($self,$cbef) = @_;
   return $self->use_account
     ? $cbef->account 
-    : $cbef->account.'/'.$cbef->sub_account;
+    : $cbef->account.'/'.$cbef->account_sub;
 }
 
 sub get_value {

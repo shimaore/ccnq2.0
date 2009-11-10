@@ -74,6 +74,12 @@ sub insert
     my $cfda              = $params->{cfda} || undef;
     my $cfda_timeout      = $params->{cfda_timeout} || undef;
     my $outbound_route    = $params->{outbound_route} || undef;
+    # These are mostly useful in the inbound-proxy.
+    # Also note that they are only used for inbound calls, never for outbound calls.
+    my $account           = $params->{account};
+    my $account_sub       = $params->{account_sub};
+    $account     = undef if $account     eq '';
+    $account_sub = undef if $account_sub eq '';
 
     return () unless defined $number and $number ne '';
     return () unless defined $username and $username ne '';
@@ -98,6 +104,8 @@ SQL
         $self->_avp_set($number,$domain,'cfb',$cfb),
         $self->_avp_set($number,$domain,'cfda',$cfda),
         $self->_avp_set($number,$domain,'inv_timer',$cfda_timeout),
+        $self->_avp_set($number,$domain,'number_account',$account),
+        $self->_avp_set($number,$domain,'number_account_sub',$account_sub),
     );
 }
 
@@ -119,6 +127,8 @@ SQL
         $self->_avp_set($number,$domain,'cfb',undef),
         $self->_avp_set($number,$domain,'cfda',undef),
         $self->_avp_set($number,$domain,'inv_timer',undef),
+        $self->_avp_set($number,$domain,'number_account',undef),
+        $self->_avp_set($number,$domain,'number_account_sub',undef),
     );
 }
 
@@ -142,12 +152,14 @@ sub list
                     (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS cfb,
                     (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS cfda,
                     (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS cfda_timeout,
+                    (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS account,
+                    (SELECT value FROM avpops WHERE uuid = main.uuid AND domain = main.domain AND attribute = ?) AS account_sub,
                     (SELECT groupid FROM dr_groups WHERE username = main.uuid AND domain = main.domain) AS outbound_route
             FROM avpops main
             WHERE attribute = ? $where
             ORDER BY uuid, value ASC
 SQL
-        [$self->avp->{dst_domain},$self->avp->{cfa},$self->avp->{cfnr},$self->avp->{cfb},$self->avp->{cfda},$self->avp->{inv_timer},$self->avp->{dst_subs}],
+        [$self->avp->{dst_domain},$self->avp->{cfa},$self->avp->{cfnr},$self->avp->{cfb},$self->avp->{cfda},$self->avp->{inv_timer},$self->avp->{number_account},$self->avp->{number_account_sub},$self->avp->{dst_subs}],
         undef
     );
 }
