@@ -4,7 +4,6 @@ toolbox
 forwarder
 accounting
 invite-inbound-proxy
-build-account-headers
 invite
 loose-route
 non-loose-route
