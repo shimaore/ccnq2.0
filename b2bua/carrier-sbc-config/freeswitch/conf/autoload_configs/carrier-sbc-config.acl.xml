@@ -10,13 +10,13 @@
 
     <!-- Create one ACL for each carrier profile. They should be called "sbc-${profile_name}" -->
     <!-- This should complement, not replace, a firewall or iptables. -->
-    <list name="sbc-sotel-sbc1" default="deny">
+    <list name="sbc-sotel-sbc" default="deny">
       <!-- List the IP address of each ingress IP for the carrier. -->
       <node type="allow" cidr="4.79.132.209/32"/>
       <node type="allow" cidr="4.79.132.210/32"/>
     </list>
 
-    <list name="sbc-dash-sbc1" default="deny">
+    <list name="sbc-dash-sbc" default="deny">
       <!-- old gateways -->
       <node type="allow" cidr="63.214.44.25/32"/>
       <node type="allow" cidr="63.214.44.26/32"/>
@@ -34,8 +34,8 @@
       <node type="allow" cidr="208.94.159.10/32"/>
     </list>
 
-    <list name="sbc-level3-sbc1" default="deny">
+    <list name="sbc-level3-sbc" default="deny">
     </list>
 
-    <list name="sbc-global-crossing-sbc1" default="deny">
+    <list name="sbc-global-crossing-sbc" default="deny">
     </list>
