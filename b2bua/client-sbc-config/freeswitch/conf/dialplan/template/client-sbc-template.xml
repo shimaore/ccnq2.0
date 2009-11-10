@@ -26,22 +26,17 @@
       </condition>
     </extension>
 
-    <!-- billing data -->
-    <extension name="save" continue="true">
-      <condition field="destination_number" expression="">
-        <action application="set" data="ccnq_account=${regex(${sip_req_uri}|;account=([^;]*)|%1)}"/>
-        <action application="set" data="ccnq_account_sub=${regex(${sip_req_uri}|;account_sub=([^;]*)|%1)}"/>
-      </condition>
-    </extension>
-
     <X-PRE-PROCESS cmd="include" data="$${profile_name}-egress.xml"/>
 
     <!-- Place the call -->
     <extension name="place-call">
-      <condition field="destination_number" expression="^call-(.*)$">
+      <condition field="destination_number" expression="^call$">
         <action application="set" data="direction=egress"/>
         <action application="set" data="progress_timeout=12"/>
-        <action application="bridge" data="sofia/sbc-$${profile_name}/$1@$${egress_target}"/>
+        <action application="set" data="ccnq_account=${regex(${sip_req_params}|account=([^;]*)|%1)}"/>
+        <action application="set" data="ccnq_account_sub=${regex(${sip_req_params}|account_sub=([^;]*)|%1)}"/>
+        <action application="set" data="effective_caller_id_number=${ccnq_from_e164}"/>
+        <action application="bridge" data="sofia/sbc-$${profile_name}/${ccnq_to_e164}@$${egress_target}"/>
       </condition>
     </extension>
 
@@ -67,10 +62,10 @@
     <!-- billing data -->
     <extension name="save" continue="true">
       <condition field="destination_number" expression="">
-        <action application="set" data="ccnq_from_e164=${caller_id_number}"/>
-        <action application="set" data="ccnq_to_e164=${destination_number}"/>
-        <action application="set" data="ccnq_account=${regex(${sip_req_uri}|;account=([^;]*)|%1)}"/>
-        <action application="set" data="ccnq_account_sub=${regex(${sip_req_uri}|;account_sub=([^;]*)|%1)}"/>
+        <anti-action application="set" data="ccnq_from_e164=${caller_id_number}"/>
+        <anti-action application="set" data="ccnq_to_e164=${destination_number}"/>
+        <anti-action application="set" data="ccnq_account=${regex(${sip_req_params}|account=([^;]*)|%1)}"/>
+        <anti-action application="set" data="ccnq_account_sub=${regex(${sip_req_params}|account_sub=([^;]*)|%1)}"/>
       </condition>
     </extension>
 

@@ -17,7 +17,7 @@
 <!-- from: national number -->
 <extension name="cleanup-caller-id" continue="true">
   <condition field="caller_id_number" expression="^33([0-9]+)$">
-    <action application="set" data="caller_id_number=0$1"/>
+    <action application="set" data="effective_caller_id_number=0$1"/>
     <action application="transfer" data="to-${destination_number}"/>
   </condition>
 </extension>
@@ -25,7 +25,7 @@
 <!-- from: international number -->
 <extension name="cleanup-caller-id" continue="true">
   <condition field="caller_id_number" expression="^([1-9][0-9]+)$">
-    <action application="set" data="caller_id_number=00$1"/>
+    <action application="set" data="effective_caller_id_number=00$1"/>
     <action application="transfer" data="to-${destination_number}"/>
   </condition>
 </extension>

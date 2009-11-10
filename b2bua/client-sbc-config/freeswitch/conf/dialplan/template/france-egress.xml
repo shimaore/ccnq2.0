@@ -28,7 +28,7 @@
 <extension name="cleanup-called-1" continue="true">
   <condition field="destination_number" expression="^to-0([12345689][0-9]{8})$">
     <action application="set" data="ccnq_to_e164=33$1"/>
-    <action application="transfer" data="call-${ccnq_to_e164}"/>
+    <action application="transfer" data="call"/>
   </condition>
 </extension>
 
@@ -36,7 +36,7 @@
 <extension name="cleanup-called-2" continue="true">
   <condition field="destination_number" expression="^to-(1[0-9]{1,5}|3[0-9]{3})$">
     <action application="set" data="ccnq_to_e164=33#$1"/>
-    <action application="transfer" data="call-${ccnq_to_e164}"/>
+    <action application="transfer" data="call"/>
   </condition>
 </extension>
 
@@ -44,7 +44,7 @@
 <extension name="cleanup-called-3" continue="true">
   <condition field="destination_number" expression="^to-00([0-9]*)$">
     <action application="set" data="ccnq_to_e164=$1"/>
-    <action application="transfer" data="call-${ccnq_to_e164}"/>
+    <action application="transfer" data="call"/>
   </condition>
 </extension>
 
