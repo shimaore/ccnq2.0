@@ -27,7 +27,7 @@
 </extension>
 
 <!-- international call -->
-<extension name="cleanup-called-3" continue="true">
+<extension name="cleanup-called-2" continue="true">
   <condition field="destination_number" expression="^to-011([2-9][0-9]*)$">
     <action application="set" data="ccnq_to_e164=$1"/>
     <action application="transfer" data="call"/>
