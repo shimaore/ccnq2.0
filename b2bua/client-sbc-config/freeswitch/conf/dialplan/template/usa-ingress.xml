@@ -1,22 +1,22 @@
+<!-- to: US number -->
+<extension name="cleanup-called-1" continue="true">
+  <condition field="destination_number" expression="^(1[2-9]*)$">
+    <action application="transfer" data="call-$1"/>
+  </condition>
+</extension>
+
 <!-- from: national number -->
-<extension name="cleanup-caller-id" continue="true">
+<extension name="cleanup-caller-id-1" continue="true">
+  <condition field="destination_number" expression="^call"/>
   <condition field="caller_id_number" expression="^1([2-9][0-9]{9})$">
     <action application="set" data="effective_caller_id_number=$1"/>
-    <action application="transfer" data="to-${destination_number}"/>
   </condition>
 </extension>
 
 <!-- from: international number -->
-<extension name="cleanup-caller-id" continue="true">
+<extension name="cleanup-caller-id-2" continue="true">
+  <condition field="destination_number" expression="^call"/>
   <condition field="caller_id_number" expression="^([2-9][0-9]+)$">
     <action application="set" data="effective_caller_id_number=011$1"/>
-    <action application="transfer" data="to-${destination_number}"/>
-  </condition>
-</extension>
-
-<!-- to: US number -->
-<extension name="cleanup-called-1" continue="true">
-  <condition field="destination_number" expression="^to-(1[2-9]*)$">
-    <action application="transfer" data="call-$1"/>
   </condition>
 </extension>
