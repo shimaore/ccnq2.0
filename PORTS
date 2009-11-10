@@ -19,11 +19,17 @@ SIP ports (Sofia profiles):
   GC:           5064
   L3:           5060 *
   Sotel:        5070
+  Option Service: 5072
 
   FeatureServer:  5100
 
   Cust SBC:     15200:15299 (internal -- towards customer proxy)
                 5200:5299 (external -- towards inbound/outbound proxy)
+                
+                5200: usa
+                5201: usa-cnam
+                5202: france
+                5203: e164
 
   OpenSIPS:     5060 *
 
