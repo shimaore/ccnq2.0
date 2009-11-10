@@ -35,7 +35,9 @@
     </list>
 
     <list name="sbc-level3-sbc" default="deny">
+      <node type="allow" cidr="0.0.0.0/0"/>
     </list>
 
     <list name="sbc-global-crossing-sbc" default="deny">
+      <node type="allow" cidr="0.0.0.0/0"/>
     </list>
