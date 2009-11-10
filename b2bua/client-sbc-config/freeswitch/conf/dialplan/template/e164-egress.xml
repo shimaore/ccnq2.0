@@ -1,12 +1,12 @@
 <extension name="cleanup-caller-id" continue="true">
+  <condition field="destination_number" expression="^call"/>
   <condition field="caller_id_number" expression="^\+([1-9][0-9]+)$">
     <action application="set" data="ccnq_from_e164=$1"/>
-    <action application="transfer" data="to-${destination_number}"/>
   </condition>
 </extension>
 
-<extension name="cleanup-called-1" continue="true">
-  <condition field="destination_number" expression="^to-\+([1-9][0-9]+)$">
+<extension name="cleanup-called">
+  <condition field="destination_number" expression="^\+([1-9][0-9]+)$">
     <action application="set" data="ccnq_to_e164=$1"/>
     <action application="transfer" data="call"/>
   </condition>
