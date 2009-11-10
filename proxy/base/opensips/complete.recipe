@@ -7,6 +7,7 @@ authenticate
 nat
 mediaproxy
 invite-router
+build-account-headers
 invite
 # obsolete:
 invite-trunk-side
