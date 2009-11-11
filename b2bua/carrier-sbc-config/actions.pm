@@ -28,6 +28,24 @@ use File::Path;
     debug("b2bua/carrier-sbc-config: Creating path $dialplan_path");
     File::Path::mkpath([$dialplan_path]);
 
+    $context->{resolver} = new AnyEvent::DNS( untaint => 1 );
+
+    my $txt = sub {
+       my ($domain, $cb) = @_;
+
+       $context->{resolver}->resolve ($domain => "txt", sub {
+          $cb->(map $_->[3], @_);
+       });
+    };
+
+    my $a = sub {
+       my ($domain, $cb) = @_;
+
+       $context->{resolver}->resolve ($domain => "a", sub {
+          $cb->(map $_->[3], @_);
+       });
+    }
+
     # sip_profile
     for my $name qw( dash-911 dash level3 option-service ) {
       # Figure out whether we have all the data to configure the profile.
@@ -54,14 +72,13 @@ use File::Path;
 
       my $port_dns = CCNQ::Install::catdns('port',$name,fqdn);
       debug("b2bua/carrier-sbc-config: Querying TXT $port_dns");
-      my $port_cv = AnyEvent->condvar;
-      $port_cv->cb( sub {
+      $txt->($port_dns, sub {
         my ($external_port) = @_;
         my $internal_port = $external_port + 10000;
         debug("b2bua/carrier-sbc-config: Found port $external_port");
-        AnyEvent::DNS::a CCNQ::Install::catdns('public',$name,fqdn), sub {
+        $a->( CCNQ::Install::catdns('public',$name,fqdn), sub {
           my ($public_ip) = @_;
-          AnyEvent::DNS::a CCNQ::Install::catdns('private',$name,fqdn), sub {
+          $a->( CCNQ::Install::catdns('private',$name,fqdn), sub {
             my ($private_ip) = @_;
 
             # Generate sip_profile entries
@@ -78,17 +95,17 @@ EOT
             CCNQ::Install::print_to($sip_profile_file,$sip_profile_text);
 
             # Generate ACLs
-            AnyEvent::DNS::a CCNQ::Install::catdns('ingress',$name,fqdn), sub {
+            $a->( CCNQ::Install::catdns('ingress',$name,fqdn), sub {
               my @ingress = @_;
               my $acl_file = File::Spec->catfile(CCNQ::B2BUA::freeswitch_install_conf,'autoload_configs',"${name}.acl.xml");
               my $acl_text = qq(<list name="sbc-${name}" default="deny">);
               $acl_text .= join('',map { qq(<node type="allow" cidr="$_/32"/>) } @ingress);
               $acl_text .= qq(</list>);
               CCNQ::Install::print_to($acl_file,$acl_text);
-            };
+            });
 
             # Generate dialplan entries
-            AnyEvent::DNS::a CCNQ::Install::catdns('egress',$name,fqdn), sub {
+            $a->( CCNQ::Install::catdns('egress',$name,fqdn), sub {
               my @egress = @_;
               # XXX Only one IP supported at this time.
               my $egress = shift @egress;
@@ -105,11 +122,10 @@ EOT
                 <X-PRE-PROCESS cmd="include" data="template/${dialplan_template}.xml"/>
 EOT
               CCNQ::Install::print_to($dialplan_file,$dialplan_text);
-            };
-          };
-        };
+            });
+          });
+        });
       });
-      AnyEvent::DNS::txt $port_dns, $port_cv;
     } # for $name
 
     # $context->{condvar}->cb(AnyEvent::DNS::resolver->{rw4});
