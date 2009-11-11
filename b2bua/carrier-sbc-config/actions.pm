@@ -52,15 +52,15 @@ use File::Path;
 
       debug("b2bua/carrier-sbc-config: Creating configuration for profile $name, if used.");
 
-      my $port_dns = CCNQ::Install::cat_dns('port',$name,fqdn);
+      my $port_dns = CCNQ::Install::catdns('port',$name,fqdn);
       debug("b2bua/carrier-sbc-config: Querying TXT $port_dns");
       AnyEvent::DNS::txt $port_dns, sub {
         my ($external_port) = @_;
         my $internal_port = $external_port + 10000;
         debug("b2bua/carrier-sbc-config: Found port $external_port");
-        AnyEvent::DNS::a CCNQ::Install::cat_dns('public',$name,fqdn), sub {
+        AnyEvent::DNS::a CCNQ::Install::catdns('public',$name,fqdn), sub {
           my ($public_ip) = @_;
-          AnyEvent::DNS::a CCNQ::Install::cat_dns('private',$name,fqdn), sub {
+          AnyEvent::DNS::a CCNQ::Install::catdns('private',$name,fqdn), sub {
             my ($private_ip) = @_;
 
             # Generate sip_profile entries
@@ -77,7 +77,7 @@ EOT
             CCNQ::Install::print_to($sip_profile_file,$sip_profile_text);
 
             # Generate ACLs
-            AnyEvent::DNS::a CCNQ::Install::cat_dns('ingress',$name,fqdn), sub {
+            AnyEvent::DNS::a CCNQ::Install::catdns('ingress',$name,fqdn), sub {
               my @ingress = @_;
               my $acl_file = File::Spec->catfile(CCNQ::B2BUA::freeswitch_install_conf,'autoload_configs',"${name}.acl.xml");
               my $acl_text = qq(<list name="sbc-${name}" default="deny">);
@@ -87,7 +87,7 @@ EOT
             };
 
             # Generate dialplan entries
-            AnyEvent::DNS::a CCNQ::Install::cat_dns('egress',$name,fqdn), sub {
+            AnyEvent::DNS::a CCNQ::Install::catdns('egress',$name,fqdn), sub {
               my @egress = @_;
               # XXX Only one IP supported at this time.
               my $egress = shift @egress;
