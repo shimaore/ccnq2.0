@@ -11,27 +11,32 @@ use File::Path;
     my ($params,$context,$mcv) = @_;
     my $b2bua_name = 'carrier-sbc-config';
 
-    debug("b2bua/carrier-sbc-config: Installing autoload_configs");
-    for my $name (qw( carrier-sbc-config )) {
-      CCNQ::B2BUA::copy_file($b2bua_name,qw( autoload_configs ),"${name}.acl.xml");
-    }
-
     debug("b2bua/carrier-sbc-config: Installing dialplan/template");
     for my $name (qw( dash level3 option-service transparent )) {
       CCNQ::B2BUA::copy_file($b2bua_name,qw( dialplan template ),"${name}.xml");
     }
 
-    my $profile_path = File::Spec->catfile(CCNQ::B2BUA::freeswitch_install_conf,'sip_profiles');
-    debug("b2bua/carrier-sbc-config: Creating path $profile_path");
-    File::Path::mkpath([$profile_path]);
-    my $dialplan_path = File::Spec->catfile(CCNQ::B2BUA::freeswitch_install_conf,'dialplan');
-    debug("b2bua/carrier-sbc-config: Creating path $dialplan_path");
-    File::Path::mkpath([$dialplan_path]);
+    CCNQ::B2BUA::mk_dir(qw(autoload_configs));
+    CCNQ::B2BUA::mk_dir(qw(sip_profiles));
+    CCNQ::B2BUA::mk_dir(qw(dialplan));
 
     $context->{resolver} = AnyEvent::DNS::resolver;
 
+    my $sip_profile_text = '';
+    my $dialplan_text    = '';
+    my $acl_text         = <<'EOT';
+    <!-- The "proxies" ACL should contain one entry for each OpenSIPS proxy host. -->
+    <!-- This should complement, not replace, a firewall or iptables. -->
+
+    <!-- List the IP addresses of each OpenSIPS egress server. -->
+    <list name="proxies" default="deny">
+      <!-- XXX Replace with "a.b.c.d/32" -->
+      <node type="allow" cidr="0.0.0.0/0"/>
+    </list>
+EOT
+
     # sip_profile
-    for my $name qw( dash-911 dash level3 option-service ) {
+    for my $name qw( dash-911 dash level3 option-service transparent ) {
       # Figure out whether we have all the data to configure the profile.
       # We need to have at least:
       #   port      -- TXT record of the SIP port to use (externally)
@@ -79,8 +84,7 @@ use File::Path;
       debug("b2bua/carrier-sbc-config: Using internal port $internal_port");
 
       # Generate sip_profile entries
-      my $sip_profile_file = File::Spec->catfile($profile_path,"${name}.xml");
-      my $sip_profile_text = <<"EOT";
+      $sip_profile_text .= <<"EOT";
         <X-PRE-PROCESS cmd="set" data="profile_name=${name}"/>
         <X-PRE-PROCESS cmd="set" data="internal_sip_port=${internal_port}"/>
         <X-PRE-PROCESS cmd="set" data="external_sip_port=${external_port}"/>
@@ -89,7 +93,6 @@ use File::Path;
         ${extra}
         <X-PRE-PROCESS cmd="include" data="template/${profile_template}.xml"/>
 EOT
-      CCNQ::Install::print_to($sip_profile_file,$sip_profile_text);
 
       # Generate ACLs
       my $ingress_cv = AnyEvent->condvar;
@@ -97,11 +100,9 @@ EOT
       my @ingress = $ingress_cv->recv;
       debug("b2bua/carrier-sbc-config: Found ingress IPs ".join(',',@ingress));
 
-      my $acl_file = File::Spec->catfile(CCNQ::B2BUA::freeswitch_install_conf,'autoload_configs',"${name}.acl.xml");
-      my $acl_text = qq(<list name="sbc-${name}" default="deny">);
+      $acl_text .= qq(<list name="sbc-${name}" default="deny">);
       $acl_text .= join('',map { qq(<node type="allow" cidr="$_/32"/>) } @ingress);
       $acl_text .= qq(</list>);
-      CCNQ::Install::print_to($acl_file,$acl_text);
 
       # Generate dialplan entries
       my $egress_cv = AnyEvent->condvar;
@@ -111,8 +112,7 @@ EOT
 
       # XXX Only one IP supported at this time.
       my $egress = shift @egress;
-      my $dialplan_file = File::Spec->catfile($dialplan_path,"${name}.xml");
-      my $dialplan_text = <<"EOT";
+      $dialplan_text .= <<"EOT";
         <X-PRE-PROCESS cmd="set" data="profile_name=${name}"/>
         <X-PRE-PROCESS cmd="set" data="internal_sip_port=${internal_port}"/>
         <X-PRE-PROCESS cmd="set" data="external_sip_port=${external_port}"/>
@@ -123,9 +123,18 @@ EOT
         <X-PRE-PROCESS cmd="set" data="egress_target=${egress}"/>
         <X-PRE-PROCESS cmd="include" data="template/${dialplan_template}.xml"/>
 EOT
-      CCNQ::Install::print_to($dialplan_file,$dialplan_text);
     } # for $name
 
+    my $sip_profile_file = File::Spec->catfile($profile_path,"carrier-sbc-config.xml");
+    CCNQ::Install::print_to($sip_profile_file,$sip_profile_text);
+
+    my $acl_file = File::Spec->catfile(CCNQ::B2BUA::freeswitch_install_conf,'autoload_configs',"carrier-sbc-config.acl.xml");
+    CCNQ::Install::print_to($acl_file,$acl_text);
+
+    my $dialplan_file = File::Spec->catfile($dialplan_path,"carrier-sbc-config.xml");
+    CCNQ::Install::print_to($dialplan_file,$dialplan_text);
+
+    CCNQ::B2BUA::finish();
     return;
   },
 }
