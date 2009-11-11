@@ -54,66 +54,69 @@ use File::Path;
 
       debug("b2bua/carrier-sbc-config: Creating configuration for profile $name, if used.");
 
-      my $port_dns = CCNQ::Install::catdns('port',$name,fqdn);
-      debug("b2bua/carrier-sbc-config: Querying TXT $port_dns");
-      AnyEvent::DNS::txt($port_dns, sub {
-        my ($external_port) = @_;
-        my $internal_port = $external_port + 10000;
-        debug("b2bua/carrier-sbc-config: Found port $external_port");
-        AnyEvent::DNS::a( CCNQ::Install::catdns('public',$name,fqdn), sub {
-          my ($public_ip) = @_;
-          AnyEvent::DNS::a( CCNQ::Install::catdns('private',$name,fqdn), sub {
-            my ($private_ip) = @_;
+      my $port_cv = AnyEvent->condvar;
+      AnyEvent::DNS::txt( CCNQ::Install::catdns('port',$name,fqdn), $port_cv );
+      my ($external_port) = $port_cv;
 
-            # Generate sip_profile entries
-            my $sip_profile_file = File::Spec->catfile($profile_path,"${name}.xml");
-            my $sip_profile_text = <<"EOT";
-              <X-PRE-PROCESS cmd="set" data="profile_name=${name}"/>
-              <X-PRE-PROCESS cmd="set" data="internal_sip_port=${internal_port}"/>
-              <X-PRE-PROCESS cmd="set" data="external_sip_port=${external_port}"/>
-              <X-PRE-PROCESS cmd="set" data="internal_sip_ip=${private_ip}"/>
-              <X-PRE-PROCESS cmd="set" data="external_sip_ip=${public_ip}"/>
-              ${extra}
-              <X-PRE-PROCESS cmd="include" data="template/${profile_template}.xml"/>
+      my $public_cv = AnyEvent->condvar;
+      AnyEvent::DNS::a( CCNQ::Install::catdns('public',$name,fqdn), $public_cv );
+      my ($public_ip) = $public_cv->recv;
+
+      my $private_cv = AnyEvent->condvar;
+      AnyEvent::DNS::a( CCNQ::Install::catdns('private',$name,fqdn), $private_cv );
+      my ($private_ip) = $private_cv->recv;
+
+      next unless defined($external_port) && defined($public_ip) && defined($private_cv);
+
+      debug("b2bua/carrier-sbc-config: Found port $external_port");
+      my $internal_port = $external_port + 10000;
+
+      # Generate sip_profile entries
+      my $sip_profile_file = File::Spec->catfile($profile_path,"${name}.xml");
+      my $sip_profile_text = <<"EOT";
+        <X-PRE-PROCESS cmd="set" data="profile_name=${name}"/>
+        <X-PRE-PROCESS cmd="set" data="internal_sip_port=${internal_port}"/>
+        <X-PRE-PROCESS cmd="set" data="external_sip_port=${external_port}"/>
+        <X-PRE-PROCESS cmd="set" data="internal_sip_ip=${private_ip}"/>
+        <X-PRE-PROCESS cmd="set" data="external_sip_ip=${public_ip}"/>
+        ${extra}
+        <X-PRE-PROCESS cmd="include" data="template/${profile_template}.xml"/>
 EOT
-            CCNQ::Install::print_to($sip_profile_file,$sip_profile_text);
+      CCNQ::Install::print_to($sip_profile_file,$sip_profile_text);
 
-            # Generate ACLs
-            AnyEvent::DNS::a( CCNQ::Install::catdns('ingress',$name,fqdn), sub {
-              my @ingress = @_;
-              my $acl_file = File::Spec->catfile(CCNQ::B2BUA::freeswitch_install_conf,'autoload_configs',"${name}.acl.xml");
-              my $acl_text = qq(<list name="sbc-${name}" default="deny">);
-              $acl_text .= join('',map { qq(<node type="allow" cidr="$_/32"/>) } @ingress);
-              $acl_text .= qq(</list>);
-              CCNQ::Install::print_to($acl_file,$acl_text);
-            });
+      # Generate ACLs
+      my $ingress_cv = AnyEvent->condvar;
+      AnyEvent::DNS::a( CCNQ::Install::catdns('ingress',$name,fqdn), $ingress_cv );
+      my @ingress = $ingress_cv->recv;
 
-            # Generate dialplan entries
-            AnyEvent::DNS::a( CCNQ::Install::catdns('egress',$name,fqdn), sub {
-              my @egress = @_;
-              # XXX Only one IP supported at this time.
-              my $egress = shift @egress;
-              my $dialplan_file = File::Spec->catfile($dialplan_path,"${name}.xml");
-              my $dialplan_text = <<"EOT";
-                <X-PRE-PROCESS cmd="set" data="profile_name=${name}"/>
-                <X-PRE-PROCESS cmd="set" data="internal_sip_port=${internal_port}"/>
-                <X-PRE-PROCESS cmd="set" data="external_sip_port=${external_port}"/>
-                <X-PRE-PROCESS cmd="set" data="internal_sip_ip=${private_ip}"/>
-                <X-PRE-PROCESS cmd="set" data="external_sip_ip=${public_ip}"/>
+      my $acl_file = File::Spec->catfile(CCNQ::B2BUA::freeswitch_install_conf,'autoload_configs',"${name}.acl.xml");
+      my $acl_text = qq(<list name="sbc-${name}" default="deny">);
+      $acl_text .= join('',map { qq(<node type="allow" cidr="$_/32"/>) } @ingress);
+      $acl_text .= qq(</list>);
+      CCNQ::Install::print_to($acl_file,$acl_text);
 
-                <X-PRE-PROCESS cmd="set" data="ingress_target=inbound-proxy.\$\${cluster_name}"/>
-                <X-PRE-PROCESS cmd="set" data="egress_target=${egress}"/>
-                <X-PRE-PROCESS cmd="include" data="template/${dialplan_template}.xml"/>
+      # Generate dialplan entries
+      my $egress_cv = AnyEvent->condvar;
+      AnyEvent::DNS::a( CCNQ::Install::catdns('egress',$name,fqdn), $egress_cv );
+      my @egress = $egress_cv->recv;
+
+      # XXX Only one IP supported at this time.
+      my $egress = shift @egress;
+      my $dialplan_file = File::Spec->catfile($dialplan_path,"${name}.xml");
+      my $dialplan_text = <<"EOT";
+        <X-PRE-PROCESS cmd="set" data="profile_name=${name}"/>
+        <X-PRE-PROCESS cmd="set" data="internal_sip_port=${internal_port}"/>
+        <X-PRE-PROCESS cmd="set" data="external_sip_port=${external_port}"/>
+        <X-PRE-PROCESS cmd="set" data="internal_sip_ip=${private_ip}"/>
+        <X-PRE-PROCESS cmd="set" data="external_sip_ip=${public_ip}"/>
+
+        <X-PRE-PROCESS cmd="set" data="ingress_target=inbound-proxy.\$\${cluster_name}"/>
+        <X-PRE-PROCESS cmd="set" data="egress_target=${egress}"/>
+        <X-PRE-PROCESS cmd="include" data="template/${dialplan_template}.xml"/>
 EOT
-              CCNQ::Install::print_to($dialplan_file,$dialplan_text);
-            });
-          });
-        });
-      });
+      CCNQ::Install::print_to($dialplan_file,$dialplan_text);
     } # for $name
 
-    $context->{condvar}->cb($context->{resolver}->{rw4});
-    $context->{condvar}->cb($context->{resolver}->{rw6});
     return;
   },
 }
