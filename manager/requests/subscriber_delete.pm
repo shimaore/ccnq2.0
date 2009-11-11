@@ -3,10 +3,10 @@ sub {
   # Return list of activities required to complete this request.
   return (
     {
-      action => 'aliases/update',
+      action => 'subscriber/delete',
       cluster_name => $request->{cluster_name},
       params => {
-        map { $_ => $request->{$_} } qw( username domain target_username target_domain )
+        map { $_ => $request->{$_} } qw( username domain ip )
       }
     },
   );

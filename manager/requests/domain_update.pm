@@ -1,6 +1,5 @@
 sub {
   my $request = shift;
-  debug("domain_update request");
   # Return list of activities required to complete this request.
   return (
     {
