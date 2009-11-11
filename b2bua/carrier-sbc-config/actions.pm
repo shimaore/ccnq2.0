@@ -3,10 +3,11 @@ use CCNQ::Install;
 use AnyEvent::DNS;
 use File::Spec;
 use File::Path;
-use Logger::Syslog;
 
 {
   install => sub {
+    use Logger::Syslog;
+
     my ($params,$context,$mcv) = @_;
     my $b2bua_name = 'carrier-sbc-config';
 
