@@ -67,10 +67,9 @@ SQL
 
 sub delete
 {
-    my $self = shift;
-    my %params = @_;
-    my $alias_username = $params{username};
-    my $alias_domain   = $params{domain};
+    my ($self,$params) = @_;
+    my $alias_username = $params->{username};
+    my $alias_domain   = $params->{domain};
 
     return (<<'SQL',[$alias_username,$alias_domain]);
         DELETE FROM aliases WHERE alias_username = ? AND alias_domain = ?
