@@ -18,6 +18,11 @@ use File::Spec;
       CCNQ::B2BUA::copy_file($b2bua_name,qw( dialplan template ),"${name}.xml");
     }
 
+    my $profile_path = File::Spec::catfile(CCNQ::B2BUA::freeswitch_install_conf,'sip_profiles');
+    File::Path::mkpath([$profile_path]);
+    my $diaplan_path = File::Spec::catfile(CCNQ::B2BUA::freeswitch_install_conf,'dialplan');
+    File::Path::mkpath([$dialplan_path]);
+
     # sip_profile
     for my $name qw( dash-911 dash level3 option-service ) {
       # Figure out whether we have all the data to configure the profile.
@@ -49,7 +54,7 @@ use File::Spec;
             my ($private_ip) = @_;
 
             # Generate sip_profile entries
-            my $sip_profile_file = File::Spec::catfile(CCNQ::B2BUA::freeswitch_install_conf,'sip_profiles',"${name}.xml");
+            my $sip_profile_file = File::Spec::catfile($profile_path,"${name}.xml");
             my $sip_profile_text = <<"EOT";
               <X-PRE-PROCESS cmd="set" data="profile_name=${name}"/>
               <X-PRE-PROCESS cmd="set" data="internal_sip_port=${internal_port}"/>
@@ -76,7 +81,7 @@ EOT
               my @egress = @_;
               # XXX Only one IP supported at this time.
               my $egress = shift @egress;
-              my $dialplan_file = CCNQ::B2BUA::freeswitch_install_conf,'dialplan',"${name}.xml";
+              my $dialplan_file = File::Spec::catfile($dialplan_path,"${name}.xml");
               my $dialplan_text = <<"EOT";
                 <X-PRE-PROCESS cmd="set" data="profile_name=${name}"/>
                 <X-PRE-PROCESS cmd="set" data="internal_sip_port=${internal_port}"/>
