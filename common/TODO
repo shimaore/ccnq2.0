@@ -1,1 +1,9 @@
 XXX Using mediaproxy/relay and mediaproxy/dispatcher in two different roles does not work: calling "mediaproxy/actions.pm" overwrites the configuration.
+
+
+
+1. add clusters name to domain with TXT to enumerate clusters; this is used to build
+lists (e.g. of inbound-proxies, etc.)
+
+2. add $(profile)-ingress-gw and $(profile)-egress-gw to individual carrier gateways
+with A to get target IP(s) for that SBC; Perl generates list and prepends to all.xml

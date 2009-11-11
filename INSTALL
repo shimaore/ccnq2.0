@@ -28,7 +28,7 @@ EOT
 * On all servers, install the program:
 
   sudo aptitude update
-  sudo aptitude install libjson-perl libnet-libidn-perl libauthen-sasl-perl libxml-writer-perl libwww-perl libyaml-perl libexpat-dev liblogger-syslog-perl libio-stringy-perl git-core libnet-ssleay-perl build-essential
+  sudo aptitude -y install libjson-perl libnet-libidn-perl libauthen-sasl-perl libxml-writer-perl libwww-perl libyaml-perl libexpat-dev liblogger-syslog-perl libio-stringy-perl git-core libnet-ssleay-perl build-essential
   sudo cpan EV
   sudo cpan AnyEvent::XMPP
   sudo cpan AnyEvent::Watchdog
@@ -109,7 +109,7 @@ EOT
 
   # Install FreeSwitch
 
-  sudo aptitude install unixodbc libasound2 libcurl3 libvorbis0a
+  sudo aptitude -y install unixodbc libasound2 libcurl3 libvorbis0a
 
   cd ~/src
   wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch_1.0.4-1_amd64.deb
@@ -164,9 +164,8 @@ SQL
 
   # ACL updates
   As appropriate, review
-      b2bua/carrier-sbc-config/freeswitch/conf/autoload_configs/acl.carrier-sbc-config.conf.xml
-  and b2bua/client-sbc-config/freeswitch/conf/autoload_configs/acl.client-sbc-config.conf.xml
-  to add your proxies' and provider's IP addresses.
+  b2bua/client-sbc-config/freeswitch/conf/autoload_configs/acl.client-sbc-config.conf.xml
+  to add your proxies' IP addresses.
 
 * On upgrades:
 
