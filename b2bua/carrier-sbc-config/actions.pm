@@ -28,23 +28,7 @@ use File::Path;
     debug("b2bua/carrier-sbc-config: Creating path $dialplan_path");
     File::Path::mkpath([$dialplan_path]);
 
-    $context->{resolver} = new AnyEvent::DNS( untaint => 1 );
-
-    my $txt = sub {
-       my ($domain, $cb) = @_;
-
-       $context->{resolver}->resolve ($domain => "txt", sub {
-          $cb->(map $_->[3], @_);
-       });
-    };
-
-    my $a = sub {
-       my ($domain, $cb) = @_;
-
-       $context->{resolver}->resolve ($domain => "a", sub {
-          $cb->(map $_->[3], @_);
-       });
-    };
+    $context->{resolver} = AnyEvent::DNS::resolver;
 
     # sip_profile
     for my $name qw( dash-911 dash level3 option-service ) {
@@ -72,13 +56,13 @@ use File::Path;
 
       my $port_dns = CCNQ::Install::catdns('port',$name,fqdn);
       debug("b2bua/carrier-sbc-config: Querying TXT $port_dns");
-      $txt->($port_dns, sub {
+      AnyEvent::DNS::txt($port_dns, sub {
         my ($external_port) = @_;
         my $internal_port = $external_port + 10000;
         debug("b2bua/carrier-sbc-config: Found port $external_port");
-        $a->( CCNQ::Install::catdns('public',$name,fqdn), sub {
+        AnyEvent::DNS::a( CCNQ::Install::catdns('public',$name,fqdn), sub {
           my ($public_ip) = @_;
-          $a->( CCNQ::Install::catdns('private',$name,fqdn), sub {
+          AnyEvent::DNS::a( CCNQ::Install::catdns('private',$name,fqdn), sub {
             my ($private_ip) = @_;
 
             # Generate sip_profile entries
@@ -95,7 +79,7 @@ EOT
             CCNQ::Install::print_to($sip_profile_file,$sip_profile_text);
 
             # Generate ACLs
-            $a->( CCNQ::Install::catdns('ingress',$name,fqdn), sub {
+            AnyEvent::DNS::a( CCNQ::Install::catdns('ingress',$name,fqdn), sub {
               my @ingress = @_;
               my $acl_file = File::Spec->catfile(CCNQ::B2BUA::freeswitch_install_conf,'autoload_configs',"${name}.acl.xml");
               my $acl_text = qq(<list name="sbc-${name}" default="deny">);
@@ -105,7 +89,7 @@ EOT
             });
 
             # Generate dialplan entries
-            $a->( CCNQ::Install::catdns('egress',$name,fqdn), sub {
+            AnyEvent::DNS::a( CCNQ::Install::catdns('egress',$name,fqdn), sub {
               my @egress = @_;
               # XXX Only one IP supported at this time.
               my $egress = shift @egress;
@@ -128,8 +112,8 @@ EOT
       });
     } # for $name
 
-    # $context->{condvar}->cb(AnyEvent::DNS::resolver->{rw4});
-    # $context->{condvar}->cb(AnyEvent::DNS::resolver->{rw6});
+    $context->{condvar}->cb($context->{resolver}->{rw4});
+    $context->{condvar}->cb($context->{resolver}->{rw6});
     return;
   },
 }
