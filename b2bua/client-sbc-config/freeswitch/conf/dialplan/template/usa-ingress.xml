@@ -19,7 +19,7 @@
 
 <!-- to: US number -->
 <extension name="cleanup-called-1">
-  <condition field="destination_number" expression="^(1[2-9]*)$">
+  <condition field="destination_number" expression="^(1[2-9][0-9]+)$">
     <action application="transfer" data="call-$1"/>
   </condition>
 </extension>
