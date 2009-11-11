@@ -58,19 +58,19 @@ use File::Path;
       my $port_cv = AnyEvent->condvar;
       AnyEvent::DNS::txt( $port_dn, $port_cv );
       my ($external_port) = $port_cv->recv;
-      debug("Query TXT $port_dn -> $external_port");
+      debug("Query TXT $port_dn -> $external_port") if defined $external_port;
 
       my $public_dn = CCNQ::Install::catdns('public',$name,fqdn);
       my $public_cv = AnyEvent->condvar;
       AnyEvent::DNS::a( $public_dn, $public_cv );
       my ($public_ip) = $public_cv->recv;
-      debug("Query A $public_dn -> $public_ip");
+      debug("Query A $public_dn -> $public_ip") if defined $public_ip;
 
       my $private_dn = CCNQ::Install::catdns('private',$name,fqdn);
       my $private_cv = AnyEvent->condvar;
       AnyEvent::DNS::a( $private_dn, $private_cv );
       my ($private_ip) = $private_cv->recv;
-      debug("Query A $private_dn -> $private_ip");
+      debug("Query A $private_dn -> $private_ip") if defined $private_ip;
 
       next unless defined($external_port) && defined($public_ip) && defined($private_ip);
 
