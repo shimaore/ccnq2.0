@@ -6,7 +6,7 @@ sub {
       action => 'aliases/delete',
       cluster_name => $request->{cluster_name},
       params => {
-        map { $_ => $request->{$_} } qw( username domain target_username target_domain )
+        map { $_ => $request->{$_} } qw( username domain )
       }
     },
   );

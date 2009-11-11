@@ -71,11 +71,9 @@ sub delete
     my %params = @_;
     my $alias_username = $params{username};
     my $alias_domain   = $params{domain};
-    my $username = $params{target_username};
-    my $domain   = $params{target_domain};
 
-    return (<<'SQL',[$username,$domain,$alias_username,$alias_domain]);
-        DELETE FROM aliases WHERE username = ? AND domain = ? AND alias_username = ? AND alias_domain = ?
+    return (<<'SQL',[$alias_username,$alias_domain]);
+        DELETE FROM aliases WHERE alias_username = ? AND alias_domain = ?
 SQL
 }
 
