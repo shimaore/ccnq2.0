@@ -11,12 +11,12 @@ use File::Path;
     my ($params,$context,$mcv) = @_;
     my $b2bua_name = 'carrier-sbc-config';
 
-    # autoload_configs
+    debug("Installing autoload_configs");
     for my $name (qw( carrier-sbc-config )) {
       CCNQ::B2BUA::copy_file($b2bua_name,qw( autoload_configs ),"${name}.acl.xml");
     }
 
-    # dialplan/template
+    debug("Installing dialplan/template");
     for my $name (qw( dash level3 option-service transparent )) {
       CCNQ::B2BUA::copy_file($b2bua_name,qw( dialplan template ),"${name}.xml");
     }
