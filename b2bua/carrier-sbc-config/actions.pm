@@ -44,7 +44,7 @@ use File::Path;
        $context->{resolver}->resolve ($domain => "a", sub {
           $cb->(map $_->[3], @_);
        });
-    }
+    };
 
     # sip_profile
     for my $name qw( dash-911 dash level3 option-service ) {
