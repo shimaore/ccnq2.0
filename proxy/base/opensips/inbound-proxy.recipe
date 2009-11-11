@@ -9,4 +9,4 @@ routing-lineside
 routing-logic
 loose-route
 non-loose-route
-register-none
+register-ignore
