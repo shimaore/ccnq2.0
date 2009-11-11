@@ -50,12 +50,14 @@ use File::Path;
       $profile_template = 'sbc-media'
         if $name eq 'dash-911';
 
-      debug("Creating for profile $name, if used.");
+      debug("b2bua/carrier-sbc-config: Creating configuration for profile $name, if used.");
 
-      AnyEvent::DNS::txt CCNQ::Install::cat_dns('port',$name,fqdn), sub {
+      my $port_dns = CCNQ::Install::cat_dns('port',$name,fqdn);
+      debug("b2bua/carrier-sbc-config: Querying TXT $port_dns");
+      AnyEvent::DNS::txt $port_dns, sub {
         my ($external_port) = @_;
         my $internal_port = $external_port + 10000;
-        debug("Found port $external_port");
+        debug("b2bua/carrier-sbc-config: Found port $external_port");
         AnyEvent::DNS::a CCNQ::Install::cat_dns('public',$name,fqdn), sub {
           my ($public_ip) = @_;
           AnyEvent::DNS::a CCNQ::Install::cat_dns('private',$name,fqdn), sub {
