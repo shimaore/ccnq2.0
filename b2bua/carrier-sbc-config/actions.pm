@@ -54,7 +54,8 @@ use File::Path;
 
       my $port_dns = CCNQ::Install::catdns('port',$name,fqdn);
       debug("b2bua/carrier-sbc-config: Querying TXT $port_dns");
-      AnyEvent::DNS::txt $port_dns, sub {
+      my $port_cv = AnyEvent->condvar;
+      $port_cv->cb( sub {
         my ($external_port) = @_;
         my $internal_port = $external_port + 10000;
         debug("b2bua/carrier-sbc-config: Found port $external_port");
@@ -107,11 +108,12 @@ EOT
             };
           };
         };
-      };
+      });
+      AnyEvent::DNS::txt $port_dns, $port_cv;
     } # for $name
 
-    $context->{condvar}->cb(AnyEvent::DNS::resolver->{rw4});
-    $context->{condvar}->cb(AnyEvent::DNS::resolver->{rw6});
+    # $context->{condvar}->cb(AnyEvent::DNS::resolver->{rw4});
+    # $context->{condvar}->cb(AnyEvent::DNS::resolver->{rw6});
     return;
   },
 }
