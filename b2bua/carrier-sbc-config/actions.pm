@@ -21,11 +21,11 @@ use File::Path;
       CCNQ::B2BUA::copy_file($b2bua_name,qw( dialplan template ),"${name}.xml");
     }
 
-    debug("b2bua/carrier-sbc-config: Creating path $profile_path");
     my $profile_path = File::Spec::catfile(CCNQ::B2BUA::freeswitch_install_conf,'sip_profiles');
+    debug("b2bua/carrier-sbc-config: Creating path $profile_path");
     File::Path::mkpath([$profile_path]);
-    debug("b2bua/carrier-sbc-config: Creating path $dialplan_path");
     my $dialplan_path = File::Spec::catfile(CCNQ::B2BUA::freeswitch_install_conf,'dialplan');
+    debug("b2bua/carrier-sbc-config: Creating path $dialplan_path");
     File::Path::mkpath([$dialplan_path]);
 
     # sip_profile
