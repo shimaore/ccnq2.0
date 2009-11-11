@@ -21,10 +21,10 @@ use File::Path;
       CCNQ::B2BUA::copy_file($b2bua_name,qw( dialplan template ),"${name}.xml");
     }
 
-    my $profile_path = File::Spec::catfile(CCNQ::B2BUA::freeswitch_install_conf,'sip_profiles');
+    my $profile_path = File::Spec->catfile(CCNQ::B2BUA::freeswitch_install_conf,'sip_profiles');
     debug("b2bua/carrier-sbc-config: Creating path $profile_path");
     File::Path::mkpath([$profile_path]);
-    my $dialplan_path = File::Spec::catfile(CCNQ::B2BUA::freeswitch_install_conf,'dialplan');
+    my $dialplan_path = File::Spec->catfile(CCNQ::B2BUA::freeswitch_install_conf,'dialplan');
     debug("b2bua/carrier-sbc-config: Creating path $dialplan_path");
     File::Path::mkpath([$dialplan_path]);
 
@@ -62,7 +62,7 @@ use File::Path;
             my ($private_ip) = @_;
 
             # Generate sip_profile entries
-            my $sip_profile_file = File::Spec::catfile($profile_path,"${name}.xml");
+            my $sip_profile_file = File::Spec->catfile($profile_path,"${name}.xml");
             my $sip_profile_text = <<"EOT";
               <X-PRE-PROCESS cmd="set" data="profile_name=${name}"/>
               <X-PRE-PROCESS cmd="set" data="internal_sip_port=${internal_port}"/>
@@ -77,7 +77,7 @@ EOT
             # Generate ACLs
             AnyEvent::DNS::a CCNQ::Install::cat_dns('ingress',$name,fqdn), sub {
               my @ingress = @_;
-              my $acl_file = File::Spec::catfile(CCNQ::B2BUA::freeswitch_install_conf,'autoload_configs',"${name}.acl.xml");
+              my $acl_file = File::Spec->catfile(CCNQ::B2BUA::freeswitch_install_conf,'autoload_configs',"${name}.acl.xml");
               my $acl_text = qq(<list name="sbc-${name}" default="deny">);
               $acl_text .= join('',map { qq(<node type="allow" cidr="$_/32"/>) } @ingress);
               $acl_text .= qq(</list>);
@@ -89,7 +89,7 @@ EOT
               my @egress = @_;
               # XXX Only one IP supported at this time.
               my $egress = shift @egress;
-              my $dialplan_file = File::Spec::catfile($dialplan_path,"${name}.xml");
+              my $dialplan_file = File::Spec->catfile($dialplan_path,"${name}.xml");
               my $dialplan_text = <<"EOT";
                 <X-PRE-PROCESS cmd="set" data="profile_name=${name}"/>
                 <X-PRE-PROCESS cmd="set" data="internal_sip_port=${internal_port}"/>
