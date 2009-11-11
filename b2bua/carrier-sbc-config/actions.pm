@@ -108,8 +108,10 @@ EOT
           };
         };
       };
-    }
+    } # for $name
 
+    $context->{condvar}->cb(AnyEvent::DNS::resolver->{rw4});
+    $context->{condvar}->cb(AnyEvent::DNS::resolver->{rw6});
     return;
   },
 }
