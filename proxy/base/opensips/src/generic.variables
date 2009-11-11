@@ -72,3 +72,5 @@ mpath="${MPATH}"
 
 # Multi-homed
 mhomed=1
+
+server_header="Server: CCNQ 2.0"
