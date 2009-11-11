@@ -54,19 +54,25 @@ use File::Path;
 
       debug("b2bua/carrier-sbc-config: Creating configuration for profile $name, if used.");
 
+      my $port_dn = CCNQ::Install::catdns('port',$name,fqdn);
       my $port_cv = AnyEvent->condvar;
-      AnyEvent::DNS::txt( CCNQ::Install::catdns('port',$name,fqdn), $port_cv );
+      AnyEvent::DNS::txt( $port_dn, $port_cv );
       my ($external_port) = $port_cv;
+      debug("Query TXT $port_dn -> $external_port");
 
+      my $public_dn = CCNQ::Install::catdns('public',$name,fqdn);
       my $public_cv = AnyEvent->condvar;
-      AnyEvent::DNS::a( CCNQ::Install::catdns('public',$name,fqdn), $public_cv );
+      AnyEvent::DNS::a( $public_dn, $public_cv );
       my ($public_ip) = $public_cv->recv;
+      debug("Query A $public_dn -> $public_ip");
 
+      my $private_dn = CCNQ::Install::catdns('private',$name,fqdn);
       my $private_cv = AnyEvent->condvar;
-      AnyEvent::DNS::a( CCNQ::Install::catdns('private',$name,fqdn), $private_cv );
+      AnyEvent::DNS::a( $private_dn, $private_cv );
       my ($private_ip) = $private_cv->recv;
+      debug("Query A $private_dn -> $private_ip");
 
-      next unless defined($external_port) && defined($public_ip) && defined($private_cv);
+      next unless defined($external_port) && defined($public_ip) && defined($private_ip);
 
       debug("b2bua/carrier-sbc-config: Found port $external_port");
       my $internal_port = $external_port + 10000;
