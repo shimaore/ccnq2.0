@@ -125,13 +125,13 @@ EOT
 EOT
     } # for $name
 
-    my $sip_profile_file = File::Spec->catfile($profile_path,"carrier-sbc-config.xml");
+    my $sip_profile_file = CCNQ::B2BUA::install_dir(qw( sip_profiles ), "${b2bua_name}.xml" ));
     CCNQ::Install::print_to($sip_profile_file,$sip_profile_text);
 
-    my $acl_file = File::Spec->catfile(CCNQ::B2BUA::freeswitch_install_conf,'autoload_configs',"carrier-sbc-config.acl.xml");
+    my $acl_file = CCNQ::B2BUA::install_dir(qw( autoload_configs ), "${b2bua_name}.acl.xml" ));
     CCNQ::Install::print_to($acl_file,$acl_text);
 
-    my $dialplan_file = File::Spec->catfile($dialplan_path,"carrier-sbc-config.xml");
+    my $dialplan_file = CCNQ::B2BUA::install_dir(qw( dialplan ), "${b2bua_name}.xml" ));
     CCNQ::Install::print_to($dialplan_file,$dialplan_text);
 
     CCNQ::B2BUA::finish();

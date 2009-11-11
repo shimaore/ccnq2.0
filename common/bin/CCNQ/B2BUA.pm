@@ -20,6 +20,10 @@ sub finish {
   CCNQ::Install::execute('chown','-R','freeswitch.daemon',freeswitch_install_conf);
 }
 
+sub install_dir {
+  return File::Spec->catfile(CCNQ::B2BUA::freeswitch_install_conf,@_);
+}
+
 sub install_file {
   my $cb = pop;
   my $function = shift;
@@ -29,7 +33,7 @@ sub install_file {
   my @dst_dir = (@path);
   pop @dst_dir;
   mk_dir(@dst_dir);
-  my $dst = File::Spec->catfile(CCNQ::B2BUA::freeswitch_install_conf,@path);
+  my $dst = install_dir(@path);
   debug("Installing $src as $dst");
   my $txt = CCNQ::Install::content_of($src);
   return error("No file $src") if !defined($txt);
