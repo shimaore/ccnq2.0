@@ -20,8 +20,10 @@ use Logger::Syslog;
     }
 
     my $profile_path = File::Spec::catfile(CCNQ::B2BUA::freeswitch_install_conf,'sip_profiles');
+    debug("Creating path $profile_path");
     File::Path::mkpath([$profile_path]);
     my $dialplan_path = File::Spec::catfile(CCNQ::B2BUA::freeswitch_install_conf,'dialplan');
+    debug("Creating path $dialplan_path");
     File::Path::mkpath([$dialplan_path]);
 
     # sip_profile
