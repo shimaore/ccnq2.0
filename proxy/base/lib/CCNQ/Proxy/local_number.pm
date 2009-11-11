@@ -86,11 +86,11 @@ sub insert
 
     my @result = ();
     if(defined $outbound_route) {
-      push @result, (<<'SQL',[$username,$domain,$outbound_route]);
+      push @result, (<<'SQL',[$number,$domain,$outbound_route]);
         INSERT INTO dr_groups(username,domain,groupid) VALUES (?,?,?);
 SQL
     } else {
-      push @result, (<<'SQL',[$username,$domain]);
+      push @result, (<<'SQL',[$number,$domain]);
         DELETE FROM dr_groups WHERE username = ? AND domain = ?;
 SQL
     }
@@ -115,7 +115,7 @@ sub delete
     my $number  = $params->{number};
     my $domain  = $params->{domain};
 
-    my @result = (<<'SQL',[$username,$domain]);
+    my @result = (<<'SQL',[$number,$domain]);
       DELETE FROM dr_groups WHERE username = ? AND domain = ?;
 SQL
     return (
