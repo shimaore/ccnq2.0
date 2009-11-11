@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 use strict; use warnings;
+our $session;
 
 use constant CNAM_URI => 'https://cnam.sotelips.net:9443/callingname.yaws?Number=';
 
@@ -9,7 +10,6 @@ sub info
 }
 
 sub cnam_run {
-  my $session;
 
   info('Starting');
   my $cid = $session->getVariable('caller_id_number');
