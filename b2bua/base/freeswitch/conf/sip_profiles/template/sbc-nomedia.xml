@@ -5,7 +5,7 @@
 
   
   <settings>
-    <param name="alias" value="sip:$${local_ip_v4}:$${internal_sip_port}"/>
+    <param name="alias" value="sip:$${internal_sip_ip}:$${internal_sip_port}"/>
     <!--<param name="media-option" value="resume-media-on-hold"/> -->
     <param name="media-option" value="bypass-media-after-att-xfer"/>
     <param name="user-agent-string" value="CCNQ2.0"/>
@@ -19,8 +19,8 @@
     <param name="codec-prefs" value="$${global_codec_prefs}"/>
     <param name="use-rtp-timer" value="true"/>
     <param name="rtp-timer-name" value="soft"/>
-    <param name="rtp-ip" value="$${local_ip_v4}"/>
-    <param name="sip-ip" value="$${local_ip_v4}"/>
+    <param name="rtp-ip" value="$${local_ip_v4}"/>  <!-- <param name="rtp-ip" value="$${use_local_ip}"/> -->
+    <param name="sip-ip" value="$${internal_sip_ip}"/>
     <param name="hold-music" value="$${hold_music}"/>
     <!--<param name="apply-nat-acl" value="rfc1918"/>-->
     <!--<param name="aggressive-nat-detection" value="true"/>-->
@@ -104,7 +104,7 @@
   </domains>
   
   <settings>
-    <param name="alias" value="sip:$${local_ip_v4}:$${external_sip_port}"/>
+    <param name="alias" value="sip:$${external_sip_ip}:$${external_sip_port}"/>
     <!--<param name="media-option" value="resume-media-on-hold"/> -->
     <param name="media-option" value="bypass-media-after-att-xfer"/>
     <param name="user-agent-string" value="CCNQ2.0"/>
@@ -118,8 +118,8 @@
     <param name="codec-prefs" value="$${global_codec_prefs}"/>
     <param name="use-rtp-timer" value="true"/>
     <param name="rtp-timer-name" value="soft"/>
-    <param name="rtp-ip" value="$${local_ip_v4}"/>
-    <param name="sip-ip" value="$${local_ip_v4}"/>
+    <param name="rtp-ip" value="$${local_ip_v4}"/>  <!-- <param name="rtp-ip" value="$${use_local_ip}"/> -->
+    <param name="sip-ip" value="$${external_sip_ip}"/>  <!-- <param name="sip-ip" value="$${use_local_ip}"/> -->
     <param name="hold-music" value="$${hold_music}"/>
     <!--<param name="apply-nat-acl" value="rfc1918"/>-->
     <!--<param name="aggressive-nat-detection" value="true"/>-->

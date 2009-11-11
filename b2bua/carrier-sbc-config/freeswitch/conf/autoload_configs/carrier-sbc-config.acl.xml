@@ -3,41 +3,6 @@
 
     <!-- List the IP addresses of each OpenSIPS egress server. -->
     <list name="proxies" default="deny">
-      <node type="allow" cidr="${__OPENSIPS_HOST_1__}/32"/>
-      <node type="allow" cidr="${__OPENSIPS_HOST_2__}/32"/>
-    </list>
-
-
-    <!-- Create one ACL for each carrier profile. They should be called "sbc-${profile_name}" -->
-    <!-- This should complement, not replace, a firewall or iptables. -->
-    <list name="sbc-sotel-sbc" default="deny">
-      <!-- List the IP address of each ingress IP for the carrier. -->
-      <node type="allow" cidr="4.79.132.209/32"/>
-      <node type="allow" cidr="4.79.132.210/32"/>
-    </list>
-
-    <list name="sbc-dash-sbc" default="deny">
-      <!-- old gateways -->
-      <node type="allow" cidr="63.214.44.25/32"/>
-      <node type="allow" cidr="63.214.44.26/32"/>
-      <!-- current (200909) gateways -->
-      <node type="allow" cidr="208.94.157.10/32"/>
-      <node type="allow" cidr="208.94.159.10/32"/>
-    </list>
-
-    <list name="sbc-dash-911" default="deny">
-      <!-- old gateways -->
-      <node type="allow" cidr="63.214.44.25/32"/>
-      <node type="allow" cidr="63.214.44.26/32"/>
-      <!-- current (200909) gateways -->
-      <node type="allow" cidr="208.94.157.10/32"/>
-      <node type="allow" cidr="208.94.159.10/32"/>
-    </list>
-
-    <list name="sbc-level3-sbc" default="deny">
-      <node type="allow" cidr="0.0.0.0/0"/>
-    </list>
-
-    <list name="sbc-global-crossing-sbc" default="deny">
+      <!-- XXX Replace with "a.b.c.d/32" -->
       <node type="allow" cidr="0.0.0.0/0"/>
     </list>
