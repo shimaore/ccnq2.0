@@ -1,5 +1,5 @@
 <extension name="apply-cnam" continue="true">
-    <condition field="destination_number" expression="^call$">
+    <condition field="destination_number" expression="^call">
       <action application="perl" data="cnam.pl"/>
     </condition>
 </extension>
