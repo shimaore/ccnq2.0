@@ -5,6 +5,8 @@ forwarder
 accounting
 invite-inbound-proxy
 invite
+routing-lineside
+routing-logic
 loose-route
 non-loose-route
-register-ignore
+register-none
