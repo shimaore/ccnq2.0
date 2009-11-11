@@ -44,9 +44,8 @@ sub form
 
 sub insert
 {
-    my $self = shift;
-    my %params = @_;
-    my $source  = $params{source};
+    my ($self,$params) = @_;
+    my $source  = $params->{source};
 
     return ()
         unless defined $source;
@@ -63,11 +62,13 @@ SQL
 
 sub delete
 {
-    my $self = shift;
-    my %params = @_;
-    my $source = $params{source};
+    my ($self,$params) = @_;
+    my $source = $params->{source};
 
-    warn "Source must be an IP"
+    return ()
+      unless defined $source;
+
+    die "Source must be an IP"
         unless $source =~ /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$/;
 
     return (
