@@ -50,7 +50,7 @@ use File::Spec;
 
             # Generate sip_profile entries
             my $sip_profile_file = File::Spec::catfile(CCNQ::B2BUA::freeswitch_install_conf,'sip_profiles',"${name}.xml");
-            my $sip_profile_text = <<EOT;
+            my $sip_profile_text = <<"EOT";
               <X-PRE-PROCESS cmd="set" data="profile_name=${name}"/>
               <X-PRE-PROCESS cmd="set" data="internal_sip_port=${internal_port}"/>
               <X-PRE-PROCESS cmd="set" data="external_sip_port=${external_port}"/>
@@ -77,7 +77,7 @@ EOT
               # XXX Only one IP supported at this time.
               my $egress = shift @egress;
               my $dialplan_file = CCNQ::B2BUA::freeswitch_install_conf,'dialplan',"${name}.xml";
-              my $dialplan_text <<"EOT";
+              my $dialplan_text = <<"EOT";
                 <X-PRE-PROCESS cmd="set" data="profile_name=${name}"/>
                 <X-PRE-PROCESS cmd="set" data="internal_sip_port=${internal_port}"/>
                 <X-PRE-PROCESS cmd="set" data="external_sip_port=${external_port}"/>
