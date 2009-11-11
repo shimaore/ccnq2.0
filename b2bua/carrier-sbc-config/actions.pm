@@ -52,9 +52,7 @@ use File::Path;
 
       debug("Creating for profile $name, if used.");
 
-      my $cv = AnyEvent->condvar;
-      AnyEvent::DNS::txt CCNQ::Install::cat_dns('port',$name,fqdn), $cv;
-      $cv->cb( sub {
+      AnyEvent::DNS::txt CCNQ::Install::cat_dns('port',$name,fqdn), sub {
         my ($external_port) = @_;
         my $internal_port = $external_port + 10000;
         debug("Found port $external_port");
@@ -107,8 +105,7 @@ EOT
             };
           };
         };
-      });
-      $context->{condvar}->cb($cv);
+      };
     }
 
     return;
