@@ -20,7 +20,7 @@ use File::Spec;
 
     my $profile_path = File::Spec::catfile(CCNQ::B2BUA::freeswitch_install_conf,'sip_profiles');
     File::Path::mkpath([$profile_path]);
-    my $diaplan_path = File::Spec::catfile(CCNQ::B2BUA::freeswitch_install_conf,'dialplan');
+    my $dialplan_path = File::Spec::catfile(CCNQ::B2BUA::freeswitch_install_conf,'dialplan');
     File::Path::mkpath([$dialplan_path]);
 
     # sip_profile
