@@ -14,12 +14,7 @@ SIP ports (Sofia profiles):
   The ports indicated are the external ports for SBC profiles.
   The internal profiles use port N+10000.
 
-  Dash-911:     5068
-  Dash SBC:     5066
-  GC:           5064
-  L3:           5060 *
-  Sotel:        5070
-  Option Service: 5072
+  Normally use ports 5060, 5062, etc. for the carrier-SBCs.
 
   FeatureServer:  5100
 
