@@ -70,3 +70,5 @@ avp_aliases="${AVP_ALIASES}"
 
 mpath="${MPATH}"
 
+# Multi-homed
+mhomed=1

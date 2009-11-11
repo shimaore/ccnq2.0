@@ -40,7 +40,7 @@ use constant db_host      => $configuration::db_host      || '127.0.0.1';
 use constant db_name      => $configuration::db_name      || 'opensips';
 use constant node_id      => $configuration::node_id      || '';
 
-use constant proxy_ip     => $configuration::sip_host       || '';
+use constant proxy_ip     => $configuration::sip_host       || ''; # Could be CCNQ::Install:fqdn if mhomed is bothersome.
 use constant proxy_port   => $configuration::sip_port       || '5060';
 use constant challenge    => $configuration::sip_challenge  || '';
 
