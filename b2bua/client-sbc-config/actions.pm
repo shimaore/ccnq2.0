@@ -20,7 +20,7 @@ use CCNQ::B2BUA;
     }
 
     # sip_profile
-    for my $name (qw( usa usa-cnam france )) {
+    for my $name (qw( usa usa-cnam france e164 )) {
       CCNQ::B2BUA::copy_file($b2bua_name,qw( sip_profiles ),"${name}.xml");
     }
 
