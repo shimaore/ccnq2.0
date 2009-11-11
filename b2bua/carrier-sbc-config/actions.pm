@@ -93,7 +93,7 @@ EOT
                 <X-PRE-PROCESS cmd="set" data="egress_target=${egress}"/>
                 <X-PRE-PROCESS cmd="include" data="template/${dialplan_template}.xml"/>
 EOT
-              CCNQ::Install::print_to($dialplan_file,$diaplan_text);
+              CCNQ::Install::print_to($dialplan_file,$dialplan_text);
             };
           };
         };
