@@ -41,7 +41,7 @@
       <condition field="destination_number" expression="^\+(.*)$">
         <action application="set" data="direction=ingress"/>
         <action application="set" data="progress_timeout=12"/>
-        <action application="set" data="effective_caller_id_number=${regex(${caller_id_number}|^\\+(.*)|%1)}"/>
+        <action application="set" data="effective_caller_id_number=${regex(${caller_id_number}|^\\+?(.*)|%1)}"/>
         <action application="bridge" data="sofia/internal-$${profile_name}/$1@$${ingress_target}"/>
       </condition>
     </extension>
