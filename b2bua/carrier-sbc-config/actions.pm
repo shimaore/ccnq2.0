@@ -42,12 +42,12 @@ EOT
     my @sbc_names = $sbc_names_cv->recv;
     debug("Query TXT $sbc_names_dn -> ",join(',',@sbc_names));
 
-    # sip_profile
     for my $name (@sbc_names) {
-      # Figure out whether we have all the data to configure the profile.
+      # Figure out whether we have all the data to configure this instance.
       # We need to have at least:
+      #   profile   -- TXT record of the profile (templates) to use
       #   port      -- TXT record of the SIP port to use (externally)
-      #                         The internal port is always $external_port + 10000
+      #                (The internal port is always $external_port + 10000.)
       #   public    -- A record of our external SIP IP
       #   private   -- A record of our internal SIP IP
       # and zero or more of:
