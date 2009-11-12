@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<include>
+  <!-- egress towards carrier -->
+  <context name="egress-$${profile_name}">
+
+    <extension name="unloop">
+      <condition field="${unroll_loops}" expression="^true$"/>
+      <condition field="${sip_looped_call}" expression="^true$">
+        <action application="deflect" data="${destination_number}"/>
+      </condition>
+    </extension>
+
+    <extension name="egress-911">
+      <condition field="destination_number" expression="^1(911)$">
+        <action application="set" data="direction=egress"/>
+        <action application="set" data="progress_timeout=12"/>
+        <action application="set" data="effective_caller_id_number=+${caller_id_number}"/>
+        <action application="bridge" data="sofia/sbc-$${profile_name}/$1@$${egress_target}"/>
+      </condition>
+    </extension>
+
+    <extension name="egress-nanpa">
+      <condition field="destination_number" expression="^(1.*)$">
+        <action application="set" data="direction=egress"/>
+        <action application="set" data="progress_timeout=12"/>
+        <action application="set" data="effective_caller_id_number=+${caller_id_number}"/>
+        <action application="bridge" data="sofia/sbc-$${profile_name}/+$1@$${egress_target}"/>
+      </condition>
+    </extension>
+
+    <extension name="egress-international">
+      <condition field="destination_number" expression="^(.*)$">
+        <action application="set" data="direction=egress"/>
+        <action application="set" data="progress_timeout=12"/>
+        <action application="set" data="effective_caller_id_number=+${caller_id_number}"/>
+        <action application="bridge" data="sofia/sbc-$${profile_name}/+$1@$${egress_target}"/>
+      </condition>
+    </extension>
+
+  </context>
+
+  <!-- ingress from carrier -->
+  <context name="ingress-$${profile_name}">
+
+    <extension name="unloop">
+      <condition field="${unroll_loops}" expression="^true$"/>
+      <condition field="${sip_looped_call}" expression="^true$">
+        <action application="deflect" data="${destination_number}"/>
+      </condition>
+    </extension>
+
+    <extension name="default-ingress">
+      <condition field="destination_number" expression="^\+?(.*)$">
+        <action application="set" data="direction=ingress"/>
+        <action application="set" data="progress_timeout=12"/>
+        <action application="set" data="effective_caller_id_number=${regex(${caller_id_number}|^\\+?(.*)|%1)}"/>
+        <action application="bridge" data="sofia/internal-$${profile_name}/$1@$${ingress_target}"/>
+      </condition>
+    </extension>
+
+  </context>
+</include>
