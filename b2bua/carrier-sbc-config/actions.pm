@@ -12,7 +12,7 @@ use File::Path;
     my $b2bua_name = 'carrier-sbc-config';
 
     debug("b2bua/carrier-sbc-config: Installing dialplan/template");
-    for my $name (qw( dash level3 option-service transparent )) {
+    for my $name (qw( dash-e164 dash level3 option-service transparent )) {
       CCNQ::B2BUA::copy_file($b2bua_name,qw( dialplan template ),"${name}.xml");
     }
 
@@ -36,8 +36,14 @@ use File::Path;
     </list>
 EOT
 
+    my $sbc_names_dn = CCNQ::Install::catdns('sbc-names',fqdn);
+    my $sbc_names_cv = AnyEvent->condvar;
+    AnyEvent::DNS::txt( $sbc_names_dn, $sbc_names_cv );
+    my @sbc_names = $sbc_names_cv->recv;
+    debug("Query TXT $sbc_names_dn -> ",join(',',@sbc_names));
+
     # sip_profile
-    for my $name qw( dash-911 dash level3 option-service transparent ) {
+    for my $name (@sbc_names) {
       # Figure out whether we have all the data to configure the profile.
       # We need to have at least:
       #   port      -- TXT record of the SIP port to use (externally)
@@ -48,17 +54,25 @@ EOT
       #   ingress    -- A records with the IP address of the carrier's potential origination SBC
       #   egress     -- A record(s) with the IP address of the carrier's termination SBC
 
+      my $profile_dn = CCNQ::Install::catdns('profile',$name,fqdn);
+      my $profile_cv = AnyEvent->condvar;
+      AnyEvent::DNS::txt( $profile_dn, $profile_cv );
+      my ($profile) = $profile_cv->recv;
+      debug("Query TXT $profile_dn -> $profile") if defined $profile;
+
+      error("Name $name has not profile recorded in DNS, skipping"),
+      next if !defined($profile);
+
       my $extra = '';
       my $profile_template = 'sbc-nomedia';
-      my $dialplan_template = $name;
+      my $dialplan_template = $profile;
 
       $extra = q(<X-PRE-PROCESS cmd="set" data="global_codec_prefs=PCMU@8000h@20i"/>),
-      $dialplan_template = 'dash'
-        if $name =~ /^dash/;
+      $dialplan_template = 'dash',
       $profile_template = 'sbc-media'
         if $name eq 'dash-911';
 
-      debug("b2bua/carrier-sbc-config: Creating configuration for profile $name, if used.");
+      debug("b2bua/carrier-sbc-config: Creating configuration for name $name / profile $profile.");
 
       my $port_dn = CCNQ::Install::catdns('port',$name,fqdn);
       my $port_cv = AnyEvent->condvar;
