@@ -1,0 +1,5 @@
+<extension name="cleanup-caller-id-1">
+  <condition field="destination_number" expression=""/>
+    <action application="transfer" data="call-${destination_number} XML egress-$${profile_name}"/>
+  </condition>
+</extension>
