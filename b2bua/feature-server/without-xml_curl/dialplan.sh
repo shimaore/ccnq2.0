@@ -9,4 +9,4 @@ XML_OUTPUT=${FS}/conf/dialplan/routing/cdb.xml
 ./dialplan.pl $1 > ${XML_OUTPUT}.new && \
   chown freeswitch.daemon ${XML_OUTPUT}.new && \
   mv ${XML_OUTPUT}.new ${XML_OUTPUT} && \
-  ${FS}/bin/fs_cli -x 'reloadxml'
+  ${FS}/bin/fs_cli -p CCNQ -x 'reloadxml'
