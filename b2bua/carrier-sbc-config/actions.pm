@@ -40,7 +40,7 @@ EOT
     my $sbc_names_cv = AnyEvent->condvar;
     AnyEvent::DNS::txt( $sbc_names_dn, $sbc_names_cv );
     my @sbc_names = $sbc_names_cv->recv;
-    debug("Query TXT $sbc_names_dn -> ",join(',',@sbc_names));
+    debug("Query TXT $sbc_names_dn -> ".join(',',@sbc_names));
 
     for my $name (@sbc_names) {
       # Figure out whether we have all the data to configure this instance.
@@ -60,7 +60,7 @@ EOT
       my ($profile) = $profile_cv->recv;
       debug("Query TXT $profile_dn -> $profile") if defined $profile;
 
-      error("Name $name has not profile recorded in DNS, skipping"),
+      error("Name $name has no profile recorded in DNS (TXT $profile_dn), skipping"),
       next if !defined($profile);
 
       my $extra = '';
