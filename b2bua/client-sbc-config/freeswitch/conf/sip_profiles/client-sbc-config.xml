@@ -32,3 +32,10 @@
 <X-PRE-PROCESS cmd="set" data="internal_sip_ip=$${local_ip_v4}"/>
 <X-PRE-PROCESS cmd="set" data="external_sip_ip=$${local_ip_v4}"/>
 <X-PRE-PROCESS cmd="include" data="template/sbc-nomedia.xml"/>
+
+<X-PRE-PROCESS cmd="set" data="profile_name=transparent"/>
+<X-PRE-PROCESS cmd="set" data="internal_sip_port=15205"/>
+<X-PRE-PROCESS cmd="set" data="external_sip_port=5205"/>
+<X-PRE-PROCESS cmd="set" data="internal_sip_ip=$${local_ip_v4}"/>
+<X-PRE-PROCESS cmd="set" data="external_sip_ip=$${local_ip_v4}"/>
+<X-PRE-PROCESS cmd="include" data="template/sbc-nomedia.xml"/>
