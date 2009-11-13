@@ -44,7 +44,7 @@ sub run {
   }->();
 
   chdir(script_path) or die "chdir(".script_path."): $!";
-  debug("Starting from ".script_path."\n");
+  debug("Starting from ".script_path);
   eval q{
     use CCNQ::Install;
     use AnyEvent;
