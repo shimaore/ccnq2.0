@@ -42,14 +42,17 @@ EOT
     my @sbc_names = $sbc_names_cv->recv;
     debug("Query TXT $sbc_names_dn -> ".join(',',@sbc_names));
 
+    my $external_ip = CCNQ::Install::external_ip;
+    my $internal_ip = CCNQ::Install::internal_ip;
+
     for my $name (@sbc_names) {
       # Figure out whether we have all the data to configure this instance.
       # We need to have at least:
       #   profile   -- TXT record of the profile (templates) to use
       #   port      -- TXT record of the SIP port to use (externally)
       #                (The internal port is always $external_port + 10000.)
-      #   public    -- A record of our external SIP IP
-      #   private   -- A record of our internal SIP IP
+      #   external  -- A record of (host's) external SIP IP
+      #   internal  -- A record of (host's) internal SIP IP
       # and zero or more of:
       #   ingress    -- A records with the IP address of the carrier's potential origination SBC
       #   egress     -- A record(s) with the IP address of the carrier's termination SBC
@@ -80,19 +83,7 @@ EOT
       my ($external_port) = $port_cv->recv;
       debug("Query TXT $port_dn -> $external_port") if defined $external_port;
 
-      my $public_dn = CCNQ::Install::catdns('public',$name,fqdn);
-      my $public_cv = AnyEvent->condvar;
-      AnyEvent::DNS::a( $public_dn, $public_cv );
-      my ($public_ip) = $public_cv->recv;
-      debug("Query A $public_dn -> $public_ip") if defined $public_ip;
-
-      my $private_dn = CCNQ::Install::catdns('private',$name,fqdn);
-      my $private_cv = AnyEvent->condvar;
-      AnyEvent::DNS::a( $private_dn, $private_cv );
-      my ($private_ip) = $private_cv->recv;
-      debug("Query A $private_dn -> $private_ip") if defined $private_ip;
-
-      next unless defined($external_port) && defined($public_ip) && defined($private_ip);
+      next unless defined($external_port) && defined($external_ip) && defined($internal_ip);
 
       debug("b2bua/carrier-sbc-config: Found external port $external_port");
       my $internal_port = $external_port + 10000;
@@ -103,8 +94,8 @@ EOT
         <X-PRE-PROCESS cmd="set" data="profile_name=${name}"/>
         <X-PRE-PROCESS cmd="set" data="internal_sip_port=${internal_port}"/>
         <X-PRE-PROCESS cmd="set" data="external_sip_port=${external_port}"/>
-        <X-PRE-PROCESS cmd="set" data="internal_sip_ip=${private_ip}"/>
-        <X-PRE-PROCESS cmd="set" data="external_sip_ip=${public_ip}"/>
+        <X-PRE-PROCESS cmd="set" data="internal_sip_ip=${internal_ip}"/>
+        <X-PRE-PROCESS cmd="set" data="external_sip_ip=${external_ip}"/>
         ${extra}
         <X-PRE-PROCESS cmd="include" data="template/${profile_template}.xml"/>
 EOT
@@ -131,8 +122,8 @@ EOT
         <X-PRE-PROCESS cmd="set" data="profile_name=${name}"/>
         <X-PRE-PROCESS cmd="set" data="internal_sip_port=${internal_port}"/>
         <X-PRE-PROCESS cmd="set" data="external_sip_port=${external_port}"/>
-        <X-PRE-PROCESS cmd="set" data="internal_sip_ip=${private_ip}"/>
-        <X-PRE-PROCESS cmd="set" data="external_sip_ip=${public_ip}"/>
+        <X-PRE-PROCESS cmd="set" data="internal_sip_ip=${internal_ip}"/>
+        <X-PRE-PROCESS cmd="set" data="external_sip_ip=${external_ip}"/>
 
         <X-PRE-PROCESS cmd="set" data="ingress_target=inbound-proxy.\$\${cluster_name}"/>
         <X-PRE-PROCESS cmd="set" data="egress_target=${egress}"/>

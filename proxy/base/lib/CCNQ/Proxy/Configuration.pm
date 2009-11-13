@@ -40,7 +40,9 @@ use constant db_host      => $configuration::db_host      || '127.0.0.1';
 use constant db_name      => $configuration::db_name      || 'opensips';
 use constant node_id      => $configuration::node_id      || '';
 
-use constant proxy_ip     => $configuration::sip_host       || ''; # Could be CCNQ::Install:fqdn if mhomed is bothersome.
+use constant proxy_ip     => $configuration::sip_host       || '';
+use constant internal_ip  => CCNQ::Install::internal_ip     || '';
+use constant external_ip  => CCNQ::Install::external_ip     || '';
 use constant proxy_port   => $configuration::sip_port       || '5060';
 use constant challenge    => $configuration::sip_challenge  || '';
 
@@ -102,6 +104,8 @@ sub parameters {
     UAC_VSF     => (defined $configuration::uac_vsf && $configuration::uac_vsf ne '') ? $configuration::uac_vsf : 'vsf',
     NODE_ID     => node_id,
     INV_TIMER   => $configuration::inv_timer || 60,
+    FORCE_INTERNAL => $internal_ip ? qq(force_send_socket(${internal_ip});) : '',
+    FORCE_EXTERNAL => $external_ip ? qq(force_send_socket(${external_ip});) : '',
   );
 
   return %values;

@@ -335,4 +335,23 @@ sub attempt_on_roles_and_functions {
 use constant api_rendezvous_host => '127.0.0.1';
 use constant api_rendezvous_port => 9090;
 
+# Try to locate the "internal" and "external" IP addresses, if any are specified.
+
+use constant internal_ip_tag => 'internal';
+use constant external_ip_tag => 'external';
+
+sub internal_ip {
+  my $cv = AnyEvent->condvar;
+  AnyEvent::DNS::a catdns(internal_ip_tag,fqdn), $cv;
+  my ($internal_ip) = $cv->recv;
+  return $internal_ip;
+}
+
+sub external_ip {
+  my $cv = AnyEvent->condvar;
+  AnyEvent::DNS::a catdns(external_ip_tag,fqdn), $cv;
+  my ($external_ip) = $cv->recv;
+  return $external_ip;
+}
+
 1;

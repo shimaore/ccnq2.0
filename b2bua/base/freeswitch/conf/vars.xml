@@ -5,8 +5,8 @@
   <X-PRE-PROCESS cmd="set" data="global_codec_prefs=PCMU@8000h@20i,G729@8000h@20i"/>
   <X-PRE-PROCESS cmd="set" data="outbound_codec_prefs=PCMU@8000h@20i,G729@8000h@20i"/>
 
-  <X-PRE-PROCESS cmd="set" data="external_rtp_ip=4.53.160.141"/>
-  <X-PRE-PROCESS cmd="set" data="external_sip_ip=4.53.160.141"/>
+  <X-PRE-PROCESS cmd="set" data="external_rtp_ip=$${local_ip_v4}"/>
+  <X-PRE-PROCESS cmd="set" data="external_sip_ip=$${local_ip_v4}"/>
 
   <X-PRE-PROCESS cmd="set" data="unroll_loops=true"/>
 
