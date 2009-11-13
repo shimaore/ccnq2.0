@@ -104,8 +104,8 @@ sub parameters {
     UAC_VSF     => (defined $configuration::uac_vsf && $configuration::uac_vsf ne '') ? $configuration::uac_vsf : 'vsf',
     NODE_ID     => node_id,
     INV_TIMER   => $configuration::inv_timer || 60,
-    FORCE_INTERNAL => $internal_ip ? qq(force_send_socket(${internal_ip});) : '',
-    FORCE_EXTERNAL => $external_ip ? qq(force_send_socket(${external_ip});) : '',
+    FORCE_INTERNAL => internal_ip ? 'force_send_socket('.internal_ip.');' : '',
+    FORCE_EXTERNAL => external_ip ? 'force_send_socket('.external_ip.');' : '',
   );
 
   return %values;
