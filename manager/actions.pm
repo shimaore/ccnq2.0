@@ -97,7 +97,7 @@
               if($res->[0] eq 'ok') {
                 debug("New activity ID=$activity->{activity} was submitted.");
               } else {
-                error("Submission failed: $res->[1] for activity ID=$activity->{activity}");
+                error("Submission failed (in request): $res->[1] for activity ID=$activity->{activity}");
               }
             }
 
@@ -171,7 +171,7 @@
               if($res->[0] eq 'ok') {
                 debug("Next activity ID=$next_activity_id was submitted.");
               } else {
-                error("Submission failed: $res->[1] for activity ID=$next_activity_id");
+                error("Submission failed (in response): $res->[1] for activity ID=$next_activity_id");
               }
               $db->save_doc($next_activity)->cb(sub{$_[0]->recv;
                 debug("Next activity ID=$next_activity_id submitted.");
