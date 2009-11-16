@@ -209,7 +209,7 @@ sub _join_room {
   my $nick = join(',',$context->{function},$context->{username},rand());
   info("Attempting to join $dest as $context->{function}");
   $context->{muc}->join_room($context->{connection},$dest,$nick,{
-    history => {seconds=>3600},
+    history => {seconds=>0},
     create_instant => 1,
   });
 }

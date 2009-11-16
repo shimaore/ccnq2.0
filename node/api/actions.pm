@@ -43,10 +43,7 @@
     use CCNQ::XMPPAgent;
 
     my $muc_room = CCNQ::Install::manager_cluster_jid;
-    $context->{muc}->join_room($context->{connection},$muc_room,$context->{function}.','.rand(),{
-      history => {seconds=>0},
-      create_instant => 1,
-    });
+    CCNQ::XMPPAgent::_join_room($context,$muc_room);
 
     my $host = CCNQ::Install::api_rendezvous_host;
     my $port = CCNQ::Install::api_rendezvous_port;
