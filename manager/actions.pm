@@ -1,3 +1,5 @@
+# manager/actions.pm
+
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -12,9 +14,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-# manager/actions.pm
-
 
 {
   install => sub {
