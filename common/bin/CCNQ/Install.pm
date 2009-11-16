@@ -370,7 +370,7 @@ sub attempt_run {
 
     if($@) {
       debug("attempt_run($function,$action): failed with error $@");
-      $cv->send(FAILURE($@));
+      $cv->send(FAILURE("attempt_run($function,$action): failed with error $@"));
     }
   };
 }

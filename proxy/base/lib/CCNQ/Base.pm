@@ -29,7 +29,6 @@ sub _build_callback {
   my ($db,$sql,$args,$cb) = @_;
   debug("Postponing $sql with (".join(',',@{$args}).") and callback $cb");
   return sub {
-    $#_ or die "failure: $@";
     debug("Executing $sql with (".join(',',@{$args}).") and callback $cb");
     $db->exec($sql,@{$args},$cb);
   };
@@ -43,7 +42,6 @@ sub do_sql {
   my $cv = AnyEvent->condvar;
 
   my $run = sub {
-    $#_ or die "failure: $@";
     $db->commit( sub {
       $cv->send(CCNQ::Install::SUCCESS);
     });
