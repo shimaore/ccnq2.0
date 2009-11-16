@@ -99,6 +99,7 @@
           # Callback is used inside the _response handler.
           $context->{api_callback}->{$body->{activity}} = sub {
             my ($params,$context,$cv) = @_;
+            debug("node/api: Callback in process");
             if($params->{error}) {
               debug("node/api: Request failed: ".$params->{error});
               $req->respond([500,'Request failed',{ 'Content-Type' => 'text/plain' },$params->{error}]);
