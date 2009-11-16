@@ -169,7 +169,9 @@ sub run
 =cut
 
     error("Invalid action $action");
-    return CCNQ::Install::FAILURE("Invalid action $action");
+    my $cv = AnyEvent->condvar;
+    $cv->send(CCNQ::Install::FAILURE("Invalid action $action"));
+    return $cv;
 }
 
 1;

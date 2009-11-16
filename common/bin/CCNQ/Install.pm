@@ -369,8 +369,9 @@ sub attempt_run {
     };
 
     if($@) {
-      debug("attempt_run($function,$action): failed with error $@");
-      $cv->send(FAILURE("attempt_run($function,$action): failed with error $@"));
+      my $error_msg = "attempt_run($function,$action): failed with error $@";
+      debug($error_msg);
+      $cv->send(FAILURE($error_msg));
     }
   };
 }

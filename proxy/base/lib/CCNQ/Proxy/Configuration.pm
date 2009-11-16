@@ -126,14 +126,28 @@ sub run_from_class {
   # my $db = $context->{ae_dbi_db}->{$class};
   my $db = ae_dbi_db();
   my $challenge = challenge;
+  my $r = undef;
   eval qq{
     use lib proxy_base_lib;
     use CCNQ::Proxy::${class};
     my \$b = new CCNQ::Proxy::${class} (\$db,\$challenge);
-    return \$b->run(\$action,\$params,\$context);
+    \$r = \$b->run(\$action,\$params,\$context);
   };
-  error($@) if $@;
-  return undef;
+
+  my $error_msg = "run_from_class($class,$action): ";
+  if($r) {
+    return $r;
+  } else {
+    $error_msg .= "no condvar returned. ";
+  }
+  if($@) {
+    $error_msg .= $@;
+  }
+
+  error($error_msg);
+  my $cv = AnyEvent->condvar;
+  $cv->send(CCNQ::Install::FAILURE($error_msg));
+  return $cv;
 }
 
 1;
