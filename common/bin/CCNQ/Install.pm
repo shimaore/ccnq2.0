@@ -313,8 +313,8 @@ use constant actions_file_name => 'actions.pm';
 
 =cut
 
-sub STATUS_COMPLETED => 'completed';
-sub STATUS_FAILED    => 'failed';
+use constant STATUS_COMPLETED => 'completed';
+use constant STATUS_FAILED    => 'failed';
 
 sub SUCCESS {
   my $result = shift;
