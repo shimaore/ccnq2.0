@@ -206,7 +206,7 @@ sub handle_message {
 
 sub _join_room {
   my ($context,$dest) = @_;
-  my $nick = $context->{function}.','.rand();
+  my $nick = join(',',$context->{function},$context->{username},rand());
   info("Attempting to join $dest as $context->{function}");
   $context->{muc}->join_room($context->{connection},$dest,$nick,{
     history => {seconds=>3600},
