@@ -17,6 +17,8 @@
 
 {
   install => sub {
+    my ($params,$context,$mcv) = @_;
+
     use CCNQ::MediaProxy;
     CCNQ::MediaProxy::install_default_key('dispatcher');
     my $config = <<'EOT';
@@ -40,5 +42,6 @@ passport = None
 # end dispatcher configuration
 EOT
     print_to(CCNQ::MediaProxy::mediaproxy_config.'.dispatcher',$config);
-  }
+    $mcv->send(CCNQ::Install::SUCCESS);
+  },
 }

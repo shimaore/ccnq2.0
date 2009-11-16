@@ -41,5 +41,6 @@ port_range = 40000:41998
 # end relay configuration
 EOT
     print_to(CCNQ::MediaProxy::mediaproxy_config.'.relay',$config);
-  }
+    $mcv->send(CCNQ::Install::SUCCESS);
+  },
 }

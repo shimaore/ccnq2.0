@@ -21,7 +21,7 @@ use CCNQ::Proxy::Config;
 
 {
   install => sub {
-    my ($params,$context) = @_;
+    my ($params,$context,$mcv) = @_;
 
     use constant proxy_mode => 'proxy_mode';
     use constant proxy_mode_file => File::Spec->catfile(CCNQ::Install::CCN,proxy_mode);
@@ -37,7 +37,7 @@ use CCNQ::Proxy::Config;
     #    router
 
     my $model = first_line_of(proxy_mode_file);
-    die if !defined $model;
+    die 'No proxy model found in '.proxy_mode_file if !defined $model;
     my $template_dir = CCNQ::Install::CCN;
 
     # We install opensips.cfg and opensips.sql into /etc/ccn/
@@ -58,40 +58,51 @@ use CCNQ::Proxy::Config;
     info("Restarting OpenSIPS");
     CCNQ::Install::execute('/bin/sed','-i','-e','s/^RUN_OPENSIPS=no$/RUN_OPENSIPS=yes/','/etc/default/opensips');
     CCNQ::Install::execute('/etc/init.d/opensips','restart');
-    return;
+
+    $mcv->send(CCNQ::Install::SUCCESS);
   },
 
   _session_ready => sub {
-    my ($params,$context) = @_;
+    my ($params,$context,$mcv) = @_;
     use CCNQ::XMPPAgent;
     debug("Proxy _session_ready");
     CCNQ::XMPPAgent::join_cluster_room($context);
-    return;
+    $mcv->send(CCNQ::Install::SUCCESS);
   },
 
   _default => sub {
-    my ($action,$request,$context) = @_;
-    error("No action defined"), return unless $action;
-    my ($module,$command) = ($action =~ m{^(.*)/(delete|update|query)$});
-    error("Invalid action $action"), return unless $module && $command;
+    my ($action,$request,$context,$mcv) = @_;
 
-    debug("Ignoring response") if $request->{status};
+    debug("Ignoring response"),
+    return $mcv->send(CCNQ::Install::CANCEL),
+      if $request->{status};
+
+    error("No action defined"),
+    return $mcv->send(CCNQ::Install::FAILURE('No action defined'))
+     unless $action;
+
+    my ($module,$command) = ($action =~ m{^(.*)/(delete|update|query)$});
+
+    error("Invalid action $action"),
+    return $mcv->send(CCNQ::Install::FAILURE("Invalid action $action"))
+      unless $module && $command;
 
     use CCNQ::Proxy::Configuration;
     my $cv = CCNQ::Proxy::Configuration::run_from_class($module,$command,$request->{params},$context);
+    $cv->cb(sub{
+      $mcv->send(CCNQ::Install::SUCCESS);
+    });
     $context->{condvar}->cb($cv) if $cv;
-    # _default must always return a value (undef means that the action was not handled)
-    return {};
   },
 
   dr_reload => sub {
-    my ($params,$context) = @_;
+    my ($params,$context,$mcv) = @_;
     CCNQ::Install::_execute($context,qw( /usr/sbin/opensipsctl fifo dr_reload ));
-    return;
+    $mcv->send(CCNQ::Install::SUCCESS);
   },
   trusted_reload => sub {
-    my ($params,$context) = @_;
+    my ($params,$context,$mcv) = @_;
     CCNQ::Install::_execute($context,qw( /usr/sbin/opensipsctl fifo trusted_reload ));
-    return;
+    $mcv->send(CCNQ::Install::SUCCESS);
   },
 }

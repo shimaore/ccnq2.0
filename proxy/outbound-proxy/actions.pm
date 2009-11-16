@@ -17,9 +17,11 @@
 
 {
   install => sub {
+    my ($params,$context,$mcv) = @_;
     use constant proxy_mode => 'proxy_mode';
     use constant proxy_mode_file => File::Spec->catfile(CCN,proxy_mode);
 
     print_to(proxy_mode_file,'outbound-proxy');
+    $mcv->send(CCNQ::Install::SUCCESS);
   },
 }

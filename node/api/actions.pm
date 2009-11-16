@@ -27,19 +27,20 @@
 
 {
   _request => sub {
+    my ($request,$context,$mcv) = @_;
     # Silently ignore. (These come to us because we are subscribed to the manager MUC.)
-    return;
+    $mcv->send(CCNQ::Install::CANCEL);
   },
 
   _session_ready => sub {
+    my ($params,$context,$mcv) = @_;
+
     use JSON;
     use AnyEvent;
     use CCNQ::HTTPD;
     use JSON;
 
     use CCNQ::XMPPAgent;
-
-    my ($params,$context) = @_;
 
     my $muc_room = CCNQ::Install::manager_cluster_jid;
     $context->{muc}->join_room($context->{connection},$muc_room,$context->{function}.','.rand(),{
@@ -100,7 +101,7 @@
         } else {
           # Callback is used inside the _response handler.
           $context->{api_callback}->{$body->{activity}} = sub {
-            my ($params,$context,$cv) = @_;
+            my ($params,$context) = @_;
             debug("node/api: Callback in process");
             if($params->{error}) {
               debug("node/api: Request failed: ".$params->{error});
@@ -126,23 +127,24 @@
         $httpd->stop_request;
       },
     );
-    return { ok => 1 };
+    $mcv->send(CCNQ::Install::SUCCESS);
   },
 
   _response => sub {
-    my ($params,$context,$cv) = @_;
+    my ($params,$context,$mcv) = @_;
     my $activity = $params->{activity};
     if($activity) {
       my $cb = $context->{api_callback}->{$activity};
       if($cb) {
         debug("node/api: Using callback for activity $activity");
-        $cb->($params,$context,$cv);
+        $cb->($params,$context);
       } else {
         debug("node/api: Activity $activity has no registered callback");
       }
     } else {
       debug("node/api: Response contains no activity ID, ignoring");
     }
-  }
+    $mcv->send(CCNQ::Install::CANCEL);
+  },
 
 }

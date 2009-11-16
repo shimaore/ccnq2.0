@@ -17,6 +17,7 @@
 
 {
   install => sub {
+    my ($params,$context,$mcv) = @_;
     use CCNQ::MediaProxy;
     use File::Spec;
     use File::Copy;
@@ -50,5 +51,6 @@ EOT
     print_to(CCNQ::MediaProxy::mediaproxy_config,$config.$config_dispatcher.$config_relay);
     unlink($dispatcher_file);
     unlink($relay_file);
-  }
+    $mcv->send(CCNQ::Install::SUCCESS);
+  },
 }

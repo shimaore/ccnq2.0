@@ -19,6 +19,8 @@ use CCNQ::B2BUA;
 
 {
   install => sub {
+    my ($params,$context,$mcv) = @_;
+
     my $b2bua_name = 'client-sbc-config';
 
     # acls
@@ -47,6 +49,6 @@ use CCNQ::B2BUA;
       CCNQ::B2BUA::copy_file($b2bua_name,qw( .. scripts ),${name});
     }
 
-    return;
+    $mcv->send(CCNQ::Install::SUCCESS);
   },
 }

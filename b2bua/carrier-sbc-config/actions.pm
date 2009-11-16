@@ -23,6 +23,7 @@ use File::Path;
 
 {
   install => sub {
+    my ($params,$context,$mcv) = @_;
     use Logger::Syslog;
 
     my ($params,$context,$mcv) = @_;
@@ -158,6 +159,6 @@ EOT
     CCNQ::Install::print_to($dialplan_file,$dialplan_text);
 
     CCNQ::B2BUA::finish();
-    return;
+    $mcv->send(CCNQ::Install::SUCCESS);
   },
 }

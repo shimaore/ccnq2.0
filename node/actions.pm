@@ -17,24 +17,24 @@
 
 {
   install_all => sub {
-    my ($params,$context) = @_;
+    my ($params,$context,$mcv) = @_;
     CCNQ::Install::attempt_on_roles_and_functions('install',$params,$context);
-    return { ok => 1 };
+    $mcv->send(CCNQ::Install::SUCCESS);
   },
 
   # Used to provide server-wide status information.
   status => sub {
-    return {
-      running => 1,
-    };
+    my ($params,$context,$mcv) = @_;
+    $mcv->send(CCNQ::Install::SUCCESS({running => 1}));
   },
 
   restart_all => sub {
+    my ($params,$context,$mcv) = @_;
     use AnyEvent::Watchdog::Util;
     AnyEvent::Watchdog::Util::enabled
       or croak "Not running under watchdog!";
     AnyEvent::Watchdog::Util::restart;
-    return { ok => 1 };
+    $mcv->send(CCNQ::Install::SUCCESS);
   },
 
 }

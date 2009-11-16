@@ -31,7 +31,7 @@
       $mcv->end;
     });
     $context->{condvar}->cb($cv);
-    return;
+    $mcv->send(CCNQ::Install::SUCCESS);
   },
 
   _session_ready => sub {
@@ -39,17 +39,20 @@
     use CCNQ::XMPPAgent;
     debug("Manager _session_ready");
     CCNQ::XMPPAgent::join_cluster_room($context);
-    return;
+    $mcv->send(CCNQ::Install::SUCCESS);
   },
 
   # Send requests out (message received from node/api/actions.pm)
   _request => sub {
+    my ($request,$context,$mcv) = @_;
+
     use AnyEvent::CouchDB;
     use CCNQ::Manager;
 
-    my ($request,$context,$mcv) = @_;
+    error("No request!"),
+    return $mcv->send(CCNQ::Install::FAILURE("No request!"))
+      unless $request and $request->{params};
 
-    error("No request!"), return unless $request and $request->{params};
     $request = $request->{params};
 
     debug("Manager handling request");
@@ -58,8 +61,6 @@
 
     # XXX Use the original's Activity's ID (+random) as the new Request ID
     # XXX Use the Request ID + sequential number as the Activity ID.
-
-    $mcv->begin;
 
     # Log the request.
     my $cv = $db->save_doc($request);
@@ -107,23 +108,21 @@
           });
         }
 
-        $mcv->end;
+        $mcv->send(CCNQ::Install::SUCCESS($request->{request}));
         debug("Request ID=$request->{request} submitted");
-
       });
 
     });
 
     $context->{condvar}->cb($cv);
-    return { request => $request->{request} };
   },
 
   # Response to requests
   _response => sub {
+    my ($response,$context,$mcv) = @_;
+
     use AnyEvent::CouchDB;
     use CCNQ::Manager;
-
-    my ($response,$context,$mcv) = @_;
 
     my $action = $response->{action};
     error("No action defined"), return unless $action;
@@ -133,8 +132,6 @@
     return if $response->{activity} =~ qr{^node/api}; # Not a real response.
 
     my $db = couchdb(CCNQ::Manager::manager_db);
-
-    $mcv->begin;
 
     my $cv = $db->open_doc($response->{activity});
     $cv->cb(sub{
@@ -185,9 +182,9 @@
         });
       } else {
         error("Activity $response->{activity} does not exist!");
+        $mcv->end;
       }
     });
     $context->{condvar}->cb($cv);
-    return;
   },
 }

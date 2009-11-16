@@ -308,19 +308,38 @@ use constant actions_file_name => 'actions.pm';
   { status => 'completed', params => $results }
   { status => 'failed', error => $error_msg }
 
+  Note: failure is detected by the presence of the "error" field,
+        not by the fact that status is "failed".
+
 =cut
+
+sub STATUS_COMPLETED => 'completed';
+sub STATUS_FAILED    => 'failed';
+
+sub SUCCESS {
+  my $result = shift;
+  return $result ? { status => STATUS_COMPLETED, params => $result }
+                 : { status => STATUS_COMPLETED };
+}
+
+sub FAILURE {
+  my $error = shift || 'No error specified';
+  return { status => STATUS_FAILED, error => $error };
+}
+
+use constant CANCEL => {};
 
 sub attempt_run {
   my ($function,$action,$params,$context) = @_;
 
-  debug(qq(Creating "${action}" in function "${function}".));
+  debug(qq(attempt_run($function,$action): started));
   my $run_file = File::Spec->catfile(CCNQ::Install::SRC,$function,actions_file_name);
 
   # Errors which lead to not being able to submit the request are not reported.
-  my $cancel = sub { shift->send({}); };
+  my $cancel = sub { debug("attempt_run($function,$action): cancel"); shift->send(CANCEL); };
 
   # No "actions.pm" for the selected function.
-  warning(qq(No such file "${run_file}", skipping)),
+  warning(qq(attempt_run($function,$action): No such file "${run_file}", skipping)),
   return $cancel unless -e $run_file;
 
   # An error occurred while reading the file.
@@ -329,7 +348,7 @@ sub attempt_run {
 
   # An error occurred while parsing the file.
   my $run = eval($eval);
-  warning(qq(Executing "${run_file}" in attempt_run("$function","$action",...) returned: $@)),
+  warning(qq(attempt_run($function,$action): Executing "${run_file}" returned: $@)),
   return $cancel if $@;
 
   return sub {
@@ -338,21 +357,19 @@ sub attempt_run {
     my $result = undef;
     eval {
       if($run->{$action}) {
-        $result = $run->{$action}->($params,$context,$cv);
+        $run->{$action}->($params,$context,$cv);
       } elsif($run->{_default}) {
-        $result = $run->{_default}->($action,$params,$context,$cv);
-        $cancel->($cv) if not defined $result;
+        $run->{_default}->($action,$params,$context,$cv);
       } else {
-        debug("attempt_run: No action available for function $function action $action");
+        debug("attempt_run($function,$action): No action available");
         $cancel->($cv);
-        return;
       }
+      return;
     };
 
     if($@) {
-      $cv->send({ status => 'failed', error => $@ });
-    } else {
-      $cv->send({ status => 'completed', params => $result });
+      debug("attempt_run($function,$action): failed with error $@");
+      $cv->send(FAILURE($@));
     }
   };
 }

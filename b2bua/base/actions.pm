@@ -21,7 +21,7 @@ use constant vars_xml => 'vars.xml';
 
 {
   install => sub {
-    my ($params,$context) = @_;
+    my ($params,$context,$mcv) = @_;
 
     my $b2bua_name = 'base';
 
@@ -67,15 +67,16 @@ EOT
     CCNQ::Install::execute('/bin/sed','-i','-e','s/^FREESWITCH_ENABLED="false"$/FREESWITCH_ENABLED="true"/','/etc/default/freeswitch');
     CCNQ::Install::execute('/etc/init.d/freeswitch','stop');
     CCNQ::Install::execute('/etc/init.d/freeswitch','start');
-    return;
+
+    $mcv->send(CCNQ::Install::SUCCESS);
   },
 
   _session_ready => sub {
-    my ($params,$context) = @_;
+    my ($params,$context,$mcv) = @_;
     use CCNQ::XMPPAgent;
     debug("B2BUA _session_ready");
     CCNQ::XMPPAgent::join_cluster_room($context);
-    return;
+    $mcv->send(CCNQ::Install::SUCCESS);
   },
 
 }
