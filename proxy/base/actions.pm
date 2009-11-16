@@ -90,7 +90,8 @@ use CCNQ::Proxy::Config;
     use CCNQ::Proxy::Configuration;
     my $cv = CCNQ::Proxy::Configuration::run_from_class($module,$command,$request->{params},$context);
     $cv->cb(sub{
-      $mcv->send(CCNQ::Install::SUCCESS);
+      my $result = shift->recv;
+      $mcv->send($result);
     });
     $context->{condvar}->cb($cv) if $cv;
   },

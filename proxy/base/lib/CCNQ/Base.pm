@@ -23,11 +23,13 @@ use strict; use warnings;
 use base qw(CCNQ::SQL);
 
 use Logger::Syslog;
+use CCNQ::Install;
 
 sub _build_callback {
   my ($db,$sql,$args,$cb) = @_;
   debug("Postponing $sql with (".join(',',@{$args}).") and callback $cb");
   return sub {
+    $#_ or die "failure: $@";
     debug("Executing $sql with (".join(',',@{$args}).") and callback $cb");
     $db->exec($sql,@{$args},$cb);
   };
@@ -41,8 +43,9 @@ sub do_sql {
   my $cv = AnyEvent->condvar;
 
   my $run = sub {
+    $#_ or die "failure: $@";
     $db->commit( sub {
-      $cv->send(['ok']);
+      $cv->send(CCNQ::Install::SUCCESS);
     });
   };
 
@@ -168,7 +171,7 @@ sub run
 =cut
 
     error("Invalid action $action");
-    return undef;
+    return CCNQ::Install::FAILURE("Invalid action $action");
 }
 
 1;
