@@ -73,6 +73,12 @@ sub execute {
   return 0;
 }
 
+=pod
+  $text = first_line_of($filename)
+    Returns the first line of the file $filename,
+    or undef if an error occurred.
+=cut
+
 sub first_line_of {
   open(my $fh, '<', $_[0]) or error("$_[0]: $!"), return undef;
   my $result = <$fh>;
@@ -80,6 +86,12 @@ sub first_line_of {
   close($fh) or error("$_[0]: $!"), return undef;
   return $result;
 }
+
+=pod
+  $content = content_of($filename)
+    Returns the content of file $filename,
+    or undef if an error occurred.
+=cut
 
 sub content_of {
   open(my $fh, '<', $_[0]) or error("$_[0]: $!"), return undef;
@@ -89,11 +101,24 @@ sub content_of {
   return $result;
 }
 
+=pod
+  print_to($filename,$content)
+    Saves the $content to the specified $filename.
+    croak()s on errors.
+=cut
+
 sub print_to {
   open(my $fh, '>', $_[0]) or croak "$_[0]: $!";
   print $fh $_[1];
   close($fh) or croak "$_[0]: $!";
 }
+
+=pod
+  $text = get_variable($name,$file,$guess_tool)
+    Loads a variable from $file if it exists.
+    Otherwise creates $file with the value guessed by $guess_tool,
+    and exits.
+=cut
 
 sub get_variable {
   my ($what,$file,$guess_tool) = @_;
@@ -109,6 +134,14 @@ sub get_variable {
   }
   return $result;
 }
+
+=pod
+  $filename = tag_to_file($tag)
+    Returns the filename (under CCNQ::Install::CCN) where the $tag is
+    stored.
+    Generally used in conjunction with get_variables() to retrieve
+    a configuration value for a specific tag.
+=cut
 
 sub tag_to_file {
   return File::Spec->catfile(CCNQ::Install::CCN,shift);
@@ -162,7 +195,11 @@ use constant host_name =>
 use constant domain_name =>
   get_variable(domain_name_tag,domain_name_file,sub {Net::Domain::hostdomain()});
 
-# Like File::Spec->catfile, but for DNS names.
+=pod
+  $dns_name = catdns(@dns_fragments)
+    Like File::Spec->catfile, but for DNS names.
+=cut
+
 sub catdns {
   return join('.',@_);
 }

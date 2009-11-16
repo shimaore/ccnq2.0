@@ -6,23 +6,26 @@
 * Each cluster implements one and only one role.
 
   Parameter: cluster_name: Unique name assigned to a cluster within ${domain_name}.
+
              ${cluster_name}.${domain_name} is used in DNS SRV, etc.
-             jabber:${cluster_name}@${domain_name} is an XMPP MUC chatroom used for configuration.
+             jabber:${cluster_name}@conference.${domain_name} is an XMPP MUC chatroom used for configuration.
 
   Parameter: cluster_role: Role implemented by this cluster.
-             DNS: _role.${cluster_name}.${domain_name} IN TXT "$role"
+
+             ${cluster_name}.${domain_name} IN TXT "$role"
 
 * A host (or server) may belong to one or more clusters. Which is equivalent to saying:
   Each server may host one or multiple roles.
   e.g.: a server might be a b2bua, a mediaproxy, and a proxy
 
   Parameter: host_name: Unique name assigned to a server/host within ${domain_name}.
+
              ${host_name}.${domain_name} IN A <server-ip>  must be a valid DNS entry with a valid IP.
              (It is used e.g. for CDR retrieval and other file-transfer operations from the host.)
 
   Parameter: A server discovers which clusters it belongs to by using DNS.
-             The clusters are available as TXT records (one or more):
-             _clusters.${host_name}.${domain_name} IN TXT "${cluster_name}>"
+             The clusters are listed in TXT records (one or more):
+             ${host_name}.${domain_name} IN TXT "${cluster_name}"
 
 * Each node role may require one or more node functions to be implemented.
   e.g: a "carrier-sbc" role requires at least the "b2bua-config" and the "b2bua-cdr" functions
@@ -30,7 +33,8 @@
 	Parameter: role_name: one of the available role names
 
 * Each node function instance registers as an XMPP client inside the domain.
-  e.g.: The node function jabber:${host_name}@${domain_name}/${function_name} will listen in MUC ${cluster_name}.
+  e.g.: The node-function jabber:${host_name}@${domain_name}/${function_name} 
+        will listen in MUC ${cluster_name}@conference.${domain_name}.
 
 	Parameter: function_name: one of the available function names.
 
@@ -42,6 +46,7 @@ Inter-node communications are established using XMPP.
 
 
 Available Node Roles:
+(The exact and final list is in common/bin/CCNQ/Install.pm as "roles_to_functions")
 
 # A carrier-facing SBC
 role: carrier-sbc
