@@ -104,9 +104,14 @@
               debug("node/api: Request failed: ".$params->{error});
               $req->respond([500,'Request failed',{ 'Content-Type' => 'text/plain' },$params->{error}]);
             } else {
-              my $json_content = encode_json($params->{params});
-              debug("node/api: Request queued: ".$json_content);
-              $req->respond([201,'Request queued',{ 'Content-Type' => 'text/json' },$json_content]);
+              if($params->{params}) {
+                my $json_content = encode_json($params->{params});
+                debug("node/api: Request queued: $params->{status} with $json_content");
+                $req->respond([201,'Request queued: '.$params->{status},{ 'Content-Type' => 'text/json' },$json_content]);
+              } else {
+                debug("node/api: Request queued: $params->{status}");
+                $req->respond([201,'Request queued: '.$params->{status}]);
+              }
             }
           };
         }

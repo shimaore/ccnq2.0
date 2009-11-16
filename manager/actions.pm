@@ -116,7 +116,7 @@
     });
 
     $context->{condvar}->cb($cv);
-    return;
+    return { request => $request->{request} };
   },
 
   # Response to requests
