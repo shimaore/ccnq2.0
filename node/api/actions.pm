@@ -33,6 +33,7 @@
     use JSON;
     use AnyEvent;
     use CCNQ::HTTPD;
+    use JSON;
 
     use CCNQ::XMPPAgent;
 
@@ -92,10 +93,19 @@
 
         debug("node/api: Contacting $muc_room");
         my $r = CCNQ::XMPPAgent::send_muc_message($context,$muc_room,$body);
-        if($r->[0] eq 'ok') {
-          $req->respond([200,'OK']);
-        } else {
+        if($r->[0] ne 'ok') {
           $req->respond([500,$r->[1]]);
+        } else {
+          # Callback is used inside the _response handler.
+          $context->{api_callback}->{$body->{activity}} = sub {
+            my ($params,$context,$cv) = @_;
+            if($params->{error}) {
+              $req->respond([500,'Request failed',{ 'Content-Type' => 'text/plain' },$params->{error}]);
+            } else {
+              my $json_content = encode_json($params->{params});
+              $req->respond([200,$params->{status},{ 'Content-Type' => 'text/json' },$json_content]);
+            }
+          };
         }
         $httpd->stop_request;
       },
@@ -108,5 +118,21 @@
     );
     return { ok => 1 };
   },
+
+  _response => sub {
+    my ($params,$context,$cv) = @_;
+    my $activity = $params->{activity};
+    if($activity) {
+      my $cb = $context->{api_callback}->{$activity};
+      if($cb) {
+        debug("node/api: Using callback for activity $activity");
+        $cb->($params,$context,$cv);
+      } else {
+        debug("node/api: Activity $activity has no registered callback");
+      }
+    } else {
+      debug("node/api: Response contains no activity ID, ignoring");
+    }
+  }
 
 }
