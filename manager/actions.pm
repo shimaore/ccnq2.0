@@ -108,7 +108,7 @@
           });
         }
 
-        $mcv->send(CCNQ::Install::SUCCESS($request->{request}));
+        $mcv->send(CCNQ::Install::SUCCESS($request));
         debug("Request ID=$request->{request} submitted");
       });
 
