@@ -1,0 +1,8 @@
+Currently configuration relies on DNS.
+
+XXX TODO: automate DNS record generation.
+
+
+Important notes:
+- CCNQ::Install assumes that your 'manager' cluster is called 'manager'.
+- CCNQ::Install assumes that your XMPP conference cluster is called 'conference'.
