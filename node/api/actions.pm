@@ -100,10 +100,12 @@
           $context->{api_callback}->{$body->{activity}} = sub {
             my ($params,$context,$cv) = @_;
             if($params->{error}) {
+              debug("node/api: Request failed: ".$params->{error});
               $req->respond([500,'Request failed',{ 'Content-Type' => 'text/plain' },$params->{error}]);
             } else {
               my $json_content = encode_json($params->{params});
-              $req->respond([200,$params->{status},{ 'Content-Type' => 'text/json' },$json_content]);
+              debug("node/api: Request queued: ".$json_content);
+              $req->respond([201,'Request queued',{ 'Content-Type' => 'text/json' },$json_content]);
             }
           };
         }
