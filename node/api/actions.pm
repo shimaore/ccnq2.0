@@ -61,7 +61,7 @@
         $httpd->stop_request;
       },
 
-      '/request' => sub {
+      '/api' => sub {
         my ($httpd, $req) = @_;
 
         debug("node/api: Processing web request");
@@ -73,8 +73,15 @@
           },
         };
 
-        if(!defined($body->{params}->{action}) || $body->{params}->{action} !~ /^\w+$/) {
-          $req->respond([404,'Invalid action']);
+        use URI;
+        my $url = URI->new($req->url);
+        my $path = $url->path;
+
+        if($path =~ m{^/api/(\w+)/([\w-]+)$}) {
+          $body->{params}->{action} = $1;
+          $body->{params}->{cluster_name} = $2;
+        } else {
+          $req->respond([404,'Invalid request']);
           $httpd->stop_request;
           return;
         }
