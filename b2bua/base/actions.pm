@@ -62,6 +62,8 @@ EOT
       CCNQ::B2BUA::copy_file($b2bua_name,qw( sip_profiles template ),"${name}.xml");
     }
 
+    CCNQ::B2BUA::finish();
+
     # Restart FreeSwitch using the new configuration.
     info("Restarting FreeSwitch");
     CCNQ::Install::execute('/bin/sed','-i','-e','s/^FREESWITCH_ENABLED="false"$/FREESWITCH_ENABLED="true"/','/etc/default/freeswitch');

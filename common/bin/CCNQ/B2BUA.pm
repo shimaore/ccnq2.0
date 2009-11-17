@@ -23,6 +23,9 @@ use constant b2bua_directory => File::Spec->catfile(CCNQ::Install::SRC,qw( b2bua
 
 use constant freeswitch_install_conf => '/opt/freeswitch/conf'; # Debian
 
+use constant log_dir  => '/var/log/freeswitch';         # As specified in logfile.conf.xml
+use constant cdr_dir  => '/var/log/freeswitch/cdr_csv'; # As specified in cdr_csv.conf.xml
+
 sub mk_dir {
   my $dst_dir = File::Spec->catfile(CCNQ::B2BUA::freeswitch_install_conf,@_);
   debug("Creating target directory $dst_dir");
@@ -30,6 +33,14 @@ sub mk_dir {
 }
 
 sub finish {
+  # Create the logs directory and change ownership
+  File::Path::mkpath([CCNQ::B2BUA::log_dir]);
+  CCNQ::Install::execute('chown','freeswitch.daemon',CCNQ::B2BUA::log_dir);
+  # Create the CDR directory and change ownership
+  File::Path::mkpath([CCNQ::B2BUA::cdr_dir]);
+  CCNQ::Install::execute('chown','freeswitch.daemon',CCNQ::B2BUA::cdr_dir);
+
+  # Change ownership of the configuration files
   CCNQ::Install::execute('chown','-R','freeswitch.daemon',freeswitch_install_conf);
 }
 
@@ -52,7 +63,6 @@ sub install_file {
   return error("No file $src") if !defined($txt);
   $txt = $cb->($txt) if $cb;
   CCNQ::Install::print_to($dst,$txt);
-  finish();
 }
 
 sub copy_file {

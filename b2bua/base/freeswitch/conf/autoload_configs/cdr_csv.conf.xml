@@ -1,7 +1,7 @@
 <configuration name="cdr_csv.conf" description="CDR CSV Format">
   <settings>
     <!-- 'cdr-csv' will always be appended to log-base -->
-    <!--<param name="log-base" value="/var/log"/>-->
+    <param name="log-base" value="/var/log/freeswitch/cdr_csv"/>
     <param name="default-template" value="ccnq"/>
     <!-- This is like the info app but after the call is hung up -->
     <!--<param name="debug" value="true"/>-->
