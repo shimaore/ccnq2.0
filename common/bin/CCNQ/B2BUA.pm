@@ -24,7 +24,7 @@ use constant b2bua_directory => File::Spec->catfile(CCNQ::Install::SRC,qw( b2bua
 use constant freeswitch_install_conf => '/opt/freeswitch/conf'; # Debian
 
 use constant log_dir  => '/var/log/freeswitch';         # As specified in logfile.conf.xml
-use constant cdr_dir  => '/var/log/freeswitch/cdr_csv'; # As specified in cdr_csv.conf.xml
+use constant cdr_dir  => log_dir.'/cdr_csv';            # As specified in cdr_csv.conf.xml
 
 sub mk_dir {
   my $dst_dir = File::Spec->catfile(CCNQ::B2BUA::freeswitch_install_conf,@_);

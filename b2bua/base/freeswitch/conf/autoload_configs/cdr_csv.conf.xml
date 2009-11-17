@@ -1,10 +1,10 @@
 <configuration name="cdr_csv.conf" description="CDR CSV Format">
   <settings>
     <!-- 'cdr-csv' will always be appended to log-base -->
-    <param name="log-base" value="/var/log/freeswitch/cdr_csv"/>
+    <param name="log-base" value="/var/log/freeswitch"/>
     <param name="default-template" value="ccnq"/>
     <!-- This is like the info app but after the call is hung up -->
-    <!--<param name="debug" value="true"/>-->
+    <param name="debug" value="true"/> <!-- XXX Making this the default for now. -->
     <param name="rotate-on-hup" value="true"/>
     <!-- may be a b or ab -->
     <param name="legs" value="ab"/>
