@@ -48,6 +48,18 @@ sub id_of_gateway {
 }
 =cut
 
+sub sql_concat {
+  my $separator = shift;
+  if($#_ > 0) {
+    # XXX CONCAT_WS is a MySQL-ism
+    return qq{CONCAT_WS('$separator',}.join(',',@_).q{)};
+  }
+  if($#_ == 0) {
+    return $_[0];
+  }
+  return ''; # Should not happen, unless $gwlist is improperly formatted
+}
+
 sub insert
 {
     my ($self,$params) = @_;
@@ -56,18 +68,19 @@ sub insert
     my $prefix      = $params->{prefix};
     my $priority    = $params->{priority};
     my $gwlist      = $params->{target};
-=pod
-    my $gwlist = join(';', map {
-                    join(',', map {
-                      id_of_gateway($_)
-                    } split(/,/))
-                  } split(/;/,$gwlist));
-=cut
+
+    my @sql_params = split(/[,;]/,$gwlist);
+
+    my $sql_fragment =
+      sql_concat(';',map{ sql_concat(',',map{
+          '(SELECT gwid FROM dr_gateways WHERE address = ?)'
+        } split(/,/))
+      } split(/;/,$gwlist));
 
     my @res;
     push @res,
-        <<'SQL',[$groupid,$prefix,'',$priority,'',$gwlist,$description];
-        INSERT INTO dr_rules(groupid,prefix,timerec,priority,routeid,gwlist,description) VALUES (?,?,?,?,?,(SELECT gwid FROM dr_gateways WHERE address = ?),?)
+        <<"SQL",[$groupid,$prefix,'',$priority,'',@sql_params,$description];
+        INSERT INTO dr_rules(groupid,prefix,timerec,priority,routeid,gwlist,description) VALUES (?,?,?,?,?,${sql_fragment},?)
 SQL
     return @res;
 }

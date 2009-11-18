@@ -1,5 +1,4 @@
 # Recipe for the outbound proxy in the CCNQ2.0 standard design
-generic
 toolbox
 forwarder
 accounting
@@ -9,3 +8,4 @@ loose-route
 non-loose-route
 invite-trunk-side
 register-none
+generic

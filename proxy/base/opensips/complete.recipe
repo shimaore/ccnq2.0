@@ -1,5 +1,4 @@
 # Recipe for a standalone proxy that does it all
-generic
 toolbox
 forwarder
 accounting
@@ -16,3 +15,4 @@ routing-logic
 routing-lineside
 routing-trunkside-transparent
 register-colocated
+generic

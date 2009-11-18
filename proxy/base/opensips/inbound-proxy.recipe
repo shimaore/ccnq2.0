@@ -1,5 +1,4 @@
 # Recipe for the inbound proxy in the CCNQ2.0 standard design
-generic
 toolbox
 forwarder
 accounting
@@ -10,3 +9,4 @@ routing-logic
 loose-route
 non-loose-route
 register-ignore
+generic
