@@ -1,4 +1,5 @@
 # Recipe for a static-only (no registration) router in the CCNQ2.0 standard design
+generic
 toolbox
 forwarder
 accounting
@@ -13,4 +14,4 @@ routing-logic
 routing-lineside
 routing-trunkside-transparent
 register-ignore
-generic
+generic2

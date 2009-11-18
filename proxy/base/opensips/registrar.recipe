@@ -1,5 +1,6 @@
 # Recipe for the registrar in the CCNQ2.0 standard design
+generic
 toolbox
 invite-registrar
 register-registrar
-generic
+generic2
