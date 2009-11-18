@@ -46,3 +46,12 @@
   <list name="sbc-france" default="allow">
     <node type="allow" cidr="0.0.0.0/0"/>
   </list>
+  <list name="sbc-e164" default="allow">
+    <node type="allow" cidr="0.0.0.0/0"/>
+  </list>
+  <list name="sbc-loopback" default="allow">
+    <node type="allow" cidr="0.0.0.0/0"/>
+  </list>
+  <list name="sbc-transparent" default="allow">
+    <node type="allow" cidr="0.0.0.0/0"/>
+  </list>
