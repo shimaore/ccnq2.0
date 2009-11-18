@@ -26,7 +26,6 @@ use File::Path;
     my ($params,$context,$mcv) = @_;
     use Logger::Syslog;
 
-    my ($params,$context,$mcv) = @_;
     my $b2bua_name = 'carrier-sbc-config';
 
     debug("b2bua/carrier-sbc-config: Installing dialplan/template");
