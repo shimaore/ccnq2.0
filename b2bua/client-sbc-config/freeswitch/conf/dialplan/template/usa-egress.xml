@@ -2,7 +2,6 @@
 
 <!-- from: national number -->
 <extension name="cleanup-caller-id-1" continue="true">
-  <condition field="destination_number" expression="^call"/>
   <condition field="caller_id_number" expression="^\+?1([2-9][0-9]{9})$">
     <action application="set" data="ccnq_from_e164=1$1"/>
   </condition>
@@ -10,7 +9,6 @@
 
 <!-- from: national number (10 digits only) -->
 <extension name="cleanup-caller-id-2" continue="true">
-  <condition field="destination_number" expression="^call"/>
   <condition field="caller_id_number" expression="^([2-9][0-9]{9})$">
     <action application="set" data="ccnq_from_e164=1$1"/>
   </condition>
