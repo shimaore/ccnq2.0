@@ -15,3 +15,6 @@
 
 <X-PRE-PROCESS cmd="set" data="profile_name=loopback"/>
 <X-PRE-PROCESS cmd="include" data="template/client-sbc-template.xml"/>
+
+<X-PRE-PROCESS cmd="set" data="profile_name=ocs"/>
+<X-PRE-PROCESS cmd="include" data="template/client-sbc-template.xml"/>
