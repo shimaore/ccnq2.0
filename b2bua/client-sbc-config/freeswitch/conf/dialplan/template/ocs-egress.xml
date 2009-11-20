@@ -1,1 +1,1 @@
-<X-PRE-PROCESS cmd="include" data="$${e164}-egress.xml"/>
+<X-PRE-PROCESS cmd="include" data="e164-egress.xml"/>

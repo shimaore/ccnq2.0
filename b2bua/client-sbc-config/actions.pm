@@ -35,7 +35,7 @@ use CCNQ::B2BUA;
 
     # dialplan/template
     for my $name (qw( client-sbc-template ),
-        map {($_.'-ingress',$_.'-egress')} qw( e164 france loopback transparent usa-cnam usa )) {
+        map {($_.'-ingress',$_.'-egress')} qw( e164 france loopback transparent usa-cnam usa ocs )) {
       CCNQ::B2BUA::copy_file($b2bua_name,qw( dialplan template ),"${name}.xml");
     }
 
