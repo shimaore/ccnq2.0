@@ -21,7 +21,7 @@ use CCNQ::B2BUA;
   install => sub {
     my ($params,$context,$mcv) = @_;
 
-    my $b2bua_name = 'ocs';
+    my $b2bua_name = 'client-ocs-sbc';
 
     # acls
     for my $name ($b2bua_name) {
