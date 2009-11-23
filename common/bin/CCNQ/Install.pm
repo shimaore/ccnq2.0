@@ -231,6 +231,7 @@ sub make_password {
 use constant roles_to_functions => {
   'carrier-sbc'     => [qw( b2bua/cdr b2bua/carrier-sbc-config b2bua/base node )],
   'client-sbc'      => [qw( b2bua/cdr b2bua/client-sbc-config  b2bua/base node )],
+  'client-ocs-sbc'  => [qw( b2bua/cdr b2bua/client-ocs-sbc b2bua/base node )],
   'ocs-sbc'         => [qw( b2bua/cdr b2bua/ocs  b2bua/base node )],
   'inbound-proxy'   => [qw( proxy/inbound-proxy proxy/base node )],
   'outbound-proxy'  => [qw( proxy/outbound-proxy proxy/base node )],
