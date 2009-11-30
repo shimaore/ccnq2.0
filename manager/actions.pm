@@ -187,4 +187,29 @@
     });
     $context->{condvar}->cb($cv);
   },
+
+  # API "request status" query
+  get_request_status => sub {
+    my ($params,$context,$mcv) = @_;
+
+    use AnyEvent::CouchDB;
+    use CCNQ::Manager;
+
+    my $db = couchdb(CCNQ::Manager::manager_db);
+
+    my $cv = $db->open_doc($params->{request_id});
+    $cv->cb(sub{
+      my $request = $_[0]->recv;
+      if($request) {
+        debug("Found request");
+
+        $mcv->send(SUCCESS($request));
+      } else {
+        debug("Request $params->{request_id} not found.");
+        $mcv->send(FAILURE("Request not found."));
+      }
+    });
+    $context->{condvar}->cb($cv);
+  },
+
 }

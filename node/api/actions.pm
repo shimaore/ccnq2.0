@@ -124,10 +124,63 @@
         }
         $httpd->stop_request;
       },
-      '/node' => sub {
+
+      '/request' => sub {
         my ($httpd, $req) = @_;
-        debug("node/api: Junking web request");
-        $req->respond([404,'Not found']);
+
+        debug("node/request: Processing web request");
+        my $body = {
+          activity => 'node/request/'.rand(),
+          action => 'get_request_status',
+          params => {
+            $req->vars
+          },
+        };
+
+        use URI;
+        my $url = URI->new($req->url);
+        my $path = $url->path;
+
+        if($path =~ m{^/request/(\w+)$}) {
+          $body->{params}->{request_id} = $1;
+        } else {
+          $req->respond([404,'Invalid request']);
+          $httpd->stop_request;
+          return;
+        }
+
+        if($req->method eq 'GET') {
+          $body->{params}->{action} .= '_query';
+        } else {
+          $req->respond([501,'Invalid method']);
+          $httpd->stop_request;
+          return;
+        }
+
+        debug("node/api: Contacting $muc_room");
+        my $r = CCNQ::XMPPAgent::send_muc_message($context,$muc_room,$body);
+        if($r->[0] ne 'ok') {
+          $req->respond([500,$r->[1]]);
+        } else {
+          # Callback is used inside the _response handler.
+          $context->{api_callback}->{$body->{activity}} = sub {
+            my ($params,$context) = @_;
+            debug("node/request: Callback in process");
+            if($params->{error}) {
+              debug("node/request: Request failed: ".$params->{error});
+              $req->respond([500,'Request failed',{ 'Content-Type' => 'text/plain' },$params->{error}]);
+            } else {
+              if($params->{params}) {
+                my $json_content = encode_json($params->{params});
+                debug("node/request: Request queued: $params->{status} with $json_content");
+                $req->respond([200,'OK, '.$params->{status},{ 'Content-Type' => 'text/json' },$json_content]);
+              } else {
+                debug("node/request: Request queued: $params->{status}");
+                $req->respond([200,'OK, '.$params->{status}]);
+              }
+            }
+          };
+        }
         $httpd->stop_request;
       },
     );
