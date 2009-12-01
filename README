@@ -1,8 +1,17 @@
+CCNQ2.0 is a SIP softswitch built out of (mainly) OpenSIPS and FreeSwitch.
+It aims to provide provisioning, billing, and a user portal, while
+being fully distributed.
+
+Issues are tracked using SD. You can obtain a copy of the SD repository using
+for example:
+  SD_REPO=. sd clone --from http://stephane.shimaore.net/sd/ccnq2.0
+
+
 This code is designed to work with the following versions of these products:
 
 Debian GNU/Linux    lenny       www.debian.org
 OpenSIPS            1.5         www.opensips.org
-MediaProxy          
+MediaProxy
 FreeSwitch          1.4         www.freeswitch.org
 
 Perl AnyEvent
@@ -10,7 +19,6 @@ Perl AnyEvent::XMPP
 
 Pre-built Debian packages for the various components are made available at:
   http://opensource.sotelips.net/
-  http://carrierclass.net/
 
 
 This work is supported by Sotel Systems LLC, http://www.sotelsystems.com
