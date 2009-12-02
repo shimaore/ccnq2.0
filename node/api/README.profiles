@@ -1,0 +1,47 @@
+Specify how the manager nodes will process complex (form-like) requests.
+Need to be able to configure dynamically a set of actions that will for example create and route a DID:
+  - route the DID on the inbound proxy
+  - route the DID on the customer SBC
+  - route the DID on the customer proxy (with proper number rewritten based on profile)
+  - create a CBEF (billing) record of "DID was added"
+  - notify customer, update ticket, etc.
+We can create this type of actions using manager requests. However here the topic is 
+to be able to create a generic template (a "Profile") which can be updated e.g. using a web interface;
+this is similar in concept to what is been done in billing/rating/Rating/Rate.pm
+(which will also need its own generic description so that the Plans can be created using a UI).
+
+So basically I need:
+- a generic way to specify this type of (to-be-dynamically/UI-updated) actions (which are then grouped in a Plan (for rating) or Profile (for provisioning));
+  this includes being able to generate proper argument lists (for example list of inbound proxies, etc.);
+- an implementation for the provisioning world, in the form of a generic manager request "apply profile to".
+
+Note: "apply profile to" can be used for GET / PUT / DELETE actions.
+
+Note: the actions created by the Profile (at instantiation) should not require access to dynamic data (e.g. a list of available proxies, or
+user-related information). In other words a Profile must be self-contained (a lambda) which can generate the proper list of commands based
+solely on the arguments given to it -- a Profile instance is a rewriting engine which takes the set of parameters for a request (e.g. as submitted by an API
+Form) and spews out a list of activities that needs to be completed for this request.
+
+   profile(request) --> [activities]
+
+
+One way to implement is to:
+- add profile manipulation actions to the manager (e.g. create profile, add action (with parameters) to profile, list profiles, show content of profile,
+  etc.)
+- send a "apply_profile" message to the manager with the profile name and a list of paramaters (as submitted e.g. by the Form API)
+
+A Profile instance in turn is a list of "activity templates" (just like a Plan is a list of):
+    profile = [ { action => ..., cluster_name => ...., params => { v1 => ..., v2 => ... } } ]
+where
+   action is a standard "manager request"-type action (e.g. local_number_update)
+   cluster_name is used as per standard manager requets
+   v1, v2, etc. are hardcoded parameters for this action, with associated values (which are default/hardcoded)
+
+So basically this is a macro-substitution exercise; the "profiles" are predefined "activities list" in which some parameters (but not all) will
+be sustituted at execution time. Missing parameters must be provided by the request (modulo the notes below).
+
+Note:
+- this is not sufficient to handle the case where for example a Customer SBC does digit manipulation; 
+  in this case the number configured in the Customer Proxy needs to be rewritten according to the rule in the C-SBC;
+- this might not be sufficiently flexible for some purposes -- e.g. this might cause a need for way too many profiles to be created for a very slight
+  modification in parameters. (On the other hand, this parameters could be left as a request parameter, rather than hardcoded in the profile.)
