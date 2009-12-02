@@ -1,0 +1,171 @@
+The API uses REST/JSON. It uses the same operations as the internal "api" service,
+namely:
+  GET
+  PUT
+  DELETE
+
+Form fields and content will be provided by the "api" service.
+Field validation, layout and presentation is the responsability of the "portal" service.
+
+-- Forms --
+
+Generic forms are accessible using the following paths:
+
+  /form/${_name}/blank?...  (GET) returns a "blank" form
+  /form/${_name}?...        (GET) returns a "pre-filled" form
+  /form/${_name}            (PUT) create or update a new instance
+  /form/${_name}?...        (DELETE) delete the instance
+
+PUT should submit new values as its content, in the form of a JSON hash
+  { field => value }      -- single text value
+  { field => [values] }   -- multiple text values
+
+All request MUST provide the username (for authorization purposes) and
+in some cases, an account and/or account_sub. The forms processor will
+return an error if these fields are not available.
+
+GET and DELETE URI parameters must (and should only) include fields marked
+as "key" in the form description, although providing extraneous fields will not
+generate an error.
+
+The "form" service will always return a JSON object, whether the operation
+was successful or not. That JSON object is a hash which will contain the following
+keys:
+
+  form      The form metadata (see below)
+  values    Current values for each form field (as described above for the PUT method)
+  request   A request ID, if applicable
+
+and possibly other (internal) fields. (Extraneous fields may change and
+should not be relied upon.)
+
+Note: a "blank" GET form will contain a "values" hash with default values.
+
+All forms are designed to be idempotent as far as the "values" inside the form
+are concerned. (Obviously this only applies to successful requests.)
+
+A "request" is an internal system operation which can be queried using the
+/request/${request} path. (See below under "Requests".)
+
+The following return codes are provided:
+
+  GET     -> 200    OK, information available in content
+  DELETE  -> 200    OK, information available in content (with request ID)
+  PUT     -> 200    OK, information available in content (with request ID)
+  GET     -> 404    object not found, original form provided in content
+  DELETE  -> 404    object not found, original form provided in content
+  PUT     ->
+  (any)   -> 500    internal error occurred, resubmit
+
+Note: "OK" only relates to the submission of the request inside the system.
+      The request itself may or may not have been successful.
+      Querying the request object is required in order to obtain status.
+
+A "form" in this context is a JSON hash which offers the following fields:
+
+  name      The form name -- unique. Used as a key for e.g. L10N.
+  next      Suggested next forms to display (in a workflow) [array]
+  fields    Fields description (metadata) [hash]
+
+Note: inside a workflow, the parameters from one form to the next are designed
+      so that they can be re-used (i.e. the field names are kept identical
+      so that the "values" hash can be re-used from one form to the next).
+
+For each field referenced, a hash containing the following keys is provided:
+
+  -- content information
+  required          0 = not required, 1 = required
+  hidden            0 = field should be presented, 1 = field should be hidden
+  key               1 = field is to be used for GET and DELETE operations
+  values            available values
+                    can be a hash of { value => label }
+                    an array of      [ value, label, .. ]
+
+  -- layout information (suggested)
+
+  order       The suggested order of the field
+  tabular     Field should be presented in a tabular fashion
+  nobreak     Keep the label and input together
+  size
+  maxlength
+
+  -- Note that the layout of the fields is not fixed by the API.
+
+It is important to note that the metadata is generated dynamically and
+may vary based on the input submitted (e.g. "values" may be different
+based on the end-user making the interaction).
+
+
+-- Views --
+
+Views are used to provide multiple "form" records based on pre-established
+criteria.
+
+  /view/${_name}/blank    (GET) return a "blank" form to query for a view
+  /view/${_name}?...      (GET) returns the view for the specified parameters
+
+PUT and DELETE are not applicable to views.
+
+A view will return a JSON array containing zero, one, or more "form" records
+as specified under "form".
+
+
+-- Requests --
+
+One special view, called "request", provides information about the status of
+internal requests.
+
+  /request/${request}     (GET)
+
+The $request ID is provided if applicable by e.g. PUT or DELETE operations on
+forms.
+
+
+-- Portal information --
+
+  Some "well-known" fields might be required by the API in order to process
+  some requests. They are listed here.
+
+  The following fields are "opaque" to the API:
+
+  username        A unique identifier for each portal user
+  account         An account identifier
+  account_sub     An account_sub identifier
+
+  The following are not opaque and must be valid:
+
+  email           Email address for a portal user
+
+-- Portal users --
+
+Although the portal front-end is responsible for authentication, session
+management, etc., the API stores information about portal users in order
+to provide back-end services (e.g. alerts and billing reports, including
+invoices).
+This information is kept to a minimum since in some cases it might be
+duplicated in the portal. However it is also available using the following
+operations:
+
+  /user/${username}                   (GET, PUT)
+  /user/${username}/email             (GET, PUT)
+  /user/${username}/billing_accounts  (GET, PUT)
+  /user/${username}/billing_account   (GET, PUT, DELETE)
+
+("billing_accounts" lists the accounts which this portal user will receive
+invoices for.)
+
+Other information such as access levels (portal_accounts, pricing access,
+which operations are available to which users, ..), passwords, etc. are
+managed directly by the portal front-end and do not interest the "api".
+
+-- Billing, Account Management --
+
+  /account/${account}                   (GET, PUT)
+
+  /account/${account}/name              (GET, PUT)
+  /account/${account}/billing_address
+  /account/${account}/billing_cycle
+
+  /account_sub/${account}/${account_sub}
+  /account_sub/${account}/${account_sub}/label
+  /account_sub/${account}/${account_sub}/plan
