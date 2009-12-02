@@ -1,0 +1,34 @@
+
+"actions.pm" files must return a hashref which is a list of
+
+   action => callback
+
+where "action" can be any of:
+
+  _session_ready: called when the connection with the XMPP server is established
+  _response: called when a response is received from another node
+  _default: called (if present) when no specific callback is available
+
+  install:   used by the installer script
+  _request: sent by an API node to the manager MUC
+
+  or any "action" defined by the specific application.
+
+The last parameter for the callback is an AnyEvent->condvar variable which
+should be triggered once the callback is done, using one of the following
+templates:
+
+  $mcv->send(CCNQ::Install::CANCEL); # Cancel the response
+
+  $mcv->send(CCNQ::Install::SUCCESS);
+  or
+  $mcv->send(CCNQ::Install::SUCCESS({ name => value }))
+
+  $mcv->send(CCNQ::Install::FAILURE($error_text))
+
+In _response handlers, since the $mcv->recv value is never used ($mcv has no
+callback), it is possible to simply say:
+
+  $mcv->send
+
+to indicate completion of the response.
