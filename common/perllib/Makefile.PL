@@ -22,4 +22,6 @@ requires      'JSON' => 0;
 ## Proxy requirements
 # requires      'DBI' => 0;
 
+test_requires 'Test::More' => 0;
+
 WriteAll;
