@@ -20,7 +20,7 @@
 use strict; use warnings;
 
 package CCNQ::Proxy::Base;
-use base qw(CCNQ::Base);
+use base qw(CCNQ::SQL::Base);
 
 sub _init
 {
