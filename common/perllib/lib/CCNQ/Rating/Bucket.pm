@@ -44,6 +44,10 @@ sub name {
     : $cbef->account.'/'.$cbef->account_sub;
 }
 
+sub use_account {
+  XXX
+}
+
 sub get_value {
   my ($self,$cbef) = @_;
   return $self->retrieve($self->name($cbef));

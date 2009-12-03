@@ -53,6 +53,8 @@
       port => $port,
     );
 
+    use CCNQ::API::handler;
+
     $context->{httpd}->reg_cb(
       '' => sub {
         my ($httpd, $req) = @_;
@@ -183,6 +185,47 @@
         }
         $httpd->stop_request;
       },
+
+      '/form' => sub {
+        my ($httpd, $req) = @_;
+
+        debug("node/form: Processing web request");
+        my $body = {
+          activity => 'node/form/'.rand(),
+          action => 'submit_form',
+          params => {
+            $req->vars
+          },
+        };
+
+      },
+
+      '/view' => sub {
+        my ($httpd, $req) = @_;
+
+        debug("node/view: Processing web request");
+        my $body = {
+          activity => 'node/view/'.rand(),
+          action => 'submit_form',
+          params => {
+            $req->vars
+          },
+        };
+
+      },
+
+      '/account' => CCNQ::API::handler::make_couchdb_handler(
+          $context,couchdb('account'),[qw(name billing_address billing_cycle)],[qw(name billing_address billing_cycle)],
+        ),
+
+      '/account_sub' => CCNQ::API::handler::make_couchdb_handler(
+          $context,couchdb('account_sub'),[qw(label plan)],[qw(label plan)],
+        ),
+
+      '/user' =>      CCNQ::API::handler::make_couchdb_handler(
+          # XXX "billing_account" method needs finer-grained processing (add/remove from a list)
+          $context,couchdb('user'),[qw(email billing_accounts)],[qw(email billing_accounts)],
+        ),
     );
     $mcv->send(CCNQ::Install::SUCCESS);
   },
