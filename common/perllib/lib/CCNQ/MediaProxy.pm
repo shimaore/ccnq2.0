@@ -21,7 +21,6 @@ use constant mediaproxy_directory => File::Spec->catfile(CCNQ::Install::SRC,qw( 
 use constant mediaproxy_install_conf => '/etc/mediaproxy'; # Debian
 use constant mediaproxy_config => File::Spec->catfile(mediaproxy_install_conf,'config.ini');
 
-use File::Spec;
 use File::Copy;
 use Logger::Syslog;
 

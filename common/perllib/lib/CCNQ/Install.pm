@@ -24,6 +24,8 @@ use AnyEvent::Util;
 
 use Logger::Syslog;
 
+use Memoize;
+
 # Where the local configuration information is kept.
 use constant CCN => q(/etc/ccn);
 
@@ -144,7 +146,7 @@ sub get_variable {
 =cut
 
 sub tag_to_file {
-  return File::Spec->catfile(CCNQ::Install::CCN,shift);
+  return File::Spec->catfile(CCN,shift);
 }
 
 # cookie resolution
@@ -156,9 +158,10 @@ use constant cookie_file => tag_to_file(cookie_tag);
 #       it we won't be able to authenticate ourselves to the rest
 #       of the system.
 
-use constant cookie =>
+memoize('cookie');
+sub cookie {
   get_variable(cookie_tag,cookie_file,sub{croak "No cookie file ".cookie_file." found"});
-
+}
 
 # Source path resolution
 
@@ -167,7 +170,8 @@ use constant cookie =>
 use constant source_path_tag => 'source_path';
 use constant source_path_file => tag_to_file(source_path_tag);
 
-use constant SRC => get_variable(source_path_tag,source_path_file,sub {
+memoize('SRC');
+sub SRC { get_variable(source_path_tag,source_path_file,sub {
   # Work under the assumption that upgrade.pl already did the right thing.
   my $abs_path = File::Spec->rel2abs(File::Spec->curdir());
   # my $abs_path = File::Spec->rel2abs($0);
@@ -177,7 +181,7 @@ use constant SRC => get_variable(source_path_tag,source_path_file,sub {
   pop @directories; # Remove common/
   $directories = File::Spec->catdir(@directories);
   return File::Spec->catpath($volume,$directories,'');
-});
+})}
 
 use constant install_script_dir => File::Spec->catfile(SRC,'common','bin');
 
@@ -190,10 +194,14 @@ use constant domain_name_tag => 'domain_name';
 use constant host_name_file => tag_to_file(host_name_tag);
 use constant domain_name_file => tag_to_file(domain_name_tag);
 
-use constant host_name =>
+memoize('host_name');
+sub host_name {
   get_variable(host_name_tag,host_name_file,sub {Net::Domain::hostname()});
-use constant domain_name =>
+}
+memoize('domain_name');
+sub domain_name {
   get_variable(domain_name_tag,domain_name_file,sub {Net::Domain::hostdomain()});
+}
 
 =pod
   $dns_name = catdns(@dns_fragments)
@@ -269,8 +277,10 @@ sub resolve_cluster_names {
 
 use constant clusters_file => tag_to_file(clusters_tag);
 
-use constant cluster_names =>
+memoize('cluster_names');
+sub cluster_names {
   [ split(' ',get_variable(clusters_tag,clusters_file,sub {resolve_cluster_names})) ];
+}
 
 # Resolve role(s) and function(s)
 
@@ -336,7 +346,7 @@ sub attempt_run {
   my ($function,$action,$params,$context) = @_;
 
   debug(qq(attempt_run($function,$action): started));
-  my $run_file = File::Spec->catfile(CCNQ::Install::SRC,$function,actions_file_name);
+  my $run_file = File::Spec->catfile(SRC,$function,actions_file_name);
 
   # Errors which lead to not being able to submit the request are not reported.
   my $cancel = sub { debug("attempt_run($function,$action): cancel"); shift->send(CANCEL); };

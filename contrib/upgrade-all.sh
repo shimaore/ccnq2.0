@@ -43,6 +43,11 @@ done
 
 for s in $SERVERS; do
   echo "Server $s"
+  ssh $s 'cd src/ccnq2.0/common/perllib && perl Makefile.PL && make && make install' || echo 'Failed'
+done
+
+for s in $SERVERS; do
+  echo "Server $s"
   ssh $s 'cd src/ccnq2.0/common/bin && sudo ./upgrade.pl && sudo tail -100 /var/log/syslog | grep -i error'
 done
 

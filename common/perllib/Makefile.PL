@@ -13,8 +13,16 @@ requires      'File::Spec' => 0; # '3.2501'
 requires      'File::Copy' => 0;
 requires      'File::Path' => 0;
 requires      'AnyEvent' => 0; # '5.202'
+requires      'AnyEvent::DNS' => 0;
+requires      'AnyEvent::Util' => 0;
+
 requires      'Logger::Syslog' => 0;
 requires      'JSON' => 0;
+requires      'Memoize' => 0;
+
+requires      'Digest::SHA1' => 0;
+requires      'Carp' => 0;
+
 ## Portal requirements
 # requires      'Locale::Maketext::Lexicon' => 0;
 # requires      'Lingua::EN::Numbers::Ordinate' => 0;

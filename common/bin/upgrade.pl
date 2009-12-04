@@ -15,16 +15,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use strict; use warnings;
-use File::Spec;
 
 use Logger::Syslog;
+use File::Spec;
+use File::Path qw(mkpath);
 
 # Where the local configuration information is kept.
 use constant CCN => q(/etc/ccn);
 
 sub run {
   # Create the configuration directory.
-  use File::Path qw(mkpath);
   die "No ".CCN unless -d CCN or mkpath(CCN);
 
   # Source path resolution
