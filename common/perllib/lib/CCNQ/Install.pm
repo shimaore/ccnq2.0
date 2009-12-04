@@ -183,7 +183,8 @@ sub SRC { get_variable(source_path_tag,source_path_file,sub {
   return File::Spec->catpath($volume,$directories,'');
 })}
 
-use constant install_script_dir => File::Spec->catfile(SRC,'common','bin');
+memoize('install_script_dir');
+sub install_script_dir { File::Spec->catfile(SRC,'common','bin'); }
 
 # host_name and domain_name resolution
 use Net::Domain;
