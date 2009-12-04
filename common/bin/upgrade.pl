@@ -47,6 +47,13 @@ sub run {
   debug("Starting from ".script_path);
   eval q{
     use CCNQ::Install;
+
+    # Make sure all variables are available:
+    CCNQ::Install::cookie();
+    CCNQ::Install::fqdn();
+    CCNQ::Install::SRC();
+    CCNQ::Install::cluster_names();
+
     use AnyEvent;
 
     my $program = AnyEvent->condvar;
