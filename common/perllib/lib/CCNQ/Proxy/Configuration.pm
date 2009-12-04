@@ -6,6 +6,7 @@ use CCNQ::Proxy;
 
 use lib CCNQ::Proxy::proxy_base_lib;
 use CCNQ::Proxy::Base;
+use Memoize;
 
 =pod
   package configuration; # in /etc/ccn/configuration.pm
@@ -41,8 +42,10 @@ use constant db_name      => $configuration::db_name      || 'opensips';
 use constant node_id      => $configuration::node_id      || '';
 
 use constant proxy_ip     => $configuration::sip_host       || '';
-use constant internal_ip  => CCNQ::Install::internal_ip     || '';
-use constant external_ip  => CCNQ::Install::external_ip     || '';
+memoize('internal_ip');
+sub internal_ip  { CCNQ::Install::internal_ip     || ''; }
+memoize('external_ip');
+sub external_ip  { CCNQ::Install::external_ip     || ''; }
 use constant proxy_port   => $configuration::sip_port       || '5060';
 use constant challenge    => $configuration::sip_challenge  || '';
 
