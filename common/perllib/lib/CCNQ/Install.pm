@@ -213,7 +213,8 @@ sub catdns {
   return join('.',@_);
 }
 
-use constant fqdn => catdns(host_name,domain_name);
+memoize('fqdn');
+sub fqdn { catdns(host_name,domain_name) }
 sub cluster_fqdn {
   return catdns($_[0],domain_name);
 }
@@ -226,7 +227,8 @@ sub make_muc_jid {
 }
 
 # XXX This assumes the "manager" cluster is called "manager".
-use constant manager_cluster_jid => make_muc_jid('manager');
+memoize('manager_cluster_jid');
+sub manager_cluster_jid { make_muc_jid('manager'); }
 
 use constant xmpp_tag => 'xmpp-agent';
 
