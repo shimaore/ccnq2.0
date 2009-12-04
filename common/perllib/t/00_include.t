@@ -44,7 +44,7 @@ require_ok( 'CCNQ::Proxy::local_number' );
 require_ok( 'CCNQ::Proxy::subscriber' );
 
 require_ok( 'CCNQ::SQL' );
-require_ok( 'CCNQ::SQL::Base ');
+require_ok( 'CCNQ::SQL::Base' );
 
 # XXX Portal
 # XXX Rating
