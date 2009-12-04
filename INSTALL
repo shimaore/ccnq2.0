@@ -191,7 +191,7 @@ SQL
   git pull
 
   # Install the updated modules
-  cd common/perllib && perl Makefile.PL && make && make test && make install
+  cd common/perllib && perl Makefile.PL && make && make test && sudo make install
 
   # Upgrade the configuration(s) as needed
   sudo $HOME/src/ccnq2.0/common/bin/upgrade.pl

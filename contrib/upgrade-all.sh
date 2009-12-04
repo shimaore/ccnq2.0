@@ -43,7 +43,7 @@ done
 
 for s in $SERVERS; do
   echo "Server $s"
-  ssh $s 'cd src/ccnq2.0/common/perllib && perl Makefile.PL && make && make test && make install' || echo 'Failed'
+  ssh $s 'cd src/ccnq2.0/common/perllib && perl Makefile.PL && make && make test && sudo make install' || echo 'Failed'
 done
 
 for s in $SERVERS; do
