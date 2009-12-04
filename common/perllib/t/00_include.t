@@ -22,5 +22,21 @@ require_ok( 'CCNQ::Install' );
 
 require_ok( 'AnyEvent::Watchdog::Util' );
 
+require_ok( 'CCNQ::Proxy::aliases' );
+require_ok( 'CCNQ::Proxy::Config' );
+require_ok( 'CCNQ::Proxy::Configuration' );
+require_ok( 'CCNQ::Proxy::domain' );
+require_ok( 'CCNQ::Proxy::dr_gateway' );
+require_ok( 'CCNQ::Proxy::dr_rule' );
+require_ok( 'CCNQ::Proxy::inbound' );
+require_ok( 'CCNQ::Proxy::local_number' );
+require_ok( 'CCNQ::Proxy::subscriber' );
+
+require_ok( 'CCNQ::Manager' );
+require_ok( 'CCNQ::MediaProxy' );
+require_ok( 'CCNQ::B2BUA' );
+require_ok( 'CCNQ::Proxy' );
+require_ok( 'CCNQ::XMPPAgent' );
+
 done_testing();
 1;
