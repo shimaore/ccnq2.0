@@ -23,6 +23,7 @@ ok($ENV{'CCNQ_source_path'},'Please specify CCNQ_source_path in the environment;
 
 my $path = $ENV{'CCNQ_source_path'};
 
+# find . -name '*.pl'  --- with some restrictions
 for my $name qw(
   ./b2bua/client-ocs-sbc/freeswitch/scripts/cnam.pl
   ./b2bua/client-sbc-config/freeswitch/scripts/cnam.pl

@@ -23,6 +23,7 @@ ok($ENV{'CCNQ_source_path'},'Please specify CCNQ_source_path in the environment;
 
 my $path = $ENV{'CCNQ_source_path'};
 
+# find . -name 'actions.pm'
 for my $name qw(
   ./b2bua/base/actions.pm
   ./b2bua/carrier-sbc-config/actions.pm
