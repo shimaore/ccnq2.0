@@ -30,7 +30,7 @@ is(CCNQ::Install::manager_cluster_jid(),'manager@conference.private.example.net'
 # Tests that rely on SRC
 require_ok( 'AnyEvent' );
 
-ok($ENV{'CCNQ_source_path'},'Please specify CCNQ_source_path in the environment; for example run:\n  CCNQ_source_path=../.. make test\n');
+ok($ENV{'CCNQ_source_path'},'Please specify CCNQ_source_path in the environment; for example run:  CCNQ_source_path=../.. make test ');
 
 my $sub = CCNQ::Install::attempt_run('node','status',undef,undef);
 is(ref($sub), 'CODE', 'attempt_run for node/status');
