@@ -4,7 +4,6 @@ use Logger::Syslog;
 use CCNQ::Install;
 use CCNQ::Proxy;
 
-use lib CCNQ::Proxy::proxy_base_lib;
 use CCNQ::Proxy::Base;
 
 =pod
@@ -128,7 +127,6 @@ sub run_from_class {
   my $challenge = challenge;
   my $r = undef;
   eval qq{
-    use lib proxy_base_lib;
     use CCNQ::Proxy::${class};
     my \$b = new CCNQ::Proxy::${class} (\$db,\$challenge);
     \$r = \$b->run(\$action,\$params,\$context);
