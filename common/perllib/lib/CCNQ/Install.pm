@@ -117,24 +117,34 @@ sub print_to {
 
 =pod
   $text = get_variable($name,$file,$guess_tool)
-    Loads a variable from $file if it exists.
+    Loads variable $name from the environment, or from $file if it exists.
     Otherwise creates $file with the value guessed by $guess_tool,
     and exits.
 =cut
 
+use constant ENV_Prefix => 'CCNQ_';
+
 sub get_variable {
   my ($what,$file,$guess_tool) = @_;
-  my $result;
-  if(-f $file) {
-    $result = first_line_of($file);
-    info("Using existing ${what} ${result}.");
-  } else {
-    my $guess = $guess_tool->();
-    info("Found ${what} ${guess}, please edit ${file} if needed.");
-    print_to($file,$guess);
-    exit(1);
+
+  # Used e.g. by the test tools.
+  my $env_variable = ENV_Prefix().$what;
+  if(exists($ENV{$env_variable}) && defined($ENV{$env_variable}) ) {
+    my $result = $ENV{$env_variable};
+    info("Using environment ${what} ${result}.");
+    return $result;
   }
-  return $result;
+
+  if(-f $file) {
+    my $result = first_line_of($file);
+    info("Using existing ${what} ${result}.");
+    return $result;
+  }
+
+  my $guess = $guess_tool->();
+  info("Found ${what} ${guess}, please edit ${file} if needed.");
+  print_to($file,$guess);
+  exit(1);
 }
 
 =pod
