@@ -53,7 +53,7 @@ use File::Path;
     </list>
 EOT
 
-    my $sbc_names_dn = CCNQ::Install::catdns('sbc-names',fqdn);
+    my $sbc_names_dn = CCNQ::Install::catdns('sbc-names',CCNQ::Install::fqdn);
     my $sbc_names_cv = AnyEvent->condvar;
     AnyEvent::DNS::txt( $sbc_names_dn, $sbc_names_cv );
     my @sbc_names = $sbc_names_cv->recv;
@@ -74,7 +74,7 @@ EOT
       #   ingress    -- A records with the IP address of the carrier's potential origination SBC
       #   egress     -- A record(s) with the IP address of the carrier's termination SBC
 
-      my $profile_dn = CCNQ::Install::catdns('profile',$name,fqdn);
+      my $profile_dn = CCNQ::Install::catdns('profile',$name,CCNQ::Install::fqdn);
       my $profile_cv = AnyEvent->condvar;
       AnyEvent::DNS::txt( $profile_dn, $profile_cv );
       my ($profile) = $profile_cv->recv;
@@ -94,7 +94,7 @@ EOT
 
       debug("b2bua/carrier-sbc-config: Creating configuration for name $name / profile $profile.");
 
-      my $port_dn = CCNQ::Install::catdns('port',$name,fqdn);
+      my $port_dn = CCNQ::Install::catdns('port',$name,CCNQ::Install::fqdn);
       my $port_cv = AnyEvent->condvar;
       AnyEvent::DNS::txt( $port_dn, $port_cv );
       my ($external_port) = $port_cv->recv;
@@ -119,7 +119,7 @@ EOT
 
       # Generate ACLs
       my $ingress_cv = AnyEvent->condvar;
-      AnyEvent::DNS::a( CCNQ::Install::catdns('ingress',$name,fqdn), $ingress_cv );
+      AnyEvent::DNS::a( CCNQ::Install::catdns('ingress',$name,CCNQ::Install::fqdn), $ingress_cv );
       my @ingress = $ingress_cv->recv;
       debug("b2bua/carrier-sbc-config: Found ingress IPs ".join(',',@ingress));
 
@@ -129,7 +129,7 @@ EOT
 
       # Generate dialplan entries
       my $egress_cv = AnyEvent->condvar;
-      AnyEvent::DNS::a( CCNQ::Install::catdns('egress',$name,fqdn), $egress_cv );
+      AnyEvent::DNS::a( CCNQ::Install::catdns('egress',$name,CCNQ::Install::fqdn), $egress_cv );
       my @egress = $egress_cv->recv;
       debug("b2bua/carrier-sbc-config: Found egress IPs ".join(',',@egress));
 
