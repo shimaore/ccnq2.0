@@ -23,7 +23,7 @@ is(CCNQ::Install::cookie(),'ABCD','cookie from environment');
 
 $ENV{'CCNQ_host_name'} = 'test-host';
 $ENV{'CCNQ_domain_name'} = 'private.example.net';
-is(CCNQ::Install::fqdn,'test-host.private.example.net','fqdn');
+is(CCNQ::Install::fqdn(),'test-host.private.example.net','fqdn');
 
 is(CCNQ::Install::manager_cluster_jid(),'manager@conference.private.example.net','manager cluster JID');
 
