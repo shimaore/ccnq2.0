@@ -34,7 +34,7 @@ for my $name qw(
 ) {
   # require_ok ("$path/$name")  does not work.
   # I need the equivalent of "perl -wc".
-  system(qq(perl -wc "${path}/${name}")) || die "$name failed";
+  system(qq(perl -wc "${path}/${name}")) == 0 || die "$name failed";
 }
 
 # Does not work with
