@@ -129,7 +129,7 @@ sub get_variable {
 
   # Used e.g. by the test tools.
   my $env_variable = ENV_Prefix().$what;
-  if(exists($ENV{$env_variable}) && defined($ENV{$env_variable}) ) {
+  if( exists($ENV{$env_variable}) && defined($ENV{$env_variable}) ) {
     my $result = $ENV{$env_variable};
     info("Using environment ${what} ${result}.");
     return $result;
