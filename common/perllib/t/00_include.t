@@ -20,5 +20,7 @@ use Test::More;
 require_ok( 'CCNQ::Object' );
 require_ok( 'CCNQ::Install' );
 
+require_ok( 'AnyEvent::Watchdog::Util' );
+
 done_testing();
 1;
