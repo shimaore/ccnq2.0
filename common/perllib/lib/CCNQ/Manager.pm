@@ -17,11 +17,10 @@ use CCNQ::Install;
 use File::Spec;
 use JSON;
 use Logger::Syslog;
-use Memoize;
 
 use constant manager_db => 'manager';
-memoize('manager_requests_dir');
-sub manager_requests_dir { File::Spec->catfile(CCNQ::Install::SRC,qw( manager requests )); }
+use constant::defer manager_requests_dir =>
+  sub { File::Spec->catfile(CCNQ::Install::SRC,qw( manager requests )) };
 
 =pod
 

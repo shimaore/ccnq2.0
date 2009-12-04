@@ -24,8 +24,6 @@ use AnyEvent::Util;
 
 use Logger::Syslog;
 
-use Memoize;
-
 # Where the local configuration information is kept.
 use constant CCN => q(/etc/ccn);
 
@@ -168,10 +166,9 @@ use constant cookie_file => tag_to_file(cookie_tag);
 #       it we won't be able to authenticate ourselves to the rest
 #       of the system.
 
-memoize('cookie');
-sub cookie {
+use constant::defer cookie => sub {
   get_variable(cookie_tag,cookie_file,sub{croak "No cookie file ".cookie_file." found"});
-}
+};
 
 # Source path resolution
 
@@ -180,8 +177,7 @@ sub cookie {
 use constant source_path_tag => 'source_path';
 use constant source_path_file => tag_to_file(source_path_tag);
 
-memoize('SRC');
-sub SRC { get_variable(source_path_tag,source_path_file,sub {
+use constant::defer SRC => sub { get_variable(source_path_tag,source_path_file,sub {
   # Work under the assumption that upgrade.pl already did the right thing.
   my $abs_path = File::Spec->rel2abs(File::Spec->curdir());
   # my $abs_path = File::Spec->rel2abs($0);
@@ -191,10 +187,9 @@ sub SRC { get_variable(source_path_tag,source_path_file,sub {
   pop @directories; # Remove common/
   $directories = File::Spec->catdir(@directories);
   return File::Spec->catpath($volume,$directories,'');
-})}
+})};
 
-memoize('install_script_dir');
-sub install_script_dir { File::Spec->catfile(SRC,'common','bin'); }
+use constant::defer install_script_dir => sub { File::Spec->catfile(SRC,'common','bin') };
 
 # host_name and domain_name resolution
 use Net::Domain;
@@ -205,14 +200,12 @@ use constant domain_name_tag => 'domain_name';
 use constant host_name_file => tag_to_file(host_name_tag);
 use constant domain_name_file => tag_to_file(domain_name_tag);
 
-memoize('host_name');
-sub host_name {
+use constant::defer host_name => sub {
   get_variable(host_name_tag,host_name_file,sub {Net::Domain::hostname()});
-}
-memoize('domain_name');
-sub domain_name {
+};
+use constant::defer domain_name => sub {
   get_variable(domain_name_tag,domain_name_file,sub {Net::Domain::hostdomain()});
-}
+};
 
 =pod
   $dns_name = catdns(@dns_fragments)
@@ -223,8 +216,7 @@ sub catdns {
   return join('.',@_);
 }
 
-memoize('fqdn');
-sub fqdn { catdns(host_name,domain_name) }
+use constant::defer fqdn => sub { catdns(host_name,domain_name) };
 sub cluster_fqdn {
   return catdns($_[0],domain_name);
 }
@@ -237,8 +229,7 @@ sub make_muc_jid {
 }
 
 # XXX This assumes the "manager" cluster is called "manager".
-memoize('manager_cluster_jid');
-sub manager_cluster_jid { make_muc_jid('manager'); }
+use constant::defer manager_cluster_jid => sub { make_muc_jid('manager') };
 
 use constant xmpp_tag => 'xmpp-agent';
 
@@ -290,10 +281,9 @@ sub resolve_cluster_names {
 
 use constant clusters_file => tag_to_file(clusters_tag);
 
-memoize('cluster_names');
-sub cluster_names {
+use constant::defer cluster_names => sub {
   [ split(' ',get_variable(clusters_tag,clusters_file,sub {resolve_cluster_names})) ];
-}
+};
 
 # Resolve role(s) and function(s)
 

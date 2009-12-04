@@ -18,10 +18,9 @@ use File::Spec;
 use File::Path;
 
 use Logger::Syslog;
-use Memoize;
 
-memoize('b2bua_directory');
-sub b2bua_directory { File::Spec->catfile(CCNQ::Install::SRC,qw( b2bua )); }
+use constant::defer b2bua_directory =>
+  sub { File::Spec->catfile(CCNQ::Install::SRC,qw( b2bua )) };
 
 use constant freeswitch_install_conf => '/opt/freeswitch/conf'; # Debian
 

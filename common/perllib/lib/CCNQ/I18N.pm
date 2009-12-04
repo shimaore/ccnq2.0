@@ -19,9 +19,8 @@ our @EXPORT = qw( _ );
 
 use CCNQ::Install;
 
-use Memoize;
-memoize('i18n_directory');
-sub i18n_directory { File::Spec->catfile(CCNQ::Install::SRC,qw( common i18n )); }
+use constant::defer i18n_directory =>
+  sub { File::Spec->catfile(CCNQ::Install::SRC,qw( common i18n )) };
 
 # See http://cpansearch.perl.org/src/DRTECH/Locale-Maketext-Lexicon-0.77/docs/webl10n.html
 

@@ -20,6 +20,7 @@ requires      'AnyEvent::Watchdog::Util' => 0;
 requires      'Logger::Syslog' => 0;
 requires      'JSON' => 0;
 requires      'Memoize' => 0;
+requires      'constant::defer' => 0;
 
 requires      'Digest::SHA1' => 0;
 requires      'Carp' => 0;
