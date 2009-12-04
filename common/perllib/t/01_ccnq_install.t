@@ -41,6 +41,7 @@ my $r1 = $cv->recv;
 ok(defined($r1),'node/status returned undef');
 ok($r1,'node/status returned CANCEL');
 is(ref($r1),'HASH','node/status returns hash');
+is($r1->{status},'completed','node/status failed');
 is(ref($r1->{params}),'HASH','node/status returned params');
 ok($r1->{params}->{running},'node/status');
 
