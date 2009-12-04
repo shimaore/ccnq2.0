@@ -16,8 +16,10 @@ package CCNQ::MediaProxy;
 
 use CCNQ::Install;
 use File::Spec;
+use Memoize;
 
-use constant mediaproxy_directory => File::Spec->catfile(CCNQ::Install::SRC,qw( mediaproxy ));
+memoize('mediaproxy_directory');
+sub mediaproxy_directory { File::Spec->catfile(CCNQ::Install::SRC,qw( mediaproxy )); }
 use constant mediaproxy_install_conf => '/etc/mediaproxy'; # Debian
 use constant mediaproxy_config => File::Spec->catfile(mediaproxy_install_conf,'config.ini');
 
