@@ -38,6 +38,7 @@ is(ref($sub), 'CODE', 'attempt_run for node/status');
 my $cv = AnyEvent->condvar;
 $sub->($cv);
 my $r1 = $cv->recv;
+ok(defined($r1),'node/status returned undef');
 is(ref($r1),'HASH','node/status returns hash');
 is(ref($r1->{params}),'HASH','node/status returned params');
 ok($r1->{params}->{running},'node/status');
