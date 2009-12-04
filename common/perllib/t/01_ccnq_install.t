@@ -28,8 +28,19 @@ is(CCNQ::Install::fqdn(),'test-host.private.example.net','fqdn');
 is(CCNQ::Install::manager_cluster_jid(),'manager@conference.private.example.net','manager cluster JID');
 
 # Tests that rely on SRC
-$ENV{'CCNQ_source_path'} = './lib';
+require_ok( 'AnyEvent' );
 
+ok($ENV{'CCNQ_source_path'},'Please specify CCNQ_source_path in the environment');
+
+my $sub = CCNQ::Install::attempt_run('node','status',undef,undef);
+is(ref($sub), 'CODE', 'attempt_run for node/status');
+
+my $cv = AnyEvent->condvar;
+$sub->($cv);
+my $r1 = $cv->recv;
+is(ref($r1),'HASH','node/status returns hash');
+is(ref($r1->{params}),'HASH','node/status returned params');
+ok($r1->{params}->{running},'node/status');
 
 done_testing();
 1;
