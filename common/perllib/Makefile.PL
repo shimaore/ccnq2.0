@@ -15,6 +15,7 @@ requires      'File::Path' => 0;
 requires      'AnyEvent' => 0; # '5.202'
 requires      'AnyEvent::DNS' => 0;
 requires      'AnyEvent::Util' => 0;
+requires      'AnyEvent::Watchdog::Util' => 0;
 
 requires      'Logger::Syslog' => 0;
 requires      'JSON' => 0;
