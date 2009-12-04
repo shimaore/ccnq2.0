@@ -22,9 +22,6 @@ use CCNQ::Proxy::Config;
   install => sub {
     my ($params,$context,$mcv) = @_;
 
-    use constant proxy_mode => 'proxy_mode';
-    use constant proxy_mode_file => File::Spec->catfile(CCNQ::Install::CCN,proxy_mode);
-
     # MODEL: Which model is used for the local opensips system
     # Must be onre of the *.recipe names:
     #    complete-transparent

@@ -22,4 +22,7 @@ use constant runtime_opensips_sql => '/etc/opensips/opensips.sql';
 
 use constant::defer opensips_base_lib => sub { File::Spec->catfile(CCNQ::Install::SRC,qw( proxy base opensips)) };
 
+use constant proxy_mode => 'proxy_mode';
+use constant proxy_mode_file => File::Spec->catfile(CCNQ::Install::CCN,proxy_mode);
+
 1;

@@ -15,11 +15,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use CCNQ::Proxy;
+
 {
   install => sub {
     my ($params,$context,$mcv) = @_;
-    use constant proxy_mode => 'proxy_mode';
-    use constant proxy_mode_file => File::Spec->catfile(CCN,proxy_mode);
 
     print_to(proxy_mode_file,'router-no-registrar');
     $mcv->send(CCNQ::Install::SUCCESS);
