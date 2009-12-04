@@ -18,10 +18,21 @@
 use Test::More;
 
 require_ok( 'CCNQ::Object' );
-require_ok( 'CCNQ::Install' );
-
 require_ok( 'AnyEvent::Watchdog::Util' );
 
+# require_ok( 'CCNQ::API::handler' );
+require_ok( 'CCNQ::B2BUA' );
+
+require_ok( 'CCNQ::HTTPD' );
+
+# require_ok( 'CCNQ::I18N' );
+
+require_ok( 'CCNQ::Install' );
+require_ok( 'CCNQ::Manager' );
+require_ok( 'CCNQ::MediaProxy' );
+require_ok( 'CCNQ::XMPPAgent' );
+
+require_ok( 'CCNQ::Proxy' );
 require_ok( 'CCNQ::Proxy::aliases' );
 require_ok( 'CCNQ::Proxy::Config' );
 require_ok( 'CCNQ::Proxy::Configuration' );
@@ -32,11 +43,11 @@ require_ok( 'CCNQ::Proxy::inbound' );
 require_ok( 'CCNQ::Proxy::local_number' );
 require_ok( 'CCNQ::Proxy::subscriber' );
 
-require_ok( 'CCNQ::Manager' );
-require_ok( 'CCNQ::MediaProxy' );
-require_ok( 'CCNQ::B2BUA' );
-require_ok( 'CCNQ::Proxy' );
-require_ok( 'CCNQ::XMPPAgent' );
+require_ok( 'CCNQ::SQL' );
+require_ok( 'CCNQ::SQL::Base ');
+
+# XXX Portal
+# XXX Rating
 
 done_testing();
 1;
