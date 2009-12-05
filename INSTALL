@@ -43,18 +43,30 @@ EOT
 
   sudo aptitude update
   sudo aptitude -y install libjson-perl libnet-libidn-perl libauthen-sasl-perl libxml-writer-perl libwww-perl libyaml-perl libexpat-dev liblogger-syslog-perl libio-stringy-perl git-core libnet-ssleay-perl build-essential libmodule-install-perl
+  # Required for AnyEvent::DBI
+  sudo aptitude -y install libdbi-perl
+  # Required for AnyEvent::CouchDB
+  sudo aptitude -y install libdata-dump-streamer-perl libio-all-perl libdata-dump-perl libtest-deep-perl
+  # Now add non-Debian Perl modules.
   sudo cpan EV
   sudo cpan AnyEvent::XMPP
   sudo cpan AnyEvent::Watchdog
   sudo cpan constant::defer
   sudo cpan Test::More
+  # The proxies need AnyEvent::DBI
+  sudo cpan AnyEvent::DBI
+  # The (manager) client also needs AnyEvent::CouchDB
+  sudo cpan AnyEvent::HTTP CouchDB::View AnyEvent::CouchDB
+
+  # Download the latest release of the code
   mkdir -p ~/src && (cd ~/src && git clone git://github.com/stephanealnet/ccnq2.0.git)
 
+  # Build the Perl modules and install them
+  cd ~/src/ccnq2.0/common/perllib && perl Makefile.PL && make && make test && make install
 
 * On the API server:
 
   # The API server is the one that pushes HTTP request into the XMPP bus.
-  # sudo cpan CCNQ::HTTPD  # Actually it's too broken.
 
 * On the manager server:
 
@@ -83,9 +95,6 @@ EOT
   sudo adduser --gecos '' --disabled-password couchdb
   sudo chown couchdb /usr/local/var/*/couchdb
 
-  # Our client also needs this module:
-  sudo cpan AnyEvent::CouchDB
-
 * On the proxy servers:
 
   # Install OpenSIPS (note: we provide "amd64"-type Debian packages only)
@@ -95,9 +104,6 @@ EOT
   wget http://opensource.sotelips.net/~stephane/osip-1.5.3-tls/opensips-mysql-module_1.5.3-0_amd64.deb
   sudo dpkg -i opensips_1.5.3-0_amd64.deb
   sudo dpkg -i opensips-mysql-module_1.5.3-0_amd64.deb
-
-  # Continue installation for the proxy:
-  sudo cpan AnyEvent::DBI
 
   sudo aptitude install mysql-server
   # (leave the MySQL root password empty)
@@ -192,7 +198,7 @@ SQL
   git pull
 
   # Install the updated modules
-  cd common/perllib && perl Makefile.PL && make && make test && sudo make install
+  cd ~/src/ccnq2.0/common/perllib && perl Makefile.PL && make && make test && sudo make install
 
   # Upgrade the configuration(s) as needed
   sudo $HOME/src/ccnq2.0/common/bin/upgrade.pl

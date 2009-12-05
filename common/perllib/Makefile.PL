@@ -9,22 +9,24 @@ license       'gpl';
 perl_version  '5.008';
 
 # Specific dependencies
-requires      'File::Spec' => 0; # '3.2501'
-requires      'File::Copy' => 0;
-requires      'File::Path' => 0;
-requires      'AnyEvent' => 0; # '5.202'
-requires      'AnyEvent::DNS' => 0;
-requires      'AnyEvent::Util' => 0;
-requires      'AnyEvent::Watchdog::Util' => 0;
+requires      'File::Spec'                => 0; # '3.2501'
+requires      'File::Copy'                => 0;
+requires      'File::Path'                => 0;
+requires      'AnyEvent'                  => 0; # '5.202'
+requires      'AnyEvent::DNS'             => 0;
+requires      'AnyEvent::Util'            => 0;
+requires      'AnyEvent::Watchdog::Util'  => 0;
+requires      'AnyEvent::DBI'             => '2.0';
+requires      'AnyEvent::CouchDB'         => '1.12';
 
-requires      'Logger::Syslog' => 0;
-requires      'JSON' => 0;
-requires      'Memoize' => 0;
-requires      'constant::defer' => 0;
-requires      'IO::Scalar' => 0;
+requires      'Logger::Syslog'            => 0;
+requires      'JSON'                      => 0;
+requires      'Memoize'                   => 0;
+requires      'constant::defer'           => 0;
+requires      'IO::Scalar'                => 0;
 
-requires      'Digest::SHA1' => 0;
-requires      'Carp' => 0;
+requires      'Digest::SHA1'              => 0;
+requires      'Carp'                      => 0;
 
 ## Portal requirements
 # requires      'Locale::Maketext::Lexicon' => 0;
