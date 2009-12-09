@@ -15,17 +15,9 @@ sub name;
 
 sub email;
 
-sub language {
-  shift->{language} || CCNQ::I18N::default_language;
-}
-
-sub lang {
+sub default_language {
   my $self = shift;
-  $self->{lang} ||= CCNQ::I18N->get_handle($self->language);
-}
-
-sub loc {
-  $self->lang->maketext(@_);
+  return $self->{default_language};
 }
 
 1;

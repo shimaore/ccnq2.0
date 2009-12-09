@@ -30,6 +30,9 @@ requires      'IO::Scalar'                => 0;
 requires      'Digest::SHA1'              => 0;
 requires      'Carp'                      => 0;
 
+# Dependencies for the portal
+# requires      'CGI::Session'              => 0;
+
 ## Portal requirements
 # requires      'Locale::Maketext::Lexicon' => 0;
 # requires      'Lingua::EN::Numbers::Ordinate' => 0;
