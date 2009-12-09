@@ -1,0 +1,12 @@
+CCNQ2.0 Project Plan	
+	
+Provisioning
+  SD tickets
+  Finalize API
+  Write FORMS code
+
+Portal
+
+Billing	Aggregation
+  CBEF formalization (Perl API)
+
