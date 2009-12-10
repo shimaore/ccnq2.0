@@ -7,10 +7,10 @@
     <param name="debug" value="true"/> <!-- XXX Making this the default for now. -->
     <param name="rotate-on-hup" value="true"/>
     <!-- may be a b or ab -->
-    <param name="legs" value="ab"/>
+    <param name="legs" value="a"/>
   </settings>
   <templates>
     <!-- &#009; is TAB -->
-    <template name="ccnq">start=${start_stamp}&#009;account=${ccnq_account}&#009;account_sub=${ccnq_account_sub}&#009;from_e164=${ccnq_from_e164}&#009;to_e164=${ccnq_to_e164}&#009;count=1&#009;duration=${billsec}</template>
+    <template name="ccnq">start=${start_stamp}&#009;account=${ccnq_account}&#009;account_sub=${ccnq_account_sub}&#009;from_e164=${ccnq_from_e164}&#009;to_e164=${ccnq_to_e164}&#009;count=1&#009;duration=${billsec}&#009;direction=${direction}</template>
   </templates>
 </configuration>
