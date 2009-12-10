@@ -53,12 +53,14 @@
   <!-- ingress: from the rest of the world to OCS -->
   <context name="ingress-ocs">
 
+<!--
     <extension name="unloop">
       <condition field="${unroll_loops}" expression="^true$"/>
       <condition field="${sip_looped_call}" expression="^true$">
         <action application="deflect" data="${destination_number}"/>
       </condition>
     </extension>
+-->
 
     <!-- billing data -->
     <extension name="save" continue="true">
