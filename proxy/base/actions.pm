@@ -32,8 +32,8 @@ use CCNQ::Proxy::Config;
     #    router-no-registrar
     #    router
 
-    my $model = first_line_of(proxy_mode_file);
-    die 'No proxy model found in '.proxy_mode_file if !defined $model;
+    my $model = first_line_of(CCNQ::Proxy::proxy_mode_file);
+    die 'No proxy model found in '.CCNQ::Proxy::proxy_mode_file if !defined $model;
     my $template_dir = CCNQ::Install::CCN;
 
     # We install opensips.cfg and opensips.sql into /etc/ccn/

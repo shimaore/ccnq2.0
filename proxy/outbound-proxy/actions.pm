@@ -21,7 +21,7 @@ use CCNQ::Proxy;
   install => sub {
     my ($params,$context,$mcv) = @_;
 
-    print_to(proxy_mode_file,'outbound-proxy');
+    print_to(CCNQ::Proxy::proxy_mode_file,'outbound-proxy');
     $mcv->send(CCNQ::Install::SUCCESS);
   },
 }
