@@ -37,6 +37,7 @@
 
     use JSON;
     use AnyEvent;
+    use AnyEvent::CouchDB;
     use CCNQ::HTTPD;
     use JSON;
 
