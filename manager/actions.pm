@@ -15,11 +15,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use AnyEvent::CouchDB;
+use CCNQ::Manager;
+
+use CCNQ::XMPPAgent;
+
 {
   install => sub {
     my ($params,$context,$mcv) = @_;
-    use AnyEvent::CouchDB;
-    use CCNQ::Manager;
     my $db_name = CCNQ::Manager::manager_db;
     info("Creating CouchDB '${db_name}' database");
     my $couch = couch;
@@ -36,7 +39,6 @@
 
   _session_ready => sub {
     my ($params,$context,$mcv) = @_;
-    use CCNQ::XMPPAgent;
     debug("Manager _session_ready");
     CCNQ::XMPPAgent::join_cluster_room($context);
     $mcv->send(CCNQ::Install::SUCCESS);
@@ -45,9 +47,6 @@
   # Send requests out (message received from node/api/actions.pm)
   _request => sub {
     my ($request,$context,$mcv) = @_;
-
-    use AnyEvent::CouchDB;
-    use CCNQ::Manager;
 
     error("No request!"),
     return $mcv->send(CCNQ::Install::FAILURE("No request!"))
@@ -121,9 +120,6 @@
   _response => sub {
     my ($response,$context,$mcv) = @_;
 
-    use AnyEvent::CouchDB;
-    use CCNQ::Manager;
-
     my $action = $response->{action};
     error("No action defined"), return unless $action;
     error("No activity defined for action $action"), return unless $response->{activity};
@@ -191,9 +187,6 @@
   # API "request status" query
   get_request_status => sub {
     my ($params,$context,$mcv) = @_;
-
-    use AnyEvent::CouchDB;
-    use CCNQ::Manager;
 
     my $db = couchdb(CCNQ::Manager::manager_db);
 
