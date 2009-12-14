@@ -5,7 +5,7 @@ Need to be able to configure dynamically a set of actions that will for example 
   - route the DID on the customer proxy (with proper number rewritten based on profile)
   - create a CBEF (billing) record of "DID was added"
   - notify customer, update ticket, etc.
-We can create this type of actions using manager requests. However here the topic is 
+We can create this type of actions using manager requests. However here the topic is
 to be able to create a generic template (a "Profile") which can be updated e.g. using a web interface;
 this is similar in concept to what is been done in billing/rating/Rating/Rate.pm
 (which will also need its own generic description so that the Plans can be created using a UI).
@@ -41,7 +41,7 @@ So basically this is a macro-substitution exercise; the "profiles" are predefine
 be sustituted at execution time. Missing parameters must be provided by the request (modulo the notes below).
 
 Note:
-- this is not sufficient to handle the case where for example a Customer SBC does digit manipulation; 
+- this is not sufficient to handle the case where for example a Customer SBC does digit manipulation;
   in this case the number configured in the Customer Proxy needs to be rewritten according to the rule in the C-SBC;
 - this might not be sufficiently flexible for some purposes -- e.g. this might cause a need for way too many profiles to be created for a very slight
-  modification in parameters. (On the other hand, this parameters could be left as a request parameter, rather than hardcoded in the profile.)
+  modification in parameters. (On the other hand, this parameter could be left as a request parameter, rather than be hardcoded in the profile.)

@@ -13,40 +13,42 @@ package CCNQ::API::handler;
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+use strict; use warnings;
+
+use CCNQ::API::provisioning_db;
 
 # See also Path::Dispatcher::Declarative  ?
 
 # XXX Rewrite node/api/actions.pm et al. to use JSON-RPC naming (i.e. "method" instead of "action", "result" instead of "params" for responses)
 
 sub make_couchdb_proxy {
-  my ($context,$couch_db,$readable_fields,$writable_fields) = @_;
+  my ($context,$view_name,$key_prefix,$key_fields,$readable_fields,$writable_fields) = @_;
+  my $couch_db = couchdb(CCNQ::API::provisioning_db);
+  my $nb_fields = $#key_fields+1;
 
   return sub {
     my ($httpd, $req) = @_;
 
-    debug("node/account: Processing web request");
+    debug("make_couchdb_proxy: Processing web request");
 
     use URI;
     my $url = URI->new($req->url);
     my $path = $url->path;
     my @path = split(m{/},$path);
 
-    if( defined($path[1]) ) {
-      $body->{params}->{account} = $path[1];
-    } else {
-      $req->respond([404,'Invalid request']);
-      $httpd->stop_request;
-      return;
-    }
+    my @key_values = @path(1..$nb_fields);
 
-    ### XXX Get the record from the DB
+    my $field = $path[$nb_fields+1];
+
+    my $cv = $db->view($view_name, { key => encode_json([$key_prefix,@key_values]) });
+    $cv->cb(sub{
+      my $doc = $_[0]->recv;
 
       if($req->method eq 'GET') {
 
-        if( defined($path[2]) ) {
+        if( defined($field) ) {
 
-          my $field = $path[2];
-          if(!grep { $_ eq $path[2] } @{$readable_fields}) {
+          if(!grep { $_ eq $field } @{$readable_fields}) {
             $req->respond([501,'Invalid method']);
             $httpd->stop_request;
             return;
@@ -71,11 +73,9 @@ sub make_couchdb_proxy {
 
       } elsif($req->method eq 'PUT') {
 
-        if( defined($path[2]) ) {
+        if( defined($field) ) {
 
-          my $field = $path[2];
-          if(!grep { $_ eq $path[2] } @{$writable_fields}) {
-            $req->respond([501,'Invalid method']);
+          if(!grep { $_ eq $field } @{$writable_fields}) {
             $httpd->stop_request;
             return;
           }
@@ -87,14 +87,20 @@ sub make_couchdb_proxy {
           foreach my $field ($writable_fields) {
             $doc->{$_} = $req->vars->{$field};
           }
+
         }
-        # XXX Save the new record
+
+        $db->save_doc($request)->cb(sub{ $_[0]->recv;
+          $req->respond([200,'OK']);
+        });
 
       } else {
         $req->respond([501,'Invalid method']);
         $httpd->stop_request;
         return;
       }
+    });
+    $context->{condvar}->cb($cv);
   };
 }
 

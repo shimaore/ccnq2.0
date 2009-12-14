@@ -207,7 +207,7 @@
         debug("node/view: Processing web request");
         my $body = {
           activity => 'node/view/'.rand(),
-          action => 'submit_form',
+          action => 'view_form',
           params => {
             $req->vars
           },
@@ -216,16 +216,28 @@
       },
 
       '/account' => CCNQ::API::handler::make_couchdb_proxy(
-          $context,couchdb('account'),[qw(name billing_address billing_cycle)],[qw(name billing_address billing_cycle)],
+          $context,
+          'by/account',                              # View name
+          'account', [qw(account)],                  # Key
+          [qw(name billing_address billing_cycle)],
+          [qw(name billing_address billing_cycle)],
         ),
 
       '/account_sub' => CCNQ::API::handler::make_couchdb_proxy(
-          $context,couchdb('account_sub'),[qw(label plan)],[qw(label plan)],
+          $context,
+          'by/account_sub',                          # View name
+          'account_sub', [qw(account account_sub)],  # Key
+          [qw(label plan)],
+          [qw(label plan)],
         ),
 
       '/user' =>      CCNQ::API::handler::make_couchdb_proxy(
           # XXX "billing_account" method needs finer-grained processing (add/remove from a list)
-          $context,couchdb('user'),[qw(email billing_accounts)],[qw(email billing_accounts)],
+          $context,
+          'by/user',                                 # View name
+          'user', [qw(username)],                    # Key
+          [qw(email billing_accounts)],
+          [qw(email billing_accounts)],
         ),
     );
     $mcv->send(CCNQ::Install::SUCCESS);
