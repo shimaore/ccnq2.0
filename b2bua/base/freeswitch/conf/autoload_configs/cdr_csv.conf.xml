@@ -4,7 +4,7 @@
     <param name="log-base" value="/var/log/freeswitch"/>
     <param name="default-template" value="ccnq"/>
     <!-- This is like the info app but after the call is hung up -->
-    <param name="debug" value="true"/> <!-- XXX Making this the default for now. -->
+    <param name="debug" value="false"/>
     <param name="rotate-on-hup" value="true"/>
     <!-- may be a b or ab -->
     <param name="legs" value="a"/>

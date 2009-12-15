@@ -9,7 +9,7 @@
     <!--<param name="media-option" value="resume-media-on-hold"/> -->
     <param name="media-option" value="bypass-media-after-att-xfer"/>
     <param name="user-agent-string" value="CCNQ2.0"/>
-    <param name="debug" value="3"/>
+    <param name="debug" value="0"/>
     <param name="sip-trace" value="no"/>
     <param name="context" value="egress-$${profile_name}"/>
     <param name="rfc2833-pt" value="101"/>
@@ -108,7 +108,7 @@
     <!--<param name="media-option" value="resume-media-on-hold"/> -->
     <param name="media-option" value="bypass-media-after-att-xfer"/>
     <param name="user-agent-string" value="CCNQ2.0"/>
-    <param name="debug" value="3"/>
+    <param name="debug" value="0"/>
     <param name="sip-trace" value="no"/>
     <param name="context" value="ingress-$${profile_name}"/>
     <param name="rfc2833-pt" value="101"/>

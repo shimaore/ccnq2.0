@@ -20,7 +20,7 @@
     <param name="max-sessions" value="2000"/>
     <param name="sessions-per-second" value="200"/>
     <param name="loglevel" value="alert"/>
-    <param name="crash-protection" value="false"/>
+    <param name="crash-protection" value="true"/>
     <!--<param name="max_dtmf_duration" value="192000"/>-->
     <!--<param name="default_dtmf_duration" value="8000"/>-->
     <param name="mailer-app" value="sendmail"/>
