@@ -16,6 +16,7 @@ package CCNQ::API::handler;
 use strict; use warnings;
 
 use CCNQ::API;
+use AnyEvent::CouchDB;
 
 # See also Path::Dispatcher::Declarative  ?
 
