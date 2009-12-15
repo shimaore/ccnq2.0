@@ -32,6 +32,7 @@
       <condition field="destination_number" expression="^call$"/>
       <condition field="${ccnq_from_e164}" expression="."/> <!-- Must be non-empty -->
       <condition field="${ccnq_to_e164}" expression="."> <!-- Must be non-empty -->
+        <action application="ring_ready"/>
         <action application="set" data="direction=egress"/>
         <action application="set" data="progress_timeout=12"/>
         <action application="set" data="ccnq_account=${regex(${sip_req_params}|account=([^;]*)|%1)}"/>
