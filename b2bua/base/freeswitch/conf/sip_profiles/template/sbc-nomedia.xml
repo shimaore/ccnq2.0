@@ -36,7 +36,7 @@
     <!--<param name="presence-hosts" value="$${domain}"/>-->
     
     <!-- <param name="bitpacking" value="aal2"/> -->
-    <!--<param name="max-proceeding" value="1000"/>-->
+    <param name="max-proceeding" value="3000"/>
     <!--<param name="session-timeout" value="120"/>-->
     <!--<param name="multiple-registrations" value="contact"/>-->
     <param name="inbound-codec-negotiation" value="greedy"/>
@@ -135,7 +135,7 @@
     <!--<param name="presence-hosts" value="$${domain}"/>-->
     
     <!-- <param name="bitpacking" value="aal2"/> -->
-    <!--<param name="max-proceeding" value="1000"/>-->
+    <param name="max-proceeding" value="3000"/>
     <!--<param name="session-timeout" value="120"/>-->
     <!--<param name="multiple-registrations" value="contact"/>-->
     <param name="inbound-codec-negotiation" value="greedy"/>
