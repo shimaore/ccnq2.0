@@ -38,7 +38,6 @@ for my $name qw(
   manager/requests/local_number_delete.pm
   manager/requests/local_number_update.pm
   manager/requests/node_status_query.pm
-  manager/requests/request_query.pm
   manager/requests/subscriber_delete.pm
   manager/requests/subscriber_update.pm
 ) {
