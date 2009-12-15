@@ -11,6 +11,7 @@
   </settings>
   <templates>
     <!-- &#009; is TAB -->
-    <template name="ccnq">start=${start_stamp}&#009;account=${ccnq_account}&#009;account_sub=${ccnq_account_sub}&#009;from_e164=${ccnq_from_e164}&#009;to_e164=${ccnq_to_e164}&#009;count=1&#009;duration=${billsec}&#009;direction=${direction}</template>
+    <template name="ccnq">start=${start_stamp}&#009;account=${ccnq_account}&#009;account_sub=${ccnq_account_sub}&#009;from_e164=${ccnq_from_e164}&#009;to_e164=${ccnq_to_e164}&#009;count=1&#009;duration=${billsec}&#009;direction=${direction}&#009;call_id_a=${sip_call_id}&#009;call_id_b=${uuid}</template>
+    <!-- ${uuid} is valid unless we rewrite the Call-ID using ${sip_outgoing_call_id} -->
   </templates>
 </configuration>
