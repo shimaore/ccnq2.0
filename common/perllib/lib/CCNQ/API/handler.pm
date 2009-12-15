@@ -40,7 +40,7 @@ sub make_couchdb_proxy {
 
     my $field = $path[$nb_fields+1];
 
-    my $cv = $db->view($view_name, { key => encode_json([$key_prefix,@key_values]) });
+    my $cv = $couch_db->view($view_name, { key => encode_json([$key_prefix,@key_values]) });
     $cv->cb(sub{
       my $doc = $_[0]->recv;
 
