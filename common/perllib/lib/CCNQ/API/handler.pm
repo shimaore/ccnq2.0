@@ -24,7 +24,7 @@ use CCNQ::API;
 sub make_couchdb_proxy {
   my ($context,$view_name,$key_prefix,$key_fields,$readable_fields,$writable_fields) = @_;
   my $couch_db = couchdb(CCNQ::API::provisioning_db);
-  my $nb_fields = $#key_fields+1;
+  my $nb_fields = $#{$key_fields}+1;
 
   return sub {
     my ($httpd, $req) = @_;
