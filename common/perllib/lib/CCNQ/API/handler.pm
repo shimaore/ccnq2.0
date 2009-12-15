@@ -15,7 +15,7 @@ package CCNQ::API::handler;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
 
-use CCNQ::API::provisioning_db;
+use CCNQ::API;
 
 # See also Path::Dispatcher::Declarative  ?
 
