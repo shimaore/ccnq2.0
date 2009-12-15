@@ -1,9 +1,9 @@
 <profile name="internal-$${profile_name}">
   <domains>
-    <domain name="all" alias="true" parse="false"/> 
+    <domain name="all" alias="true" parse="false"/>
   </domains>
 
-  
+
   <settings>
     <param name="alias" value="sip:$${internal_sip_ip}:$${internal_sip_port}"/>
     <!--<param name="media-option" value="resume-media-on-hold"/> -->
@@ -30,11 +30,11 @@
     <!--<param name="apply-register-acl" value="domains"/>-->
     <!--<param name="dtmf-type" value="info"/>-->
     <!--<param name="record-template" value="$${base_dir}/recordings/${caller_id_number}.${target_domain}.${strftime(%Y-%m-%d-%H-%M-%S)}.wav"/>-->
-    <param name="manage-presence" value="true"/>
-    <!--<param name="manage-shared-appearance" value="true"/>-->
+    <param name="manage-presence" value="false"/>
+    <param name="manage-shared-appearance" value="false"/>
     <!--<param name="dbname" value="share_presence"/>-->
     <!--<param name="presence-hosts" value="$${domain}"/>-->
-    
+
     <!-- <param name="bitpacking" value="aal2"/> -->
     <param name="max-proceeding" value="3000"/>
     <!--<param name="session-timeout" value="120"/>-->
@@ -48,15 +48,15 @@
     <param name="tls-sip-port" value="$${internal_tls_port}"/>
     <param name="tls-cert-dir" value="$${internal_ssl_dir}"/>
     <param name="tls-version" value="$${sip_tls_version}"/>
-    
+
     <!--<param name="rtp-rewrite-timestamps" value="true"/>-->
     <param name="pass-rfc2833" value="true"/>
     <!--<param name="odbc-dsn" value="dsn:user:pass"/>-->
-    
+
     <param name="inbound-bypass-media" value="true"/>
     <param name="inbound-proxy-media" value="false"/>
     <param name="inbound-late-negotiation" value="true"/>
-    
+
     <!-- <param name="accept-blind-reg" value="true"/> -->
     <!-- <param name="accept-blind-auth" value="true"/> -->
     <!-- <param name="suppress-cng" value="true"/> -->
@@ -93,16 +93,16 @@
          <!--<param name="disable-srv" value="false" />-->
          <!--<param name="disable-naptr" value="false" />-->
 
-    
+
   </settings>
 </profile>
 
 <!-- http://wiki.freeswitch.org/wiki/Sofia_Configuration_Files -->
 <profile name="sbc-$${profile_name}">
   <domains>
-    <domain name="all" alias="true" parse="false"/> 
+    <domain name="all" alias="true" parse="false"/>
   </domains>
-  
+
   <settings>
     <param name="alias" value="sip:$${external_sip_ip}:$${external_sip_port}"/>
     <!--<param name="media-option" value="resume-media-on-hold"/> -->
@@ -129,11 +129,11 @@
     <!--<param name="apply-register-acl" value="domains"/>-->
     <!--<param name="dtmf-type" value="info"/>-->
     <!--<param name="record-template" value="$${base_dir}/recordings/${caller_id_number}.${target_domain}.${strftime(%Y-%m-%d-%H-%M-%S)}.wav"/>-->
-    <param name="manage-presence" value="true"/>
-    <!--<param name="manage-shared-appearance" value="true"/>-->
+    <param name="manage-presence" value="false"/>
+    <param name="manage-shared-appearance" value="false"/>
     <!--<param name="dbname" value="share_presence"/>-->
     <!--<param name="presence-hosts" value="$${domain}"/>-->
-    
+
     <!-- <param name="bitpacking" value="aal2"/> -->
     <param name="max-proceeding" value="3000"/>
     <!--<param name="session-timeout" value="120"/>-->
@@ -147,15 +147,15 @@
     <param name="tls-sip-port" value="$${internal_tls_port}"/>
     <param name="tls-cert-dir" value="$${internal_ssl_dir}"/>
     <param name="tls-version" value="$${sip_tls_version}"/>
-    
+
     <!--<param name="rtp-rewrite-timestamps" value="true"/>-->
     <param name="pass-rfc2833" value="true"/>
     <!--<param name="odbc-dsn" value="dsn:user:pass"/>-->
-    
+
     <param name="inbound-bypass-media" value="true"/>
     <param name="inbound-proxy-media" value="false"/>
     <param name="inbound-late-negotiation" value="true"/>
-    
+
     <!-- <param name="accept-blind-reg" value="true"/> -->
     <!-- <param name="accept-blind-auth" value="true"/> -->
     <!-- <param name="suppress-cng" value="true"/> -->
@@ -192,6 +192,6 @@
          <!--<param name="disable-srv" value="false" />-->
          <!--<param name="disable-naptr" value="false" />-->
 
-    
+
   </settings>
 </profile>
