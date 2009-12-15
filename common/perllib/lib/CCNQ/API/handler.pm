@@ -36,7 +36,7 @@ sub make_couchdb_proxy {
     my $path = $url->path;
     my @path = split(m{/},$path);
 
-    my @key_values = @path(1..$nb_fields);
+    my @key_values = @path[1..$nb_fields];
 
     my $field = $path[$nb_fields+1];
 
