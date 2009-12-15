@@ -90,7 +90,7 @@ sub make_couchdb_proxy {
 
         }
 
-        $couch_db->save_doc($request)->cb(sub{ $_[0]->recv;
+        $couch_db->save_doc($doc)->cb(sub{ $_[0]->recv;
           $req->respond([200,'OK']);
         });
 
