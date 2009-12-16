@@ -1,0 +1,21 @@
+check process __HOST__.opensips with pidfile /var/run/opensips/opensips.pid
+   group voice
+   start program = "/etc/init.d/opensips start"
+   stop  program = "/etc/init.d/opensips stop"
+   if failed port 5060 type TCP then restart
+   if 5 restarts within 5 cycles then timeout
+   depends on __HOST__.opensips_bin
+   depends on __HOST__.opensips_rc
+
+check file __HOST__.opensips_bin with path /usr/sbin/opensips
+   group voice
+   if failed checksum then unmonitor
+   if failed permission 755 then unmonitor
+
+check file __HOST__.opensips_rc with path /etc/init.d/opensips
+   group voice
+   if failed checksum then unmonitor
+   if failed permission 755 then unmonitor
+   if failed uid root then unmonitor
+   if failed gid root then unmonitor
+
