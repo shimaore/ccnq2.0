@@ -39,6 +39,25 @@ EOT
   sudo aptitude update
   sudo aptitude dist-upgrade
 
+
+* Note: I've noticed that Lenny installs a /etc/rsyslog.conf which creates /var/log/user.log, but it never gets cleaned up.
+I recommend:
+
+  mv /etc/rsyslog.conf /etc/rsyslog.conf.bak
+  cat <<EOT | sudo tee /etc/rsyslog.conf >/dev/null
+$ModLoad imuxsock # provides support for local system logging
+$ModLoad imklog   # provides kernel logging support (previously done by rklogd)
+$ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat
+$FileOwner root
+$FileGroup adm
+$FileCreateMode 0640
+$DirCreateMode 0755
+$IncludeConfig /etc/rsyslog.d/*.conf
+auth,authpriv.*                 /var/log/auth.log
+*.*;auth,authpriv.none          -/var/log/syslog
+EOT
+  sudo /etc/init.d/rsyslog reload
+
 * On all servers, install the program:
 
   sudo aptitude update
