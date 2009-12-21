@@ -1,0 +1,10 @@
+These scripts can be used to manage the underlying (OS) level of the
+servers in your system.
+
+They all rely on a script ~/bin/list.sh which should 
+
+    # List of all servers
+    export SERVERS="server1 server2 ..."
+    # List of SIP-processing servers
+    export SIP_SERVERS="server3 server4"
+
