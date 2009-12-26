@@ -43,7 +43,6 @@ JAVASCRIPT
     info("Creating CouchDB '${db_name}' database");
     my $couch = couch;
     my $db = $couch->db($db_name);
-    $context->{condvar}->begin;
     my $cv = $db->info();
     $cv->cb(sub{
       eval { my $info = $_[0]->recv; };
@@ -76,11 +75,9 @@ JAVASCRIPT
         eval { $_[0]->recv; };
         if($@) {
           error("Updating CouchDB views failed: $@");
-          $context->{condvar}->end;
           $mcv->send(CCNQ::Install::FAILURE($@));
         } else {
           info("Created CouchDB views");
-          $context->{condvar}->end;
           $mcv->send(CCNQ::Install::SUCCESS);
         }
       });

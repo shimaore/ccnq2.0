@@ -395,11 +395,19 @@ sub attempt_on_roles_and_functions {
   my $action = shift;
   my $params = shift || {};
   my $context = shift;
+  my $mcv = shift;
   resolve_roles_and_functions(sub {
     my ($cluster_name,$role,$function) = @_;
+    $mcv->begin;
     my $cv = AnyEvent->condvar;
     attempt_run($function,$action,{ %{$params}, cluster_name => $cluster_name, role => $role },$context)->($cv);
-    $context->{condvar}->cb($cv);
+    $mcv->cb(sub{
+      eval { $cv->recv };
+      if($@) {
+        error("Function: $function Action: $action Cluster: $cluster_name Failure: $@");
+      }
+      $mcv->end;
+    });
   });
 }
 
