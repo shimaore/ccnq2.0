@@ -1,1 +1,23 @@
-The manager is an XMPP robot which receives individual Requests and converts them into individual Activities, which are then submitted to the proper XMPP agents (generally via MUC rooms).
+The manager is an XMPP robot which receives individual Requests and
+converts them into individual Activities, which are then submitted to
+the proper XMPP agents (generally via MUC rooms).
+
+The manager processes different message types:
+
+  Request:
+
+    Requests are generated with a unique identifier.
+
+  Activity:
+    Each request might contain one or more activities; activities are
+    tried sequentially and are identified by their parent request ID
+    followed by a sequential number.
+
+  Responses:
+
+    Responses received from hosts for each activity are stored individually
+    and identified by the related activity's identifier, followed by the
+    respondent's host name.
+
+All messages are logged into a database which can be queried to retrieve
+status information about requests and activities.

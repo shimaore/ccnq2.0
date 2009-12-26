@@ -44,25 +44,6 @@ use CCNQ::XMPPAgent;
     $mcv->send(CCNQ::Install::SUCCESS);
   },
 
-=pod
-
-  Request:
-
-    Requests are generated with a unique identifier.
-
-  Activity:
-    Each request might contain one or more activities; activities are
-    tried sequentially and are identified by their parent request ID
-    followed by a sequential number.
-
-  Responses:
-
-    Responses received from hosts for each activity are stored individually
-    and identified by the related activity's identifier, followed by the
-    respondent's host name.
-
-=cut
-
   # Send requests out (message received from node/api/actions.pm)
   _request => sub {
     my ($request,$context,$mcv) = @_;
