@@ -400,21 +400,19 @@ sub attempt_on_roles_and_functions {
   resolve_roles_and_functions(sub {
     my ($cluster_name,$role,$function) = @_;
     my $fun = attempt_run($function,$action,{ %{$params}, cluster_name => $cluster_name, role => $role },$context);
-    $mcv->begin;
+
     my $cv = AnyEvent->condvar;
-    $cv->cb(sub{
-      info("Waiting for Function: $function Action: $action Cluster: $cluster_name to complete");
-      eval { $_[0]->recv };
-      if($@) {
-        error("Function: $function Action: $action Cluster: $cluster_name Failure: $@");
-      } else {
-        info("Function: $function Action: $action Cluster: $cluster_name Completed");
-      }
-      $mcv->end;
-    });
     $fun->($cv);
-    $mcv->cb($cv);
+
+    info("Waiting for Function: $function Action: $action Cluster: $cluster_name to complete");
+    eval { $cv->recv };
+    if($@) {
+      error("Function: $function Action: $action Cluster: $cluster_name Failure: $@");
+    } else {
+      info("Function: $function Action: $action Cluster: $cluster_name Completed");
+    }
   });
+  $mcv->send;
 }
 
 use constant api_rendezvous_host => '127.0.0.1';
