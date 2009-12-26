@@ -44,6 +44,25 @@ use CCNQ::XMPPAgent;
     $mcv->send(CCNQ::Install::SUCCESS);
   },
 
+=pod
+
+  Request:
+
+    Requests are generated with a unique identifier.
+
+  Activity:
+    Each request might contain one or more activities; activities are
+    tried sequentially and are identified by their parent request ID
+    followed by a sequential number.
+
+  Responses:
+
+    Responses received from hosts for each activity are stored individually
+    and identified by the related activity's identifier, followed by the
+    respondent's host name.
+
+=cut
+
   # Send requests out (message received from node/api/actions.pm)
   _request => sub {
     my ($request,$context,$mcv) = @_;
@@ -57,9 +76,6 @@ use CCNQ::XMPPAgent;
     debug("Manager handling request");
 
     my $db = couchdb(CCNQ::Manager::manager_db);
-
-    # XXX Use the original's Activity's ID (+random) as the new Request ID
-    # XXX Use the Request ID + sequential number as the Activity ID.
 
     # Log the request.
     my $cv = $db->save_doc($request);
@@ -139,13 +155,19 @@ use CCNQ::XMPPAgent;
           if $response->{action} ne $activity->{action};
 
         $activity->{status} = $response->{status};
-        $db->save_doc($activity)->cb(sub{$_[0]->recv;
-          debug("Activity $response->{activity} updated.");
+
+        my $actitivty_response = {%{$activity}};
+        $activity_response->{_id} = $activity->{activity}.'.'.$activity->{from};
+        $activity_response->{activity_response} = $activity_response->{_id};
+
+        $db->save_doc($activity_response)->cb(sub{$_[0]->recv;
+          debug("Activity response $activity_response->{_id} updated.");
 
           if($response->{error}) {
             info("Activity $response->{activity} failed with error $response->{error}, re-submitting");
             delete $activity->{status};
             delete $activity->{error};
+            delete $activity->{from};
             my $res = CCNQ::XMPPAgent::submit_activity($context,$activity);
             if($res->[0] eq 'ok') {
               debug("Activity was re-submitted.");

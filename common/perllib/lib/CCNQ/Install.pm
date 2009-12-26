@@ -334,13 +334,13 @@ use constant STATUS_FAILED    => 'failed';
 sub SUCCESS {
   my $result = shift;
   error(Carp::longmess("$result is not an hashref")) if $result && ref($result) ne 'HASH';
-  return $result ? { status => STATUS_COMPLETED, params => $result }
-                 : { status => STATUS_COMPLETED };
+  return $result ? { status => STATUS_COMPLETED, params => $result, from => host_name }
+                 : { status => STATUS_COMPLETED,                    from => host_name };
 }
 
 sub FAILURE {
   my $error = shift || 'No error specified';
-  return { status => STATUS_FAILED, error => $error };
+  return { status => STATUS_FAILED, error => $error, from => host_name };
 }
 
 use constant CANCEL => {};
