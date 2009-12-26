@@ -33,7 +33,7 @@
       <condition field="destination_number" expression="^call$"/>
       <condition field="${ccnq_from_e164}" expression="."/> <!-- Must be non-empty -->
       <condition field="${ccnq_to_e164}" expression="."> <!-- Must be non-empty -->
-        <action application="set" data="direction=egress"/>
+        <action application="set" data="ccnq_direction=egress"/>
         <action application="set" data="progress_timeout=12"/>
         <action application="set" data="ccnq_account=${regex(${sip_req_params}|account=([^;]*)|%1)}"/>
         <action application="set" data="ccnq_account_sub=${regex(${sip_req_params}|account_sub=([^;]*)|%1)}"/>
@@ -76,7 +76,7 @@
     <!-- Place the call -->
     <extension name="default-ingress">
       <condition field="destination_number" expression="^call-(.*)$">
-        <action application="set" data="direction=ingress"/>
+        <action application="set" data="ccnq_direction=ingress"/>
         <action application="set" data="progress_timeout=12"/>
         <action application="bridge" data="sofia/internal-$${profile_name}/$1@$${ingress_target}"/>
       </condition>

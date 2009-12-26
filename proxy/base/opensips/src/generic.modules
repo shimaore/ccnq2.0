@@ -26,8 +26,8 @@ loadmodule "db_mysql.so"
 
 # -- Flat store --
 loadmodule "db_flatstore.so"
-# Flush flatstore after each write (may have to be changed to 0)
-modparam("db_flatstore", "flush", 1)
+# Do not Flush flatstore after each write (not used for CDRs)
+modparam("db_flatstore", "flush", 0)
 
 # -- Common --
 loadmodule "xlog.so"
@@ -35,8 +35,8 @@ loadmodule "sl.so"
 
 loadmodule "tm.so"
 
-# Timeout for Final reply for INVITE after provisional msg (1xx or 2xx)
-# This is the time we wait for ringing before trying the next route.
+# Timeout for Final reply for INVITE after provisional msg (1xx).
+# This is e.g. the time we wait for ringing before trying the next route.
 modparam("tm", "fr_inv_timer", ${INV_TIMER})
 # default is 120
 # Same, as an AVP
