@@ -400,6 +400,7 @@ sub attempt_on_roles_and_functions {
   resolve_roles_and_functions(sub {
     my ($cluster_name,$role,$function) = @_;
     my $fun = attempt_run($function,$action,{ %{$params}, cluster_name => $cluster_name, role => $role },$context);
+    $mcv->begin;
     my $cv = AnyEvent->condvar;
     $cv->cb(sub{
       info("Waiting for Function: $function Action: $action Cluster: $cluster_name to complete");
@@ -409,6 +410,7 @@ sub attempt_on_roles_and_functions {
       } else {
         info("Function: $function Action: $action Cluster: $cluster_name Completed");
       }
+      $mcv->end;
     });
     $fun->($cv);
     $mcv->cb($cv);
