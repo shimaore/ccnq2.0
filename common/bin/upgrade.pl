@@ -61,6 +61,7 @@ sub run {
       condvar => $program,
     };
     CCNQ::Install::attempt_run('node','install_all',undef,$context)->($program);
+    info("Waiting for installation to complete");
     $program->recv;
   };
 

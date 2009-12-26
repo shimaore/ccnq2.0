@@ -369,6 +369,7 @@ sub attempt_run {
 
   return sub {
     my $cv = shift;
+    debug("start of attempt_run($function,$action)->($cv)");
 
     my $result = undef;
     eval {
@@ -388,26 +389,29 @@ sub attempt_run {
       debug($error_msg);
       $cv->send(FAILURE($error_msg));
     }
+    debug("end of attempt_run($function,$action)->($cv)");
   };
 }
 
 sub attempt_on_roles_and_functions {
-  my $action = shift;
-  my $params = shift || {};
-  my $context = shift;
-  my $mcv = shift;
+  my ($action,$params,$context,$mcv) = @_;
+  $params ||= {};
+
   resolve_roles_and_functions(sub {
     my ($cluster_name,$role,$function) = @_;
-    $mcv->begin;
+    my $fun = attempt_run($function,$action,{ %{$params}, cluster_name => $cluster_name, role => $role },$context);
     my $cv = AnyEvent->condvar;
-    attempt_run($function,$action,{ %{$params}, cluster_name => $cluster_name, role => $role },$context)->($cv);
-    $mcv->cb(sub{
-      eval { $cv->recv };
+    $cv->cb(sub{
+      info("Waiting for Function: $function Action: $action Cluster: $cluster_name to complete");
+      eval { $_[0]->recv };
       if($@) {
         error("Function: $function Action: $action Cluster: $cluster_name Failure: $@");
+      } else {
+        info("Function: $function Action: $action Cluster: $cluster_name Completed");
       }
-      $mcv->end;
     });
+    $fun->($cv);
+    $mcv->cb($cv);
   });
 }
 

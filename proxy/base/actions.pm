@@ -55,6 +55,7 @@ use CCNQ::Proxy::Config;
     CCNQ::Install::execute('/bin/sed','-i','-e','s/^RUN_OPENSIPS=no$/RUN_OPENSIPS=yes/','/etc/default/opensips');
     CCNQ::Install::execute('/etc/init.d/opensips','restart');
 
+    debug("Restarted OpenSIPS");
     $mcv->send(CCNQ::Install::SUCCESS);
   },
 
