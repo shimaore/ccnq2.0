@@ -50,6 +50,9 @@ sub insert
     my $uac_user    = $params->{login};
     my $uac_pass    = $params->{password};
 
+    return ()
+      unless defined $address && $address ne '';
+
     my @res;
     push @res,
         <<'SQL',['0',$address,$strip,$pri_prefix,'',''];
@@ -69,6 +72,9 @@ sub delete
 {
     my ($self,$params) = @_;
     my $address = $params->{target};
+
+    return ()
+    unless defined $address && $address ne '';
 
     my @res;
     push @res,

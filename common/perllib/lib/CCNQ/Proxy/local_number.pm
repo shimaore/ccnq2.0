@@ -81,8 +81,11 @@ sub insert
     $account     = undef if $account     eq '';
     $account_sub = undef if $account_sub eq '';
 
-    return () unless defined $number and $number ne '';
-    return () unless defined $username and $username ne '';
+    return ()
+      unless defined $number   and $number ne ''
+      and    defined $domain   and $domain ne ''
+      and    defined $username and $username ne ''
+      and    defined $username_domain and $username_domain ne '';
 
     my @result = ();
     if(defined $outbound_route) {
@@ -114,6 +117,10 @@ sub delete
     my ($self,$params) = @_;
     my $number  = $params->{number};
     my $domain  = $params->{domain};
+
+    return ()
+      unless defined $number   and $number ne ''
+      and    defined $domain   and $domain ne '';
 
     my @result = (<<'SQL',[$number,$domain]);
       DELETE FROM dr_groups WHERE username = ? AND domain = ?;

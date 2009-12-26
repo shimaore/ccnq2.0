@@ -99,6 +99,10 @@ sub insert
     my $account     = $params->{account};
     my $account_sub = $params->{account_sub};
 
+    return ()
+      unless defined $username and $username ne ''
+      and    defined $domain   and $domain   ne '';
+
     my $challenge   = $self->{challenge};
     $challenge = $domain if $challenge eq '';
 
@@ -152,6 +156,10 @@ sub delete
     my $username = $params->{username};
     my $domain   = $params->{domain};
     my $ip       = $params->{ip};
+
+    return ()
+      unless defined $username and $username ne ''
+      and    defined $domain   and $domain   ne '';
 
     my @res = (
         <<'SQL',[$username,$domain],
