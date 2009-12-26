@@ -170,7 +170,7 @@ JAVASCRIPT
 
         $activity->{status} = $response->{status};
 
-        my $actitivty_response = {%{$activity}};
+        my $activity_response = {%{$activity}};
         $activity_response->{_id} = $activity->{activity}.'.'.$response->{from};
         $activity_response->{activity_responder} = $response->{from};
 
