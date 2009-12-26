@@ -63,11 +63,11 @@ JAVASCRIPT
       $db->save_doc($design_report)->cb( sub{ $_[0]->recv;
         info("Created CouchDB views");
         $mcv->end;
+        $mcv->send(CCNQ::Install::SUCCESS);
       });
 
     });
     $context->{condvar}->cb($cv);
-    $mcv->send(CCNQ::Install::SUCCESS);
   },
 
   _session_ready => sub {
