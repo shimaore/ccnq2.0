@@ -58,6 +58,11 @@ auth,authpriv.*                 /var/log/auth.log
 EOT
   sudo /etc/init.d/rsyslog reload
 
+* Note: for high performance, the directory /opt/freeswitch/db must be
+in memory. Add the following line to /etc/fstab:
+   tmpfs /opt/freeswitch/db tmpfs defaults 0 0
+
+
 * On all servers, install the program:
 
   sudo aptitude update
