@@ -53,7 +53,7 @@ JAVASCRIPT
         language => 'javascript',
         views    => {
           requests => {
-            map => report_requests_javascript,
+            map => js_report_requests,
             # no reduce function
           },
           # Other _design/report views here
