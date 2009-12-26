@@ -43,7 +43,6 @@ JAVASCRIPT
     info("Creating CouchDB '${db_name}' database");
     my $couch = couch;
     my $db = $couch->db($db_name);
-    $mcv->begin;
     my $cv = $db->create();
     $cv->cb(sub{ $_[0]->recv;
       info("Created CouchDB '${db_name}' database");
@@ -62,12 +61,11 @@ JAVASCRIPT
 
       $db->save_doc($design_report)->cb( sub{ $_[0]->recv;
         info("Created CouchDB views");
-        $mcv->end;
         $mcv->send(CCNQ::Install::SUCCESS);
       });
 
     });
-    $context->{condvar}->cb($cv);
+    $mcv->cb($cv);
   },
 
   _session_ready => sub {
