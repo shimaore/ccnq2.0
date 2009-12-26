@@ -20,6 +20,22 @@ use CCNQ::Manager;
 
 use CCNQ::XMPPAgent;
 
+use constant js_report_requests => <<'JAVASCRIPT';
+  function(doc) {
+    if(doc.parent_request && doc.activity_responder) {
+      emit([doc.parent_request,doc.activity_rank,doc.activity_responder],null);
+      return;
+    }
+    if(doc.parent_request) {
+      emit([doc.parent_request,doc.activity_rank],null);
+      return;
+    }
+    if(doc.request) {
+      emit([doc.request],null);
+    }
+  }
+JAVASCRIPT
+
 {
   install => sub {
     my ($params,$context,$mcv) = @_;
@@ -29,9 +45,26 @@ use CCNQ::XMPPAgent;
     my $db = $couch->db($db_name);
     $mcv->begin;
     my $cv = $db->create();
-    $cv->cb(sub{
+    $cv->cb(sub{ $_[0]->recv;
       info("Created CouchDB '${db_name}' database");
-      $mcv->end;
+
+      my $design_report = {
+        _id      => '_design/report',
+        language => 'javascript',
+        views    => {
+          requests => {
+            map => report_requests_javascript,
+            # no reduce function
+          },
+          # Other _design/report views here
+        },
+      };
+
+      $db->save_doc($design_report)->cb( sub{ $_[0]->recv;
+        info("Created CouchDB views");
+        $mcv->end;
+      });
+
     });
     $context->{condvar}->cb($cv);
     $mcv->send(CCNQ::Install::SUCCESS);
