@@ -138,8 +138,8 @@ use CCNQ::XMPPAgent;
         $activity->{status} = $response->{status};
 
         my $actitivty_response = {%{$activity}};
-        $activity_response->{_id} = $activity->{activity}.'.'.$activity->{from};
-        $activity_response->{activity_response} = $activity_response->{_id};
+        $activity_response->{_id} = $activity->{activity}.'.'.$response->{from};
+        $activity_response->{activity_responder} = $response->{from};
 
         $db->save_doc($activity_response)->cb(sub{$_[0]->recv;
           debug("Activity response $activity_response->{_id} updated.");
