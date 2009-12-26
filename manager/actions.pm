@@ -65,8 +65,12 @@ JAVASCRIPT
         },
       };
 
+      # XXX This code actually doesn't work on updates.
       $db->remove_doc({_id => '_design/report'})->cb(sub{
         eval { my $info = $_[0]->recv; };
+        if($@) {
+          error("Removing CouchDB views failed: $@");
+        }
       });
       $db->save_doc($design_report)->cb( sub{
         eval { $_[0]->recv; };
