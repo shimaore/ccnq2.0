@@ -69,16 +69,16 @@ use CCNQ::XMPPAgent;
       $db->save_doc($request)->cb(sub{ $_[0]->recv;
         # Now split the request into independent activities
         my @activities = CCNQ::Manager::activities_for_request($request);
-        for my $rank (0..$#activities) {
-          my $activity = $activities[$rank];
+        for my $activity_rank (0..$#activities) {
+          my $activity = $activities[$activity_rank];
 
           debug("Creating new activity");
-          $activity->{_id} = $request->{request}.'.'.$rank;
+          $activity->{_id} = $request->{request}.'.'.$activity_rank;
           $activity->{parent_request} = $request->{request};
-          $activity->{rank} = $rank;
+          $activity->{activity_rank} = $activity_rank;
           $activity->{activity} = $activity->{_id};
-          $activity->{next_activity} = $request->{request}.'.'.($rank+1)
-            unless $rank == $#activities;
+          $activity->{next_activity} = $request->{request}.'.'.($activity_rank+1)
+            unless $activity_rank == $#activities;
 
           $mcv->begin;
           $db->save_doc($activity)->cb(sub{ $_[0]->recv;
@@ -88,7 +88,7 @@ use CCNQ::XMPPAgent;
             # Submit the activity to the proper recipient.
             # Should only be done for the first activity in the request.
             # The other ones will be processed when a positive response is received.
-            if($rank == 0) {
+            if($activity_rank == 0) {
               my $res = CCNQ::XMPPAgent::submit_activity($context,$activity);
               if($res->[0] eq 'ok') {
                 debug("New activity ID=$activity->{activity} was submitted.");
