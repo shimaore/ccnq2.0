@@ -82,7 +82,7 @@ JAVASCRIPT
         }
       });
     });
-    $mcv->cb($cv);
+    $context->{condvar}->cb($cv);
   },
 
   _session_ready => sub {
