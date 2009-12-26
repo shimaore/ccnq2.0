@@ -65,13 +65,20 @@ JAVASCRIPT
         },
       };
 
-      $db->remove_doc($design_report)->cb(sub{
+      $db->remove_doc({_id => '_design/report'})->cb(sub{
         eval { my $info = $_[0]->recv; };
-        $db->save_doc($design_report)->cb( sub{ $_[0]->recv;
+      });
+      $db->save_doc($design_report)->cb( sub{
+        eval { $_[0]->recv; };
+        if($@) {
+          error("Updating CouchDB views failed: $@");
+          $context->{condvar}->end;
+          $mcv->send(CCNQ::Install::FAILURE($@));
+        } else {
           info("Created CouchDB views");
           $context->{condvar}->end;
           $mcv->send(CCNQ::Install::SUCCESS);
-        });
+        }
       });
     });
     $mcv->cb($cv);
