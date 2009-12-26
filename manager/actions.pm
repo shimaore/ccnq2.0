@@ -44,9 +44,14 @@ JAVASCRIPT
     my $couch = couch;
     my $db = $couch->db($db_name);
     $context->{condvar}->begin;
-    my $cv = $db->create();
-    $cv->cb(sub{ $_[0]->recv;
-      info("Created CouchDB '${db_name}' database");
+    my $cv = $db->info();
+    $cv->cb(sub{
+      eval { my $info = $_[0]->recv; };
+      if($@) {
+        $db->create()->cb(sub{ $_[0]->recv;
+          info("Created CouchDB '${db_name}' database");
+        });
+      }
 
       my $design_report = {
         _id      => '_design/report',
@@ -60,12 +65,14 @@ JAVASCRIPT
         },
       };
 
-      $db->save_doc($design_report)->cb( sub{ $_[0]->recv;
-        info("Created CouchDB views");
-        $context->{condvar}->end;
-        $mcv->send(CCNQ::Install::SUCCESS);
+      $db->remove_doc($design_report)->cb(sub{
+        eval { my $info = $_[0]->recv; };
+        $db->save_doc($design_report)->cb( sub{ $_[0]->recv;
+          info("Created CouchDB views");
+          $context->{condvar}->end;
+          $mcv->send(CCNQ::Install::SUCCESS);
+        });
       });
-
     });
     $mcv->cb($cv);
   },

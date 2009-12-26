@@ -21,7 +21,7 @@ use Carp;
   install_all => sub {
     my ($params,$context,$mcv) = @_;
     CCNQ::Install::attempt_on_roles_and_functions('install',$params,$context);
-    $mcv->send(CCNQ::Install::SUCCESS);
+    # $mcv->send(CCNQ::Install::SUCCESS);
   },
 
   # Used to provide server-wide status information.
