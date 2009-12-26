@@ -64,7 +64,7 @@ use CCNQ::XMPPAgent;
 
     $cv->cb( sub{ $_[0]->recv;
       $request->{request} ||= $request->{_id};
-      debug("Saved request with ID=$request->{request}.");
+      debug("Saving request with ID=$request->{request}.");
 
       $db->save_doc($request)->cb(sub{ $_[0]->recv;
         # Now split the request into independent activities
