@@ -59,8 +59,8 @@ use CCNQ::XMPPAgent;
     my $db = couchdb(CCNQ::Manager::manager_db);
 
     # Log the request.
-    my $cv = $db->save_doc($request);
     $request->{_id} = $request->{request} if $request->{request};
+    my $cv = $db->save_doc($request);
 
     $cv->cb( sub{ $_[0]->recv;
       $request->{request} ||= $request->{_id};
