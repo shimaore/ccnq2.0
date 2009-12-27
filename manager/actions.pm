@@ -241,17 +241,30 @@ JAVASCRIPT
 
     my $db = couchdb(CCNQ::Manager::manager_db);
 
-    my $cv = $db->open_doc($params->{request_id});
-    $cv->cb(sub{
-      my $request = $_[0]->recv;
-      if($request) {
-        debug("Found request");
+    my $cv = $db->view(
+        'report/requests',
+        {
+          startkey => encode_json([$params->{request_id}]),
+          endkey   => encode_json([$params->{request_id},{}]),
+        }
+    );
 
-        $mcv->send(SUCCESS($request));
-      } else {
+    $cv->cb(sub{
+      eval { my $result = $_[0]->recv };
+
+      if($@) {
+        $mcv->send(FAILURE($@));
+        return;
+      }
+
+      if(!$result) {
         debug("Request $params->{request_id} not found.");
         $mcv->send(FAILURE("Request not found."));
+        return;
       }
+
+      debug("Found request");
+      $mcv->send(SUCCESS($request->{rows}));
     });
     $context->{condvar}->cb($cv);
   },
