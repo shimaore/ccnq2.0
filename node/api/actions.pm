@@ -70,7 +70,6 @@
         debug("node/api: Processing web request");
         my $body = {
           activity => 'node/api/'.rand(),
-          action => '_request',
           params => {
             $req->vars
           },
@@ -134,7 +133,6 @@
         debug("node/request: Processing web request");
         my $body = {
           activity => 'node/request/'.rand(),
-          action => 'get_request_status',
           params => {
             $req->vars
           },
@@ -145,6 +143,7 @@
         my $path = $url->path;
 
         if($path =~ m{^/request/(\w+)$}) {
+          $body->{params}->{action} = 'get_request_status';
           $body->{params}->{request_id} = $1;
         } else {
           $req->respond([404,'Invalid request']);
