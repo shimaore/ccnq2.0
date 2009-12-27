@@ -1,0 +1,2 @@
+The node/provisioning subsystem is used to store information for the entire
+system. It is basically a thin interface for a CouchDB database.

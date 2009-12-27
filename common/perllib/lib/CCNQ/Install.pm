@@ -252,6 +252,7 @@ use constant roles_to_functions => {
   # ...
   'portal'          => [qw( portal/base node/api node )],
   'api'             => [qw( node/api )],
+  'provisioning'    => [qw( node/provisioning )],
   'manager'         => [qw( manager node )],
   'aggregator'      => [qw( billing/aggregator node/api node )],
   # ...
