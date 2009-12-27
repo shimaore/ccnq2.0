@@ -253,6 +253,7 @@
       } else {
         debug("node/api: Activity $activity has no registered callback");
       }
+      delete $context->{api_callback}->{$activity};
     } else {
       debug("node/api: Response contains no activity ID, ignoring");
     }
