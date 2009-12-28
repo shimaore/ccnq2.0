@@ -99,8 +99,7 @@ sub delete
 
     return ()
       unless defined $groupid  && $groupid  ne ''
-      and    defined $priority && $priority ne ''
-      and    defined $gwlist   && $gwlist   ne '';
+      and    defined $priority && $priority ne '';
 
     my @res;
     push @res,
