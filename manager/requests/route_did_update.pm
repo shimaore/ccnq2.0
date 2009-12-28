@@ -22,8 +22,13 @@ sub {
     #   number
     #   account
     #   account_sub
-    #   (treatment type) => 'usa-cnam'@'wholesale-sbc'
     #   endpoint
+
+    # treatment_type      (e.g.  'usa-cnam')
+    # inbound_proxy_name  (e.g. 'inbound-proxy')
+    # outbound_proxy_name (e.g. 'outbound-proxy')
+    # customer_sbc_name   (e.g  'wholesale-sbc')
+    # customer_proxy_name (e.g. 'wholesale-proxy')
 
     # 1. Save the entire request in the provisioning database
     {
@@ -38,12 +43,12 @@ sub {
     # 2. Route the inbound DID through the inbound-proxy
     {
       action => 'local_number/update',
-      cluster_name => 'inbound-proxy',
+      cluster_name => $request->{inbound_proxy_name},
       params => {
         number => $request->{number},
-        domain => CCNQ::Install::cluster_fqdn('inbound-proxy'),
-        username => 'usa-cnam',
-        username_domain => CCNQ::Install::cluster_fqdn('inbound-proxy'),
+        domain => CCNQ::Install::cluster_fqdn($request->{inbound_proxy_name}),
+        username => $request->{treatment_type},
+        username_domain => CCNQ::Install::cluster_fqdn($request->{inbound_proxy_name}),
         account => $request->{account},
         account_sub => $request->{account_sub},
       }
@@ -52,12 +57,12 @@ sub {
     # 3. Route the inbound DID through the customer-side proxy
     {
       action => 'local_number/update',
-      cluster_name => 'wholesale-proxy',
+      cluster_name => $request->{customer_proxy_name},
       params => {
         number => $request->{number}, # Or with transform
-        domain => CCNQ::Install::cluster_fqdn('ingress-proxy','wholesale-sbc'),
+        domain => CCNQ::Install::cluster_fqdn('ingress-proxy',$request->{customer_sbc_name}),
         username => $request->{endpoint},
-        username_domain => CCNQ::Install::cluster_fqdn('ingress-proxy','wholesale-sbc'),
+        username_domain => CCNQ::Install::cluster_fqdn('ingress-proxy',$request->{customer_sbc_name}),
         account => $request->{account},
         account_sub => $request->{account_sub},
       }
@@ -65,19 +70,26 @@ sub {
 
     # 4. Route the DID back into the system (onnet-onnet) using the loop on the outbound-proxy
     {
+      action => 'dr_gateway/update',
+      cluster_name => $request->{outbound_proxy_name},
+      params => {
+        target => $request->{inbound_proxy_name}
+      }
+    },
+    {
       action => 'dr_rule/update',
-      cluster_name => $request->{cluster_name},
+      cluster_name => $request->{outbound_proxy_name},
       params => {
         outbound_route => 0,
         description => "Loop for $request->{number}",
         prefix => $request->{number},
         priority => 1,
-        target => 'inbound-proxy',
+        target => $request->{inbound_proxy_name},
       }
     },
     {
       action => 'dr_reload',
-      cluster_name => $request->{cluster_name},
+      cluster_name => $request->{outbound_proxy_name},
     }
 
     # 6. Add billing entry for the day of creation
