@@ -20,6 +20,10 @@
 
 # NOTE: Requires tshark 1.2 or above. (e.g. tshark/testing if using Lenny)
 
+# This script assumes you have contrib/traces.sh running, and will use
+# the PCAP files in /var/log/traces to find trace information about
+# past calls.
+
 use strict; use warnings;
 
 use CCNQ::Install;
