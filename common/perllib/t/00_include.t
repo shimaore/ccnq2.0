@@ -20,6 +20,7 @@ use Test::More;
 require_ok( 'CCNQ::Object' );
 require_ok( 'AnyEvent::Watchdog::Util' );
 
+require_ok( 'CCNQ::API' );
 require_ok( 'CCNQ::API::handler' );
 require_ok( 'CCNQ::B2BUA' );
 
@@ -30,6 +31,7 @@ require_ok( 'CCNQ::HTTPD' );
 require_ok( 'CCNQ::Install' );
 require_ok( 'CCNQ::Manager' );
 require_ok( 'CCNQ::MediaProxy' );
+require_ok( 'CCNQ::Trace' );
 require_ok( 'CCNQ::XMPPAgent' );
 
 require_ok( 'CCNQ::Proxy' );
