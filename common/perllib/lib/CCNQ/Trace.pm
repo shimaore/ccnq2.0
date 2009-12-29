@@ -59,12 +59,13 @@ sub run {
   my $from_user    = $params->{from_user};
   my $days_ago     = $params->{days_ago};
 
-  $mcv->send(CCNQ::Install::FAILURE) if defined $to_user   && $to_user   !~ /^\d+$/;
-  $mcv->send(CCNQ::Install::FAILURE) if defined $from_user && $from_user !~ /^\d+$/;
-  $mcv->send(CCNQ::Install::FAILURE) if defined $call_id   && $call_id   !~ /^[\w@-]+$/;
-  $mcv->send(CCNQ::Install::FAILURE) if defined $days_ago  && $days_ago  !~ /^\d{1,5}$/;
+  $mcv->send(CCNQ::Install::FAILURE('Invalid to_user')  ) if defined $to_user   && $to_user   !~ /^\d+$/;
+  $mcv->send(CCNQ::Install::FAILURE('Invalid from_user')) if defined $from_user && $from_user !~ /^\d+$/;
+  $mcv->send(CCNQ::Install::FAILURE('Invalid call_id')  ) if defined $call_id   && $call_id   !~ /^[\w@-]+$/;
+  $mcv->send(CCNQ::Install::FAILURE('Invalid days_ago') ) if defined $days_ago  && $days_ago  !~ /^\d{1,5}$/;
 
-  $mcv->send(CCNQ::Install::FAILURE) unless defined $call_id or defined $to_user or defined $from_user;
+  $mcv->send(CCNQ::Install::FAILURE('Missing required parameters'))
+    unless defined $call_id or defined $to_user or defined $from_user;
 
   #### Generate a merged capture file #####
 
