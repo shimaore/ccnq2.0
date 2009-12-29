@@ -32,6 +32,8 @@ use AnyEvent::Util;
 
 use JSON;
 
+use Logger::Syslog;
+
 use constant trace_field_names => [qw(
   frame.time ip.version ip.dsfield.dscp ip.src ip.dst ip.proto udp.srcport udp.dstport
   sip.Call-ID
@@ -52,6 +54,7 @@ use constant bin_sh => '/bin/sh';
 sub run {
   my ($params,$context,$mcv) = @_;
 
+  debug("trace: checking parameters");
   my $dump_packets = $params->{params}->{dump_packets} || 0;
   my $call_id      = $params->{params}->{call_id};
   my $to_user      = $params->{params}->{to_user};
@@ -71,6 +74,7 @@ sub run {
     unless defined $call_id or defined $to_user or defined $from_user;
 
   #### Generate a merged capture file #####
+  debug("trace: creating filters");
 
   my $make_ngrep_filter = sub {
     my @ngrep_filter = ();
@@ -120,12 +124,13 @@ sub run {
   my $script = new File::Temp (UNLINK => 0, SUFFIX => '.sh');
 
   if($dump_packets) {
+    debug("trace: starting binary dump");
 
     # Output the subset of packets
     print $script <<SCRIPT;
 #!/bin/sh
 mergecap -w - $base_dir/*.pcap | ngrep -i -l -q -I - -O '$fh' '$ngrep_filter' >/dev/null;
-tshark -r "$fh" -R '$tshark_filter' -w -
+exec tshark -r "$fh" -R '$tshark_filter' -w -
 SCRIPT
     close($script);
 
@@ -137,17 +142,19 @@ SCRIPT
       shift->recv;
       undef $fh;
       unlink $script;
+      debug("trace: completed binary dump");
       $mcv->send(CCNQ::Install::SUCCESS([$content]));
     });
 
   } else {
+    debug("trace: starting text dump");
 
     # Output JSON
     my $fields = join(' ',map { ('-e', $_) } @{trace_field_names()});
     print $script <<SCRIPT;
 #!/bin/sh
 mergecap -w - $base_dir/*.pcap | ngrep -i -l -q -I - -O '$fh' '$ngrep_filter' >/dev/null;
-tshark -r "$fh" -R '$tshark_filter' -nltad -T fields $fields
+exec tshark -r "$fh" -R '$tshark_filter' -nltad -T fields $fields
 SCRIPT
     close($script);
 
@@ -177,11 +184,13 @@ SCRIPT
       shift->recv;
       undef $fh;
       unlink $script;
+      debug("trace: completed text dump");
       $mcv->send(CCNQ::Install::SUCCESS([@content]));
     });
 
   }
 
+  debug("trace: starting dump");
   $context->{condvar}->cb($cv);
 }
 
