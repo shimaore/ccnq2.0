@@ -68,39 +68,45 @@ sub run {
 
   #### Generate a merged capture file #####
 
-  my @ngrep_filter = ();
-  push @ngrep_filter, 'To'.     ':[^\r\n]*'.$to_user   if defined $to_user;
-  push @ngrep_filter, 'From'.   ':[^\r\n]*'.$from_user if defined $from_user;
-  push @ngrep_filter, 'Call-ID'.':[^\r\n]*'.$call_id   if defined $call_id;
-
-  my $ngrep_filter = join('|',@ngrep_filter);
-
-  my @tshark_filter = ();
-
-  if(defined $days_ago) {
-    # Wireshark's format: Nov 12, 1999 08:55:44.123
-    sub make_day {
-      my $t = shift;
-      my @t = localtime($t);
-      return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']->[$t[4]].
-             ' '.
-             $t[3].
-             ', '.
-             sprintf('%04d',$t[5]+1900).
-             ' 00:00:00.000';
-    }
-
-    my $today = make_day(time-86400*$days_ago);
-    push @tshark_filter, qq(frame.time >= "$today");
-    my $tomorrow = make_day(time-86400*($days_ago-1));
-    push @tshark_filter, qq(frame.time < "$tomorrow");
+  sub make_ngrep_filter {
+    my @ngrep_filter = ();
+    push @ngrep_filter, 'To'.     ':[^\r\n]*'.$to_user   if defined $to_user;
+    push @ngrep_filter, 'From'.   ':[^\r\n]*'.$from_user if defined $from_user;
+    push @ngrep_filter, 'Call-ID'.':[^\r\n]*'.$call_id   if defined $call_id;
+    return join('|',@ngrep_filter);
   }
 
-  push @tshark_filter, qq(sip.r-uri.user contains "$to_user" || sip.to.user contains "$to_user") if defined $to_user;
-  push @tshark_filter, qq(sip.from.user contains "$from_user") if defined $from_user;
-  push @tshark_filter, qq(sip.Call-ID == "$call_id") if defined $call_id;
+  my $ngrep_filter = make_ngrep_filter();
 
-  my $tshark_filter = join(' && ', map { "($_)" } @tshark_filter);
+  sub make_tshark_filter {
+    my @tshark_filter = ();
+
+    if(defined $days_ago) {
+      # Wireshark's format: Nov 12, 1999 08:55:44.123
+      sub make_day {
+        my $t = shift;
+        my @t = localtime($t);
+        return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']->[$t[4]].
+               ' '.
+               $t[3].
+               ', '.
+               sprintf('%04d',$t[5]+1900).
+               ' 00:00:00.000';
+      }
+
+      my $today = make_day(time-86400*$days_ago);
+      push @tshark_filter, qq(frame.time >= "$today");
+      my $tomorrow = make_day(time-86400*($days_ago-1));
+      push @tshark_filter, qq(frame.time < "$tomorrow");
+    }
+
+    push @tshark_filter, qq(sip.r-uri.user contains "$to_user" || sip.to.user contains "$to_user") if defined $to_user;
+    push @tshark_filter, qq(sip.from.user contains "$from_user") if defined $from_user;
+    push @tshark_filter, qq(sip.Call-ID == "$call_id") if defined $call_id;
+    return join(' && ', map { "($_)" } @tshark_filter);
+  }
+
+  my $tshark_filter = make_tshark_filter();
 
   my @fields = map { ('-e', $_) } @{trace_field_names()};
 
@@ -150,6 +156,7 @@ sub run {
     $cv->cb(sub {
       shift->recv;
       undef $fh;
+      unlink $script;
       $mcv->send(CCNQ::Install::SUCCESS([@content]));
     });
   }
