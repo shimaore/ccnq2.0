@@ -183,13 +183,13 @@ sub pp
   my $v = shift;
   if(ref($v) eq '')
   {
-    return $v;
+    return qq("$v");
   }
   if(ref($v) eq 'ARRAY')
   {
     return '[ '.join(', ', map { pp($_) } @{$v}).' ]';
   }
-  return '{ '.join(', ', map { "$_: ".pp($v->{$_}) } sort keys %{$v}).' }';
+  return '{ '.join(', ', map { qq("$_": ).pp($v->{$_}) } sort keys %{$v}).' }';
 }
 
 1;
