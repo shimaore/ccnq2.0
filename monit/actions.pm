@@ -24,7 +24,7 @@ use constant monit_target => '/etc/monit';
 {
   install => sub {
     my ($params,$context,$mcv) = @_;
-    for my $file in qw( couchdb.monitrc freeswitch.monitrc local.monitrc monitrc opensips.monitrc ) {
+    for my $file qw( couchdb.monitrc freeswitch.monitrc local.monitrc monitrc opensips.monitrc ) {
       my $src = File::Spec->catfile(monit_directory,$file);
       my $content = content_of($src);
       $content =~ s/__HOST__/CCNQ::Install::host_name()/ge;
