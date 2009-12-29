@@ -70,7 +70,7 @@
         debug("node/api: Processing web request");
         my $body = {
           activity => 'node/api/'.rand(),
-          action => 'request',
+          action => '_request', # ran by the 'manager'
           params => {
             $req->vars
           },
