@@ -108,32 +108,44 @@ sub run {
 
   my $tshark_filter = make_tshark_filter();
 
-  my @fields = map { ('-e', $_) } @{trace_field_names()};
-
   my $base_dir = '/var/log/traces';
 
   my $cv;
 
   my $fh     = new File::Temp (SUFFIX => '.pcap');
+  my $script = new File::Temp (UNLINK => 0, SUFFIX => '.sh');
 
   if($dump_packets) {
     # Output the subset of packets
+    print $script <<SCRIPT;
+#!/bin/sh
+mergecap -w - $base_dir/*.pcap | ngrep -i -l -q -I - -O "$fh" "$ngrep_filter" >/dev/null;
+tshark -r "$fh" -R "$tshark_filter" -w -
+SCRIPT
+    close($script);
+
     my $content = '';
     $cv = run_cmd
-      [ trace_script, $fh->filename, $ngrep_filter, $tshark_filter, '-w -'],
+      [ $script ],
       '>', \$content;
     $cv->cb(sub {
       shift->recv;
       undef $fh;
+      unlink $script;
       $mcv->send(CCNQ::Install::SUCCESS([$content]));
     });
   } else {
     # Output JSON
+    my $fields = join(' ',map { ('-e', $_) } @{trace_field_names()});
+    print $script <<SCRIPT;
+#!/bin/sh
+mergecap -w - $base_dir/*.pcap | ngrep -i -l -q -I - -O "$fh" "$ngrep_filter" >/dev/null;
+tshark -r "$fh" -R "$tshark_filter" -nltad -T fields $fields
+SCRIPT
+    close($script);
     my @content = ();
     $cv = run_cmd
-      [ trace_script, $fh->filename, $ngrep_filter, $tshark_filter,
-        '-T fields '.join(' ',@fields)
-      ],
+      [ $script ],
       # My assumptions about the callback are:
       #   - receives line-by-line
       #   - gets 'undef' at EOF.
