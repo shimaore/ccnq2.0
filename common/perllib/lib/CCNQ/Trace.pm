@@ -74,7 +74,7 @@ sub run {
     push @ngrep_filter, 'From'.   ':[^\r\n]*'.$from_user if defined $from_user;
     push @ngrep_filter, 'Call-ID'.':[^\r\n]*'.$call_id   if defined $call_id;
     return join('|',@ngrep_filter);
-  }
+  };
 
   my $ngrep_filter = $make_ngrep_filter->();
 
@@ -104,7 +104,7 @@ sub run {
     push @tshark_filter, qq(sip.from.user contains "$from_user") if defined $from_user;
     push @tshark_filter, qq(sip.Call-ID == "$call_id") if defined $call_id;
     return join(' && ', map { "($_)" } @tshark_filter);
-  }
+  };
 
   my $tshark_filter = $make_tshark_filter->();
 
