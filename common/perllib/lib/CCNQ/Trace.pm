@@ -170,6 +170,7 @@ SCRIPT
         my $t = shift;
         debug("trace: reading text dump");
         if(!defined $t) {
+          undef $cv;
           return;
         }
         chomp $t;
