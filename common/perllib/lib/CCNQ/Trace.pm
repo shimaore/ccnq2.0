@@ -165,7 +165,7 @@ SCRIPT
     #   - gets 'undef' at EOF.
 
     $cv = AnyEvent::Util::run_cmd [ bin_sh, $script ],
-      close_all => 1;
+      close_all => 1,
       '>' => sub {
         my $t = shift;
         debug("trace: reading text dump");
