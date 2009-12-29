@@ -155,7 +155,7 @@ SCRIPT
     print $script <<SCRIPT;
 #!/bin/sh
 mergecap -w - $base_dir/*.pcap | ngrep -i -l -q -I - -O '$fh' '$ngrep_filter' >/dev/null;
-tshark -r "$fh" -R '$tshark_filter' -nltad -T fields $fields
+exec tshark -r "$fh" -R '$tshark_filter' -nltad -T fields $fields
 SCRIPT
     close($script);
 
@@ -168,7 +168,7 @@ SCRIPT
       close_all => 1,
       '>' => sub {
         my $t = shift;
-        debug("trace: reading text dump: $_");
+        debug("trace: reading text dump: $t");
         if(!defined $t) {
           $cv->send;
           return;
