@@ -18,7 +18,7 @@
 =pod
 
   Example valid query:
-    GET http://127.0.0.1:9090/request?node_name=couchdb1&action=node_status
+    GET 'http://127.0.0.1:9090/api/node_status/api?node_name=couchdb1'
   Note how "couchdb1" is a short name; the domain name is automatically
   appended in submit_activity() (after the request went through the
   request manager).
@@ -70,6 +70,7 @@
         debug("node/api: Processing web request");
         my $body = {
           activity => 'node/api/'.rand(),
+          action => 'request',
           params => {
             $req->vars
           },
@@ -133,6 +134,7 @@
         debug("node/request: Processing web request");
         my $body = {
           activity => 'node/request/'.rand(),
+          action => 'get_request_status',
           params => {
             $req->vars
           },
@@ -143,7 +145,6 @@
         my $path = $url->path;
 
         if($path =~ m{^/request/(\w+)$}) {
-          $body->{params}->{action} = 'get_request_status';
           $body->{params}->{request_id} = $1;
         } else {
           $req->respond([404,'Invalid request']);
