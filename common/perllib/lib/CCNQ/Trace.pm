@@ -145,7 +145,7 @@ SCRIPT
       unlink $script;
       debug("trace: completed pcap dump");
       $mcv->send(CCNQ::Install::SUCCESS({pcap => [$content]}));
-    )};
+    });
 
   } else {
     debug("trace: starting text dump");
