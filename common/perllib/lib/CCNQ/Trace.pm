@@ -68,7 +68,7 @@ sub run {
 
   #### Generate a merged capture file #####
 
-  sub make_ngrep_filter {
+  my $make_ngrep_filter = sub {
     my @ngrep_filter = ();
     push @ngrep_filter, 'To'.     ':[^\r\n]*'.$to_user   if defined $to_user;
     push @ngrep_filter, 'From'.   ':[^\r\n]*'.$from_user if defined $from_user;
@@ -76,9 +76,9 @@ sub run {
     return join('|',@ngrep_filter);
   }
 
-  my $ngrep_filter = make_ngrep_filter();
+  my $ngrep_filter = $make_ngrep_filter->();
 
-  sub make_tshark_filter {
+  my $make_tshark_filter = sub {
     my @tshark_filter = ();
 
     if(defined $days_ago) {
@@ -106,7 +106,7 @@ sub run {
     return join(' && ', map { "($_)" } @tshark_filter);
   }
 
-  my $tshark_filter = make_tshark_filter();
+  my $tshark_filter = $make_tshark_filter->();
 
   my $base_dir = '/var/log/traces';
 
