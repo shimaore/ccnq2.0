@@ -141,6 +141,7 @@ SCRIPT
 
     $cv->cb(sub {
       shift->recv;
+      undef $cv;
       undef $fh;
       unlink $script;
       debug("trace: completed pcap dump");
@@ -188,6 +189,7 @@ SCRIPT
 
     $cv->cb(sub {
       shift->recv;
+      undef $cv;
       undef $fh;
       unlink $script;
       debug("trace: completed text dump");
