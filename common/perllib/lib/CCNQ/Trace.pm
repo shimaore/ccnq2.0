@@ -134,7 +134,6 @@ sub run {
       '>' => sub {
         my $t = shift;
         if(!defined $t) {
-          $content = encode_json([@content]);
           return;
         }
         chomp $t;
