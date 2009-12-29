@@ -166,11 +166,12 @@ SCRIPT
 
     $cv = AnyEvent::Util::run_cmd [ bin_sh, $script ],
       close_all => 1,
+      '<' => '/dev/null',
+      '2>' => '/dev/null',
       '>' => sub {
         my $t = shift;
         debug("trace: reading text dump: $t");
         if(!defined $t) {
-          $cv->send;
           return;
         }
         chomp $t;
