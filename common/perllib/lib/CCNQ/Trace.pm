@@ -134,6 +134,7 @@ exec tshark -r "$fh" -R '$tshark_filter' -w -
 SCRIPT
     close($script);
 
+    my $content = '';
     $cv = AnyEvent::Util::run_cmd [ bin_sh, $script ],
       close_all => 1,
       '>' => \$content;
