@@ -168,9 +168,9 @@ SCRIPT
       close_all => 1,
       '>' => sub {
         my $t = shift;
-        debug("trace: reading text dump");
+        debug("trace: reading text dump: $_");
         if(!defined $t) {
-          undef $cv;
+          $cv->send;
           return;
         }
         chomp $t;
