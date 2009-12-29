@@ -124,7 +124,7 @@ sub run {
   my $script = new File::Temp (UNLINK => 0, SUFFIX => '.sh');
 
   if($dump_packets) {
-    debug("trace: starting binary dump");
+    debug("trace: starting pcap dump");
 
     # Output the subset of packets
     print $script <<SCRIPT;
@@ -134,18 +134,25 @@ exec tshark -r "$fh" -R '$tshark_filter' -w -
 SCRIPT
     close($script);
 
-    my $content = '';
-    $cv = AnyEvent::Util::run_cmd
-      [ bin_sh, $script ],
-      '>', \$content;
-    $cv->cb(sub {
-      shift->recv;
-      undef $fh;
+    if(!open(my $fh,'-|', bin_sh, $script )) {
+      error($!);
       unlink $script;
-      debug("trace: completed binary dump");
-      $mcv->send(CCNQ::Install::SUCCESS([$content]));
-    });
+      $mcv->send(CCNQ::Install::FAILURE($!));
+      return;
+    };
+    my $content = '';
+    local $/;
+    $content = <$fh>;
+    if(!close($fh)) {
+      error($!);
+      unlink $script;
+      $mcv->send(CCNQ::Install::FAILURE($!));
+      return;
+    };
 
+    unlink $script;
+    debug("trace: completed pcap dump");
+    $mcv->send(CCNQ::Install::SUCCESS({pcap => [$content]}));
   } else {
     debug("trace: starting text dump");
 
@@ -158,41 +165,36 @@ exec tshark -r "$fh" -R '$tshark_filter' -nltad -T fields $fields
 SCRIPT
     close($script);
 
-    my @content = ();
-    $cv = AnyEvent::Util::run_cmd
-      [ bin_sh, $script ],
-      # My assumptions about the callback are:
-      #   - receives line-by-line
-      #   - gets 'undef' at EOF.
-      '>' => sub {
-        my $t = shift;
-        debug("trace: reading text dump");
-        if(!defined $t) {
-          return;
-        }
-        chomp $t;
-        my @values = split(/\t/,$t);
-        my %values = ();
-        for my $i (0..$#values) {
-          my $value = $values[$i];
-          next unless defined $value && $value ne '';
-          $value =~ s/\\"/"/g; # tshark escapes " into \"
-          $values{trace_field_names()->[$i]} = $value;
-        }
-        push @content, {%values};
-      };
-    $cv->cb(sub {
-      shift->recv;
-      undef $fh;
+    if(!open(my $fh,'-|', bin_sh, $script )) {
+      error($!);
       unlink $script;
-      debug("trace: completed text dump");
-      $mcv->send(CCNQ::Install::SUCCESS([@content]));
-    });
+      $mcv->send(CCNQ::Install::FAILURE($!));
+      return;
+    };
+    my @content = ();
+    while(<$fh>) {
+      chomp;
+      my @values = split(/\t/);
+      my %values = ();
+      for my $i (0..$#values) {
+        my $value = $values[$i];
+        next unless defined $value && $value ne '';
+        $value =~ s/\\"/"/g; # tshark escapes " into \"
+        $values{trace_field_names()->[$i]} = $value;
+      }
+      push @content, {%values};
+    }
+    if(!close($fh)) {
+      error($!);
+      unlink $script;
+      $mcv->send(CCNQ::Install::FAILURE($!));
+      return;
+    };
 
+    unlink $script;
+    debug("trace: completed text dump");
+    $mcv->send(CCNQ::Install::SUCCESS({rows => [@content]}));
   }
-
-  debug("trace: starting dump");
-  $mcv->cb($cv);
 }
 
 1;
