@@ -81,6 +81,8 @@ in memory. Add the following line to /etc/fstab:
   sudo cpan AnyEvent::DBI
   # The (manager) client also needs AnyEvent::CouchDB
   sudo cpan AnyEvent::HTTP CouchDB::View AnyEvent::CouchDB
+  # Generally speaking you might want to install/upgrade those for better performance with AnyEvent
+  sudo cpan Async::Interrupt EV Guard JSON JSON::XS Net::SSLeay
 
   # Download the latest release of the code
   mkdir -p ~/src && (cd ~/src && git clone git://github.com/stephanealnet/ccnq2.0.git)
