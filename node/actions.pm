@@ -30,11 +30,6 @@ use CCNQ::Trace;
     $mcv->send(CCNQ::Install::SUCCESS({running => 1}));
   },
 
-  trace => sub {
-    my ($params,$context,$mcv) = @_;
-    CCNQ::Trace::run($params,$context,$mcv);
-  },
-
   restart_all => sub {
     my ($params,$context,$mcv) = @_;
     use AnyEvent::Watchdog::Util;

@@ -81,4 +81,9 @@ EOT
     $mcv->send(CCNQ::Install::SUCCESS);
   },
 
+  trace => sub {
+    my ($params,$context,$mcv) = @_;
+    CCNQ::Trace::run($params,$context,$mcv);
+  },
+
 }

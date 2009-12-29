@@ -103,4 +103,10 @@ use CCNQ::Proxy::Config;
     CCNQ::Install::_execute($context,qw( /usr/sbin/opensipsctl fifo trusted_reload ));
     $mcv->send(CCNQ::Install::SUCCESS);
   },
+
+  trace => sub {
+    my ($params,$context,$mcv) = @_;
+    CCNQ::Trace::run($params,$context,$mcv);
+  },
+
 }
