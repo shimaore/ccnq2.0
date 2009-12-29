@@ -47,17 +47,16 @@ use constant trace_field_names => [qw(
   sip.User-Agent
 )];
 
-use constant::defer trace_script =>
-  sub { File::Spec->catfile(CCNQ::Install::SRC,qw( contrib trace-filter.sh )) };
+use constant bin_sh => '/bin/sh';
 
 sub run {
   my ($params,$context,$mcv) = @_;
 
-  my $dump_packets = $params->{dump_packets};
+  my $dump_packets = $params->{dump_packets} || 0;
   my $call_id      = $params->{call_id};
   my $to_user      = $params->{to_user};
   my $from_user    = $params->{from_user};
-  my $days_ago     = $params->{days_ago};
+  my $days_ago     = $params->{days_ago} || 0;
 
   $mcv->send(CCNQ::Install::FAILURE('Invalid to_user')  ), return
     if defined $to_user   && $to_user   !~ /^\d+$/;
@@ -121,6 +120,7 @@ sub run {
   my $script = new File::Temp (UNLINK => 0, SUFFIX => '.sh');
 
   if($dump_packets) {
+
     # Output the subset of packets
     print $script <<SCRIPT;
 #!/bin/sh
@@ -131,7 +131,7 @@ SCRIPT
 
     my $content = '';
     $cv = run_cmd
-      [ $script ],
+      [ bin_sh, $script ],
       '>', \$content;
     $cv->cb(sub {
       shift->recv;
@@ -139,7 +139,9 @@ SCRIPT
       unlink $script;
       $mcv->send(CCNQ::Install::SUCCESS([$content]));
     });
+
   } else {
+
     # Output JSON
     my $fields = join(' ',map { ('-e', $_) } @{trace_field_names()});
     print $script <<SCRIPT;
@@ -148,9 +150,10 @@ mergecap -w - $base_dir/*.pcap | ngrep -i -l -q -I - -O "$fh" "$ngrep_filter" >/
 tshark -r "$fh" -R "$tshark_filter" -nltad -T fields $fields
 SCRIPT
     close($script);
+
     my @content = ();
     $cv = run_cmd
-      [ $script ],
+      [ bin_sh, $script ],
       # My assumptions about the callback are:
       #   - receives line-by-line
       #   - gets 'undef' at EOF.
@@ -176,6 +179,7 @@ SCRIPT
       unlink $script;
       $mcv->send(CCNQ::Install::SUCCESS([@content]));
     });
+
   }
 
   $context->{condvar}->cb($cv);
