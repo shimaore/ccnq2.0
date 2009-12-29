@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use Carp;
+use CCNQ::Trace;
 
 {
   install_all => sub {
@@ -27,6 +28,11 @@ use Carp;
   status => sub {
     my ($params,$context,$mcv) = @_;
     $mcv->send(CCNQ::Install::SUCCESS({running => 1}));
+  },
+
+  trace => sub {
+    my ($params,$context,$mcv) = @_;
+    CCNQ::Trace::run($params,$context,$mcv);
   },
 
   restart_all => sub {
