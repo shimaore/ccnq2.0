@@ -52,7 +52,7 @@ use CCNQ::Trace;
 
 my $mcv = AnyEvent->condvar;
 
-print run({
+CCNQ::Trace::run({
     dump_packets => $dump_packets,
     call_id      => $call_id,
     to_user      => $to_user,
@@ -63,6 +63,7 @@ print run({
   $mcv
 );
 
-print $mcv->recv;
+use CCNQ::Portal::Formatter;
+print CCNQ::Portal::Formatter::pp($mcv->recv);
 
 __END__
