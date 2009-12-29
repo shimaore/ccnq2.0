@@ -155,7 +155,7 @@ SCRIPT
     print $script <<SCRIPT;
 #!/bin/sh
 mergecap -w - $base_dir/*.pcap | ngrep -i -l -q -I - -O '$fh' '$ngrep_filter' >/dev/null;
-exec tshark -r "$fh" -R '$tshark_filter' -nltad -T fields $fields
+tshark -r "$fh" -R '$tshark_filter' -nltad -T fields $fields
 SCRIPT
     close($script);
 
