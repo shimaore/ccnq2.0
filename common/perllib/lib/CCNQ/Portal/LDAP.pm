@@ -1,5 +1,5 @@
 
-package Portal::Directory;
+package CCNQ::Portal::Directory;
 
 use Net::LDAP;
 

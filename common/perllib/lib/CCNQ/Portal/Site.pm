@@ -1,4 +1,4 @@
-
+package CCNQ::Portal::Site;
 =pod
 
   base_uri
@@ -7,3 +7,4 @@
 
 =cut
 
+1;

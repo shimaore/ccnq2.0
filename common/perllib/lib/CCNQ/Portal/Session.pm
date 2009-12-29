@@ -1,4 +1,4 @@
-package Portal::Session;
+package CCNQ::Portal::Session;
 
 use base 'CGI::Session';
 use Logger::Syslog;

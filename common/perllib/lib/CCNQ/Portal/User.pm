@@ -1,4 +1,4 @@
-package Portal::User;
+package CCNQ::Portal::User;
 
 
 =pod
