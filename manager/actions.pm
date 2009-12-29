@@ -250,7 +250,8 @@ JAVASCRIPT
     );
 
     $cv->cb(sub{
-      eval { my $result = $_[0]->recv };
+      my $result;
+      eval { $result = $_[0]->recv };
 
       if($@) {
         $mcv->send(FAILURE($@));
