@@ -1,19 +1,21 @@
+package CCNQ::Portal::I18N;
+
+use Filter::Simple;
 
 =pod
 
 
-  Use macros so that e.g.
-     _("....")
+  We use macros so that e.g.
+     _("....")_
   can use the local $session to gather $session->current_language().
 
 =cut
 
-=pod
+# See http://www.unix.com/shell-programming-scripting/70177-perl-regex-help-matching-parentheses-2.html
+# or http://search.cpan.org/dist/perl-5.10.0/pod/perl5100delta.pod#Regular_expressions
 
-  _
-  _duration
-  _timestamp
-  _date
-  _amount(currency,value)
+FILTER {
+  s{_\((.*?)\)_}{ $session->loc($1) }g;
+};
 
-=cut
+1;

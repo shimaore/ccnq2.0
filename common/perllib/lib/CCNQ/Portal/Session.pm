@@ -20,7 +20,7 @@ use constant URL_EXPIRED    => 'https://sotelips.net/d/?q=node/69&error=Session+
 sub new {
   my $class = shift;
   my ($cgi,$user,$site) = @_;
-  
+
   # Session already exists.
   my $self = $class->SUPER::load(undef, $cgi, {Directory=>SESSION_STORE});
   if($self) {
@@ -56,9 +56,19 @@ sub init_language {
   );
 }
 
-sub site { shift->{site} }
-sub user { shift->{user} }
-sub current_language { shift->{language} }
+sub site { shift->{_site} }
+sub user { shift->{_user} }
+sub current_language { shift->{_language} }
+
+=pod
+  change_user
+=cut
+
+sub change_user {
+  my ($self,$user) = @_;
+  $self->{_user} = $user;
+  $self->init_language();
+}
 
 =pod
   change_language
@@ -68,19 +78,37 @@ sub current_language { shift->{language} }
 
 sub change_language {
   my ($self,$language) = @_;
-  $self->{language} = $language;
+  $self->{_language} = $language;
   $self->param(LANGUAGE_PARAM,$language);
   $self->flush();
 }
 
 sub lang {
   my $self = shift;
-  $self->{lang} ||= CCNQ::I18N->get_handle($self->current_language);
+  $self->{_lang} ||= CCNQ::I18N->get_handle($self->current_language);
 }
 
 sub loc {
   $self->lang->maketext(@_);
 }
 
-1;
+sub loc_duration {}
 
+sub loc_timestamp {}
+
+sub loc_date {}
+
+sub loc_amount {
+  my $self = shift;
+  my ($currency,$value) = @_;
+}
+
+sub logout
+{
+  my $self = shift;
+
+  $self->delete();
+  $self->flush;
+}
+
+1;

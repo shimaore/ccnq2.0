@@ -30,98 +30,79 @@ use constant URL_INVALID_LOGIN     => 'https://sotelips.net/d/?q=node/69&error=I
 use constant URL_INVALID_PASSWORD  => 'https://sotelips.net/d/?q=node/69&error=Invalid+Password'; # Login page with a warning about invalid password
 use constant URL_LOGOUT            => 'https://sotelips.net/d/?q=node/69&error=Successful+Logout'; # Logout page
 
-sub logout
+sub auth
 {
-  my ($cgi,$session) = @_;
+  my ($login,$password) = @_;
 
-  $session->delete();
-  $session->flush;
-  return [undef,$cgi->redirect(URL_LOGOUT)];
-}
-
-sub check
-{
-  my $cgi = shift;
-
-  my $action = $cgi->param('action');
-  return login($cgi) if defined $action && $action eq 'login';
-
-  # Session must already exist.
-  my $session = CGI::Session->load(undef, $cgi, {Directory=>SESSION_STORE}) or die CGI::Session->errstr;
-
-  return [undef,$cgi->redirect(URL_LOGIN)]
-   if(!defined($session));
-
-  return [undef,$cgi->redirect(URL_EXPIRED)]
-   if($session->is_expired);
-  return [undef,$cgi->redirect(URL_LOGIN)]
-   if($session->is_empty);
-
-  my $login = $session->param('logged_in');
-  return [undef,$cgi->redirect(URL_INVALID_LOGIN)]
-   if(!defined($login) || $login eq '');
-
-  return logout($cgi,$session) if defined $action && $action eq 'logout';
-  return [$session,''];
-}
-
-sub login
-{
-  my $cgi = shift or die;
-
-  #
-  ## Validate the fields
-  #
-
-  my $untainter = CGI::Untaint->new($cgi->Vars);
-
-  my $login = $untainter->extract(-as_email=>'login');
-  return [undef,$cgi->redirect(URL_INVALID_LOGIN)] if not defined $login;
-
-  $login = $login->format;
-
-  my $password = $cgi->param('password');
-  return [undef,$cgi->redirect(URL_INVALID_PASSWORD)] if not defined $password or $password eq '';
-
-  #
-  ## Use LDAP to validate the password.
-  #
+  return 0 unless defined $login and defined $password;
 
   # XXX: RT also has a notion of "Disabled Users" that we should (query and test) for.
 
   my $bind = "cn=${login},".LDAP_BASE;
   my $ldap = Net::LDAP->new( 'ldaps://ldap.sotelips.net', timeout => 5 ) or die $@;
   my $mesg = $ldap->bind( $bind, password => $password );
-  warn($bind.':' .$mesg->error),
-  return [undef,$cgi->redirect(URL_INVALID_PASSWORD)] if $mesg->code;
+  my $ok = $mesg->code ? 0 : 1;
+  warn($bind.':' .$mesg->error) if $mesg->code;
   $ldap->unbind;
 
   undef $ldap;
   undef $mesg;
+  return $ok;
+}
 
-  #
-  ## If logged in, create a CGI::Session.
-  #
+sub auth_change {
+  my ($login,$password) = @_;
+  
+  return 0 unless defined $login and defined $password;
 
-  my $session = new CGI::Session(undef, $cgi, {Directory=>SESSION_STORE}) or die CGI::Session->errstr;
-  $session->param('logged_in', $login);
-  $session->expire(SESSION_EXPIRY);
+  my $ldap = Portal::Directory::get_ldap($cgi);
 
-  #
-  ## Create RT URL
-  #
+  my $bind = "cn=${email},".Portal::Directory::LDAP_BASE;
 
-  my $rt = 
-    $cgi->start_form(-action=>RT_BASE,-method=>'POST',-name=>'rt_login').
-    $cgi->hidden(-name=>'user',-value=>$login,-force=>1).
-    $cgi->hidden(-name=>'pass',-value=>$password,-force=>1).
-    $cgi->submit('submit','>> Ticket system').
-    $cgi->end_form();
+  my $result = $ldap->set_password(
+    newpasswd => $password,
+    user => $bind
+  );
+  warn('Error: '.$result->error.', code: '.$result->code);
+  return $cgi->redirect(URL_CANNOT_RESET) if($result->code);
 
-  $session->param('rt',$rt);
+}
 
-  $session->flush();
-  return [$session,''];
+sub create {
+  my $ldap = Portal::Directory::get_ldap($cgi);
+  
+  my $bind = "cn=${email},".Portal::Directory::LDAP_BASE;
+
+  my $result = $ldap->add(
+    $bind,
+    attr => [
+      cn => [ $name, $email ],
+      objectclass => ['inetOrgPerson'],
+      mail => $email,
+      uid => $email,
+      sn => $name,
+    ]
+  );
+  warn("dn: $bind -> ".$result->error);
+  return $cgi->redirect(URL_FAILED) if($result->code);
+
+  $result = $ldap->set_password(
+    newpasswd => $password,
+    user => $bind
+  );
+  warn($result->error);
+  return $cgi->redirect(URL_FAILED) if($result->code);
+}
+
+sub exists {
+  my $ldap = Portal::Directory::get_ldap($cgi);
+
+  # Make sure the email address does not already exist
+  my $mesg = $ldap->search( base => Portal::Directory::LDAP_BASE, filter => "(cn=$email)" );
+  warn($mesg->error);
+  return $cgi->redirect(URL_ERROR) if $mesg->code;
+  return $cgi->redirect(URL_ALREADY) if $mesg->entries;
+  
 }
 
 1;

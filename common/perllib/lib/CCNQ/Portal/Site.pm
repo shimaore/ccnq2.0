@@ -7,4 +7,14 @@ package CCNQ::Portal::Site;
 
 =cut
 
+sub base_uri {}
+
+sub default_language {
+
+}
+
+sub security {
+  return new CCNQ::Portal::Auth::LDAP;
+}
+
 1;

@@ -37,21 +37,41 @@ use Locale::Maketext::Lexicon {
 
 use Lingua::EN::Numbers::Ordinate;
 sub en::ord { ordinate($_[1]) }
-use Lingua::FR::Numbers::Ordinate;
-sub fr::ord { ordinate_fr($_[1]) }
-
-use CCNQ::Portal::CurrentUser;
-
-sub _ {
-  if(CCNQ::Portal::current_user) {
-    CCNQ::Portal::current_user->loc(@_);
-  } else {
-    my $lh = __PACKAGE__->get_handle;
-    $lh-> maketext(@_);
-  }
-}
+use Lingua::FR::Numbers qw(number_to_fr ordinate_to_fr);
+sub fr::numf{ number_to_fr($_[1]) }
+sub fr::ord { ordinate_to_fr($_[1]) }
+#use Lingua::FR::Numbers::Ordinate;
+#sub fr::ord { ordinate_fr($_[1]) }
 
 # Could use CCNQ::Install::get_variable().
 use constant default_language => 'en-US';
+
+# Note that numf and quant are provided by default.
+
+sub duration {
+  my $self = shift;
+  my ($seconds) = @_;
+  return $self->numf($seconds)." seconds";
+}
+
+sub timestamp {
+  my $self = shift;
+  my ($timestamp) = @_;
+  return scalar(gmtime($timestamp));
+}
+
+sub date {
+  my $self = shift;
+  my ($timestamp) = @_;
+  return scalar(gmtime($timestamp));
+}
+
+sub amount {
+  my $self = shift;
+  my ($currency,$value) = @_;
+  # See e.g. Number::Format's format_price
+  return $currency.$self->numf($value);
+}
+
 
 1;
