@@ -16,7 +16,6 @@
 
 use strict; use warnings;
 
-use EV;
 use AnyEvent;
 use AnyEvent::Watchdog autorestart => 1, heartbeat => 30;
 
