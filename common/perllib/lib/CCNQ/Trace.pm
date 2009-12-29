@@ -68,8 +68,6 @@ sub run {
 
   #### Generate a merged capture file #####
 
-  my $fh = new File::Temp ("ngrepXXXXX");
-
   my @ngrep_filter = ();
   push @ngrep_filter, 'To'.     ':[^\r\n]*'.$to_user   if defined $to_user;
   push @ngrep_filter, 'From'.   ':[^\r\n]*'.$from_user if defined $from_user;
@@ -109,6 +107,8 @@ sub run {
   my $base_dir = '/var/log/traces';
 
   my $cv;
+
+  my $fh     = new File::Temp (SUFFIX => '.pcap');
 
   if($dump_packets) {
     # Output the subset of packets
