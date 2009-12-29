@@ -134,6 +134,85 @@ exec tshark -r "$fh" -R '$tshark_filter' -w -
 SCRIPT
     close($script);
 
+    $cv = AnyEvent::Util::run_cmd [ bin_sh, $script ],
+      close_all => 1,
+      '>' => \$content;
+
+    $cv->cb(sub {
+      shift->recv;
+      undef $fh;
+      unlink $script;
+      debug("trace: completed pcap dump");
+      $mcv->send(CCNQ::Install::SUCCESS({pcap => [$content]}));
+    )};
+
+  } else {
+    debug("trace: starting text dump");
+
+    # Output JSON
+    my $fields = join(' ',map { ('-e', $_) } @{trace_field_names()});
+    print $script <<SCRIPT;
+#!/bin/sh
+mergecap -w - $base_dir/*.pcap | ngrep -i -l -q -I - -O '$fh' '$ngrep_filter' >/dev/null;
+exec tshark -r "$fh" -R '$tshark_filter' -nltad -T fields $fields
+SCRIPT
+    close($script);
+
+    my @content = ();
+    # My assumptions about the callback are:
+    #   - receives line-by-line
+    #   - gets 'undef' at EOF.
+
+    $cv = AnyEvent::Util::run_cmd [ bin_sh, $script ],
+      close_all => 1;
+      '>' => sub {
+        my $t = shift;
+        debug("trace: reading text dump");
+        if(!defined $t) {
+          return;
+        }
+        chomp $t;
+        my @values = split(/\t/,$t);
+        my %values = ();
+        for my $i (0..$#values) {
+          my $value = $values[$i];
+          next unless defined $value && $value ne '';
+          $value =~ s/\\"/"/g; # tshark escapes " into \"
+          $values{trace_field_names()->[$i]} = $value;
+        }
+        push @content, {%values};
+      };
+
+    $cv->cb(sub {
+      shift->recv;
+      undef $fh;
+      unlink $script;
+      debug("trace: completed text dump");
+      $mcv->send(CCNQ::Install::SUCCESS({rows => [@content]}));
+    });
+
+  }
+
+  debug("trace: initiating dump");
+  $context->{condvar}->cb($cv);
+  debug("trace: end");
+} # run
+
+1;
+
+__END__
+
+  if($dump_packets) {
+    debug("trace: starting pcap dump");
+
+    # Output the subset of packets
+    print $script <<SCRIPT;
+#!/bin/sh
+mergecap -w - $base_dir/*.pcap | ngrep -i -l -q -I - -O '$fh' '$ngrep_filter' >/dev/null;
+exec tshark -r "$fh" -R '$tshark_filter' -w -
+SCRIPT
+    close($script);
+
     if(!open(my $fh,'-|', bin_sh, $script )) {
       error($!);
       unlink $script;
@@ -196,5 +275,3 @@ SCRIPT
     $mcv->send(CCNQ::Install::SUCCESS({rows => [@content]}));
   }
 }
-
-1;
