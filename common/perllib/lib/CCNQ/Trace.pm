@@ -135,7 +135,7 @@ SCRIPT
     close($script);
 
     my $content = '';
-    $cv = run_cmd
+    $cv = AnyEvent::Util::run_cmd
       [ bin_sh, $script ],
       '>', \$content;
     $cv->cb(sub {
@@ -159,13 +159,14 @@ SCRIPT
     close($script);
 
     my @content = ();
-    $cv = run_cmd
+    $cv = AnyEvent::Util::run_cmd
       [ bin_sh, $script ],
       # My assumptions about the callback are:
       #   - receives line-by-line
       #   - gets 'undef' at EOF.
       '>' => sub {
         my $t = shift;
+        debug("trace: reading text dump");
         if(!defined $t) {
           return;
         }
@@ -191,7 +192,7 @@ SCRIPT
   }
 
   debug("trace: starting dump");
-  $context->{condvar}->cb($cv);
+  $mcv->cb($cv);
 }
 
 1;
