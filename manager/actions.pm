@@ -241,11 +241,16 @@ JAVASCRIPT
 
     my $db = couchdb(CCNQ::Manager::manager_db);
 
+    my $request_id = $params->{params}->{request_id};
+
     my $cv = $db->view(
         'report/requests',
         {
-          startkey => encode_json([$params->{request_id}]),
-          endkey   => encode_json([$params->{request_id},{}]),
+          startkey => encode_json([$request_id]),
+          endkey   => encode_json([$request_id,{}]),
+          error    => sub {
+            $mcv->send(CCNQ::Install::FAILURE);
+          }
         }
     );
 
@@ -254,18 +259,18 @@ JAVASCRIPT
       eval { $result = $_[0]->recv };
 
       if($@) {
-        $mcv->send(FAILURE($@));
+        $mcv->send(CCNQ::Install::FAILURE($@));
         return;
       }
 
       if(!$result) {
         debug("Request $params->{request_id} not found.");
-        $mcv->send(FAILURE("Request not found."));
+        $mcv->send(CCNQ::Install::FAILURE("Request not found."));
         return;
       }
 
       debug("Found request");
-      $mcv->send(SUCCESS({rows => $result->{rows}}));
+      $mcv->send(CCNQ::Install::SUCCESS({rows => $result->{rows}}));
     });
     $context->{condvar}->cb($cv);
   },

@@ -153,7 +153,7 @@
         }
 
         if($req->method eq 'GET') {
-          $body->{params}->{action} .= '_query';
+          # OK
         } else {
           $req->respond([501,'Invalid method']);
           $httpd->stop_request;
