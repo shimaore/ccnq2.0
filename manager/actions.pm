@@ -179,7 +179,7 @@ JAVASCRIPT
       my $activity = $_[0]->recv;
       if($activity) {
         debug("Found activity");
-        $activity->{response} = $response->{params};
+        $activity->{response} = $response;
         warning("Activity $response->{activity} response action $response->{action} does not match requested action $activity->{action}")
           if $response->{action} ne $activity->{action};
 
