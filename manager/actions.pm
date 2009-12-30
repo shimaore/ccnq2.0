@@ -248,6 +248,7 @@ JAVASCRIPT
         {
           startkey => [$request_id],
           endkey   => [$request_id,{}],
+          include_docs => "true",
           error    => sub {
             $mcv->send(CCNQ::Install::FAILURE);
           }
