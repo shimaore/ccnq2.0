@@ -265,7 +265,7 @@ JAVASCRIPT
       }
 
       debug("Found request");
-      $mcv->send(SUCCESS($result->{rows}));
+      $mcv->send(SUCCESS({rows => $result->{rows}}));
     });
     $context->{condvar}->cb($cv);
   },
