@@ -246,8 +246,8 @@ JAVASCRIPT
     my $cv = $db->view(
         'report/requests',
         {
-          startkey => encode_json([$request_id]),
-          endkey   => encode_json([$request_id,{}]),
+          startkey => [$request_id],
+          endkey   => [$request_id,{}],
           error    => sub {
             $mcv->send(CCNQ::Install::FAILURE);
           }
