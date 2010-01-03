@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use CCNQ::Install;
+use CCNQ::Util;
 use File::Spec;
 
 use constant::defer monit_directory =>
@@ -26,11 +28,11 @@ use constant monit_target => '/etc/monit';
     my ($params,$context,$mcv) = @_;
     for my $file qw( couchdb.monitrc freeswitch.monitrc local.monitrc monitrc opensips.monitrc ) {
       my $src = File::Spec->catfile(monit_directory,$file);
-      my $content = content_of($src);
+      my $content = CCNQ::Util::content_of($src);
       $content =~ s/__HOST__/CCNQ::Install::host_name()/ge;
       $content =~ s/__DOMAIN__/CCNQ::Install::domain_name()/ge;
       my $dst = File::Spec->catfile(monit_target,$file);
-      print_to($dst,$content);
+      CCNQ::Util::print_to($dst,$content);
     }
 
     $mcv->send(CCNQ::Install::SUCCESS);

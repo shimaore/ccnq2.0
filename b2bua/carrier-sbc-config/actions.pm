@@ -17,6 +17,7 @@
 
 use CCNQ::B2BUA;
 use CCNQ::Install;
+use CCNQ::Util;
 use AnyEvent::DNS;
 use File::Spec;
 use File::Path;
@@ -149,13 +150,13 @@ EOT
     } # for $name
 
     my $sip_profile_file = CCNQ::B2BUA::install_dir(qw( sip_profiles ), "${b2bua_name}.xml" );
-    CCNQ::Install::print_to($sip_profile_file,$sip_profile_text);
+    CCNQ::Util::print_to($sip_profile_file,$sip_profile_text);
 
     my $acl_file = CCNQ::B2BUA::install_dir(qw( autoload_configs ), "${b2bua_name}.acl.xml" );
-    CCNQ::Install::print_to($acl_file,$acl_text);
+    CCNQ::Util::print_to($acl_file,$acl_text);
 
     my $dialplan_file = CCNQ::B2BUA::install_dir(qw( dialplan ), "${b2bua_name}.xml" );
-    CCNQ::Install::print_to($dialplan_file,$dialplan_text);
+    CCNQ::Util::print_to($dialplan_file,$dialplan_text);
 
     CCNQ::B2BUA::finish();
     $mcv->send(CCNQ::Install::SUCCESS);

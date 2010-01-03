@@ -22,6 +22,7 @@ use AnyEvent;
 use AnyEvent::DNS;
 use AnyEvent::Util;
 
+use CCNQ::Util;
 use Logger::Syslog;
 
 # Where the local configuration information is kept.
@@ -74,46 +75,6 @@ sub execute {
 }
 
 =pod
-  $text = first_line_of($filename)
-    Returns the first line of the file $filename,
-    or undef if an error occurred.
-=cut
-
-sub first_line_of {
-  open(my $fh, '<', $_[0]) or error("$_[0]: $!"), return undef;
-  my $result = <$fh>;
-  chomp($result);
-  close($fh) or error("$_[0]: $!"), return undef;
-  return $result;
-}
-
-=pod
-  $content = content_of($filename)
-    Returns the content of file $filename,
-    or undef if an error occurred.
-=cut
-
-sub content_of {
-  open(my $fh, '<', $_[0]) or error("$_[0]: $!"), return undef;
-  local $/;
-  my $result = <$fh>;
-  close($fh) or error("$_[0]: $!"), return undef;
-  return $result;
-}
-
-=pod
-  print_to($filename,$content)
-    Saves the $content to the specified $filename.
-    croak()s on errors.
-=cut
-
-sub print_to {
-  open(my $fh, '>', $_[0]) or croak "$_[0]: $!";
-  print $fh $_[1];
-  close($fh) or croak "$_[0]: $!";
-}
-
-=pod
   $text = get_variable($name,$file,$guess_tool)
     Loads variable $name from the environment, or from $file if it exists.
     Otherwise creates $file with the value guessed by $guess_tool,
@@ -134,14 +95,14 @@ sub get_variable {
   }
 
   if(-f $file) {
-    my $result = first_line_of($file);
+    my $result = CCNQ::Util::first_line_of($file);
     info("Using existing ${what} ${result}.");
     return $result;
   }
 
   my $guess = $guess_tool->();
   info("Found ${what} ${guess}, please edit ${file} if needed.");
-  print_to($file,$guess);
+  CCNQ::Util::print_to($file,$guess);
   exit(1);
 }
 
@@ -360,7 +321,7 @@ sub attempt_run {
   return $cancel unless -e $run_file;
 
   # An error occurred while reading the file.
-  my $eval = content_of($run_file);
+  my $eval = CCNQ::Util::content_of($run_file);
   return $cancel if !defined($eval);
 
   # An error occurred while parsing the file.

@@ -19,6 +19,7 @@
   install => sub {
     my ($params,$context,$mcv) = @_;
     use CCNQ::MediaProxy;
+    use CCNQ::Util;
     use File::Spec;
     use File::Copy;
     for my $file (qw( ca.pem crl.pem )) {
@@ -28,8 +29,8 @@
     }
     my $dispatcher_file = CCNQ::MediaProxy::mediaproxy_config.'.dispatcher';
     my $relay_file      = CCNQ::MediaProxy::mediaproxy_config.'.relay';
-    my $config_dispatcher = -f($dispatcher_file) ? CCNQ::Install::content_of($dispatcher_file) : '';
-    my $config_relay      = -f($relay_file)      ? CCNQ::Install::content_of($relay_file)      : '';
+    my $config_dispatcher = -f($dispatcher_file) ? CCNQ::Util::content_of($dispatcher_file) : '';
+    my $config_relay      = -f($relay_file)      ? CCNQ::Util::content_of($relay_file)      : '';
     my $config = <<'EOT';
 [TLS]
 certs_path = /etc/mediaproxy/tls
@@ -48,7 +49,7 @@ certs_path = /etc/mediaproxy/tls
 ;additional_dictionary = radius/dictionary
 
 EOT
-    print_to(CCNQ::MediaProxy::mediaproxy_config,$config.$config_dispatcher.$config_relay);
+    CCNQ::Util::print_to(CCNQ::MediaProxy::mediaproxy_config,$config.$config_dispatcher.$config_relay);
     unlink($dispatcher_file);
     unlink($relay_file);
     $mcv->send(CCNQ::Install::SUCCESS);

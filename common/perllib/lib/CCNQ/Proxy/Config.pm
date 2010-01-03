@@ -17,6 +17,7 @@ package CCNQ::Proxy::Config;
 use strict; use warnings;
 use Logger::Syslog;
 use Memoize;
+use CCNQ::Util;
 
 =pod
 
@@ -68,7 +69,7 @@ EOH
       my $file = File::Spec->catfile($base_dir,'src',"${building_block}.${extension}");
       if( -f $file ) {
         $result .= "\n## ---  Start ${file}  --- ##\n\n";
-        $result .= CCNQ::Install::content_of($file);
+        $result .= CCNQ::Util::content_of($file);
         $result .= "\n## ---  End ${file}  --- ##\n\n";
       }
     }
@@ -86,7 +87,7 @@ sub compile_sql {
   for my $building_block (@recipe) {
     my $file = File::Spec->catfile($base_dir,'src',"${building_block}.${extension}");
     if( -f $file ) {
-      $result .= CCNQ::Install::content_of($file);
+      $result .= CCNQ::Util::content_of($file);
     }
   }
   return $result;
@@ -168,8 +169,8 @@ sub configure_opensips {
   # Save the configurations to temp files
   my $cfg_file = new File::Temp;
   my $sql_file = new File::Temp;
-  CCNQ::Install::print_to($cfg_file,$cfg_text);
-  CCNQ::Install::print_to($sql_file,$sql_text);
+  CCNQ::Util::print_to($cfg_file,$cfg_text);
+  CCNQ::Util::print_to($sql_file,$sql_text);
 
   # Move the temp files to their final destinations
   info("Installing new configuration");

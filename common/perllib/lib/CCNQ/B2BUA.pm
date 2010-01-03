@@ -14,6 +14,7 @@ package CCNQ::B2BUA;
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use CCNQ::Install;
+use CCNQ::Util;
 use File::Spec;
 use File::Path;
 
@@ -60,10 +61,10 @@ sub install_file {
   mk_dir(@dst_dir);
   my $dst = install_dir(@path);
   debug("Installing $src as $dst");
-  my $txt = CCNQ::Install::content_of($src);
+  my $txt = CCNQ::Util::content_of($src);
   return error("No file $src") if !defined($txt);
   $txt = $cb->($txt) if $cb;
-  CCNQ::Install::print_to($dst,$txt);
+  CCNQ::Util::print_to($dst,$txt);
 }
 
 sub copy_file {

@@ -41,7 +41,7 @@ passport = None
 
 # end dispatcher configuration
 EOT
-    print_to(CCNQ::MediaProxy::mediaproxy_config.'.dispatcher',$config);
+    CCNQ::Util::print_to(CCNQ::MediaProxy::mediaproxy_config.'.dispatcher',$config);
     $mcv->send(CCNQ::Install::SUCCESS);
   },
 }

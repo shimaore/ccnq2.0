@@ -14,6 +14,7 @@ package CCNQ::Manager;
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use CCNQ::Install;
+use CCNQ::Util;
 use File::Spec;
 use JSON;
 use Logger::Syslog;
@@ -38,7 +39,7 @@ sub request_to_activity {
   # Try to find a file in manager/requests to handle the request.
   my $request_file = File::Spec->catfile(manager_requests_dir,"${request_type}.pm");
   if( -e $request_file ) {
-    my $eval = CCNQ::Install::content_of($request_file);
+    my $eval = CCNQ::Util::content_of($request_file);
     return undef if !defined($eval);
     my $sub = eval($eval);
     if($@) {
