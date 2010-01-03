@@ -16,6 +16,7 @@ package CCNQ::AE;
 use strict; use warnings;
 use Logger::Syslog;
 use AnyEvent::Util;
+use CCNQ::Install; # For host_name
 
 # Non-blocking version
 sub execute {
@@ -50,13 +51,13 @@ use constant STATUS_FAILED    => 'failed';
 sub SUCCESS {
   my $result = shift;
   error(Carp::longmess("$result is not an hashref")) if $result && ref($result) ne 'HASH';
-  return $result ? { status => STATUS_COMPLETED, params => $result, from => host_name }
-                 : { status => STATUS_COMPLETED,                    from => host_name };
+  return $result ? { status => STATUS_COMPLETED, params => $result, from => CCNQ::Install::host_name }
+                 : { status => STATUS_COMPLETED,                    from => CCNQ::Install::host_name };
 }
 
 sub FAILURE {
   my $error = shift || 'No error specified';
-  return { status => STATUS_FAILED, error => $error, from => host_name };
+  return { status => STATUS_FAILED, error => $error, from => CCNQ::Install::host_name };
 }
 
 use constant CANCEL => {};
