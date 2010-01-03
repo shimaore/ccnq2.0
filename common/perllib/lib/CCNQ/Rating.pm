@@ -54,7 +54,7 @@ Then the account+account_sub is used to locate a specific Plan; the Plan is then
 
 
   my $plan = lookup_plan_for($cbef->{account},$cbef->{account_sub});
-  $plan->apply($cbef);
+  CCNQ::Rating::Rate($cbef,$plan);
   return $cbef; # A Rated CBEF
 
 
@@ -67,7 +67,7 @@ event_types:
   connected_inbound_call
   connected_outbound_call
   connected_onnet_call
-  failed_inbound_call
+  failed_inbound_call   # not needed; set count to 0 (see CCNQ::Rating::Event)
   failed_outbound_call
   failed_onnet_call
   sms
