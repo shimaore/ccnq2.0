@@ -275,7 +275,7 @@ sub start {
     pending_muc => {},
   };
 
-  my $session_ready_sub = CCNQ::Install::attempt_run($function,'_session_ready',{},$context);
+  my $session_ready_sub = CCNQ::AE::Run::attempt_run($function,'_session_ready',{},$context);
 
   $con->reg_cb (
 
