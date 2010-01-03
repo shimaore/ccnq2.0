@@ -24,7 +24,7 @@ use CCNQ::AE;
 use constant actions_file_name => 'actions.pm';
 sub actions_file {
   my ($function) = @_;
-  return File::Spec->catfile(SRC,$function,actions_file_name);
+  return File::Spec->catfile(CCNQ::Install::SRC,$function,actions_file_name);
 }
 
 =pod
