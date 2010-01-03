@@ -376,8 +376,8 @@ sub attempt_run {
     eval {
       if($run->{$action}) {
         $run->{$action}->($params,$context,$cv);
-      } elsif($run->{_default}) {
-        $run->{_default}->($action,$params,$context,$cv);
+      } elsif($run->{_dispatch}) {
+        $run->{_dispatch}->($action,$params,$context,$cv);
       } else {
         debug("attempt_run($function,$action): No action available");
         $cancel->($cv);

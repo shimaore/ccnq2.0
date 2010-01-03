@@ -7,7 +7,7 @@ where "action" can be any of:
 
   _session_ready: called when the connection with the XMPP server is established
   _response: called when a response is received from another node
-  _default: called (if present) when no specific callback is available
+  _dispatch: called (if present) when no specific callback is available
 
   install:   used by the installer script
   _request: sent by an API node to the manager MUC

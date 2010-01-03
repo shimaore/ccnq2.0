@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use CCNQ::Util;
 use CCNQ::Proxy;
 use CCNQ::Proxy::Config;
 
@@ -32,7 +33,7 @@ use CCNQ::Proxy::Config;
     #    router-no-registrar
     #    router
 
-    my $model = first_line_of(CCNQ::Proxy::proxy_mode_file);
+    my $model = CCNQ::Util::first_line_of(CCNQ::Proxy::proxy_mode_file);
     die 'No proxy model found in '.CCNQ::Proxy::proxy_mode_file if !defined $model;
     my $template_dir = CCNQ::Install::CCN;
 
@@ -67,7 +68,7 @@ use CCNQ::Proxy::Config;
     $mcv->send(CCNQ::Install::SUCCESS);
   },
 
-  _default => sub {
+  _dispatch => sub {
     my ($action,$request,$context,$mcv) = @_;
 
     debug("Ignoring response"),
