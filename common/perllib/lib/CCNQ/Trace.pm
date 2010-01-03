@@ -41,11 +41,11 @@ use constant trace_field_names => [qw(
     sip.Method sip.r-uri.user sip.r-uri.host sip.r-uri.port
   sip.Status-Line
     sip.Status-Code
-  sip.to.addr
-  sip.from.addr
-  sip.contact.addr
+  sip.to.user
+  sip.from.user
   sip.From
   sip.To
+  sip.contact.addr
   sip.User-Agent
 )];
 
