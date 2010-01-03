@@ -28,10 +28,6 @@ for my $name qw(
   ./b2bua/client-ocs-sbc/freeswitch/scripts/cnam.pl
   ./b2bua/client-sbc-config/freeswitch/scripts/cnam.pl
   ./common/bin/upgrade.pl
-  ./proxy/reports/invite-all.pl
-  ./proxy/reports/invite-outcome.pl
-  ./proxy/reports/invite-single.pl
-  ./proxy/reports/stat.pl
 ) {
   # require_ok ("$path/$name")  does not work.
   # I need the equivalent of "perl -wc".
