@@ -1,3 +1,4 @@
+# CCNQ/Rating/Event.pm
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -76,66 +77,9 @@ Common Billing Element Format (CBEF)
                   normally "1" for duration-based events; "0" if the event (call) was not connected
 
     For calls we need to collect the following information:
-  duration        duration in seconds (zero duration might mean failed call)
+  duration        duration in seconds (zero duration is non-billed call)
   from_e164       +....
   to_e164         +....
-
-    The Rating engine will locate the following information in the ERC-DB for each number involved in a call
-    (i.e. from and to, mostly); the actual field names are "from_label", etc.:
-
-  .label          a "human readable" label for the number
-  .country        country of the number
-  .state          state of the number (used for US intra- vs inter-state billing)
-  etc.
-
-    Additionally, calling/called tax jurisdictions might be located at that time.
-
-    At this point extra parameters are computed in order to locate a proper rate for the call.
-    For example:
-
-  intrastate
-  interstate
-  distance
-  time_of_day_rule
-
-    A "rate" is a set of filters and a set of parameters. A filter will map a given call into a unique rating table
-    which will provide the proper parameters for the call.
-
-    Filters:
-      time-of-day
-      intra-state vs inter-state
-      etc.
-
-    Parameters: (these are the values provided in the "rating tables" generated from the ERC-DB)
-
-  currency
-  initial_duration
-  initial_cost
-  additional_duration
-  additional_cost
-  count_cost
-
-    Additionally, tax jurisdictions might be located inside the parameters.
-
-    The following values are then computed:
-
-  billable_count      for countable events
-  billable_duration   for duration-based events
-
-    The Rating engine does billing at the account_sub level (e.g. contract), if available.
-    It will use the rules in the ERC-DB in order to build a new file which will provide for each element the following additional information:
-
-  currency              USD, EUR, etc.
-  amount                (standard float with . decimal separator)
-  tax_count             (how many tax_rate and tax_amount)
-  tax_jurisdiction_1    (opaque jurisdiction reference or name)
-  tax_rate_1            (in %)
-  tax_amount_1          (in currency)
-  tax_jurisdiction_2    (...)
-  tax_rate_2            (in %)
-   (etc.)
-
-   The Rating engine might generate 0 amount records if (e.g.) the call is included in a plan, or is a toll-free call.
 
 =cut
 
@@ -163,7 +107,7 @@ sub to {
 
 sub from {
   my ($self) = @_;
-  $self->{_from} ||= new Rating::Event::Number($slef->{from_e164});
+  $self->{_from} ||= new Rating::Event::Number($self->{from_e164});
   return $self->{_from};
 }
 

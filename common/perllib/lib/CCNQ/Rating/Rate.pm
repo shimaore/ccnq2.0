@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-XXX Build modules?
+# XXX Build modules?
 
 sub rate_cbef {
   my ($cbef,$plan) = @_;
@@ -63,6 +63,22 @@ sub apply_cbef_actions {
 use Math::BigFloat;
 use constant seconds_per_minute => Math::BigFloat->new(60);
 
+=pod
+
+  A Plan is the description of a function that takes a CBEF and translate
+  it into a Rated CBEF, adding (at least) the following information:
+
+    currency
+    cost    (pre-tax) which might be divived into:
+      duration_cost
+      count_cost
+    tax = { jurisdiction => percentage }
+
+  The actual rating is done in CCNQ::Rating::Rate, which needs the following:
+
+=cut
+
+
 
 sub add_duration_rate {
   my ($cbef,$rate) = @_;
@@ -108,7 +124,7 @@ sub add_count_cost {
 
 sub add_jurisdiction {
   my ($cbef,$rec) = @_;
-  push(@{$cbef->{_jurisdiction}},$rec);
+  push(@{$cbef->{tax}},$rec);
 }
 
 use constant cbef_conditions => {
@@ -320,7 +336,7 @@ use constant cbef_actions => {
 =cut
   add_duration_rate => sub {
     my ($cbef,$rate) = @_;
-    add_duration($cbef,$rate);
+    add_duration_rate($cbef,$rate);
   },
 
 =pod
@@ -330,7 +346,7 @@ use constant cbef_actions => {
     my ($cbef,$table) = @_;
     my $r = $table->lookup($cbef->to->e164);
     if($r) {
-      add_duration($cbef,$r->{duration_rate});
+      add_duration_rate($cbef,$r->{duration_rate});
     }
   },
 
@@ -356,9 +372,12 @@ use constant cbef_actions => {
 
 
 
-    Difficult: rating periods -- in some cases, calls are rated differently based on time periods.
+  #  Difficult: rating periods -- in some cases, calls are rated differently based on time periods.
 
 }
+
+1;
+__END__
 
 Add duration to counter: [counter]
 Add billable duration to counter: [counter]

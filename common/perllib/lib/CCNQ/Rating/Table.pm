@@ -14,6 +14,7 @@ package CCNQ::Rating::Table;
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use strict; use warnings;
 
 # The rating table is a generic tool to store information related to a given prefix.
 
@@ -65,7 +66,7 @@ sub lookup {
 
 __END__
 
-Fields in results:
+Fields in results (see CCNQ::Rating::Rate for more details):
 
 
   country         in 'e164_to_location'

@@ -14,6 +14,11 @@ package Rating::Process;
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+=pod
+  process ($fh,$cb->(\%data))
+    Parse a standard-formatted CBEF file and run each entry through the
+    callback.
+=cut
 
 sub process {
   my ($fh,$cb) = @_;
@@ -30,3 +35,5 @@ sub process {
     $cb->($data);
   });
 }
+
+1;

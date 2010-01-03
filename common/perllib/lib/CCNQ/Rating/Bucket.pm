@@ -44,21 +44,18 @@ sub name {
     : $cbef->account.'/'.$cbef->account_sub;
 }
 
-sub use_account {
-  XXX
-}
-
 sub get_value {
   my ($self,$cbef) = @_;
-  return $self->retrieve($self->name($cbef));
+  return $self->_retrieve($self->name($cbef));
 }
 
 sub set_value {
   my ($self,$cbef,$value) = @_;
-  $self->store($self->name($cbef),$value);
+  $self->_store($self->name($cbef),$value);
 }
 
 sub use {
+  my $self = shift;
   my ($cbef,$value) = @_;
   return $value if $value <= 0;
 
@@ -80,6 +77,33 @@ sub use {
     $self->set_value($cbef,$remaining);
     return Math::BigInt->bzero;
   }
+}
+
+# Implementation
+
+sub use_account {
+  my ($self,$use_account) = @_;
+  if(defined($use_account)) {
+    $self->{use_account} = $use_account;
+  } else {
+    return $self->{use_account};
+  }
+}
+
+sub _retrieve {
+  my $self = shift;
+  my ($key) = @_;
+  XXX
+}
+
+sub _store {
+  my $self = shift;
+  my ($key,$value) = @_;
+  XXX
+}
+
+sub currency {
+  XXX
 }
 
 1;
