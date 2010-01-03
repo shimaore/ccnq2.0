@@ -17,6 +17,7 @@
 use strict; use warnings;
 use Test::More;
 require_ok( 'CCNQ::Install' );
+require_ok( 'CCNQ::AE::Run' );
 
 $ENV{'CCNQ_cookie'} = 'ABCD';
 is(CCNQ::Install::cookie(),'ABCD','cookie from environment');
@@ -34,7 +35,7 @@ require_ok( 'AnyEvent' );
 $ENV{'CCNQ_source_path'} = '../..' if -e '../../common/bin/xmpp_agent.pl';
 ok($ENV{'CCNQ_source_path'},'Please specify CCNQ_source_path in the environment; for example run:  CCNQ_source_path=../.. make test ');
 
-my $sub = CCNQ::Install::attempt_run('node','status',undef,undef);
+my $sub = CCNQ::AE::Run::attempt_run('node','status',undef,undef);
 is(ref($sub), 'CODE', 'attempt_run for node/status');
 
 my $cv = AnyEvent->condvar;

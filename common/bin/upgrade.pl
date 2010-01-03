@@ -60,7 +60,10 @@ sub run {
     my $context = {
       condvar => $program,
     };
-    CCNQ::Install::attempt_run('node','install_all',undef,$context)->($program);
+
+    use CCNQ::AE::Run;
+
+    CCNQ::AE::Run::attempt_run('node','install_all',undef,$context)->($program);
     info("Waiting for installation to complete");
     $program->recv;
   };

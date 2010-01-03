@@ -17,6 +17,7 @@ package CCNQ::XMPPAgent;
 use strict; use warnings;
 
 use CCNQ::Install;
+use CCNQ::AE::Run;
 
 use AnyEvent;
 use AnyEvent::XMPP::IM::Connection;
@@ -174,10 +175,10 @@ sub handle_message {
   my $handler = undef;
   if($request_body->{status}) {
     # This is a response.
-    $handler = CCNQ::Install::attempt_run($function,'_response',$request_body,$context);
+    $handler = CCNQ::AE::Run::attempt_run($function,'_response',$request_body,$context);
   } else {
     # This is a request.
-    $handler = CCNQ::Install::attempt_run($function,$action,$request_body,$context);
+    $handler = CCNQ::AE::Run::attempt_run($function,$action,$request_body,$context);
   }
 
   my $cv = AnyEvent->condvar;
