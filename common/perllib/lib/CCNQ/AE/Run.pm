@@ -52,7 +52,7 @@ sub attempt_run {
   my $run_file = actions_file($function);
 
   # Errors which lead to not being able to submit the request are not reported.
-  my $cancel = sub { debug("attempt_run($function,$action): cancel"); shift->send(CANCEL); };
+  my $cancel = sub { debug("attempt_run($function,$action): cancel"); shift->send(CCNQ::AE::CANCEL); };
 
   # No "actions.pm" for the selected function.
   warning(qq(attempt_run($function,$action): No such file "${run_file}", skipping)),
@@ -87,7 +87,7 @@ sub attempt_run {
     if($@) {
       my $error_msg = "attempt_run($function,$action): failed with error $@";
       debug($error_msg);
-      $cv->send(FAILURE($error_msg));
+      $cv->send(CCNQ::AE::FAILURE($error_msg));
     }
     debug("end of attempt_run($function,$action)->($cv)");
   };
