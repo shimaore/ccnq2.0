@@ -57,4 +57,23 @@ sub print_to {
   close($fh) or croak "$_[0]: $!";
 }
 
+# Blocking version (used in "install" blocks)
+sub execute {
+  my $command = join(' ',@_);
+
+  my $ret = system(@_);
+  # Happily lifted from perlfunc.
+  if ($ret == -1) {
+      error("Failed to execute ${command}: $!");
+  }
+  elsif ($ret & 127) {
+      error(sprintf "Child command ${command} died with signal %d, %s coredump",
+          ($ret & 127),  ($ret & 128) ? 'with' : 'without');
+  }
+  else {
+      info(sprintf "Child command ${command} exited with value %d", $ret >> 8);
+  }
+  return 0;
+}
+
 1;

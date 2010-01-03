@@ -37,13 +37,13 @@ sub mk_dir {
 sub finish {
   # Create the logs directory and change ownership
   File::Path::mkpath([CCNQ::B2BUA::log_dir]);
-  CCNQ::Install::execute('chown','freeswitch.daemon',CCNQ::B2BUA::log_dir);
+  CCNQ::Util::execute('chown','freeswitch.daemon',CCNQ::B2BUA::log_dir);
   # Create the CDR directory and change ownership
   File::Path::mkpath([CCNQ::B2BUA::cdr_dir]);
-  CCNQ::Install::execute('chown','freeswitch.daemon',CCNQ::B2BUA::cdr_dir);
+  CCNQ::Util::execute('chown','freeswitch.daemon',CCNQ::B2BUA::cdr_dir);
 
   # Change ownership of the configuration files
-  CCNQ::Install::execute('chown','-R','freeswitch.daemon',freeswitch_install_conf);
+  CCNQ::Util::execute('chown','-R','freeswitch.daemon',freeswitch_install_conf);
 }
 
 sub install_dir {

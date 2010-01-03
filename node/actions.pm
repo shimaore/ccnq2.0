@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use Carp;
+use CCNQ::AE;
 use CCNQ::Trace;
 
 {
@@ -27,7 +28,7 @@ use CCNQ::Trace;
   # Used to provide server-wide status information.
   status => sub {
     my ($params,$context,$mcv) = @_;
-    $mcv->send(CCNQ::Install::SUCCESS({running => 1}));
+    $mcv->send(CCNQ::AE::SUCCESS({running => 1}));
   },
 
   restart_all => sub {
@@ -36,7 +37,7 @@ use CCNQ::Trace;
     AnyEvent::Watchdog::Util::enabled
       or croak "Not running under watchdog!";
     AnyEvent::Watchdog::Util::restart;
-    $mcv->send(CCNQ::Install::SUCCESS);
+    $mcv->send(CCNQ::AE::SUCCESS);
   },
 
 }

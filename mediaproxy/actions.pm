@@ -20,6 +20,7 @@
     my ($params,$context,$mcv) = @_;
     use CCNQ::MediaProxy;
     use CCNQ::Util;
+    use CCNQ::AE;
     use File::Spec;
     use File::Copy;
     for my $file (qw( ca.pem crl.pem )) {
@@ -52,6 +53,6 @@ EOT
     CCNQ::Util::print_to(CCNQ::MediaProxy::mediaproxy_config,$config.$config_dispatcher.$config_relay);
     unlink($dispatcher_file);
     unlink($relay_file);
-    $mcv->send(CCNQ::Install::SUCCESS);
+    $mcv->send(CCNQ::AE::SUCCESS);
   },
 }

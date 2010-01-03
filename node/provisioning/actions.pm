@@ -15,12 +15,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use CCNQ::AE;
 use CCNQ::API;
 use AnyEvent::CouchDB;
 
 {
   install => sub {
-    $mcv->send(CCNQ::Install::SUCCESS);
+    $mcv->send(CCNQ::AE::SUCCESS);
   },
 
   update => sub {
@@ -37,9 +38,9 @@ use AnyEvent::CouchDB;
         $couch_db->save_doc($params)->cb(sub{
           eval { $_[0]->recv; }
           if($@) {
-            $mcv->send(CCNQ::Install::FAILURE($@));
+            $mcv->send(CCNQ::AE::FAILURE($@));
           } else {
-            $mcv->send(CCNQ::Install::SUCCESS);
+            $mcv->send(CCNQ::AE::SUCCESS);
           }
         });
       } else {
@@ -49,9 +50,9 @@ use AnyEvent::CouchDB;
         $couch_db->save_doc($doc)->cb(sub{
           eval { $_[0]->recv; }
           if($@) {
-            $mcv->send(CCNQ::Install::FAILURE($@));
+            $mcv->send(CCNQ::AE::FAILURE($@));
           } else {
-            $mcv->send(CCNQ::Install::SUCCESS);
+            $mcv->send(CCNQ::AE::SUCCESS);
           }
         });
       }
@@ -68,9 +69,9 @@ use AnyEvent::CouchDB;
       $couch_db->remove_doc($doc)->cb(sub{
         eval { $_[0]->recv; }
         if($@) {
-          $mcv->send(CCNQ::Install::FAILURE($@));
+          $mcv->send(CCNQ::AE::FAILURE($@));
         } else {
-          $mcv->send(CCNQ::Install::SUCCESS);
+          $mcv->send(CCNQ::AE::SUCCESS);
         }
       });
     });
@@ -84,9 +85,9 @@ use AnyEvent::CouchDB;
     $cv->cb(sub{
       eval { my $doc = $_[0]->recv; }
       if($@) {
-        $mcv->send(CCNQ::Install::FAILURE($@));
+        $mcv->send(CCNQ::AE::FAILURE($@));
       } else {
-        $mcv->send(CCNQ::Install::SUCCESS($doc));
+        $mcv->send(CCNQ::AE::SUCCESS($doc));
       }
     });
   },

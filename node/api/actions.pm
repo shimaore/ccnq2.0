@@ -29,7 +29,7 @@
   _request => sub {
     my ($request,$context,$mcv) = @_;
     # Silently ignore. (These come to us because we are subscribed to the manager MUC.)
-    $mcv->send(CCNQ::Install::CANCEL);
+    $mcv->send(CCNQ::AE::CANCEL);
   },
 
   _session_ready => sub {
@@ -41,6 +41,7 @@
     use CCNQ::HTTPD;
     use JSON;
 
+    use CCNQ::AE;
     use CCNQ::XMPPAgent;
 
     my $muc_room = CCNQ::Install::manager_cluster_jid;
@@ -240,7 +241,7 @@
           [qw(email billing_accounts)],
       ),
     );
-    $mcv->send(CCNQ::Install::SUCCESS);
+    $mcv->send(CCNQ::AE::SUCCESS);
   },
 
   _response => sub {
@@ -258,7 +259,7 @@
     } else {
       debug("node/api: Response contains no activity ID, ignoring");
     }
-    $mcv->send(CCNQ::Install::CANCEL);
+    $mcv->send(CCNQ::AE::CANCEL);
   },
 
 }

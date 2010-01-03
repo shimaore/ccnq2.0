@@ -15,6 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use CCNQ::Util;
+use CCNQ::AE;
+
 {
   install => sub {
     my ($params,$context,$mcv) = @_;
@@ -42,6 +45,6 @@ passport = None
 # end dispatcher configuration
 EOT
     CCNQ::Util::print_to(CCNQ::MediaProxy::mediaproxy_config.'.dispatcher',$config);
-    $mcv->send(CCNQ::Install::SUCCESS);
+    $mcv->send(CCNQ::AE::SUCCESS);
   },
 }

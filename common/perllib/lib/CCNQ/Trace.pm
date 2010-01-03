@@ -27,6 +27,7 @@ package CCNQ::Trace;
 use strict; use warnings;
 
 use CCNQ::Install;
+use CCNQ::AE;
 use File::Temp;
 use AnyEvent::Util;
 
@@ -61,16 +62,16 @@ sub run {
   my $from_user    = $params->{params}->{from_user};
   my $days_ago     = $params->{params}->{days_ago} || 0;
 
-  $mcv->send(CCNQ::Install::FAILURE('Invalid to_user')  ), return
+  $mcv->send(CCNQ::AE::FAILURE('Invalid to_user')  ), return
     if defined $to_user   && $to_user   !~ /^\d+$/;
-  $mcv->send(CCNQ::Install::FAILURE('Invalid from_user')), return
+  $mcv->send(CCNQ::AE::FAILURE('Invalid from_user')), return
     if defined $from_user && $from_user !~ /^\d+$/;
-  $mcv->send(CCNQ::Install::FAILURE('Invalid call_id')  ), return
+  $mcv->send(CCNQ::AE::FAILURE('Invalid call_id')  ), return
     if defined $call_id   && $call_id   !~ /^[\w@-]+$/;
-  $mcv->send(CCNQ::Install::FAILURE('Invalid days_ago') ), return
+  $mcv->send(CCNQ::AE::FAILURE('Invalid days_ago') ), return
     if defined $days_ago  && $days_ago  !~ /^\d{1,5}$/;
 
-  $mcv->send(CCNQ::Install::FAILURE('Missing required parameters')), return
+  $mcv->send(CCNQ::AE::FAILURE('Missing required parameters')), return
     unless defined $call_id or defined $to_user or defined $from_user;
 
   #### Generate a merged capture file #####
@@ -145,7 +146,7 @@ SCRIPT
       undef $fh;
       unlink $script;
       debug("trace: completed pcap dump");
-      $mcv->send(CCNQ::Install::SUCCESS({pcap => $content}));
+      $mcv->send(CCNQ::AE::SUCCESS({pcap => $content}));
     });
 
   } else {
@@ -193,7 +194,7 @@ SCRIPT
       undef $fh;
       unlink $script;
       debug("trace: completed text dump");
-      $mcv->send(CCNQ::Install::SUCCESS({rows => [@content]}));
+      $mcv->send(CCNQ::AE::SUCCESS({rows => [@content]}));
     });
 
   }
@@ -221,7 +222,7 @@ SCRIPT
     if(!open(my $fh,'-|', bin_sh, $script )) {
       error($!);
       unlink $script;
-      $mcv->send(CCNQ::Install::FAILURE($!));
+      $mcv->send(CCNQ::AE::FAILURE($!));
       return;
     };
     my $content = '';
@@ -230,13 +231,13 @@ SCRIPT
     if(!close($fh)) {
       error($!);
       unlink $script;
-      $mcv->send(CCNQ::Install::FAILURE($!));
+      $mcv->send(CCNQ::AE::FAILURE($!));
       return;
     };
 
     unlink $script;
     debug("trace: completed pcap dump");
-    $mcv->send(CCNQ::Install::SUCCESS({pcap => [$content]}));
+    $mcv->send(CCNQ::AE::SUCCESS({pcap => [$content]}));
   } else {
     debug("trace: starting text dump");
 
@@ -252,7 +253,7 @@ SCRIPT
     if(!open(my $fh,'-|', bin_sh, $script )) {
       error($!);
       unlink $script;
-      $mcv->send(CCNQ::Install::FAILURE($!));
+      $mcv->send(CCNQ::AE::FAILURE($!));
       return;
     };
     my @content = ();
@@ -271,12 +272,12 @@ SCRIPT
     if(!close($fh)) {
       error($!);
       unlink $script;
-      $mcv->send(CCNQ::Install::FAILURE($!));
+      $mcv->send(CCNQ::AE::FAILURE($!));
       return;
     };
 
     unlink $script;
     debug("trace: completed text dump");
-    $mcv->send(CCNQ::Install::SUCCESS({rows => [@content]}));
+    $mcv->send(CCNQ::AE::SUCCESS({rows => [@content]}));
   }
 }

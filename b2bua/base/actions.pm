@@ -16,6 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use CCNQ::B2BUA;
+use CCNQ::Util;
+use CCNQ::AE;
 
 use constant vars_xml => 'vars.xml';
 
@@ -66,11 +68,11 @@ EOT
 
     # Restart FreeSwitch using the new configuration.
     info("Restarting FreeSwitch");
-    CCNQ::Install::execute('/bin/sed','-i','-e','s/^FREESWITCH_ENABLED="false"$/FREESWITCH_ENABLED="true"/','/etc/default/freeswitch');
-    CCNQ::Install::execute('/etc/init.d/freeswitch','stop');
-    CCNQ::Install::execute('/etc/init.d/freeswitch','start');
+    CCNQ::Util::execute('/bin/sed','-i','-e','s/^FREESWITCH_ENABLED="false"$/FREESWITCH_ENABLED="true"/','/etc/default/freeswitch');
+    CCNQ::Util::execute('/etc/init.d/freeswitch','stop');
+    CCNQ::Util::execute('/etc/init.d/freeswitch','start');
 
-    $mcv->send(CCNQ::Install::SUCCESS);
+    $mcv->send(CCNQ::AE::SUCCESS);
   },
 
   _session_ready => sub {
@@ -78,11 +80,12 @@ EOT
     use CCNQ::XMPPAgent;
     debug("B2BUA _session_ready");
     CCNQ::XMPPAgent::join_cluster_room($context);
-    $mcv->send(CCNQ::Install::SUCCESS);
+    $mcv->send(CCNQ::AE::SUCCESS);
   },
 
   trace => sub {
     my ($params,$context,$mcv) = @_;
+    use CCNQ::Trace;
     CCNQ::Trace::run($params,$context,$mcv);
   },
 

@@ -18,6 +18,7 @@
 use CCNQ::B2BUA;
 use CCNQ::Install;
 use CCNQ::Util;
+use CCNQ::AE;
 use AnyEvent::DNS;
 use File::Spec;
 use File::Path;
@@ -159,6 +160,6 @@ EOT
     CCNQ::Util::print_to($dialplan_file,$dialplan_text);
 
     CCNQ::B2BUA::finish();
-    $mcv->send(CCNQ::Install::SUCCESS);
+    $mcv->send(CCNQ::AE::SUCCESS);
   },
 }

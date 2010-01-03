@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use CCNQ::B2BUA;
+use CCNQ::AE;
 
 {
   install => sub {
@@ -43,6 +44,6 @@ use CCNQ::B2BUA;
       CCNQ::B2BUA::copy_file($b2bua_name,qw( .. scripts ),${name});
     }
 
-    $mcv->send(CCNQ::Install::SUCCESS);
+    $mcv->send(CCNQ::AE::SUCCESS);
   },
 }

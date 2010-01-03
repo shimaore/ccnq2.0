@@ -20,59 +20,12 @@ use Digest::SHA1 qw(sha1_hex);
 
 use AnyEvent;
 use AnyEvent::DNS;
-use AnyEvent::Util;
 
 use CCNQ::Util;
 use Logger::Syslog;
 
 # Where the local configuration information is kept.
 use constant CCN => q(/etc/ccn);
-
-# Non-blocking version
-sub _execute {
-  my $context = shift;
-  my $command = join(' ',@_);
-
-  my $cv = AnyEvent::Util::run_cmd([@_]);
-
-  $cv->cb( sub {
-    my $ret = shift->recv;
-    return 1 if $ret == 0;
-    # Happily lifted from perlfunc.
-    if ($ret == -1) {
-        error("Failed to execute ${command}: $!");
-    }
-    elsif ($ret & 127) {
-        error(sprintf "Child command ${command} died with signal %d, %s coredump",
-            ($ret & 127),  ($ret & 128) ? 'with' : 'without');
-    }
-    else {
-        info(sprintf "Child command ${command} exited with value %d", $ret >> 8);
-    }
-    return 0;
-  });
-
-  $context->{condvar}->cb($cv);
-}
-
-# Blocking version (used in "install" blocks)
-sub execute {
-  my $command = join(' ',@_);
-
-  my $ret = system(@_);
-  # Happily lifted from perlfunc.
-  if ($ret == -1) {
-      error("Failed to execute ${command}: $!");
-  }
-  elsif ($ret & 127) {
-      error(sprintf "Child command ${command} died with signal %d, %s coredump",
-          ($ret & 127),  ($ret & 128) ? 'with' : 'without');
-  }
-  else {
-      info(sprintf "Child command ${command} exited with value %d", $ret >> 8);
-  }
-  return 0;
-}
 
 =pod
   $text = get_variable($name,$file,$guess_tool)
@@ -268,113 +221,6 @@ sub resolve_roles_and_functions {
       }
     }
   }
-}
-
-use constant actions_file_name => 'actions.pm';
-
-=pod
-
-  attempt_run locates an "actions.pm" module and returns a sub() that
-  will execute an action in it.
-  "actions.pm" modules must return a hashred, which keys are the action
-  names, and the values are sub()s.
-
-  The sub($cv) returned by attempt_run expects one argument, an AnyEvent
-  condvar, which will be sent the result, in the form:
-
-  { status => 'completed', params => $results }
-  { status => 'failed', error => $error_msg }
-
-  Note: failure is detected by the presence of the "error" field,
-        not by the fact that status is "failed".
-
-=cut
-
-use constant STATUS_COMPLETED => 'completed';
-use constant STATUS_FAILED    => 'failed';
-
-sub SUCCESS {
-  my $result = shift;
-  error(Carp::longmess("$result is not an hashref")) if $result && ref($result) ne 'HASH';
-  return $result ? { status => STATUS_COMPLETED, params => $result, from => host_name }
-                 : { status => STATUS_COMPLETED,                    from => host_name };
-}
-
-sub FAILURE {
-  my $error = shift || 'No error specified';
-  return { status => STATUS_FAILED, error => $error, from => host_name };
-}
-
-use constant CANCEL => {};
-
-sub attempt_run {
-  my ($function,$action,$params,$context) = @_;
-
-  debug(qq(attempt_run($function,$action): started));
-  my $run_file = File::Spec->catfile(SRC,$function,actions_file_name);
-
-  # Errors which lead to not being able to submit the request are not reported.
-  my $cancel = sub { debug("attempt_run($function,$action): cancel"); shift->send(CANCEL); };
-
-  # No "actions.pm" for the selected function.
-  warning(qq(attempt_run($function,$action): No such file "${run_file}", skipping)),
-  return $cancel unless -e $run_file;
-
-  # An error occurred while reading the file.
-  my $eval = CCNQ::Util::content_of($run_file);
-  return $cancel if !defined($eval);
-
-  # An error occurred while parsing the file.
-  my $run = eval($eval);
-  warning(qq(attempt_run($function,$action): Executing "${run_file}" returned: $@)),
-  return $cancel if $@;
-
-  return sub {
-    my $cv = shift;
-    debug("start of attempt_run($function,$action)->($cv)");
-
-    my $result = undef;
-    eval {
-      if($run->{$action}) {
-        $run->{$action}->($params,$context,$cv);
-      } elsif($run->{_dispatch}) {
-        $run->{_dispatch}->($action,$params,$context,$cv);
-      } else {
-        debug("attempt_run($function,$action): No action available");
-        $cancel->($cv);
-      }
-      return;
-    };
-
-    if($@) {
-      my $error_msg = "attempt_run($function,$action): failed with error $@";
-      debug($error_msg);
-      $cv->send(FAILURE($error_msg));
-    }
-    debug("end of attempt_run($function,$action)->($cv)");
-  };
-}
-
-sub attempt_on_roles_and_functions {
-  my ($action,$params,$context,$mcv) = @_;
-  $params ||= {};
-
-  resolve_roles_and_functions(sub {
-    my ($cluster_name,$role,$function) = @_;
-    my $fun = attempt_run($function,$action,{ %{$params}, cluster_name => $cluster_name, role => $role },$context);
-
-    my $cv = AnyEvent->condvar;
-    $fun->($cv);
-
-    info("Waiting for Function: $function Action: $action Cluster: $cluster_name to complete");
-    eval { $cv->recv };
-    if($@) {
-      error("Function: $function Action: $action Cluster: $cluster_name Failure: $@");
-    } else {
-      info("Function: $function Action: $action Cluster: $cluster_name Completed");
-    }
-  });
-  $mcv->send;
 }
 
 use constant api_rendezvous_host => '127.0.0.1';

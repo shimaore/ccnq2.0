@@ -21,6 +21,7 @@ use base qw(CCNQ::SQL);
 
 use Logger::Syslog;
 use CCNQ::Install;
+use CCNQ::AE;
 
 sub _build_callback {
   my ($db,$sql,$args,$cb) = @_;
@@ -40,7 +41,7 @@ sub do_sql {
 
   my $run = sub {
     $db->commit( sub {
-      $cv->send(CCNQ::Install::SUCCESS);
+      $cv->send(CCNQ::AE::SUCCESS);
     });
   };
 
@@ -167,7 +168,7 @@ sub run
 
     error("Invalid action $action");
     my $cv = AnyEvent->condvar;
-    $cv->send(CCNQ::Install::FAILURE("Invalid action $action"));
+    $cv->send(CCNQ::AE::FAILURE("Invalid action $action"));
     return $cv;
 }
 

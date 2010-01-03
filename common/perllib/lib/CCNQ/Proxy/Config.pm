@@ -174,8 +174,8 @@ sub configure_opensips {
 
   # Move the temp files to their final destinations
   info("Installing new configuration");
-  CCNQ::Install::execute('cp',$cfg_file,CCNQ::Proxy::runtime_opensips_cfg);
-  CCNQ::Install::execute('cp',$sql_file,CCNQ::Proxy::runtime_opensips_sql);
+  CCNQ::Util::execute('cp',$cfg_file,CCNQ::Proxy::runtime_opensips_cfg);
+  CCNQ::Util::execute('cp',$sql_file,CCNQ::Proxy::runtime_opensips_sql);
 
   # Print out some info on how to use the SQL file.
   my $runtime_opensips_sql = CCNQ::Proxy::runtime_opensips_sql;

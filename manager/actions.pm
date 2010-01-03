@@ -17,7 +17,7 @@
 
 use AnyEvent::CouchDB;
 use CCNQ::Manager;
-
+use CCNQ::AE;
 use CCNQ::XMPPAgent;
 
 use constant js_report_requests => <<'JAVASCRIPT';
@@ -75,10 +75,10 @@ JAVASCRIPT
         eval { $_[0]->recv; };
         if($@) {
           error("Updating CouchDB views failed: $@");
-          $mcv->send(CCNQ::Install::FAILURE($@));
+          $mcv->send(CCNQ::AE::FAILURE($@));
         } else {
           info("Created CouchDB views");
-          $mcv->send(CCNQ::Install::SUCCESS);
+          $mcv->send(CCNQ::AE::SUCCESS);
         }
       });
     });
@@ -89,7 +89,7 @@ JAVASCRIPT
     my ($params,$context,$mcv) = @_;
     debug("Manager _session_ready");
     CCNQ::XMPPAgent::join_cluster_room($context);
-    $mcv->send(CCNQ::Install::SUCCESS);
+    $mcv->send(CCNQ::AE::SUCCESS);
   },
 
   # Send requests out (message received from node/api/actions.pm)
@@ -97,7 +97,7 @@ JAVASCRIPT
     my ($request,$context,$mcv) = @_;
 
     error("No request!"),
-    return $mcv->send(CCNQ::Install::FAILURE("No request!"))
+    return $mcv->send(CCNQ::AE::FAILURE("No request!"))
       unless $request and $request->{params};
 
     $request = $request->{params};
@@ -152,7 +152,7 @@ JAVASCRIPT
           });
         }
 
-        $mcv->send(CCNQ::Install::SUCCESS($request));
+        $mcv->send(CCNQ::AE::SUCCESS($request));
         debug("Request ID=$request->{request} submitted");
       });
 
@@ -250,7 +250,7 @@ JAVASCRIPT
           endkey   => [$request_id,{}],
           include_docs => "true",
           error    => sub {
-            $mcv->send(CCNQ::Install::FAILURE);
+            $mcv->send(CCNQ::AE::FAILURE);
           }
         }
     );
@@ -260,18 +260,18 @@ JAVASCRIPT
       eval { $result = $_[0]->recv };
 
       if($@) {
-        $mcv->send(CCNQ::Install::FAILURE($@));
+        $mcv->send(CCNQ::AE::FAILURE($@));
         return;
       }
 
       if(!$result) {
         debug("Request $params->{request_id} not found.");
-        $mcv->send(CCNQ::Install::FAILURE("Request not found."));
+        $mcv->send(CCNQ::AE::FAILURE("Request not found."));
         return;
       }
 
       debug("Found request");
-      $mcv->send(CCNQ::Install::SUCCESS({rows => $result->{rows}}));
+      $mcv->send(CCNQ::AE::SUCCESS({rows => $result->{rows}}));
     });
     $context->{condvar}->cb($cv);
   },

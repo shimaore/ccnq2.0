@@ -17,6 +17,7 @@
 
 use CCNQ::Install;
 use CCNQ::Util;
+use CCNQ::AE;
 use File::Spec;
 
 use constant::defer monit_directory =>
@@ -35,7 +36,7 @@ use constant monit_target => '/etc/monit';
       CCNQ::Util::print_to($dst,$content);
     }
 
-    $mcv->send(CCNQ::Install::SUCCESS);
+    $mcv->send(CCNQ::AE::SUCCESS);
   },
 
 }

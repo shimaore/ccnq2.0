@@ -18,13 +18,13 @@ The last parameter for the callback is an AnyEvent->condvar variable which
 should be triggered once the callback is done, using one of the following
 templates:
 
-  $mcv->send(CCNQ::Install::CANCEL); # Cancel the response
+  $mcv->send(CCNQ::AE::CANCEL); # Cancel the response
 
-  $mcv->send(CCNQ::Install::SUCCESS);
+  $mcv->send(CCNQ::AE::SUCCESS);
   or
-  $mcv->send(CCNQ::Install::SUCCESS({ name => value }))
+  $mcv->send(CCNQ::AE::SUCCESS({ name => value }))
 
-  $mcv->send(CCNQ::Install::FAILURE($error_text))
+  $mcv->send(CCNQ::AE::FAILURE($error_text))
 
 In _response handlers, since the $mcv->recv value is never used ($mcv has no
 callback), it is possible to simply say:

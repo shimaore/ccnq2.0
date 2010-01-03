@@ -15,7 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use CCNQ::Install;
 use CCNQ::Util;
+use CCNQ::AE;
 use CCNQ::Proxy;
 use CCNQ::Proxy::Config;
 
@@ -49,15 +51,15 @@ use CCNQ::Proxy::Config;
     use CCNQ::Proxy::Configuration;
     use File::Path;
     File::Path::mkpath([CCNQ::Proxy::Configuration::cdr_directory]);
-    CCNQ::Install::execute('chown','opensips',CCNQ::Proxy::Configuration::cdr_directory);
+    CCNQ::Util::execute('chown','opensips',CCNQ::Proxy::Configuration::cdr_directory);
 
     # Restart OpenSIPS using the new configuration.
     info("Restarting OpenSIPS");
-    CCNQ::Install::execute('/bin/sed','-i','-e','s/^RUN_OPENSIPS=no$/RUN_OPENSIPS=yes/','/etc/default/opensips');
-    CCNQ::Install::execute('/etc/init.d/opensips','restart');
+    CCNQ::Util::execute('/bin/sed','-i','-e','s/^RUN_OPENSIPS=no$/RUN_OPENSIPS=yes/','/etc/default/opensips');
+    CCNQ::Util::execute('/etc/init.d/opensips','restart');
 
     debug("Restarted OpenSIPS");
-    $mcv->send(CCNQ::Install::SUCCESS);
+    $mcv->send(CCNQ::AE::SUCCESS);
   },
 
   _session_ready => sub {
@@ -65,24 +67,24 @@ use CCNQ::Proxy::Config;
     use CCNQ::XMPPAgent;
     debug("Proxy _session_ready");
     CCNQ::XMPPAgent::join_cluster_room($context);
-    $mcv->send(CCNQ::Install::SUCCESS);
+    $mcv->send(CCNQ::AE::SUCCESS);
   },
 
   _dispatch => sub {
     my ($action,$request,$context,$mcv) = @_;
 
     debug("Ignoring response"),
-    return $mcv->send(CCNQ::Install::CANCEL),
+    return $mcv->send(CCNQ::AE::CANCEL),
       if $request->{status};
 
     error("No action defined"),
-    return $mcv->send(CCNQ::Install::FAILURE('No action defined'))
+    return $mcv->send(CCNQ::AE::FAILURE('No action defined'))
      unless $action;
 
     my ($module,$command) = ($action =~ m{^(.*)/(delete|update|query)$});
 
     error("Invalid action $action"),
-    return $mcv->send(CCNQ::Install::FAILURE("Invalid action $action"))
+    return $mcv->send(CCNQ::AE::FAILURE("Invalid action $action"))
       unless $module && $command;
 
     use CCNQ::Proxy::Configuration;
@@ -96,17 +98,20 @@ use CCNQ::Proxy::Config;
 
   dr_reload => sub {
     my ($params,$context,$mcv) = @_;
-    CCNQ::Install::_execute($context,qw( /usr/sbin/opensipsctl fifo dr_reload ));
-    $mcv->send(CCNQ::Install::SUCCESS);
+    use CCNQ::AE;
+    CCNQ::AE::execute($context,qw( /usr/sbin/opensipsctl fifo dr_reload ));
+    $mcv->send(CCNQ::AE::SUCCESS);
   },
   trusted_reload => sub {
     my ($params,$context,$mcv) = @_;
-    CCNQ::Install::_execute($context,qw( /usr/sbin/opensipsctl fifo trusted_reload ));
-    $mcv->send(CCNQ::Install::SUCCESS);
+    use CCNQ::AE;
+    CCNQ::AE::execute($context,qw( /usr/sbin/opensipsctl fifo trusted_reload ));
+    $mcv->send(CCNQ::AE::SUCCESS);
   },
 
   trace => sub {
     my ($params,$context,$mcv) = @_;
+    use CCNQ::Trace;
     CCNQ::Trace::run($params,$context,$mcv);
   },
 

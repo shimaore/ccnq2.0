@@ -144,7 +144,7 @@ sub run_from_class {
 
   error($error_msg);
   my $cv = AnyEvent->condvar;
-  $cv->send(CCNQ::Install::FAILURE($error_msg));
+  $cv->send(CCNQ::AE::FAILURE($error_msg));
   return $cv;
 }
 

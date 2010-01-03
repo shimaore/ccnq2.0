@@ -16,12 +16,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use CCNQ::Proxy;
+use CCNQ::AE;
 
 {
   install => sub {
     my ($params,$context,$mcv) = @_;
 
     CCNQ::Util::print_to(CCNQ::Proxy::proxy_mode_file,'inbound-proxy');
-    $mcv->send(CCNQ::Install::SUCCESS);
+    $mcv->send(CCNQ::AE::SUCCESS);
   },
 }
