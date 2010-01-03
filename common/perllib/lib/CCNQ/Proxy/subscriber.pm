@@ -1,3 +1,4 @@
+package CCNQ::Proxy::subscriber;
 # Copyright (C) 2006, 2007  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -14,12 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-#
-# For more information visit http://carrierclass.net/
-#
 use strict; use warnings;
 
-package CCNQ::Proxy::subscriber;
 use base qw(CCNQ::Proxy::Base);
 
 =pod

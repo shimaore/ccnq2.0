@@ -15,9 +15,6 @@ package CCNQ::Proxy::dr_gateway;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-#
-# For more information visit http://carrierclass.net/
-#
 use strict; use warnings;
 
 use base qw(CCNQ::Proxy::Base);

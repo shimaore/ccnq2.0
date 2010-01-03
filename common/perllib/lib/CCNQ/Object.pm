@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+package CCNQ::Object;
 # CCN/Object.pm
 # Copyright (C) 2006  Stephane Alnet
 #
@@ -16,11 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-#
-# For more information: http://carrierclass.net/
-#
-
-package CCNQ::Object;
 use strict; use warnings;
 
 sub new {

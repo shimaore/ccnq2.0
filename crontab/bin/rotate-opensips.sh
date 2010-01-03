@@ -15,10 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # 
 
-#
-# For more information visit http://carrierclass.net/
-#
-
 # This script is called remotely via ssh. It should not be ran manually.
 # This script is called remotely by rotate.pl.
 
