@@ -15,6 +15,7 @@ package CCNQ::Util;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
 use Logger::Syslog;
+use Carp qw(croak);
 
 =pod
   $text = first_line_of($filename)
