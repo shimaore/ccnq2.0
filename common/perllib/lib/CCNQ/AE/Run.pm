@@ -97,7 +97,7 @@ sub attempt_on_roles_and_functions {
   my ($action,$params,$context,$mcv) = @_;
   $params ||= {};
 
-  resolve_roles_and_functions(sub {
+  CCNQ::Install::resolve_roles_and_functions(sub {
     my ($cluster_name,$role,$function) = @_;
     my $fun = attempt_run($function,$action,{ %{$params}, cluster_name => $cluster_name, role => $role },$context);
 
