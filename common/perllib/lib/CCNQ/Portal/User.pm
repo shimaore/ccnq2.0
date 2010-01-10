@@ -6,7 +6,7 @@ use base CCNQ::Object;
 # Class method: load an existing user from the database.
 
 sub load {
-  my ($username) = @_;
+  my ($user_id) = @_;
   # Access the database to load information about the specified user.
 
   return new CCNQ::Portal::User %params;
@@ -15,7 +15,7 @@ sub load {
 sub _init {
   my $self = shift;
   my %params = @_;
-  foreach (qw(username name email default_language)) {
+  foreach (qw(user_id name email default_language)) {
     $self->{$_} = $params{$_};
   } 
 }

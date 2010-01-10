@@ -20,7 +20,7 @@ PUT should submit new values as its content, in the form of a JSON hash
   { field => value }      -- single text value
   { field => [values] }   -- multiple text values
 
-All request MUST provide the username (for authorization purposes) and
+All request MUST provide the user_id (for authorization purposes) and
 in some cases, an account and/or account_sub. The forms processor will
 return an error if these fields are not available.
 
@@ -128,7 +128,7 @@ forms.
 
   The following fields are "opaque" to the API:
 
-  username        A unique identifier for each portal user
+  user_id         A unique identifier for each portal user
   account         An account identifier
   account_sub     An account_sub identifier
 
@@ -146,10 +146,10 @@ This information is kept to a minimum since in some cases it might be
 duplicated in the portal. However it is also available using the following
 operations:
 
-  /user/${username}                   (GET, PUT)
-  /user/${username}/email             (GET, PUT)
-  /user/${username}/billing_accounts  (GET, PUT)
-  /user/${username}/billing_account   (GET, PUT, DELETE)
+  /user/${user_id}                   (GET, PUT)
+  /user/${user_id}/email             (GET, PUT)
+  /user/${user_id}/billing_accounts  (GET, PUT)
+  /user/${user_id}/billing_account   (GET, PUT, DELETE)
 
 ("billing_accounts" lists the accounts which this portal user will receive
 invoices for.)

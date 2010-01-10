@@ -11,4 +11,4 @@ The views are for example:
 
 by/account      key: ["account",$account]
 by/account_sub  key: ["account_sub",$account,$account_sub]
-by/user         key: ["user",$username]
+by/user         key: ["user",$user_id]
