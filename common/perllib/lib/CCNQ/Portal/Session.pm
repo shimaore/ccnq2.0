@@ -52,6 +52,7 @@ sub init_language {
   my $self = shift;
   $self->change_language( $self->param(LANGUAGE_PARAM)
     || ($self->user && $self->user->default_language)
+    # XXX Use the browser's preferred languages!
     || $self->site->default_language
   );
 }

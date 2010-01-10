@@ -19,6 +19,9 @@ our @EXPORT = qw( _ );
 
 use CCNQ::Install;
 
+# XXX Differentiate between language and locale.
+# XXX e.g. "en" vs "en_US" -- Locale::Maketext::Lexicon handles them just fine.
+
 use constant::defer i18n_directory =>
   sub { File::Spec->catfile(CCNQ::Install::SRC,qw( common i18n )) };
 

@@ -1,6 +1,29 @@
-framework?
+framework
+- nginx for aggregation of modules
+- I18N, L10N: use CCNQ::Portal and the macros in CCNQ::Portal::I18N
+- jQuery available
+- authentication: internal (e.g. CouchDB), Authen::Simple (::LDAP), BitCard, OpenID..
+- CGI::Session, CGI::Session::Auth
 
-I18N, L10N
+CGI::Application::Plugin::Session? CGI::Application::Plugin::Authentication ?
 
+Also, CGI::Framework offers localization in the HTML templates
+  (could be used to replace my own CCNQ::Portal::Formatter)
+  (which itself shouldn't exist since there is CGI::FormBuilder -- which does client-side validation)
 
-jQuery
+Contenders for forms:
+  CGI::FormBuilder  (esp. CGI::FormBuilder::Multi !)
+  HTML::FormHandler (relies on Moose, and is linked to Catalyst.. probably too much overhead for me)
+
+   see also CGI::FormBuilderX::More
+   Mango::Form uses CGI::FormBuilder and FormValidator::Simple
+
+Mango provides a nice layout for the classes:
+  Mango::User
+  Mango::Profile
+  etc.
+.. coming from Handel, apparently.
+Uses Data::Currency
+
+  OpenID::Lite, Net::OpenID
+
