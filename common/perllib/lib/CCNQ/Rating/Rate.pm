@@ -23,7 +23,7 @@ sub rate_cbef {
   # Run through the guards/actions
   for my $rating_step ($plan->rating_steps) {
     my $guards = $rating_step->guards;
-    next if $guards && !apply_cbef_conditions($cbef,$guards);
+    next if $guards && !apply_cbef_guards($cbef,$guards);
     my $actions = $rating_step->actions;
     last if apply_cbef_actions($cbef,$actions);
   }
@@ -32,14 +32,14 @@ sub rate_cbef {
 }
 
 
-sub apply_cbef_conditions {
+sub apply_cbef_guards {
   my ($cbef,$guards) = @_;
   # $guards is an arrayref of guards; a guard is [ guard_name, guard_parameters ]
   # All guards must be true for the actions to be applied.
   # Note: if tables are found, they MUST be Rating::Table instances, not the table names.
   for my $guard (@{$guards}) {
     my @guard = @{$guard};
-    my $sub = cbef_conditions->{shift @guard};
+    my $sub = cbef_guards->{shift @guard};
     error("Unknown condition $guard"), return 0 unless $sub;
     return 0 if !$sub->($cbef,@guard);
   }
@@ -127,7 +127,7 @@ sub add_jurisdiction {
   push(@{$cbef->{tax}},$rec);
 }
 
-use constant cbef_conditions => {
+use constant cbef_guards => {
 
 =pod
   Conditions
