@@ -1,19 +1,50 @@
-The "portal" provided here is a an interface between HTTP/HTTPS and a
-REST/JSON "forms" interface provided by the "api" service.
+There is two layers to the portal subsystem. Both are outside of the
+core system (and therefor only use the API service to access the core
+system).
 
-Specifically the "portal" handles:
+The inner layer handles the forms presentation and submission (business
+logic), including field validation (the data submitted to the API MUST
+always be correct). It is stateless. It can only be accessed by the
+outter layer (i.e. no direct customer access); the outer layer provides
+all stateful information (e.g. user_id, account_id, etc.) to the inner
+layer. (By the time a request reaches the inner layer, it has both been
+authenticated and authorized; this means authorization is done at the
+operation level, since the outter layer on the other hand does not have
+visibility into the inner layer's data structures.)
+The inner layer probably will need some kind of local storage to define
+for example which plans are accessible to a given customer account (or
+account_sub) in case customers are allowed to change plans on their own.
+(The actual mapping between an account_sub and a plan is stored inside
+the core system's provisioning database, however.)
+
+The outer layer handles the user-level interaction. It is stateful
+(and provides session management). It relies on a portal database (or
+other storage method) which is independent from the other systems.
+
+Outer layer roles:
+- locale/language selection
 - user registration
 - user authentication
-- authorization
 - session management
-- forms presentation and submission (including field validation)
-- I18N/L10N
+- account selection (once logged in)
+- authorization (including generating menus, etc.)
+- I18N/L10N of the above roles
 
-The "portal" would also provide any AJAX/DHTML features, and proxy API
-operations to the back-end (including proper field validation and
-authorization).
+Inner layer roles:
+- forms presentation, validation, and submission
+- web User Interface (UI) (with option AJAX/DHTML features)
+- REST/JSON interface (operations identical to web UI)
+- I18N/L10N of interactive (web UI) forms
 
-The "api" service in turn offers a "forms" interface which provides:
-- "blank forms"
-- "pre-filled forms" (using a specified key/id)
-- "form submission"
+The link between the two should be as loose as possible. Basically the
+scheme looks as follows:
+
+  for outer-layer operations (e.g. language selection, registration, ..)
+    client --- outer_layer
+
+  for form presentation/validation (but no final submission)
+    client --- outer_layer --- inner_layer <-- API (core)
+
+  for submission
+    client --- outer_layer --- inner_layer <-> API (core)
+
