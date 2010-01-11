@@ -14,10 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Rating::Event::Number;
+package CCNQ::Rating::Event::Number;
 
+use CCNQ::Rating::Table;
 use constant e164_to_location_table => 'e164_to_location';
-use constant e164_to_location => new Rating::Table(e164_to_location_table);
+use constant e164_to_location => new CCNQ::Rating::Table(e164_to_location_table);
 
 sub new {
   my $this = shift;
@@ -41,7 +42,7 @@ sub us_state {
   my ($self) = @_;
   $self->{location} = e164_to_location->($self->e164)
     if !exists($self->{location});
-  return $self->{location} && $self->{location}->{country};
+  return $self->{location} && $self->{location}->{us_state};
 }
 
 
@@ -59,7 +60,7 @@ Common Billing Element Format (CBEF)
 
   The file format is tab-delimited UTF-8 data. The first line in each file is used to indicate the fields names.
   (If a Mediation processor doesn't know which fields will be needed, it should provide all the fields it knows about.)
-  If a field is empty (two tabs around it) it is treated as undefined/unassigned (i.e. the empty string is not valid content).
+  If a field is empty (two tabs around it) it is treated as undefined/unassigned (i.e. the empty string is treated as undef).
 
 * start_date            YYYYMMDD (local time)
 * start_time            HHMMSS   (local time)
@@ -67,7 +68,7 @@ Common Billing Element Format (CBEF)
 * collecting_node       (DNS, IP, or other name for the node that collected the element) -- inserted by the aggregator
 
 * account               (opaque account number)
-  account_sub           (opaque sub account, e.g. SIP trunk ID)
+* account_sub           (opaque sub account, e.g. SIP trunk ID)
 * event_type            (opaque event type; the "element rates and conditions" DB will provide information on how to handle it)
   event_description     (plain-text description of the event that caused the Element to be created)
   request_uuid          (uuid of the Request that created the Element)
@@ -76,10 +77,10 @@ Common Billing Element Format (CBEF)
   count           number of events (e.g. number of SMS, number of Mo transfered, etc.)
                   normally "1" for duration-based events; "0" if the event (call) was not connected
 
-    For calls we need to collect the following information:
+    For calls we collect the following information:
   duration        duration in seconds (zero duration is non-billed call)
-  from_e164       +....
-  to_e164         +....
+  from_e164       (E.164 number without a "+" sign)
+  to_e164         (E.164 number without a "+" sign)
 
 =cut
 
