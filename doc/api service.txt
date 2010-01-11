@@ -48,6 +48,9 @@ requests.
 -- Querying the provisioning database --
 
 The following API service allows to query the provisioning database
-directly.
+directly using views.
 
-  /provisioning/...         XXX
+  /provisioning/${design_name}/${view_name}/${key1}/${key2}/..   (GET)
+
+The CouchDB views are all designed to return keys formatted as
+  [${key1},${key2},...]
