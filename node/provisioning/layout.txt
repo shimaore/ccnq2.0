@@ -27,6 +27,7 @@ account_profile:
 
   name: $account_name
   billing_address: { }
+  billing_cycle: $billing_cycle
 
 account_sub_profile:
 
