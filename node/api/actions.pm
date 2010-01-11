@@ -44,8 +44,8 @@
     use CCNQ::AE;
     use CCNQ::XMPPAgent;
 
-    my $muc_room = CCNQ::Install::manager_cluster_jid;
-    CCNQ::XMPPAgent::_join_room($context,$muc_room);
+    my $manager_muc_room = CCNQ::Install::manager_cluster_jid;
+    CCNQ::XMPPAgent::_join_room($context,$manager_muc_room);
 
     my $host = CCNQ::Install::api_rendezvous_host;
     my $port = CCNQ::Install::api_rendezvous_port;
@@ -102,8 +102,8 @@
           return;
         }
 
-        debug("node/api: Contacting $muc_room");
-        my $r = CCNQ::XMPPAgent::send_muc_message($context,$muc_room,$body);
+        debug("node/api: Contacting $manager_muc_room");
+        my $r = CCNQ::XMPPAgent::send_muc_message($context,$manager_muc_room,$body);
         if($r->[0] ne 'ok') {
           $req->respond([500,$r->[1]]);
         } else {
@@ -161,8 +161,8 @@
           return;
         }
 
-        debug("node/api: Contacting $muc_room");
-        my $r = CCNQ::XMPPAgent::send_muc_message($context,$muc_room,$body);
+        debug("node/api: Contacting $manager_muc_room");
+        my $r = CCNQ::XMPPAgent::send_muc_message($context,$manager_muc_room,$body);
         if($r->[0] ne 'ok') {
           $req->respond([500,$r->[1]]);
         } else {
@@ -188,58 +188,6 @@
         $httpd->stop_request;
       },
 
-      '/form' => sub {
-        my ($httpd, $req) = @_;
-
-        debug("node/form: Processing web request");
-        my $body = {
-          activity => 'node/form/'.rand(),
-          action => 'submit_form',
-          params => {
-            $req->vars
-          },
-        };
-
-      },
-
-      '/view' => sub {
-        my ($httpd, $req) = @_;
-
-        debug("node/view: Processing web request");
-        my $body = {
-          activity => 'node/view/'.rand(),
-          action => 'view_form',
-          params => {
-            $req->vars
-          },
-        };
-
-      },
-
-      '/account' => CCNQ::API::handler::make_couchdb_proxy(
-          $context,
-          'by/account',                              # View name
-          'account', [qw(account)],                  # Key
-          [qw(name billing_address billing_cycle)],
-          [qw(name billing_address billing_cycle)],
-      ),
-
-      '/account_sub' => CCNQ::API::handler::make_couchdb_proxy(
-          $context,
-          'by/account_sub',                          # View name
-          'account_sub', [qw(account account_sub)],  # Key
-          [qw(label plan)],
-          [qw(label plan)],
-      ),
-
-      '/user' =>      CCNQ::API::handler::make_couchdb_proxy(
-          # XXX "billing_account" method needs finer-grained processing (add/remove from a list)
-          $context,
-          'by/user',                                 # View name
-          'user', [qw(username)],                    # Key
-          [qw(email billing_accounts)],
-          [qw(email billing_accounts)],
-      ),
     );
     $mcv->send(CCNQ::AE::SUCCESS);
   },

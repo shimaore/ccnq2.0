@@ -21,3 +21,6 @@ The manager processes different message types:
 
 All messages are logged into a database which can be queried to retrieve
 status information about requests and activities.
+
+XXX TODO: I'm still missing an off-line "re-submit pending activities"
+sub-system. This could for example use the idle state of the manager.

@@ -1,0 +1,53 @@
+This is the sepcification for the API service which allows an external
+process (e.g. portal) to query or update data inside the system.
+
+The code for the API service is located in ${SRC}/node/api/actions .
+
+The API service is located at a "well-known" contact point specified as
+
+  CCNQ::Install::api_rendezvous_host      '127.0.0.1'
+  CCNQ::Install::api_rendezvous_port      9090
+
+Note that the API service is therefor normally not reachable from
+outside an "api"-type node, which is why "api" and "portal" types
+must be co-located. (Eventually this restriction will be lifted.)
+
+-- Creating a new Request --
+
+New requests are inserted into the system using
+
+  /api/${action}/${cluster_name}
+
+This type of request is sent over to the "manager" process which then
+uses the logic in ${SRC}/manager/actions to dispatch the Request into
+one or more Activities.
+
+The ${action} must be one of actions specified in
+
+  ${SRC}/manager/requests/${action}_query.pm    for GET
+  ${SRC}/manager/requests/${action}_update.pm   for PUT
+  ${SRC}/manager/requests/${action}_delete.pm   for DELETE
+
+The response is a JSON hash containing at least the following:
+
+  {
+    request => ${request_id}
+  }
+
+Note that since GET queries do not return immediately (they merely
+create a new request for data in the system), other API services are
+available to query data in a more real-time fashion.
+
+-- Tracking a Request --
+
+The following API service provides information about the status of
+requests.
+
+  /request/${request_id}      (GET)
+
+-- Querying the provisioning database --
+
+The following API service allows to query the provisioning database
+directly.
+
+  /provisioning/...         XXX

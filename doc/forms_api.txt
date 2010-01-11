@@ -4,7 +4,7 @@ namely:
   PUT
   DELETE
 
-Form fields and content will be provided by the "api" service.
+Form fields and content will be provided by the "forms" service.
 Field validation, layout and presentation is the responsability of the "portal" service.
 
 -- Forms --
@@ -108,17 +108,6 @@ PUT and DELETE are not applicable to views.
 
 A view will return a JSON array containing zero, one, or more "form" records
 as specified under "form".
-
-
--- Requests --
-
-One special view, called "request", provides information about the status of
-internal requests.
-
-  /request/${request}     (GET)
-
-The $request ID is provided if applicable by e.g. PUT or DELETE operations on
-forms.
 
 
 -- Portal information --
