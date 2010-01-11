@@ -26,11 +26,14 @@ use AnyEvent::CouchDB;
 
   update => sub {
     my ($params,$context,$mcv) = @_;
+    unless($params->{_id}) {
+      return $mcv->send(CCNQ::AE::FAILURE('ID is required'));
+    }
     # Insert / Update a CouchDB record
-    # If the record exists, only updates the specified fields.
     my $couch_db = couchdb(CCNQ::API::provisioning_db);
 
     my $cv = $couch_db->open_doc($params->{_id});
+    # XXX Implement proper CouchDB semantics.
     $cv->cb(sub{
       eval { my $doc = $_[0]->recv; }
       if($@) {
@@ -44,6 +47,7 @@ use AnyEvent::CouchDB;
           }
         });
       } else {
+        # If the record exists, only updates the specified fields.
         for my $key (grep !/^(_id|_rev)$/ keys %params) {
           $doc->{$key} = $params->{$key};
         }
@@ -57,10 +61,14 @@ use AnyEvent::CouchDB;
         });
       }
     });
+    $context->{condvar}->cb($cv);
   },
 
   delete => sub {
     my ($params,$context,$mcv) = @_;
+    unless($params->{_id}) {
+      return $mcv->send(CCNQ::AE::FAILURE('ID is required'));
+    }
     # Delete a CouchDB record
     my $couch_db = couchdb(CCNQ::API::provisioning_db);
     my $cv = $couch_db->open_doc($params->{_id});
@@ -75,10 +83,14 @@ use AnyEvent::CouchDB;
         }
       });
     });
+    $context->{condvar}->cb($cv);
   },
 
   retrieve => sub {
     my ($params,$context,$mcv) = @_;
+    unless($params->{_id}) {
+      return $mcv->send(CCNQ::AE::FAILURE('ID is required'));
+    }
     # Return a CouchDB record, or a set of records
     my $couch_db = couchdb(CCNQ::API::provisioning_db);
     my $cv = $couch_db->open_doc($params->{_id});
@@ -90,6 +102,8 @@ use AnyEvent::CouchDB;
         $mcv->send(CCNQ::AE::SUCCESS($doc));
       }
     });
+    $context->{condvar}->cb($cv);
+  },
   },
 
 }
