@@ -17,6 +17,10 @@
 use strict; use warnings;
 use Test::More;
 
+# XXX make_couchdb_proxy is deprecated.
+# XXX Unify "view" in node/provisioning/actions.pm and "get_request_status"
+#     in manager/actions.pm
+
 use_ok ("CCNQ::API::handler");
 use_ok ("AnyEvent::CouchDB");
 ok( CCNQ::API::handler::make_couchdb_proxy(
