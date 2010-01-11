@@ -1,0 +1,98 @@
+
+This specifies minimum record layout for data stored in the provisioning
+database.
+
+user_profile
+
+  _id: "user_profile/${user_id}"
+  type: "user_profile"
+
+  name: $user_name
+  email: $user_email
+  billing_accounts: [ ${account_id}, .. ]
+
+  Notes:
+  "billing_accounts" lists the accounts which this portal user will
+  receive invoices for.
+
+  Other information such as access levels (portal_accounts, pricing
+  access, which operations are available to which users, ..), passwords,
+  etc. are managed directly by the portal front-end and are not stored
+  in the provisioning database.
+
+account_profile:
+
+  _id: "account/${account_id}"
+  type: "account_profile"
+
+  name: $account_name
+  billing_address: { }
+
+account_sub_profile:
+
+  _id: "account/${account_id}/${account_sub_id}"
+  type: "account_sub_profile"
+
+  name: $account_sub_name (as printed on bill)
+  plan: ${plan_id}  (reference to "plan/${plan_id}" document)
+
+plan_profile:
+
+  _id: "plan/${plan_id}"
+  type: "plan_profile"
+
+  name: $plan_label (plan name printed on the bill)
+  currency: $currency_name (e.g. "USD", "EUR")
+  rating: [ { name: $name, guards: [ ... ], actions: [ ... ] }, 
+            { name: $name, guards: [ ... ], actions: [ ... ] },
+            ...
+          ]
+
+  Notes:
+  guards are [ $guard_name, @guard_params ]
+  actions are [ $action_name, @action_params ]
+
+  $guard_name and $action_name are specified in CCNQ::Rating::Rate
+
+
+
+
+
+
+
+
+*** Optional:
+
+rating_table:
+
+  _id: "rating_table/${table_name}"
+  type: "rating_table"
+
+  rows: [
+          { prefix: $prefix, ... },
+          ...
+        ]
+
+
+  Notes: this could be an alternate way of storing CCNQ::Rating::Table
+  date. The current code relies on CCNQ::Rating::Process to read a 
+  tab-delimited flat file (using the first line as headers, which is
+  the format used by CBEF files).
+  XXX The code to import CouchDB-based data is missing.
+  XXX It might be better to store these outside of the provisioning_db.
+  XXX The only advantage of doing things this way is to get direct
+      access to the records for updates; otherwise flat files are easier
+      to handle (e.g. for batch uploads: simply replace the flat file
+      with a new one).
+
+
+rating_table/e164_to_location
+
+  This is a prefix-based rating table that provides location information
+  for any number. The rows content is as follows:
+
+    prefix: E.164 without a "+" sign
+    country: $country_name
+    us_state: $us_state (if $country_name is "us")
+
+  (See CCNQ::Rating::Event::Numbers in CCNQ/Rating/Events.pm.)
