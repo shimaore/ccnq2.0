@@ -188,6 +188,66 @@
         $httpd->stop_request;
       },
 
+      '/provisioning' => sub {
+        my ($httpd, $req) = @_;
+
+        debug("node/provisioning: Processing web request");
+        my $body = {
+          activity => 'node/provisioning/'.rand(),
+          action => 'retrieve',
+          params => {
+            $req->vars
+          },
+        };
+
+        use URI;
+        my $url = URI->new($req->url);
+        my $path = $url->path;
+
+        if($path =~ m{^/provisioning/(\w+)/(\w+)/(.*)$}) {
+          $body->{params}->{view} = $1.'/'.$2;
+          $body->{params}->{_id}  = [split(qr|/|,$3)];
+        } else {
+          $req->respond([404,'Invalid request']);
+          $httpd->stop_request;
+          return;
+        }
+
+        if($req->method eq 'GET') {
+          # OK
+        } else {
+          $req->respond([501,'Invalid method']);
+          $httpd->stop_request;
+          return;
+        }
+
+        debug("node/api: Contacting $manager_muc_room");
+        my $r = CCNQ::XMPPAgent::send_muc_message($context,$manager_muc_room,$body);
+        if($r->[0] ne 'ok') {
+          $req->respond([500,$r->[1]]);
+        } else {
+          # Callback is used inside the _response handler.
+          $context->{api_callback}->{$body->{activity}} = sub {
+            my ($params,$context) = @_;
+            debug("node/request: Callback in process");
+            if($params->{error}) {
+              debug("node/request: Request failed: ".$params->{error});
+              $req->respond([500,'Request failed',{ 'Content-Type' => 'text/plain' },$params->{error}]);
+            } else {
+              if($params->{params}) {
+                my $json_content = encode_json($params->{params});
+                debug("node/request: Request queued: $params->{status} with $json_content");
+                $req->respond([200,'OK, '.$params->{status},{ 'Content-Type' => 'text/json' },$json_content]);
+              } else {
+                debug("node/request: Request queued: $params->{status}");
+                $req->respond([200,'OK, '.$params->{status}]);
+              }
+            }
+          };
+        }
+        $httpd->stop_request;
+      },
+
     );
     $mcv->send(CCNQ::AE::SUCCESS);
   },

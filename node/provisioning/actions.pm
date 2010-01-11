@@ -104,6 +104,39 @@ use AnyEvent::CouchDB;
     });
     $context->{condvar}->cb($cv);
   },
+
+  view => sub {
+    my ($params,$context,$mcv) = @_;
+    unless($params->{view}) {
+      return $mcv->send(CCNQ::AE::FAILURE('View is required'));
+    }
+    unless($params->{_id} && ref($params->{_id}) eq 'ARRAY') {
+      return $mcv->send(CCNQ::AE::FAILURE('Key is required'));
+    }
+    my @key_prefix = @{$params->{_id}};
+
+    # Return a CouchDB record, or a set of records
+    my $couch_db = couchdb(CCNQ::API::provisioning_db);
+    my $cv = $couch_db->view(
+      $params->{view},
+      {
+        startkey => [@key_prefix],
+        endkey   => [@key_prefix,{}],
+        include_docs => "true",
+        error    => sub {
+          $mcv->send(CCNQ::AE::FAILURE);
+        }
+      }
+    );
+    $cv->cb(sub{
+      eval { my $view = $_[0]->recv; }
+      if($@) {
+        $mcv->send(CCNQ::AE::FAILURE($@));
+      } else {
+        $mcv->send(CCNQ::AE::SUCCESS($view));
+      }
+    });
+    $context->{condvar}->cb($cv);
   },
 
 }
