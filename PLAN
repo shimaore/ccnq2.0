@@ -1,0 +1,43 @@
+work on project plan
+analyze what needs to be done (feature tracker)
+analyze what needs to get fixed (bug tracker)
+
+some things that need to be done:
+
+web portal:
+- decide on toolset: nginx (why?), jquery (why?), ..
+  (probably stop doing stoopid CGI and move on to something better)
+  -> see comments in portal/TODO, there's enough to get started.
+- XXX the "forms" API is dead. Remove doc/forms_api.txt.
+- write e.g. Mechanize::WWW tests for web interaction testing
+- write a proper request querying interface
+  + design a proper way to indicate content-type in the JSON responses (e.g. so that sniffer traces are displayed properly without "magic")
+- 
+
+provisioning database:
+- decide on where it sits (probably the API server, but doesn't have to -- e.g. the billing processes don't need live access to the "user database" -- only the process that emails them out does)
+  .. I think I already decide on a "provisioning" server? (it doesn't need access to the user database either, it only need to store data provided to it by other modules, and be able to report on it)
+  .. maybe it's an API (e.g. pre-defined provisioning server for the cluster using an SRV or something like that)
+
+
+billing:
+- formalize (=document) the interface to dump new CBEF files into what will get processed
+  .. processed at least daily
+  .. create process to dump new events for active DIDs
+- formalize (=document) the layout of a "plan", "event", etc.
+- write proper OO interfaces for them
+- CBEF parser returns CBEF object
+- plan/rating transforms a CBEF object into a CBEF-Rated object
+- dump a CBEF object (needed for translators)
+- dump a CEBF-rated object
+
+
+... DONT over-formalize, but come up with clean interfaces so that others can work with them.
+
++ review why I have some many ways of calling dynamic bits of code.
+
+
+documentation:
+- cleanup and aggregate all the little pieces of documentation scattered
+  all over the place.
+
