@@ -35,7 +35,7 @@ do
     -p -i $intf \
     -a filesize:1024  -b files:$SIZE_MB \
     -w /var/log/traces/$intf.pcap \
-    -f ${FILTER} &
+    -f "${FILTER}" &
   # Save the PID
   echo $! > /var/run/traces/traces-$intf.pid
 done
