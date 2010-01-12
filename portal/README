@@ -23,12 +23,15 @@ other storage method) which is independent from the other systems.
 
 Outer layer roles:
 - locale/language selection
-- user registration
+- user registration (*)
 - user authentication
+- user updates (*)
 - session management
 - account selection (once logged in)
 - authorization (including generating menus, etc.)
 - I18N/L10N of the above roles
+
+(*) This includes pushing the user_id and email to the inner layer.
 
 Inner layer roles:
 - forms presentation, validation, and submission
