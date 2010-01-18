@@ -1,9 +1,13 @@
 package CCNQ::Portal::Auth;
 
+use constant USERNAME_PARAM => 'username';
+use constant PASSWORD_PARAM => 'password';
+
 =pod
-  auth($login,$password)
-    Method must return true iff the login/password combination
+  $user_id = auth($username,$password)
+    Method must return a valid user_id iff the login/password combination
     successfully authenticated the login.
+    Otherwise should return undef.
 =cut
 
 sub auth {
@@ -11,7 +15,7 @@ sub auth {
 }
 
 =pod
-  auth_change($login,$password)
+  $success = auth_change($username,$password)
     Method must return true iff the password was successfully
     changed for the login.
 =cut
@@ -21,8 +25,8 @@ sub auth_change {
 }
 
 =pod
-  create($login,$password)
-    Method must return true iff the new login was successfully registered
+  $user_id = create($username,$password)
+    Method must return the new user_id iff the new login was successfully registered
     and the password was assigned to it.
 =cut
 
@@ -32,7 +36,7 @@ sub create {
 
 =pod
   _untaint_params($receiver)
-    Returns an arrayref comprising of [$login,$password]
+    Returns an arrayref comprising of [$username,$password]
     if the fields in receiver are valid.
 =cut
 
@@ -42,14 +46,14 @@ sub _untaint_params {
 
   my $untainter = CGI::Untaint->new($receiver->Vars);
 
-  my $login = $untainter->extract(-as_email=>'login');
-  return [undef,undef] if not defined $login;
+  my $username = $untainter->extract(-as_email=>USERNAME_PARAM);
+  return [undef,undef] if not defined $username;
 
-  $login = $login->format;
+  $username = $username->format;
 
-  my $password = $cgi->param('password');
-  return [$login,undef] if not defined $password or $password eq '';
-  return [$login,$password];
+  my $password = $cgi->param(PASSWORD_PARAM);
+  return [$username,undef] if not defined $password or $password eq '';
+  return [$username,$password];
 }
 
 =pod
@@ -60,6 +64,16 @@ sub _untaint_params {
 sub render_authenticate_prompt {
   my $self = shift;
   my ($renderer) = @_;
+  $renderer->make_form( ...
+    [
+      USERNAME_PARAM() => {
+        ...
+      },
+      PASSWORD_PARAM() => {
+        ...
+      },
+    ]
+  );
 }
 
 =pod
@@ -75,8 +89,9 @@ sub authenticate {
 
   my $p = $self->_untaint_params($receiver);
 
-  if($self->auth(@{$p})) {
-    $session->change_user(Portal::User::load($login));
+  my $user_id = $self->auth(@{$p});
+  if(defined($user_id)) {
+    $session->change_user(new Portal::User $user_id);
   } else {
     return undef;
   }
@@ -91,6 +106,8 @@ sub authenticate {
 sub render_change_prompt {
   my $self = shift;
   my ($renderer,$session) = @_;
+
+  # Include Captcha?
 
 }
 
@@ -108,7 +125,7 @@ sub change {
 
   my $user = $session->user;
   $user = CCNQ::Portal::User::load $p[0];
-  $cb->(FAILED,)
+  $cb->(FAILED,...);
   if($user) {
     $cb->(OK);
   } else {
