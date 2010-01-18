@@ -1,0 +1,12 @@
+The Lua script itself should be kept short.
+
+What I need to do is create a web interface that implements the call rating
+(and therefor hides the Trie, etc. behind an API).
+
+Also the billing rules (under CCNQ::Rating::Rate) should be flexible enough to be
+able to be used for multiple modes:
+- evaluate the cost of a call knowing its duration (normal post-pay billing mode)
+- evaluate the maximum duration of a call knowing how much money is available (pre-pay mode)
+- determine whether a call is free or chargeable
+- determine a per-minute rate applicable to the call
+
