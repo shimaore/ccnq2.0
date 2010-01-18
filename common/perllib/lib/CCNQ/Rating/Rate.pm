@@ -248,7 +248,7 @@ use constant cbef_guards => {
     return $cbef->count > 0;
   },
 
-
+#  Rating periods -- in some cases, calls are rated differently based on time periods.
 
 };
 
@@ -371,8 +371,6 @@ use constant cbef_actions => {
   },
 
 
-
-  #  Difficult: rating periods -- in some cases, calls are rated differently based on time periods.
 
 }
 
