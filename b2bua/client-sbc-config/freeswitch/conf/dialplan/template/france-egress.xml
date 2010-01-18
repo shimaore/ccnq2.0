@@ -16,8 +16,8 @@
 
 <!-- Verify that the caller-id follows the proper format -->
 <extension name="cleanup-caller-id" continue="true">
-  <condition field="caller_id_number" expression="^0([12345].{8})$">
-    <action application="set" data="ccnq_from_e164=33$1"/>
+  <condition field="caller_id_number" expression="^(0|\+33)([12345].{8})$">
+    <action application="set" data="ccnq_from_e164=33$2"/>
   </condition>
 </extension>
 
@@ -25,8 +25,8 @@
 
 <!-- geographic, non-geographic, mobile, or service -->
 <extension name="cleanup-called-1">
-  <condition field="destination_number" expression="^0([12345689][0-9]{8})$">
-    <action application="set" data="ccnq_to_e164=33$1"/>
+  <condition field="destination_number" expression="^(0|\+33)([12345689][0-9]{8})$">
+    <action application="set" data="ccnq_to_e164=33$2"/>
     <action application="transfer" data="call"/>
   </condition>
 </extension>
@@ -41,8 +41,8 @@
 
 <!-- international call -->
 <extension name="cleanup-called-3">
-  <condition field="destination_number" expression="^00([0-9]*)$">
-    <action application="set" data="ccnq_to_e164=$1"/>
+  <condition field="destination_number" expression="^(00|\+)([0-9]*)$">
+    <action application="set" data="ccnq_to_e164=$2"/>
     <action application="transfer" data="call"/>
   </condition>
 </extension>
