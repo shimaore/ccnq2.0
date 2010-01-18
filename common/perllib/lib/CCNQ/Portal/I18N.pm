@@ -7,7 +7,7 @@ use Filter::Simple;
 
   We use macros so that e.g.
      _("....")_
-  can use the local $session to gather $session->current_language().
+  can use the local $session to gather $session->current_locale().
 
 =cut
 

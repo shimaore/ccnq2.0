@@ -7,7 +7,7 @@ use Logger::Syslog;
   A Portal::Session is simply a storage location for the current session.
 =cut
 
-use constant LANGUAGE_PARAM => 'language';
+use constant LOCALE_PARAM => 'locale';
 
 use constant SESSION_STORE  => '/var/www/.live-data/sessions';
 use constant SESSION_EXPIRY => '+15m';
@@ -44,49 +44,50 @@ sub new {
   $self->{_user} = $user;
   $self->{_site} = $site;
 
-  $self->init_language();
+  $self->init_locale();
   return $self;
 }
 
-sub init_language {
+sub init_locale {
   my $self = shift;
-  $self->change_language( $self->param(LANGUAGE_PARAM)
-    || ($self->user && $self->user->default_language)
-    # XXX Use the browser's preferred languages!
-    || $self->site->default_language
+  $self->change_locale( $self->param(LOCALE_PARAM)
+    || ($self->user && $self->user->default_locale)
+    # XXX Use the browser's preferred locales!
+    || $self->site->default_locale
   );
 }
 
 sub site { shift->{_site} }
 sub user { shift->{_user} }
-sub current_language { shift->{_language} }
+sub current_locale { shift->{_locale} }
 
 =pod
-  change_user
+  change_user($user)
+    Set the current session's user to a new CCNQ::Portal::User
 =cut
 
 sub change_user {
   my ($self,$user) = @_;
   $self->{_user} = $user;
-  $self->init_language();
+  $self->init_locale();
 }
 
 =pod
-  change_language
-    Used e.g. when the user manually selects a language in
+  change_locale
+    Used e.g. when the user manually selects a locale in
     the UI.
 =cut
 
-sub change_language {
-  my ($self,$language) = @_;
-  $self->{_language} = $language;
-  $self->param(LANGUAGE_PARAM,$language);
+sub change_locale {
+  my ($self,$locale) = @_;
+  $self->{_locale} = $locale;
+  $self->param(LOCALE_PARAM,$locale);
   $self->flush();
 }
 
 sub lang {
   my $self = shift;
-  $self->{_lang} ||= CCNQ::I18N->get_handle($self->current_language);
+  $self->{_lang} ||= CCNQ::I18N->get_handle($self->current_locale);
 }
 
 sub loc {

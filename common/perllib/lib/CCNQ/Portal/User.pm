@@ -1,42 +1,29 @@
 package CCNQ::Portal::User;
 
 use strict; use warnings;
-use base CCNQ::Object;
 
-# Class method: load an existing user from the database.
-
-sub load {
-  my ($user_id) = @_;
-  # Access the database to load information about the specified user.
-
-  return new CCNQ::Portal::User %params;
-}
-
-sub _init {
-  my $self = shift;
-  my %params = @_;
-  foreach (qw(user_id name email default_language)) {
-    $self->{$_} = $params{$_};
-  } 
-}
+use CCNQ::Portal::UserProfile;
 
 =pod
-  name
-    Returns a human-readable name (e.g. first name and last name) for this user.
+
+  new CCNQ::Portal::User $user_id
+
 =cut
 
-sub name { return shift->{name} }
+sub new {
+    my $this = shift; my $class = ref($this) || $this;
+    my $self = { _id => $_[0] };
+    return bless $self, $class;
+}
 
-=pod
-  email
-    Returns a valid SMTP email address.
-=cut
-
-sub email { return shift->{email} }
-
-sub default_language {
+sub id {
   my $self = shift;
-  return $self->{default_language};
+  return $self->{_id};
+}
+
+sub profile {
+  my $self = shift;
+  return $self->{_profile} ||= new CCNQ::Portal::UserProfile::load($self->{_id});
 }
 
 1;

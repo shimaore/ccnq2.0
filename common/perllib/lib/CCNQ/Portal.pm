@@ -16,10 +16,10 @@ sub current_user {
   }
 }
 
-sub current_language {
+sub current_locale {
   my $self = shift;
   if($self->current_session) {
-    return $self->current_session->current_language;
+    return $self->current_session->current_locale;
   } else {
     return undef;
   }
