@@ -58,3 +58,6 @@
   <list name="sbc-ocs" default="allow">
     <node type="allow" cidr="0.0.0.0/0"/>
   </list>
+  <list name="sbc-usa-cnam-bb" default="allow">
+    <node type="allow" cidr="0.0.0.0/0"/>
+  </list>

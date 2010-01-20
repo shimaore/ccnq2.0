@@ -46,3 +46,11 @@
 <X-PRE-PROCESS cmd="set" data="internal_sip_ip=$${local_ip_v4}"/>
 <X-PRE-PROCESS cmd="set" data="external_sip_ip=$${local_ip_v4}"/>
 <X-PRE-PROCESS cmd="include" data="template/sbc-nomedia.xml"/>
+
+<X-PRE-PROCESS cmd="set" data="profile_name=usa-cnam-bb"/>
+<X-PRE-PROCESS cmd="set" data="internal_sip_port=15207"/>
+<X-PRE-PROCESS cmd="set" data="external_sip_port=5207"/>
+<X-PRE-PROCESS cmd="set" data="internal_sip_ip=$${local_ip_v4}"/>
+<X-PRE-PROCESS cmd="set" data="external_sip_ip=$${local_ip_v4}"/>
+<X-PRE-PROCESS cmd="include" data="template/sbc-nomedia.xml"/>
+
