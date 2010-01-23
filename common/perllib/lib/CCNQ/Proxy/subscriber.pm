@@ -75,6 +75,7 @@ sub form
         'Account'               => 'text',
         'Allow_OnNet'           => [1=>'Yes',0=>'No'],
         'Always_Proxy_Media'    => [0=>'No',1=>'Yes'],
+        'Forwarding_SBC'        => [0=>'No',1=>'Yes'],
     );
 }
 
@@ -95,6 +96,7 @@ sub insert
     my $strip_digit = $params->{strip_digit};
     my $account     = $params->{account};
     my $account_sub = $params->{account_sub};
+    my $forwarding_sbc = $params->{forwarding_sbc};
 
     return ()
       unless defined $username and $username ne ''
@@ -108,6 +110,10 @@ sub insert
     my $always_mp   = $params->{always_proxy_media} || 0;
 
     $ip = undef unless defined($ip) && $ip =~ /^[\d.]+$/;
+
+    # A Forwarding SBC can only be authenticated by IP.
+    return ()
+      if $forwarding_sbc && !defined($ip);
 
     $strip_digit = undef unless defined($strip_digit) && $strip_digit =~ /^\d$/;
 
@@ -144,6 +150,7 @@ SQL
         $self->_avp_set($username,$domain,'strip_digit',$strip_digit),
         $self->_avp_set($username,$domain,'allow_onnet',$allow_onnet?1:undef),
         $self->_avp_set($username,$domain,'user_force_mp',$always_mp?1:undef),
+        $self->_avp_set($username,$domain,'forwarding_sbc',$forwarding_sbc?1:undef),
     );
 }
 
@@ -176,6 +183,7 @@ SQL
         $self->_avp_set($username,$domain,'strip_digit',undef),
         $self->_avp_set($username,$domain,'allow_onnet',undef),
         $self->_avp_set($username,$domain,'user_force_mp',undef),
+        $self->_avp_set($username,$domain,'forwarding_sbc',undef),
     );
 
     if(defined $ip)
@@ -207,7 +215,7 @@ sub list
     my $where = '';
     $where = 'HAVING '. join('AND', map { "($_)" } @where ) if @where;
 
-    return (<<SQL,[$self->avp->{account},$self->avp->{src_subs},$self->avp->{user_port},$self->avp->{user_srv},$self->avp->{dest_domain},$self->avp->{strip_digit},$self->avp->{allow_onnet},$self->avp->{user_force_mp},$self->avp->{src_subs},@where_values],undef);
+    return (<<SQL,[$self->avp->{account},$self->avp->{src_subs},$self->avp->{user_port},$self->avp->{user_srv},$self->avp->{dest_domain},$self->avp->{strip_digit},$self->avp->{allow_onnet},$self->avp->{user_force_mp},$self->avp->{forwarding_sbc},$self->avp->{src_subs},@where_values],undef);
         SELECT username AS username,
                domain AS domain,
                (SELECT value FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS account,
@@ -219,6 +227,7 @@ sub list
                (SELECT value FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS strip_digit,
                (SELECT COUNT(value) FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS allow_onnet,
                (SELECT COUNT(value) FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS always_proxy_media,
+               (SELECT COUNT(value) FROM avpops WHERE uuid = main.username AND domain = main.domain AND attribute = ?) AS forwarding_sbc,
                (SELECT contact FROM location WHERE username = main.username AND domain = main.domain ) AS contact,
                (SELECT received FROM location WHERE username = main.username AND domain = main.domain ) AS received,
                (SELECT user_agent FROM location WHERE username = main.username AND domain = main.domain ) AS user_agent,

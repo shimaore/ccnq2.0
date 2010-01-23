@@ -77,6 +77,10 @@ sub avp
         account_sub     => 193,
         number_account  => 194, # used in inbound-proxy
         number_account_sub => 195, # used in inbound-proxy
+
+        # socket-info forwarding
+        host_info       => 160,
+        forwarding_sbc  => 161,
     }
 }
 
@@ -96,7 +100,7 @@ sub cdr_extra
         from_domain     =>  '$fd',
         ruri_user       =>  '$rU',
         ruri_domain     =>  '$rd',
-        src_ip          =>  '$si',
+        src_ip          =>  '$avp(host_info)',
         src_type        =>  '$avp(src_type)', # PSTN, ONNET
         dst_type        =>  '$avp(dst_type)', # ALIAS, ONNET
         src_subs        =>  '$avp(src_subs)',
