@@ -67,3 +67,4 @@ avp_aliases="${AVP_ALIASES}"
 mpath="${MPATH}"
 
 server_header="Server: CCNQ 2.0"
+user_agent_header="User-Agent: CCNQ 2.0"
