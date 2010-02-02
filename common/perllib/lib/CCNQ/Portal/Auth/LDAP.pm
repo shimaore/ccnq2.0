@@ -1,45 +1,37 @@
-#!/usr/bin/perl
-package Portal::Login;
-
+package Portal::Auth::LDAP;
 use strict; use warnings;
-
-use CGI::Carp;
-
-use CGI::Session;
-use CGI::Untaint;
 
 use Net::LDAP;
 
-#
-## LDAP Parameters
-#
+=pod
 
-use constant LDAP_BASE      => 'ou=Users,dc=sotelips,dc=net';
+  new CCNQ::Portal::Auth::LDAP({
+    ldap_base => 'ou=Users,dc=sotelips,dc=net',
+    ldap_uri => 'ldaps://ldap.sotelips.net',
+  })
 
-#
-## RT Parameters
-#
+=cut
 
-use constant RT_BASE        => 'https://sotelips.net/rt/';
-
-#
-## Redirect URLs
-#
-
-use constant URL_INVALID_LOGIN     => 'https://sotelips.net/d/?q=node/69&error=Invalid+Login';  # Login page with a warning about invalid login
-use constant URL_INVALID_PASSWORD  => 'https://sotelips.net/d/?q=node/69&error=Invalid+Password'; # Login page with a warning about invalid password
-use constant URL_LOGOUT            => 'https://sotelips.net/d/?q=node/69&error=Successful+Logout'; # Logout page
+sub new {
+  my $this  = shift;
+  my $class = ref($this) || $this;
+  my $self  = shift;
+  bless $self, $class;
+}
 
 sub auth
 {
-  my ($login,$password) = @_;
+  my $self = shift;
+  my ($username,$password) = @_;
 
-  return 0 unless defined $login and defined $password;
+  return undef unless defined $username and defined $password;
 
   # XXX: RT also has a notion of "Disabled Users" that we should (query and test) for.
 
-  my $bind = "cn=${login},".LDAP_BASE;
-  my $ldap = Net::LDAP->new( 'ldaps://ldap.sotelips.net', timeout => 5 ) or die $@;
+  my $user_id = $username;
+
+  my $bind = "cn=${user_id},".$self->ldap_base;
+  my $ldap = Net::LDAP->new( $self->ldap_uri, timeout => 5 ) or die $@;
   my $mesg = $ldap->bind( $bind, password => $password );
   my $ok = $mesg->code ? 0 : 1;
   warn($bind.':' .$mesg->error) if $mesg->code;
@@ -47,31 +39,38 @@ sub auth
 
   undef $ldap;
   undef $mesg;
-  return $ok;
+
+  return $ok ? $user_id : undef;
 }
 
 sub auth_change {
-  my ($login,$password) = @_;
+  my $self = shift;
+  my ($user_id,$password) = @_;
   
-  return 0 unless defined $login and defined $password;
+  return ['error',_('Missing parameters')_] unless defined $user_id and defined $password;
 
-  my $ldap = Portal::Directory::get_ldap($cgi);
+  my $ldap = Portal::Directory::get_ldap();
 
-  my $bind = "cn=${email},".Portal::Directory::LDAP_BASE;
+  my $bind = "cn=${user_id},".$self->ldap_base;
 
   my $result = $ldap->set_password(
     newpasswd => $password,
-    user => $bind
+    user => $bind,
   );
   warn('Error: '.$result->error.', code: '.$result->code);
-  return $cgi->redirect(URL_CANNOT_RESET) if($result->code);
-
+  return ['error',_('Cannot change password')_] if($result->code);
+  return ['ok'];
 }
 
 sub create {
-  my $ldap = Portal::Directory::get_ldap($cgi);
+  my $self = shift;
+  my ($username,$password,$name,$email) = @_;
+
+  my $ldap = Portal::Directory::get_ldap();
+
+  my $user_id = $username;
   
-  my $bind = "cn=${email},".Portal::Directory::LDAP_BASE;
+  my $bind = "cn=${user_id},".$self->ldap_base;
 
   my $result = $ldap->add(
     $bind,
@@ -84,25 +83,28 @@ sub create {
     ]
   );
   warn("dn: $bind -> ".$result->error);
-  return $cgi->redirect(URL_FAILED) if($result->code);
+  return undef if($result->code);
 
   $result = $ldap->set_password(
     newpasswd => $password,
-    user => $bind
+    user => $bind,
   );
   warn($result->error);
-  return $cgi->redirect(URL_FAILED) if($result->code);
+  return undef if($result->code);
 }
 
 sub exists {
-  my $ldap = Portal::Directory::get_ldap($cgi);
+  my $self = shift;
+  my ($user_id) = @_;
+
+  my $ldap = Portal::Directory::get_ldap();
 
   # Make sure the email address does not already exist
   my $mesg = $ldap->search( base => Portal::Directory::LDAP_BASE, filter => "(cn=$email)" );
   warn($mesg->error);
-  return $cgi->redirect(URL_ERROR) if $mesg->code;
-  return $cgi->redirect(URL_ALREADY) if $mesg->entries;
-  
+  return ['error',_('Internal error')_] if $mesg->code;
+  return ['already'] if $mesg->entries;
+  return ['not-present'];
 }
 
 1;

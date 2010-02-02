@@ -3,35 +3,35 @@ package CCNQ::Portal::Auth;
 use constant USERNAME_PARAM => 'username';
 use constant PASSWORD_PARAM => 'password';
 
+use constant MUST_BE_INSTANTIATED => ' must be instantiated by an implementation class';
+
 =pod
-  $user_id = auth($username,$password)
-    Method must return a valid user_id iff the login/password combination
+  $user_id = auth($request)
+    Method must return $user_id iff the login/password combination
     successfully authenticated the login.
     Otherwise should return undef.
 =cut
 
-sub auth {
-  die "auth()"." must be instantiated by an implementation class";
-}
-
 =pod
-  $success = auth_change($username,$password)
-    Method must return true iff the password was successfully
+  $success = auth_change($user_id,$password)
+    Method must return ['ok'] iff the password was successfully
     changed for the login.
+    Otherwise returns ['error',$error_msg].
 =cut
 
 sub auth_change {
-  die "auth_change()"." must be instantiated by an implementation class";
+  ['error', "auth_change()".MUST_BE_INSTANTIATED];
 }
 
 =pod
-  $user_id = create($username,$password)
+  $user_id = create($username,$password, $name, $email)
     Method must return the new user_id iff the new login was successfully registered
     and the password was assigned to it.
+    Otherwise must return undef.
 =cut
 
 sub create {
-  die "create()"." must be instantiated by an implementation class";
+  ['error', "create()".MUST_BE_INSTANTIATED];
 }
 
 =pod
@@ -42,9 +42,9 @@ sub create {
 
 sub _untaint_params {
   my $self = shift;
-  my ($receiver) = @_;
+  my ($request) = @_;
 
-  my $untainter = CGI::Untaint->new($receiver->Vars);
+  my $untainter = CGI::Untaint->new($request->Vars);
 
   my $username = $untainter->extract(-as_email=>USERNAME_PARAM);
   return [undef,undef] if not defined $username;
@@ -85,15 +85,16 @@ sub render_authenticate_prompt {
 
 sub authenticate {
   my $self = shift;
-  my ($receiver,$session) = @_;
+  my ($params,$session) = @_;
 
-  my $p = $self->_untaint_params($receiver);
+  my $p = $self->_untaint_params($params);
 
   my $user_id = $self->auth(@{$p});
   if(defined($user_id)) {
     $session->change_user(new Portal::User $user_id);
+    return ['ok',$user_id];
   } else {
-    return undef;
+    return ['error',_('Authentication failed')_];
   }
 }
 

@@ -1,3 +1,5 @@
+These are notes taken during development. The final choices are outlined at the end of this file.
+
 framework
 - nginx for aggregation of modules
 - I18N, L10N: use CCNQ::Portal and the macros in CCNQ::Portal::I18N
@@ -33,3 +35,6 @@ Uses Data::Currency
   The inner layer will probably rely on CGI::FormBuilder; need to be able to provide both HTML (localized) and JSON (non-localized) output.
 
   The outer layer will use a combination of different tools; the idea is that it can be customized to a specific organizations' needs with minimum effort.
+
+-> I think I'll use Dancer. Sessions will be either stored in memcached (using Dancer::Session::Memcached) or cookies (Dancer::Session::Cookie).
+   Server-side we're using Dancer::Handler::PSGI.

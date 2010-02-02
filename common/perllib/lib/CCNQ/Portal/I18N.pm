@@ -15,7 +15,7 @@ use Filter::Simple;
 # or http://search.cpan.org/dist/perl-5.10.0/pod/perl5100delta.pod#Regular_expressions
 
 FILTER {
-  s{_\((.*?)\)_}{ $session->loc($1) }g;
+  s{_\((.*?)\)_}{ CCNQ::Portal::current_session->locale->loc($1) }g;
 };
 
 1;

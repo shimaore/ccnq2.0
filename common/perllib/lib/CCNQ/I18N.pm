@@ -46,9 +46,6 @@ sub fr::ord { ordinate_to_fr($_[1]) }
 #use Lingua::FR::Numbers::Ordinate;
 #sub fr::ord { ordinate_fr($_[1]) }
 
-# Could use CCNQ::Install::get_variable().
-use constant default_locale => 'en-US';
-
 # Note that numf and quant are provided by default.
 
 sub duration {
