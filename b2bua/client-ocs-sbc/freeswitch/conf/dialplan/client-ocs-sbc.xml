@@ -14,6 +14,13 @@
       </condition>
     </extension>
 
+    <extension name="cleanup-sdp" continue="true">
+      <condition field="destination_number" expression="^call"/>
+      <condition field="${switch_r_sdp}" expression="/(.*)(a=rtpmap:\d+ SIREN)(.*)/s" break="never">
+          <action application="respond" data="488"/>
+      </condition>
+    </extension>
+
     <extension name="cleanup-caller-id" continue="true">
       <condition field="caller_id_number" expression="^\+?([1-9][0-9]+)">
         <action application="set" data="ccnq_from_e164=$1"/>
@@ -76,13 +83,6 @@
       <condition field="destination_number" expression="^call"/>
       <condition field="${switch_r_sdp}" expression="/(.*)(m=audio \d+ RTP\/AVP)([ \d]+)(.*)/s" break="never">
           <action application="set" data="switch_r_sdp=$1$2 0 8 101$4"/>
-      </condition>
-    </extension>
-
-    <extension name="cleanup-sdp-2" continue="true">
-      <condition field="destination_number" expression="^call"/>
-      <condition field="${switch_r_sdp}" expression="/a=rtpmap:111 SIREN/16000/s" break="never">
-          <action application="reject" data="488 Not Acceptable Here"/>
       </condition>
     </extension>
 
