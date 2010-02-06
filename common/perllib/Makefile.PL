@@ -1,5 +1,7 @@
 use inc::Module::Install;
 
+use Module::Install::Share;
+
 # Define metadata
 name          'CCNQ';
 abstract      'Distribution for ccnq2.0';
@@ -51,5 +53,11 @@ requires      'AnyEvent::HTTP'            => '1.44';
 # requires      'DBI' => 0;
 
 test_requires 'Test::More' => 0;
+
+# Copy everything in 'share'.
+install_share;
+
+install_script 'ccnq2_upgrade';
+install_script 'ccnq2_xmpp_agent';
 
 WriteAll;
