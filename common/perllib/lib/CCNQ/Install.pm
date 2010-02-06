@@ -25,6 +25,7 @@ use CCNQ::Util;
 use Logger::Syslog;
 
 use File::ShareDir;
+use CCNQ;
 
 # Where the local configuration information is kept.
 use constant CCN => q(/etc/ccn);
