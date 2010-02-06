@@ -24,6 +24,8 @@ use AnyEvent::DNS;
 use CCNQ::Util;
 use Logger::Syslog;
 
+use File::ShareDir;
+
 # Where the local configuration information is kept.
 use constant CCN => q(/etc/ccn);
 
@@ -88,22 +90,8 @@ use constant::defer cookie => sub {
 
 # Try to guess the source location from the value of $0.
 
-use constant source_path_tag => 'source_path';
-use constant source_path_file => tag_to_file(source_path_tag);
-
-use constant::defer SRC => sub { get_variable(source_path_tag,source_path_file,sub {
-  # Work under the assumption that upgrade.pl already did the right thing.
-  my $abs_path = File::Spec->rel2abs(File::Spec->curdir());
-  # my $abs_path = File::Spec->rel2abs($0);
-  my ($volume,$directories,$file) = File::Spec->splitpath($abs_path);
-  my @directories = File::Spec->splitdir($directories);
-  pop @directories; # Remove bin/
-  pop @directories; # Remove common/
-  $directories = File::Spec->catdir(@directories);
-  return File::Spec->catpath($volume,$directories,'');
-})};
-
-use constant::defer install_script_dir => sub { File::Spec->catfile(SRC,'common','bin') };
+use constant MAKEFILE_MODULE_NAME => 'CCNQ';
+use constant SRC => module_dir(MAKEFILE_MODULE_NAME);
 
 # host_name and domain_name resolution
 use Net::Domain;

@@ -16,63 +16,32 @@
 
 use strict; use warnings;
 
-use Logger::Syslog;
-use File::Spec;
 use File::Path qw(mkpath);
+use AnyEvent;
 
-# Where the local configuration information is kept.
-use constant CCN => q(/etc/ccn);
+use CCNQ::Install qw(CCN);
+use CCNQ::AE::Run;
 
 sub run {
   # Create the configuration directory.
   die "No ".CCN unless -d CCN or mkpath(CCN);
 
-  # Source path resolution
+  # Make sure all variables are available:
+  eval { CCNQ::Install::cookie()        };  my $warn1 = $@;
+  eval { CCNQ::Install::fqdn()          };  my $warn2 = $@;
+  eval { CCNQ::Install::SRC()           };  my $warn3 = $@;
+  eval { CCNQ::Install::cluster_names() };  my $warn4 = $@;
 
-  # Where does the copy of the original code lie?
-  # I create mine in ~/src using:
-  #    cd $HOME/src && git clone git://github.com/stephanealnet/ccnq2.0.git
-  # therefor SRC_DEFAULT => $ENV{HOME}.q(/src/ccnq2.0);
+  die $warn1.$warn2.$warn3.$warn4
+    if $warn1 || $warn2 || $warn3 || $warn4;
 
-  # Try to figure out where the current script is located.
-  use constant script_path => sub {
-    my $abs_path = File::Spec->rel2abs($0);
-    my ($volume,$directories,$file) = File::Spec->splitpath($abs_path);
-    my @directories = File::Spec->splitdir($directories);
-    $directories = File::Spec->catdir(@directories);
-    return File::Spec->catpath($volume,$directories,'');
-  }->();
-
-  chdir(script_path) or die "chdir(".script_path."): $!";
-  debug("Starting from ".script_path);
-  eval q{
-    use CCNQ::Install;
-
-    # Make sure all variables are available:
-    CCNQ::Install::cookie();
-    CCNQ::Install::fqdn();
-    CCNQ::Install::SRC();
-    CCNQ::Install::cluster_names();
-
-    use AnyEvent;
-
-    my $program = AnyEvent->condvar;
-    my $context = {
-      condvar => $program,
-    };
-
-    use CCNQ::AE::Run;
-
-    CCNQ::AE::Run::attempt_run('node','install_all',undef,$context)->($program);
-    info("Waiting for installation to complete");
-    $program->recv;
+  my $program = AnyEvent->condvar;
+  my $context = {
+    condvar => $program,
   };
 
-  if($@) {
-    error("upgrade.pl: $@");
-  } else {
-    info("upgrade.pl done.");
-  }
+  CCNQ::AE::Run::attempt_run('node','install_all',undef,$context)->($program);
+  $program->recv;
 }
 
 run();
