@@ -1,6 +1,6 @@
 use inc::Module::Install;
 
-use Module::Install::Share;
+# use Module::Install::Share;
 
 # Define metadata
 name          'CCNQ';
