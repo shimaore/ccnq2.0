@@ -239,7 +239,7 @@ sub start {
 
   my $username = CCNQ::Install::host_name;
   my $domain   = CCNQ::Install::domain_name;
-  my $resource = $function;
+  my $resource = $function.'_'.$cluster_name;
   my $password = CCNQ::Install::make_password(CCNQ::Install::xmpp_tag);
 
   debug("Creating XMPP Connection for ${username}\@${domain}/${resource} using password $password.");
