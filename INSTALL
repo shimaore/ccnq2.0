@@ -72,6 +72,7 @@ in memory. Add the following line to /etc/fstab:
   # Required for AnyEvent::CouchDB
   sudo aptitude -y install libdata-dump-streamer-perl libio-all-perl libdata-dump-perl libtest-deep-perl
   # Now add non-Debian Perl modules.
+  cpan File::ShareDir # Obsolete version in Debian Lenny or testing
   sudo cpan EV
   sudo cpan AnyEvent::XMPP
   sudo cpan AnyEvent::Watchdog
