@@ -11,6 +11,7 @@ license       'gpl';
 perl_version  '5.008';
 
 # Specific dependencies
+requires      'File::ShareDir'            => '1.01';
 requires      'File::Spec'                => 0; # '3.2501'
 requires      'File::Copy'                => 0;
 requires      'File::Path'                => 0;
