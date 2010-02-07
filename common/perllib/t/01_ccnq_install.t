@@ -31,10 +31,6 @@ is(CCNQ::Install::manager_cluster_jid(),'manager@conference.private.example.net'
 # Tests that rely on SRC
 require_ok( 'AnyEvent' );
 
-# Are we in our normal source tree?
-$ENV{'CCNQ_source_path'} = '../..' if -e '../../common/bin/xmpp_agent.pl';
-ok($ENV{'CCNQ_source_path'},'Please specify CCNQ_source_path in the environment; for example run:  CCNQ_source_path=../.. make test ');
-
 my $sub = CCNQ::AE::Run::attempt_run('node','status',undef,undef);
 is(ref($sub), 'CODE', 'attempt_run for node/status');
 
