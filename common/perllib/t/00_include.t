@@ -34,7 +34,9 @@ require_ok( 'CCNQ::AE' );
 require_ok( 'CCNQ::AE::Run' );
 require_ok( 'CCNQ::Manager' );
 require_ok( 'CCNQ::MediaProxy' );
+require_ok( 'CCNQ::Monit' );
 require_ok( 'CCNQ::Trace' );
+require_ok( 'CCNQ::Upgrade' );
 require_ok( 'CCNQ::XMPPAgent' );
 
 require_ok( 'CCNQ::Proxy' );
