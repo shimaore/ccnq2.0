@@ -17,30 +17,27 @@
 use strict; use warnings;
 use Test::More;
 
-# Are we in our normal source tree?
-$ENV{'CCNQ_source_path'} = '../..' if -e '../../common/bin/xmpp_agent.pl';
-ok($ENV{'CCNQ_source_path'},'Please specify CCNQ_source_path in the environment; for example run:  CCNQ_source_path=../.. make test ');
+use CCNQ::Install;
+use File::Spec;
 
-my $path = $ENV{'CCNQ_source_path'};
-
-# find . -name 'actions.pm'
+# find . -name 'actions.pm' | sed -s 's/^\.\///'
 for my $name qw(
-  ./b2bua/base/actions.pm
-  ./b2bua/carrier-sbc-config/actions.pm
-  ./b2bua/client-ocs-sbc/actions.pm
-  ./b2bua/client-sbc-config/actions.pm
-  ./manager/actions.pm
-  ./mediaproxy/actions.pm
-  ./mediaproxy/dispatcher/actions.pm
-  ./mediaproxy/relay/actions.pm
-  ./node/actions.pm
-  ./node/api/actions.pm
-  ./proxy/base/actions.pm
-  ./proxy/inbound-proxy/actions.pm
-  ./proxy/outbound-proxy/actions.pm
-  ./proxy/router-no-registrar/actions.pm
+  b2bua/base/actions.pm
+  b2bua/carrier-sbc-config/actions.pm
+  b2bua/client-ocs-sbc/actions.pm
+  b2bua/client-sbc-config/actions.pm
+  manager/actions.pm
+  mediaproxy/actions.pm
+  mediaproxy/dispatcher/actions.pm
+  mediaproxy/relay/actions.pm
+  node/actions.pm
+  node/api/actions.pm
+  proxy/base/actions.pm
+  proxy/inbound-proxy/actions.pm
+  proxy/outbound-proxy/actions.pm
+  proxy/router-no-registrar/actions.pm
 ) {
-  require_ok ("$path/$name");
+  require_ok (File::Spec->catfile(CCNQ::Install::SRC,$name));
 }
 
 done_testing();
