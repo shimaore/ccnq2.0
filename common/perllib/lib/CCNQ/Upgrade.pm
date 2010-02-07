@@ -24,7 +24,7 @@ use CCNQ::AE::Run;
 
 sub run {
   # Create the configuration directory.
-  die "No ".CCN unless -d CCN or mkpath(CCN);
+  die "No ".CCN() unless -d CCN() or mkpath(CCN());
 
   # Make sure all variables are available:
   eval { CCNQ::Install::cookie()        };  my $warn1 = $@;
