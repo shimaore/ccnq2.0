@@ -19,12 +19,14 @@ use strict; use warnings;
 use File::Path qw(mkpath);
 use AnyEvent;
 
-use CCNQ::Install qw(CCN);
+use CCNQ::Install;
 use CCNQ::AE::Run;
 
 sub run {
   # Create the configuration directory.
-  die "No ".CCN() unless -d CCN() or mkpath(CCN());
+  die "No ".CCNQ::Install::CCN()
+    unless -d CCNQ::Install::CCN()
+        or mkpath(CCNQ::Install::CCN());
 
   # Make sure all variables are available:
   eval { CCNQ::Install::cookie()        };  my $warn1 = $@;
