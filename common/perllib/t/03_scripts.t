@@ -24,7 +24,6 @@ use_ok ("File::Spec");
 for my $name qw(
   b2bua/client-ocs-sbc/freeswitch/scripts/cnam.pl
   b2bua/client-sbc-config/freeswitch/scripts/cnam.pl
-  common/bin/upgrade.pl
 ) {
   # require_ok ("$path/$name")  does not work.
   # I need the equivalent of "perl -wc".
