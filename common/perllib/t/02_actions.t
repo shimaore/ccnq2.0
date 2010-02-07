@@ -17,8 +17,8 @@
 use strict; use warnings;
 use Test::More;
 
-use CCNQ::Install;
-use File::Spec;
+use_ok ("CCNQ::Install");
+use_ok ("File::Spec");
 
 # find . -name 'actions.pm' | sed -s 's/^\.\///'
 for my $name qw(

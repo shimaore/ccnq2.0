@@ -17,11 +17,8 @@
 use strict; use warnings;
 use Test::More;
 
-# Are we in our normal source tree?
-$ENV{'CCNQ_source_path'} = '../..' if -e '../../common/bin/xmpp_agent.pl';
-ok($ENV{'CCNQ_source_path'},'Please specify CCNQ_source_path in the environment; for example run:  CCNQ_source_path=../.. make test ');
-
-my $path = $ENV{'CCNQ_source_path'};
+use_ok ("CCNQ::Install");
+use_ok ("File::Spec");
 
 # find manager/requests -name '*.pm'
 for my $name qw(
@@ -43,7 +40,8 @@ for my $name qw(
 ) {
   # require_ok ("$path/$name")  does not work.
   # I need the equivalent of "perl -wc".
-  system(qq(perl -wc "${path}/${name}" > /dev/null 2>/dev/null)) == 0 || die "$name failed";
+  my $file_name = File::Spec->catfile(CCNQ::Install::SRC,$name);
+  system(qq(perl -wc "${file_name}" > /dev/null 2>/dev/null)) == 0 || die "$name failed";
 }
 
 # Does not work with
