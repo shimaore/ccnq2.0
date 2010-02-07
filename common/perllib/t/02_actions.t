@@ -37,7 +37,7 @@ for my $name qw(
   proxy/outbound-proxy/actions.pm
   proxy/router-no-registrar/actions.pm
 ) {
-  require_ok (File::Spec->catfile(CCNQ::Install::SRC,$name));
+  require_ok (File::Spec->catfile(CCNQ::Install::SRC(),$name));
 }
 
 done_testing();

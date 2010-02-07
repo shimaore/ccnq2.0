@@ -28,7 +28,7 @@ for my $name qw(
 ) {
   # require_ok ("$path/$name")  does not work.
   # I need the equivalent of "perl -wc".
-  my $file_name = File::Spec->catfile(CCNQ::Install::SRC,$name);
+  my $file_name = File::Spec->catfile(CCNQ::Install::SRC(),$name);
   system(qq(perl -wc "${file_name}" > /dev/null 2>/dev/null)) == 0 || die "$name failed";
 }
 
