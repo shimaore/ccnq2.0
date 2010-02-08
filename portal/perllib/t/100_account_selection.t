@@ -22,7 +22,7 @@ use_ok ("Dancer");
 use_ok ("CCNQ::Portal");
 use_ok ("CCNQ::Portal::Site");
 
-set session => 'Cookie';
+set(session => 'Cookie');
 
 $CCNQ::Portal::site = new CCNQ::Portal::Site(default_locale => 'en-US');
 
