@@ -20,6 +20,6 @@ requires      'Lingua::FR::Numbers::Ordinate' => 0;
 test_requires 'Test::More' => 0;
 
 # Copy everything in 'share'.
-install_share;
+# install_share;
 
 WriteAll;

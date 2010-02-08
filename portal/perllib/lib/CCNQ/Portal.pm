@@ -31,7 +31,7 @@ use 5.008;
 our $VERSION = '0.02';
 
 use strict; use warnings;
-use base CCNQ::Object;
+use base qw(CCNQ::Object);
 
 # Must be set by the startup code.
 our $site;
