@@ -1,9 +1,9 @@
 package CCNQ::Portal::Site;
 =pod
 
-  new({ base_uri => ..., default_locale => ..., security => ... })
+  new( default_locale => ..., security => ... )
+  new({ default_locale => ..., security => ... })
 
-  base_uri
   default_locale
   security (AAA) -- which AAA method to use, etc.
 
@@ -12,7 +12,7 @@ package CCNQ::Portal::Site;
 sub new {
   my $this  = shift;
   my $class = ref($this) || $this;
-  my $self  = shift;
+  my $self  = ref($_[0]) ? shift : {@_};
   bless $self, $class;
 }
 
