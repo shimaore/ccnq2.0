@@ -19,6 +19,9 @@ use Test::More;
 
 use_ok ("CCNQ::Portal::Outer::AccountSelection");
 use_ok ("Dancer");
+use_ok ("CCNQ::Portal");
+
+$CCNQ::Portal::site = new CCNQ::Portal::Site(default_locale => 'en-US');
 
 # Make sure we can actually generate a form.
 my $form = CCNQ::Portal::Outer::AccountSelection::form();
