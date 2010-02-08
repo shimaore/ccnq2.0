@@ -46,7 +46,7 @@ sub html {
     # Only one account is available, no need to "select" this one -- enforce it.
     session account => $accounts->[0];
     return _('Account [_1]',$accounts->[0])_;
-  } elseif($#{$accounts} == 0) {
+  } elsif($#{$accounts} > 0) {
     return form->render;
   }
 }

@@ -14,8 +14,12 @@ use Filter::Simple;
 # See http://www.unix.com/shell-programming-scripting/70177-perl-regex-help-matching-parentheses-2.html
 # or http://search.cpan.org/dist/perl-5.10.0/pod/perl5100delta.pod#Regular_expressions
 
+sub loc {
+  return CCNQ::Portal::current_session->locale->loc(@_);
+}
+
 FILTER {
-  s{_\((.*?)\)_}{ CCNQ::Portal::current_session->locale->loc($1) }g;
+  s{_\((.*?)\)_}{ (CCNQ::Portal::I18::loc($1)) }g;
 };
 
 1;
