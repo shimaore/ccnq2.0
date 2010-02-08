@@ -20,7 +20,9 @@ use Test::More;
 use_ok ("CCNQ::Portal::Outer::AccountSelection");
 
 # Make sure we can actually generate a form.
-ok(defined(CCNQ::Portal::Outer::AccountSelection::form->render()),'account selection form');
+my $form = CCNQ::Portal::Outer::AccountSelection::form();
+ok(defined($form),'account selection form');
+ok(defined($form->render()),'account selection form render');
 
 done_testing();
 1;
