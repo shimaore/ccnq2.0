@@ -17,7 +17,6 @@
 use strict; use warnings;
 use Test::More;
 
-use_ok ("CCNQ::Portal::Outer::AccountSelection");
 use_ok ("Dancer");
 
 set(session => 'Cookie');
@@ -25,6 +24,7 @@ set(session_cookie_key => 'bob is dancing in the spring');
 
 use_ok ("CCNQ::Portal");
 use_ok ("CCNQ::Portal::Site");
+use_ok ("CCNQ::Portal::Outer::AccountSelection");
 
 $CCNQ::Portal::site = new CCNQ::Portal::Site(default_locale => 'en-US');
 
