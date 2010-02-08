@@ -18,6 +18,7 @@ use strict; use warnings;
 use Test::More;
 
 use_ok ("CCNQ::Portal::Outer::AccountSelection");
+use_ok ("Dancer");
 
 # Make sure we can actually generate a form.
 my $form = CCNQ::Portal::Outer::AccountSelection::form();
