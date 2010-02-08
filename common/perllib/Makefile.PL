@@ -4,11 +4,7 @@ use inc::Module::Install;
 
 # Define metadata
 name          'CCNQ';
-abstract      'Distribution for ccnq2.0';
-author        'Stephane Alnet <stephane@shimaore.net>';
-version       '0.01';
-license       'gpl';
-perl_version  '5.008';
+all_from      'lib/CCNQ.pm';
 
 # Specific dependencies
 requires      'File::ShareDir'            => '1.01';
