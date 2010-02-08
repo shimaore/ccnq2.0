@@ -19,11 +19,12 @@ use Test::More;
 
 use_ok ("CCNQ::Portal::Outer::AccountSelection");
 use_ok ("Dancer");
-use_ok ("CCNQ::Portal");
-use_ok ("CCNQ::Portal::Site");
 
 set(session => 'Cookie');
 set(session_cookie_key => 'bob');
+
+use_ok ("CCNQ::Portal");
+use_ok ("CCNQ::Portal::Site");
 
 $CCNQ::Portal::site = new CCNQ::Portal::Site(default_locale => 'en-US');
 
