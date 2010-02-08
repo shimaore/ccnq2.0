@@ -43,16 +43,6 @@ requires      'Carp'                      => 0;
 # Dependencies for the api
 requires      'AnyEvent::HTTP'            => '1.44';
 
-# Dependencies for the portal
-# requires      'CGI::Session'              => 0;
-
-## Portal requirements
-# requires      'Locale::Maketext::Lexicon' => 0;
-# requires      'Lingua::EN::Numbers::Ordinate' => 0;
-# requires      'Lingua::FR::Numbers::Ordinate' => 0;
-## Proxy requirements
-# requires      'DBI' => 0;
-
 test_requires 'Test::More' => 0;
 
 # Copy everything in 'share'.
