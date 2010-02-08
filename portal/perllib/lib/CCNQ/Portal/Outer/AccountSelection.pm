@@ -6,6 +6,10 @@ use CCNQ::Portal::I18N;
 
 use CGI::FormBuilder;
 
+sub available_accounts {
+  return CCNQ::Portal::current_session->user->profile->portal_accounts;
+}
+
 sub form {
   my $form = new CGI::FormBuilder (
     name => 'account_selection',
@@ -30,21 +34,6 @@ sub form {
 
 =cut
 
-sub available_accounts {
-  return CCNQ::Portal::current_session->user->profile->portal_accounts;
-}
-
-post '/account/:account' => sub {
-  # Note: we don't use CGI::FormBuilder's here.
-  my $account = params->{account};
-  my $accounts = available_accounts;
-  session account => $account
-    if defined $accounts && defined $account
-    && grep { $_ eq $account } @{$accounts};
-
-  return get();
-}
-
 sub html {
   my $accounts = available_accounts;
 
@@ -61,6 +50,17 @@ sub html {
     return form->render;
   }
 }
+
+post '/account/:account' => sub {
+  # Note: we don't use CGI::FormBuilder's here.
+  my $account = params->{account};
+  my $accounts = available_accounts;
+  session account => $account
+    if defined $accounts && defined $account
+    && grep { $_ eq $account } @{$accounts};
+
+  return get();
+};
 
 get '/account' => \&html;
 
