@@ -1,5 +1,7 @@
 package CCNQ::Portal::Auth;
 
+use CCNQ::Portal::I18N;
+
 use constant USERNAME_PARAM => 'username';
 use constant PASSWORD_PARAM => 'password';
 

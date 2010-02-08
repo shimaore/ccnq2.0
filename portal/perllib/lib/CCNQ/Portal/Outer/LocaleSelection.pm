@@ -10,10 +10,10 @@ post '/locale/:locale' => sub {
   return get();
 }
 
-sub get {
+sub html {
   # Show a "select locale" widget.
 }
 
-get '/locale' => \&get;
+get '/locale' => \&html;
 
 1;

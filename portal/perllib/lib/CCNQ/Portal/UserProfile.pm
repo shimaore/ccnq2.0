@@ -43,7 +43,17 @@ sub name { return shift->{name} }
 
 sub email { return shift->{email} }
 
+=pod
+  default_locale
+    Returns the name of the default (preffered) locale for this user.
+=cut
+
 sub default_locale { return shift->{default_locale} }
+
+=pod
+  portal_accounts
+    Return an arrayref of authorized accounts for this portal user.
+=cut
 
 sub portal_accounts { return shift->{portal_accounts} }
 

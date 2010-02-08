@@ -1,19 +1,14 @@
 use inc::Module::Install;
 
-# use Module::Install::Share;
-
 # Define metadata
 name          'CCNQ-Portal';
-abstract      'Portal for ccnq2.0';
-author        'Stephane Alnet <stephane@shimaore.net>';
-version       '0.01';
-license       'gpl';
-perl_version  '5.008';
+all_from      'lib/CCNQ/Portal.pm';
 
 # Specific dependencies
 requires      'CCNQ'                      => '0.01';
 
-requires      'Dancer'                    => 0;
+requires      'Dancer'                    => '1.130';
+requires      'CGI::FormBuilder'          => '3.0501';
 
 ## Portal requirements
 requires      'Locale::Maketext::Lexicon'     => 0;
@@ -26,8 +21,5 @@ test_requires 'Test::More' => 0;
 
 # Copy everything in 'share'.
 install_share;
-
-install_script 'ccnq2_upgrade';
-install_script 'ccnq2_xmpp_agent';
 
 WriteAll;

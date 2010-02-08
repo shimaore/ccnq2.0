@@ -2,6 +2,7 @@ package Portal::Auth::LDAP;
 use strict; use warnings;
 
 use Net::LDAP;
+use CCNQ::Portal::I18N;
 
 =pod
 
