@@ -21,6 +21,7 @@ test_requires 'Test::More' => 0;
 # Required to test with Dancer::Session::Cookies.
 test_requires 'Crypt::CBC' => 0;
 test_requires 'String::CRC32' => 0;
+test_requires 'Crypt::Rijndael' => 0;
 
 # Copy everything in 'share'.
 # install_share;
