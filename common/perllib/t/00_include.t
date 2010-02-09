@@ -38,6 +38,7 @@ require_ok( 'CCNQ::Monit' );
 require_ok( 'CCNQ::Trace' );
 require_ok( 'CCNQ::Upgrade' );
 require_ok( 'CCNQ::XMPPAgent' );
+require_ok( 'CCNQ::B2BUA::Stick' );
 
 require_ok( 'CCNQ::Proxy' );
 require_ok( 'CCNQ::Proxy::aliases' );

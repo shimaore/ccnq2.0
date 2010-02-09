@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<include>
+  <context name="public-$${profile_name}">
+
+    <extension name="unloop">
+      <condition field="${unroll_loops}" expression="^true$"/>
+      <condition field="${sip_looped_call}" expression="^true$">
+        <action application="deflect" data="${destination_number}"/>
+      </condition>
+    </extension>
+
+    <extension name="error">
+      <condition field="destination_number" expression="^error-(\d{3})$">
+        <action application="respond" data="$1"/>
+      </condition>
+    </extension>
+
+    <extension name="echo">
+      <condition field="destination_number" expression="^echo$">
+        <action application="answer"/>
+        <action application="echo"/>
+      </condition>
+    </extension>
+
+    <extension name="delay-echo">
+      <condition field="destination_number" expression="^delay-echo$">
+        <action application="answer"/>
+        <action application="delay_echo" data="1000"/>
+      </condition>
+    </extension>
+
+    <extension name="rejected">
+      <condition field="destination_number" expression="^rejected$">
+        <action application="hangup" data="CALL_REJECTED"/>
+      </condition>
+    </extension>
+
+    <extension name="busy">
+      <condition field="destination_number" expression="^busy$">
+        <action application="hangup" data="USER_BUSY"/>
+      </condition>
+    </extension>
+
+    <extension name="ring"> <!-- 180 ring back -->
+      <condition field="destination_number" expression="^ring$">
+        <action application="ring_ready" />
+        <action application="sleep" data="180000"/>
+        <action application="hangup" data="USER_BUSY"/>
+      </condition>
+    </extension>
+
+    <!-- Only use these ones if you have a media-proxy available for all calls to them -->
+    <extension name="busy-us">
+      <condition field="destination_number" expression="^busy-us$">
+        <action application="pre_answer"/>
+        <action application="gentones" data="%(500,500,480,620)"/>
+        <action application="sleep" data="180000"/>
+        <action application="hangup" data="USER_BUSY"/>
+      </condition>
+    </extension>
+
+    <extension name="ring-us"> <!-- 183 ring back -->
+      <condition field="destination_number" expression="^ring-us$">
+        <action application="pre_answer"/>
+        <action application="gentones" data="%(2000,4000,440,480)"/>
+        <action application="sleep" data="180000"/>
+        <action application="hangup" data="USER_BUSY"/>
+      </condition>
+    </extension>
+
+  </context>
+</include>

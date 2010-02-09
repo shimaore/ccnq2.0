@@ -26,6 +26,7 @@ for my $name qw(
   b2bua/carrier-sbc-config/actions.pm
   b2bua/client-ocs-sbc/actions.pm
   b2bua/client-sbc-config/actions.pm
+  b2bua/signaling-server/actions.pm
   manager/actions.pm
   mediaproxy/actions.pm
   mediaproxy/dispatcher/actions.pm
