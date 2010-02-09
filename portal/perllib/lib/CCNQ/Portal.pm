@@ -36,7 +36,7 @@ use base qw(CCNQ::Object);
 # Must be set by the startup code.
 our $site;
 
-# e.g.   $CCNQ::Portal::site = new CCNQ::Portal::Site({ default_locale => 'en-US', security => new CCNQ::Portal::Auth::LDAP( ... )})
+# e.g.   $CCNQ::Portal::site = new CCNQ::Portal::Site( default_locale => 'en-US', security => new CCNQ::Portal::Auth::LDAP( ... ) )
 
 sub site {
   return $site;
@@ -48,4 +48,4 @@ sub current_session {
   return $session ||= new CCNQ::Portal::Session;
 }
 
-1;
+'CCNQ::Portal';

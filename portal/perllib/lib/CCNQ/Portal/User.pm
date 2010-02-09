@@ -23,7 +23,7 @@ sub id {
 
 sub profile {
   my $self = shift;
-  return $self->{_profile} ||= new CCNQ::Portal::UserProfile::load($self->{_id});
+  return $self->{_profile} ||= new CCNQ::Portal::UserProfile::load($self->id);
 }
 
 1;
