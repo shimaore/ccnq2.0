@@ -49,15 +49,19 @@ sub avp
 
         # by username
         src_subs        => 170, # IP to username
+        # routing calls towards a subscriber/endpoint
         user_ip         => 174, # IP to use if not registered and no CFNR
         user_port       => 175, # port to use if not registered and no CFNR
         user_srv        => 178, # used instead of IP if present
         strip_digit     => 179,
-        caller_name     => 176, # NOT implemented
         # by username, force media-proxy
         user_force_mp   => 140,
         user_forbid_mp  => 141, # NOT implemented
         dest_domain     => 143, # override destination domain
+        # by username, outbound routing
+        user_outbound_route           => 144,
+        ignore_default_outbound_route => 145,
+        ignore_user_outbound_route    => 146,
         # by username: auth (nanpa-style)
         allow_onnet     => 200,
 

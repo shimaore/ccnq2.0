@@ -61,15 +61,16 @@ sub insert
 {
     my ($self,$params) = @_;
     my $groupid     = $params->{outbound_route};
-    my $description = $groupid == 0 ? 'Default' : $params->{description};
     my $prefix      = $params->{prefix} || '';
     my $priority    = $params->{priority};
     my $gwlist      = $params->{target};
 
     return ()
-      unless defined $groupid  && $groupid  ne ''
+      unless defined $groupid  && $groupid =~ /^\d+$/
       and    defined $priority && $priority ne ''
       and    defined $gwlist   && $gwlist   ne '';
+
+    my $description = $groupid == 0 ? 'Default' : $params->{description};
 
     my @sql_params = split(/[,;]/,$gwlist);
 
