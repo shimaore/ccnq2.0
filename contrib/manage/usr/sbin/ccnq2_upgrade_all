@@ -48,8 +48,8 @@ done
 
 for s in $SERVERS; do
   echo "Server $s"
-  ssh $SSH_OPTIONS $s 'cd src/ccnq2.0/common/perllib &&
-    { make clean; perl Makefile.PL; }
+  ssh $SSH_OPTIONS $s 'cd src/ccnq2.0/common/perllib && \
+    { make clean; perl Makefile.PL; } \
     && make && make test && sudo make install' || echo 'Failed'
 done
 
