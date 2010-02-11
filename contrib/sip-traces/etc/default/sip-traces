@@ -1,0 +1,2 @@
+# Which interfaces should we capture on?
+INTERFACES=`/sbin/ifconfig | perl -nle '/^(eth\d+)/ and print $1'`

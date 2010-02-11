@@ -1,0 +1,4 @@
+# list all server names here
+export SERVERS=""
+# additionally, any SSH options
+export SSH_OPTIONS=""
