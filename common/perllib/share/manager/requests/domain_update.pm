@@ -21,7 +21,9 @@ sub {
       action => 'domain/update',
       cluster_name => $request->{cluster_name},
       params => {
-        map { $_ => $request->{$_} } qw( domain )
+        map { $_ => $request->{$_} } qw(
+          domain
+        )
       }
     },
   );

@@ -21,7 +21,20 @@ sub {
       action => 'local_number/update',
       cluster_name => $request->{cluster_name},
       params => {
-        map { $_ => $request->{$_} } qw( number domain username username_domain cfa cfnr cfb cfda cfda_timeout outbound_route account account_sub )
+        map { $_ => $request->{$_} } qw(
+          number
+          domain
+          username
+          username_domain
+          cfa
+          cfnr
+          cfb
+          cfda
+          cfda_timeout
+          outbound_route
+          account
+          account_sub
+        )
       }
     },
   );

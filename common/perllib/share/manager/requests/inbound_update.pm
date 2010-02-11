@@ -21,7 +21,9 @@ sub {
       action => 'inbound/update',
       cluster_name => $request->{cluster_name},
       params => {
-        map { $_ => $request->{$_} } qw( source )
+        map { $_ => $request->{$_} } qw(
+          source
+        )
       }
     },
     {

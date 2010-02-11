@@ -21,7 +21,13 @@ sub {
       action => 'dr_rule/update',
       cluster_name => $request->{cluster_name},
       params => {
-        map { $_ => $request->{$_} } qw( outbound_route description prefix priority target )
+        map { $_ => $request->{$_} } qw(
+          outbound_route
+          description
+          prefix
+          priority
+          target
+        )
       }
     },
     {

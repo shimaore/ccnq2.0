@@ -21,7 +21,14 @@ sub {
       action => 'dr_gateway/update',
       cluster_name => $request->{cluster_name},
       params => {
-        map { $_ => $request->{$_} } qw( target strip_digit prefix realm login password )
+        map { $_ => $request->{$_} } qw(
+          target
+          strip_digit
+          prefix
+          realm
+          login
+          password
+        )
       }
     },
     {
