@@ -2,7 +2,7 @@ package CCNQ;
 
 =head1 NAME
 
-Distribution for ccnq2.0
+CCNQ - Distribution for ccnq2.0
 
 =head1 SYNOPSIS
 
@@ -33,7 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =cut
 
 use 5.008;
+use vars qw{$VERSION};
 
 our $VERSION = '0.02';
 
-1;
+'CCNQ';
