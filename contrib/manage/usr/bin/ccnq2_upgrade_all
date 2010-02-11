@@ -67,4 +67,4 @@ if [ "x$1" != "x-q" ]; then
   done
 fi
 
-exec /usr/sbin/ccnq2_xmpp_restart_all
+exec /usr/bin/ccnq2_xmpp_restart_all
