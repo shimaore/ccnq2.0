@@ -5,6 +5,7 @@ use inc::Module::Install;
 # Define metadata
 name          'CCNQ';
 all_from      'lib/CCNQ.pm';
+license       'gpl';
 
 # Specific dependencies
 requires      'File::ShareDir'            => '1.01';
