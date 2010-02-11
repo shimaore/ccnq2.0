@@ -61,7 +61,7 @@ sub avp
         # by username, outbound routing
         user_outbound_route           => 144,
         ignore_default_outbound_route => 145,
-        ignore_user_outbound_route    => 146,
+        ignore_caller_outbound_route  => 146,
         # by username: auth (nanpa-style)
         allow_onnet     => 200,
 
