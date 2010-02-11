@@ -20,13 +20,11 @@
 # reset log levels to their bare minimum.
 # This might become a monit script.
 
-# ~/bin/list.sh should 
+# /etc/ccn/servers should
 #    export SERVERS="server1 server2 ..."
 # with all servers.
 
-source ~/bin/list.sh
-
-SSH_OPTIONS=""
+if [ "x$SERVERS" == "x" ]; then source /etc/ccn/servers; fi
 
 for s in $SERVERS; do
   echo "Server $s"

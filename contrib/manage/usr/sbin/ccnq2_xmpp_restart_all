@@ -17,11 +17,11 @@
 # This is a script I use in order to automatically restart the XMPP Agent
 # on all servers.
 
-# ~/bin/list.sh should 
+# /etc/ccn/servers should
 #    export SERVERS="server1 server2 ..."
 # with all servers.
 
-source ~/bin/list.sh
+if [ "x$SERVERS" == "x" ]; then source /etc/ccn/servers; fi
 
 # I assume you use ssh-agent and sudo NOPASSWD.
 # I also assume you installed the source in ~/src/ccnq2.0 as mentioned
@@ -29,5 +29,5 @@ source ~/bin/list.sh
 
 for s in $SERVERS; do
   echo "Server $s"
-  ssh $s 'cd src/ccnq2.0/common/bin || exit; killall xmpp_agent.pl; rm -f nohup.out; (nohup ./xmpp_agent.pl </dev/null >/dev/null 2>/dev/null &)' || echo 'Failed'
+  ssh $SSH_OPTIONS $s 'sudo killall tail; killall perl; (nohup ccnq2_xmpp_agent </dev/null >/dev/null 2>/dev/null &)' || echo 'Failed'
 done

@@ -16,46 +16,55 @@
 
 # This is a script I use in order to automatically update the configuration
 # on my servers at once.
-# It takes one option, '-q', which should be used when only the proxy
-# code has changed.
+#
+# Usage: upgrade-all.sh [-q|-f]
+#  -q: quick -- only do git pull and restart xmpp-agent
+#  -f: force -- reconfigure and restart the call processing nodes
+#  no option: like -q but adds backup of /etc
+#
 
-# ~/bin/list.sh should 
+# /etc/ccn/servers should
 #    export SERVERS="server1 server2 ..."
 # with all servers.
 
-source ~/bin/list.sh
+
+if [ "x$SERVERS" == "x" ]; then source /etc/ccn/servers; fi
 
 # I assume you use ssh-agent and sudo NOPASSWD.
 # I also assume you installed the source in ~/src/ccnq2.0 as mentioned
 # in INSTALL.
 
-if [ "x$1" != "x-q" ]; then
-for s in $SERVERS; do
-  echo "Server $s"
-  ssh $s 'cd /opt/freeswitch && sudo mv conf conf.`date "+%FT%T"`'
-done
+if [ "x$1" == "x-f" ]; then
+  for s in $SERVERS; do
+    echo "Server $s: removing old FS configuration"
+    ssh $SSH_OPTIONS $s 'cd /opt/freeswitch && sudo mv conf conf.`date "+%FT%T"`'
+  done
 fi
 
 for s in $SERVERS; do
   echo "Server $s"
-  ssh $s 'cd src/ccnq2.0 && git pull' || echo 'Failed'
+  ssh $SSH_OPTIONS $s 'cd src/ccnq2.0 && git pull' || echo 'Failed'
 done
 
 for s in $SERVERS; do
   echo "Server $s"
-  ssh $s 'cd src/ccnq2.0/common/perllib && perl Makefile.PL && make && make test && sudo make install' || echo 'Failed'
+  ssh $SSH_OPTIONS $s 'cd src/ccnq2.0/common/perllib &&
+    { make clean; perl Makefile.PL; }
+    && make && make test && sudo make install' || echo 'Failed'
 done
 
-for s in $SERVERS; do
-  echo "Server $s"
-  ssh $s 'cd src/ccnq2.0/common/bin && sudo ./upgrade.pl && sudo tail -100 /var/log/syslog | grep -i error'
-done
+if [ "x$1" == "x-f" ]; then
+  for s in $SERVERS; do
+    echo "Server $s: reconfigure and restart node"
+    ssh $SSH_OPTIONS $s 'sudo ccnq2_upgrade && sudo tail -100 /var/log/syslog | grep -i error'
+  done
+fi
 
 if [ "x$1" != "x-q" ]; then
-for s in $SERVERS; do
-  echo "Server $s"
-  ssh $s 'cd /etc && sudo git add . && sudo git commit -a -m "Update"'
-done
-
-exec ~/bin/xmpp-restart-all.sh
+  for s in $SERVERS; do
+    echo "Server $s: backup /etc"
+    ssh $SSH_OPTIONS $s 'cd /etc && sudo git add . && sudo git commit -a -m "Update"'
+  done
 fi
+
+exec /usr/sbin/ccnq2_xmpp_restart_all

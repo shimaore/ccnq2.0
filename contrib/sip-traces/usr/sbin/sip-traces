@@ -19,24 +19,19 @@
 # It must be ran as root (which will happen if ran from /etc/rc.local).
 
 # Which interface should we attempt to capture?
-INTERFACES="eth0 eth1"
+INTERFACE=$1
+
 # Size of the capture spool / ring (in Mo)
-SIZE_MB=100
+DEFAULT_SIZE_MB=100
 # What should we capture?
-FILTER='udp or icmp or tcp port 5060'
+DEFAULT_FILTER="udp or icmp or tcp port 5060"
 
 mkdir -p /var/run/traces
 mkdir -p /var/log/traces
 
-for intf in $INTERFACES;
-do
-  # Capture 1Mo per file, up to the indicated size
-  /usr/bin/dumpcap \
-    -p -i $intf \
-    -a filesize:1024  -b files:$SIZE_MB \
-    -w /var/log/traces/$intf.pcap \
-    -f "${FILTER}" &
-  # Save the PID
-  echo $! > /var/run/traces/traces-$intf.pid
-done
-
+# Capture 1Mo per file, up to the indicated size
+exec /usr/bin/dumpcap \
+  -p -i $INTERFACE \
+  -a filesize:1024  -b files:${SIZE_MB:-$DEFAULT_SIZE_MB} \
+  -w /var/log/traces/$INTERFACE.pcap \
+  -f "${FILTER:-$DEFAULT_FILTER}"
