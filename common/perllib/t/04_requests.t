@@ -37,6 +37,8 @@ for my $name qw(
   manager/requests/node_status_query.pm
   manager/requests/subscriber_delete.pm
   manager/requests/subscriber_update.pm
+  manager/requests/subscriber_number_delete.pm
+  manager/requests/subscriber_number_update.pm
 ) {
   # require_ok ("$path/$name")  does not work.
   # I need the equivalent of "perl -wc".

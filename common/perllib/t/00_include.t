@@ -50,6 +50,7 @@ require_ok( 'CCNQ::Proxy::dr_rule' );
 require_ok( 'CCNQ::Proxy::inbound' );
 require_ok( 'CCNQ::Proxy::local_number' );
 require_ok( 'CCNQ::Proxy::subscriber' );
+require_ok( 'CCNQ::Proxy::subscriber_number' );
 
 require_ok( 'CCNQ::SQL' );
 require_ok( 'CCNQ::SQL::Base' );
