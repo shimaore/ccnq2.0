@@ -27,7 +27,7 @@ sub insert
     my $number      = $params->{number};
 
     return (
-        $self->_avp_set("${username}/${number}",$domain,'valid_from',1),
+        $self->_avp_set("${username},${number}",$domain,'valid_from',1),
     );
 }
 
@@ -39,7 +39,7 @@ sub delete
     my $number      = $params->{number};
 
     return (
-        $self->_avp_set("${username}/${number}",$domain,'valid_from',undef),
+        $self->_avp_set("${username},${number}",$domain,'valid_from',undef),
     );
 }
 
