@@ -15,6 +15,8 @@
 
 sub {
   my $request = shift;
+  # XXX Validate the request.
+
   # Return list of activities required to complete this request.
   return (
 

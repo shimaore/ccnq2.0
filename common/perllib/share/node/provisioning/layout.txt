@@ -4,7 +4,7 @@ database.
 
 user_profile
 
-  _id: "user_profile/${user_id}"
+  _id: "user/${user_id}"
   type: "user_profile"
 
   name: $user_name
@@ -56,7 +56,9 @@ plan_profile:
   $guard_name and $action_name are specified in CCNQ::Rating::Rate
 
 
+*** Routing configuration
 
+Note: The manager/request associated with base CCNQ::Proxy::$action will eventually disappear since they are redundant.
 
 
 
