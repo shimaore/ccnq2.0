@@ -20,8 +20,8 @@ use strict; use warnings;
 use base qw(CCNQ::Proxy::Base);
 
 =pod
-    A number (DID or other) is mapped to a subscriber using
-    that subscriber's Username. Numbers must start with a 1
+    A number (DID or other) is mapped to an endpoint using
+    that endpoint's Username. Numbers must start with a 1
     and be followed by 10 digits to be used.
 
     Additionally, you can define Call Forward All (CFA),

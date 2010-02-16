@@ -49,7 +49,7 @@ sub avp
 
         # by username
         src_subs        => 170, # IP to username
-        # routing calls towards a subscriber/endpoint
+        # routing calls towards an endpoint
         user_ip         => 174, # IP to use if not registered and no CFNR
         user_port       => 175, # port to use if not registered and no CFNR
         user_srv        => 178, # used instead of IP if present

@@ -1,4 +1,4 @@
-package CCNQ::Proxy::subscriber;
+package CCNQ::Proxy::endpoint;
 # Copyright (C) 2006, 2007  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -20,27 +20,27 @@ use strict; use warnings;
 use base qw(CCNQ::Proxy::Base);
 
 =pod
-    A subscriber can be a line or trunk towards one of your downstream
+    An endpoint can be a line or trunk towards one of your downstream
     customers.
     <p>
     Subscribers are uniquely identified by their Username. (You can use
-    the Inbound Numbers screen to assign DIDs to a subscriber.)
+    the Inbound Numbers screen to assign DIDs to an endpoint.)
     <p>
-    There are two methods to authenticate a subscriber when they place a call:
+    There are two methods to authenticate an endpoint when they place a call:
     <ul>
     <li>by the IP address of their endpoint;
     <li>using the Username and Password specified.
     </ul>
     Note that the originating port (UDP or TCP) for the SIP message is never matched;
-    the port specified for the Subscriber is only used for calls going to that subscriber
+    the port specified for the Subscriber is only used for calls going to that endpoint
     (see below).
 
     <p>
-    If a subscriber cannot accept all digits in calls sent to them (for example 10 instead of 11 digits US), then
+    If an endpoint cannot accept all digits in calls sent to them (for example 10 instead of 11 digits US), then
     use the Strip Digit field to specify how many digits should be stripped when sending calls to that
-    subscriber.
+    endpoint.
     <p>
-    Finally, you must indicate what type of calls this subscriber is
+    Finally, you must indicate what type of calls this endpoint is
     authorized to place:
     <ul>
     <li>Local calls (on-net calls, or calls to NPANXX identified as "local");
@@ -48,12 +48,12 @@ use base qw(CCNQ::Proxy::Base);
     <li>Long Distance (LD) calls (non-local calls to a North-American number);
     <li>International calls (outside NANPA.com).
     </ul>
-    All subscribers can place calls to N11 or *XX numbers.
+    All endpoints can place calls to N11 or *XX numbers.
 
     <p>
-    For calls that must terminate at a subscriber, the following are tried in order:
+    For calls that must terminate at an endpoint, the following are tried in order:
     <ul>
-    <li>the location specified in the registration information, if the subscriber is registered;
+    <li>the location specified in the registration information, if the endpoint is registered;
     <li>the location (SIP URI) specified as the CFNR (Call Forward on Non-Registered)
         for the destination Inbound Number if one is specified (see under Inbound Numbers);
     <li>as a last resort, the IP address and SIP port number specified for the Subscriber.

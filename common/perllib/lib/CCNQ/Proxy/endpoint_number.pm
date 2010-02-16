@@ -1,4 +1,4 @@
-package CCNQ::Proxy::subscriber_number;
+package CCNQ::Proxy::endpoint_number;
 # Copyright (C) 2006, 2007  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -43,4 +43,4 @@ sub delete
     );
 }
 
-'CCNQ::Proxy::subscriber_number';
+'CCNQ::Proxy::endpoint_number';
