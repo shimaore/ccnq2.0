@@ -28,18 +28,18 @@ if [ "x$SERVERS" == "x" ]; then source /etc/ccn/servers; fi
 
 for s in $SERVERS; do
   echo "Server $s"
-  echo Check disk space
-  ssh $SSH_OPTIONS $s 'sudo rm /var/log/user.log* /var/log/messages* /var/log/debug*; df -k /'
-  echo Check NTP sync
-  ssh $SSH_OPTIONS $s 'echo pe | /usr/bin/ntpdc -n'
-  echo Check DNS servers
-  ssh $SSH_OPTIONS $s 'cat /etc/resolv.conf'
-  echo OpenSIPS log level
-  ssh $SSH_OPTIONS $s '/usr/sbin/opensipsctl fifo debug'
-  ssh $SSH_OPTIONS $s '/usr/sbin/opensipsctl fifo debug 3'
-  echo FreeSwitch log levels
-  ssh $SSH_OPTIONS $s '/opt/freeswitch/bin/fs_cli -p CCNQ -x "console loglevel"'
-  ssh $SSH_OPTIONS $s '/opt/freeswitch/bin/fs_cli -p CCNQ -x "console loglevel 0"'
-  ssh $SSH_OPTIONS $s '/opt/freeswitch/bin/fs_cli -p CCNQ -x "fsctl loglevel"'
-  ssh $SSH_OPTIONS $s '/opt/freeswitch/bin/fs_cli -p CCNQ -x "fsctl loglevel 1"'
+  echo -n "Check disk space: "
+  ssh $SSH_OPTIONS $s 'sudo rm -f /var/log/user.log* /var/log/messages* /var/log/debug*; df -k /' | egrep -o '[0-9]+%' || echo
+  echo -n "Check NTP sync: "
+  if ssh $SSH_OPTIONS $s 'echo pe | /usr/bin/ntpdc -n' | egrep '^*' > /dev/null; then echo 'OK'; else echo 'Not synchronized'; fi
+  echo -n "Check DNS servers: "
+  if ssh $SSH_OPTIONS $s 'cat /etc/resolv.conf' | grep 'nameserver 127.0.0.1' > /dev/null; then echo 'OK'; else echo 'Not using localhost'; fi
+  echo -n "OpenSIPS log levels: "
+  # ssh $SSH_OPTIONS $s '/usr/sbin/opensipsctl fifo debug'
+  if ssh $SSH_OPTIONS $s '[ -x /usr/sbin/opensipsctl ] && /usr/sbin/opensipsctl fifo debug 3' > /dev/null; then echo 'OK'; else echo 'Not installed/running'; fi
+  echo -n "FreeSwitch log levels: "
+  # ssh $SSH_OPTIONS $s '/opt/freeswitch/bin/fs_cli -p CCNQ -x "console loglevel"'
+  # ssh $SSH_OPTIONS $s '/opt/freeswitch/bin/fs_cli -p CCNQ -x "fsctl loglevel"'
+  if ssh $SSH_OPTIONS $s '[ -x /opt/freeswitch/bin/fs_cli ] && /opt/freeswitch/bin/fs_cli -p CCNQ -x "console loglevel 0" && /opt/freeswitch/bin/fs_cli -p CCNQ -x "fsctl loglevel 1"' > /dev/null; then echo 'OK'; else echo 'Not installed/running'; fi
+  echo
 done
