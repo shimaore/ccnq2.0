@@ -13,16 +13,5 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-sub {
-  my $request = shift;
-  # Return list of activities required to complete this request.
-  return (
-    {
-      action => 'aliases/delete',
-      cluster_name => $request->{cluster_name},
-      params => {
-        map { $_ => $request->{$_} } qw( username domain )
-      }
-    },
-  );
-}
+use CCNQ::Activities::Proxy;
+&CCNQ::Activities::Proxy::aliases_delete;
