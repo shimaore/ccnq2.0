@@ -19,6 +19,7 @@ use strict; use warnings;
 use Logger::Syslog;
 use AnyEvent::CouchDB;
 use CCNQ::AE;
+use CCNQ::Portal::Formatter;
 
 sub receive {
   my $cb = shift;
