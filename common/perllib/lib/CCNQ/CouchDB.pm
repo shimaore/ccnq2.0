@@ -20,6 +20,26 @@ use Logger::Syslog;
 use AnyEvent::CouchDB;
 use CCNQ::AE;
 
+sub recv {
+  my $cb = shift;
+  my $result;
+  eval { $result = $cb->recv };
+  if($@) {
+    error("CouchDB: ".CCNQ::Portal::Formatter::pp($@));
+    return undef;
+  } else {
+    debug("CouchDB: received ".CCNQ::Portal::Formatter::pp($result));
+    return $result;
+  }
+}
+
+sub recv_mcv {
+  my $mcv = shift;
+  return sub {
+    $mcv->send( recv(@_) ? CCNQ::AE::SUCCESS : CCNQ::AE::FAILURE );
+  }
+}
+
 sub install {
   my ($db_name,$designs,$mcv) = @_;
   $designs ||= {};
@@ -30,9 +50,9 @@ sub install {
   my $cv = $db->info();
 
   $cv->cb(sub{
-    eval { $_[0]->recv };
-    if($@) {
-      $db->create()->cb(sub{ $_[0]->recv;
+    if(!recv(@_)) {
+      $db->create()->cb(sub{
+        recv(@_);
         info("Created CouchDB '${db_name}' database");
       });
     }
@@ -42,16 +62,10 @@ sub install {
 
       # Remove old document
       $db->open_doc($id)->cb(sub{
-        my $old_doc;
-        eval { $old_doc = $_[0]->recv };
-        if($@) {
-          info("Obtaining old CouchDB design '${design_name}' failed: $@");
-        } else {
+        my $old_doc = recv(@_);
+        if($old_doc) {
           $db->remove_doc($old_doc)->cb(sub{
-            eval { $_[0]->recv };
-            if($@) {
-              info("Removing CouchDB design '${design_name}' failed: $@");
-            }
+            recv(@_);
           });
         }
       });
@@ -61,16 +75,7 @@ sub install {
       $design_content->{language} ||= 'javascript';
       # $design_content->{views} should be specified
 
-      $db->save_doc($design_content)->cb( sub{
-        eval { $_[0]->recv };
-        if($@) {
-          error("Updating CouchDB design $design_name failed: $@");
-          $mcv->send(CCNQ::AE::FAILURE($@));
-        } else {
-          info("Created CouchDB design $design_name");
-          $mcv->send(CCNQ::AE::SUCCESS);
-        }
-      });
+      $db->save_doc($design_content)->cb(recv_mcv($mcv));
     }
 
   });
@@ -92,30 +97,16 @@ sub update {
   # XXX Implement proper CouchDB semantics.
   $cv->cb(sub{
     my $doc;
-    eval { $doc = $_[0]->recv };
-    if($@) {
-      # Assume missing document
-      $couch_db->save_doc($params)->cb(sub{
-        eval { $_[0]->recv };
-        if($@) {
-          $mcv->send(CCNQ::AE::FAILURE($@));
-        } else {
-          $mcv->send(CCNQ::AE::SUCCESS);
-        }
-      });
-    } else {
+    $doc = recv(@_);
+    if($doc) {
       # If the record exists, only updates the specified fields.
       for my $key (grep { !/^(_id|_rev)$/ } keys %{$params}) {
         $doc->{$key} = $params->{$key};
       }
-      $couch_db->save_doc($doc)->cb(sub{
-        eval { $_[0]->recv };
-        if($@) {
-          $mcv->send(CCNQ::AE::FAILURE($@));
-        } else {
-          $mcv->send(CCNQ::AE::SUCCESS);
-        }
-      });
+      $couch_db->save_doc($doc)->cb(recv_mcv($mcv));
+    } else {
+      # Assume missing document
+      $couch_db->save_doc($params)->cb(recv_mcv($mcv));
     }
   });
   return $cv;
@@ -131,16 +122,8 @@ sub delete {
   my $couch_db = couchdb($db_name);
   my $cv = $couch_db->open_doc($params->{_id});
   $cv->cb(sub{
-    my $doc;
-    eval { $doc = $_[0]->recv };
-    $couch_db->remove_doc($doc)->cb(sub{
-      eval { $_[0]->recv };
-      if($@) {
-        $mcv->send(CCNQ::AE::FAILURE($@));
-      } else {
-        $mcv->send(CCNQ::AE::SUCCESS);
-      }
-    });
+    my $doc = recv(@_);
+    $couch_db->remove_doc($doc)->cb(recv_mcv($mcv));
   });
   return $cv;
 }
@@ -155,12 +138,11 @@ sub retrieve {
   my $couch_db = couchdb($db_name);
   my $cv = $couch_db->open_doc($params->{_id});
   $cv->cb(sub{
-    my $doc;
-    eval { $doc = $_[0]->recv };
-    if($@) {
-      $mcv->send(CCNQ::AE::FAILURE($@));
-    } else {
+    my $doc = recv(@_);
+    if($doc) {
       $mcv->send(CCNQ::AE::SUCCESS($doc));
+    } else {
+      $mcv->send(CCNQ::AE::FAILURE);
     }
   });
   return $cv;
@@ -191,11 +173,7 @@ sub view {
     }
   );
   $cv->cb(sub{
-    my $view;
-    eval { $view = $_[0]->recv };
-    if($@) {
-      $mcv->send(CCNQ::AE::FAILURE($@));
-    }
+    my $view = recv(@_);
     if(!$view) {
       debug("Document $params->{_id} not found.");
       $mcv->send(CCNQ::AE::FAILURE("Not found."));
