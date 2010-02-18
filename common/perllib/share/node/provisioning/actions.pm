@@ -21,6 +21,7 @@ use CCNQ::CouchDB;
 
 {
   install => sub {
+    my ($params,$context,$mcv) = @_;
     $mcv->send(CCNQ::AE::SUCCESS);
   },
 

@@ -33,6 +33,7 @@ for my $name qw(
   mediaproxy/relay/actions.pm
   node/actions.pm
   node/api/actions.pm
+  node/provisioning/actions.pm
   proxy/base/actions.pm
   proxy/inbound-proxy/actions.pm
   proxy/outbound-proxy/actions.pm
