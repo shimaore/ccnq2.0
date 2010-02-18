@@ -30,7 +30,7 @@ sub install {
   my $cv = $db->info();
 
   $cv->cb(sub{
-    eval { my $info = $_[0]->recv; };
+    eval { $_[0]->recv };
     if($@) {
       $db->create()->cb(sub{ $_[0]->recv;
         info("Created CouchDB '${db_name}' database");
@@ -48,7 +48,7 @@ sub install {
           info("Obtaining old CouchDB design '${design_name}' failed: $@");
         } else {
           $db->remove_doc($old_doc)->cb(sub{
-            eval { my $info = $_[0]->recv; };
+            eval { $_[0]->recv };
             if($@) {
               info("Removing CouchDB design '${design_name}' failed: $@");
             }
@@ -58,13 +58,13 @@ sub install {
 
       # Create new document
       $design_content->{_id} = $id;
-      $design_content->{language} ||= 'javascript',
+      $design_content->{language} ||= 'javascript';
       # $design_content->{views} should be specified
 
       $db->save_doc($design_content)->cb( sub{
-        eval { $_[0]->recv; };
+        eval { $_[0]->recv };
         if($@) {
-          error("Updating CouchDB views failed: $@");
+          error("Updating CouchDB design $design_name failed: $@");
           $mcv->send(CCNQ::AE::FAILURE($@));
         } else {
           info("Created CouchDB design $design_name");
@@ -201,7 +201,7 @@ sub view {
       $mcv->send(CCNQ::AE::FAILURE("Not found."));
       return;
     }
-    
+
     $mcv->send(CCNQ::AE::SUCCESS({rows => $view->{rows}}));
   });
   return $cv;
