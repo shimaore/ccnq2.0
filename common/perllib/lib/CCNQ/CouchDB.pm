@@ -75,17 +75,18 @@ sub install {
     while( my ($design_name,$design_content) = each %{$designs} ) {
       my $id = "_design/${design_name}";
 
-      # Remove old document
+      info("Open old document $id");
       $db->open_doc($id)->cb(sub{
         my $old_doc = receive(@_);
         if($old_doc) {
+          info("Remove old document $id");
           $db->remove_doc($old_doc)->cb(sub{
             receive(@_);
           });
         }
       });
 
-      # Create new document
+      info("Create new document $id");
       $design_content->{_id} = $id;
       $design_content->{language} ||= 'javascript';
       # $design_content->{views} should be specified
