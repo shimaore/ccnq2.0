@@ -42,7 +42,8 @@ sub install {
 
       # Remove old document
       $db->open_doc($id)->cb(sub{
-        eval { my $old_doc = $_[0]->recv; };
+        my $old_doc;
+        eval { $old_doc = $_[0]->recv };
         if($@) {
           info("Obtaining old CouchDB design '${design_name}' failed: $@");
         } else {
@@ -90,11 +91,12 @@ sub update {
 
   # XXX Implement proper CouchDB semantics.
   $cv->cb(sub{
-    eval { my $doc = $_[0]->recv; }
+    my $doc;
+    eval { $doc = $_[0]->recv };
     if($@) {
       # Assume missing document
       $couch_db->save_doc($params)->cb(sub{
-        eval { $_[0]->recv; }
+        eval { $_[0]->recv };
         if($@) {
           $mcv->send(CCNQ::AE::FAILURE($@));
         } else {
@@ -103,11 +105,11 @@ sub update {
       });
     } else {
       # If the record exists, only updates the specified fields.
-      for my $key (grep !/^(_id|_rev)$/ keys %params) {
+      for my $key (grep { !/^(_id|_rev)$/ } keys %{$params}) {
         $doc->{$key} = $params->{$key};
       }
       $couch_db->save_doc($doc)->cb(sub{
-        eval { $_[0]->recv; }
+        eval { $_[0]->recv };
         if($@) {
           $mcv->send(CCNQ::AE::FAILURE($@));
         } else {
@@ -129,9 +131,10 @@ sub delete {
   my $couch_db = couchdb($db_name);
   my $cv = $couch_db->open_doc($params->{_id});
   $cv->cb(sub{
-    eval { my $doc = $_[0]->recv; }
+    my $doc;
+    eval { $doc = $_[0]->recv };
     $couch_db->remove_doc($doc)->cb(sub{
-      eval { $_[0]->recv; }
+      eval { $_[0]->recv };
       if($@) {
         $mcv->send(CCNQ::AE::FAILURE($@));
       } else {
@@ -152,7 +155,8 @@ sub retrieve {
   my $couch_db = couchdb($db_name);
   my $cv = $couch_db->open_doc($params->{_id});
   $cv->cb(sub{
-    eval { my $doc = $_[0]->recv; }
+    my $doc;
+    eval { $doc = $_[0]->recv };
     if($@) {
       $mcv->send(CCNQ::AE::FAILURE($@));
     } else {
@@ -187,17 +191,18 @@ sub view {
     }
   );
   $cv->cb(sub{
-    eval { my $view = $_[0]->recv; }
+    my $view;
+    eval { $view = $_[0]->recv };
     if($@) {
       $mcv->send(CCNQ::AE::FAILURE($@));
     }
-    if(!$result) {
+    if(!$view) {
       debug("Document $params->{_id} not found.");
       $mcv->send(CCNQ::AE::FAILURE("Not found."));
       return;
     }
     
-    $mcv->send(CCNQ::AE::SUCCESS({rows => $result->{rows}}));
+    $mcv->send(CCNQ::AE::SUCCESS({rows => $view->{rows}}));
   });
   return $cv;
 }
