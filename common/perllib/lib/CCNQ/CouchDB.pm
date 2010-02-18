@@ -39,7 +39,7 @@ sub receive {
   my $result;
   eval { $result = $_[0]->recv };
   if($@) {
-    error("CouchDB: ".pp($@));
+    error("CouchDB failed: ".pp($@).", with result ".pp($result));
     return undef;
   }
 
