@@ -81,6 +81,7 @@ sub install {
           $design_content->{_rev} = $old_doc->{_rev};
         }
         info("Create new document $id");
+        # XXX? receive_mcv() here might prevent all of the designs from being installed if there is more than one
         $db->save_doc($design_content)->cb(receive_mcv($mcv));
       });
     }
@@ -90,9 +91,12 @@ sub install {
     info("Info for CouchDB '${db_name}' database");
     if(!receive(@_)) {
       $db->create()->cb(sub{
-        receive(@_);
         info("Created CouchDB '${db_name}' database");
-        $install_designs->();
+        if(receive(@_)) {
+          $install_designs->();
+        } else {
+          $mcv->send(CCNQ::AE::FAILURE());
+        }
       });
     } else {
       $install_designs->();
