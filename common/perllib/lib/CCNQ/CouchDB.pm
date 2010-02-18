@@ -20,7 +20,7 @@ use Logger::Syslog;
 use AnyEvent::CouchDB;
 use CCNQ::AE;
 
-sub recv {
+sub receive {
   my $cb = shift;
   my $result;
   eval { $result = $cb->recv };
@@ -33,10 +33,10 @@ sub recv {
   }
 }
 
-sub recv_mcv {
+sub receive_mcv {
   my $mcv = shift;
   return sub {
-    $mcv->send( recv(@_) ? CCNQ::AE::SUCCESS : CCNQ::AE::FAILURE );
+    $mcv->send( receive(@_) ? CCNQ::AE::SUCCESS() : CCNQ::AE::FAILURE() );
   }
 }
 
@@ -50,9 +50,9 @@ sub install {
   my $cv = $db->info();
 
   $cv->cb(sub{
-    if(!recv(@_)) {
+    if(!receive(@_)) {
       $db->create()->cb(sub{
-        recv(@_);
+        receive(@_);
         info("Created CouchDB '${db_name}' database");
       });
     }
@@ -62,10 +62,10 @@ sub install {
 
       # Remove old document
       $db->open_doc($id)->cb(sub{
-        my $old_doc = recv(@_);
+        my $old_doc = receive(@_);
         if($old_doc) {
           $db->remove_doc($old_doc)->cb(sub{
-            recv(@_);
+            receive(@_);
           });
         }
       });
@@ -75,7 +75,7 @@ sub install {
       $design_content->{language} ||= 'javascript';
       # $design_content->{views} should be specified
 
-      $db->save_doc($design_content)->cb(recv_mcv($mcv));
+      $db->save_doc($design_content)->cb(receive_mcv($mcv));
     }
 
   });
@@ -97,16 +97,16 @@ sub update {
   # XXX Implement proper CouchDB semantics.
   $cv->cb(sub{
     my $doc;
-    $doc = recv(@_);
+    $doc = receive(@_);
     if($doc) {
       # If the record exists, only updates the specified fields.
       for my $key (grep { !/^(_id|_rev)$/ } keys %{$params}) {
         $doc->{$key} = $params->{$key};
       }
-      $couch_db->save_doc($doc)->cb(recv_mcv($mcv));
+      $couch_db->save_doc($doc)->cb(receive_mcv($mcv));
     } else {
       # Assume missing document
-      $couch_db->save_doc($params)->cb(recv_mcv($mcv));
+      $couch_db->save_doc($params)->cb(receive_mcv($mcv));
     }
   });
   return $cv;
@@ -122,8 +122,8 @@ sub delete {
   my $couch_db = couchdb($db_name);
   my $cv = $couch_db->open_doc($params->{_id});
   $cv->cb(sub{
-    my $doc = recv(@_);
-    $couch_db->remove_doc($doc)->cb(recv_mcv($mcv));
+    my $doc = receive(@_);
+    $couch_db->remove_doc($doc)->cb(receive_mcv($mcv));
   });
   return $cv;
 }
@@ -138,7 +138,7 @@ sub retrieve {
   my $couch_db = couchdb($db_name);
   my $cv = $couch_db->open_doc($params->{_id});
   $cv->cb(sub{
-    my $doc = recv(@_);
+    my $doc = receive(@_);
     if($doc) {
       $mcv->send(CCNQ::AE::SUCCESS($doc));
     } else {
@@ -173,7 +173,7 @@ sub view {
     }
   );
   $cv->cb(sub{
-    my $view = recv(@_);
+    my $view = receive(@_);
     if(!$view) {
       debug("Document $params->{_id} not found.");
       $mcv->send(CCNQ::AE::FAILURE("Not found."));
