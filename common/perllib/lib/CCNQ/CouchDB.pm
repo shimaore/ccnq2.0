@@ -19,26 +19,39 @@ use strict; use warnings;
 use Logger::Syslog;
 use AnyEvent::CouchDB;
 use CCNQ::AE;
-use CCNQ::Portal::Formatter;
+
+sub pp
+{
+  my $v = shift;
+  if(ref($v) eq '') {
+    return qq("$v");
+  }
+  if(ref($v) eq 'ARRAY') {
+    return '[ '.join(', ', map { pp($_) } @{$v}).' ]';
+  }
+  if(ref($v) eq 'HASH') {
+    return '{ '.join(', ', map { qq("$_": ).pp($v->{$_}) } sort keys %{$v}).' }';
+  }
+  return qq("$v");
+}
 
 sub receive {
-  my $cb = shift;
   my $result;
-  eval { $result = $cb->recv };
+  eval { $result = $_[0]->recv };
   if($@) {
-    error("CouchDB: ".CCNQ::Portal::Formatter::pp($@));
+    error("CouchDB: ".pp($@));
     return undef;
-  } else {
-    debug("CouchDB: received ".CCNQ::Portal::Formatter::pp($result));
-    return $result;
   }
+
+  debug("CouchDB: received ".pp($result));
+  return $result;
 }
 
 sub receive_mcv {
   my $mcv = shift;
   return sub {
     $mcv->send( receive(@_) ? CCNQ::AE::SUCCESS() : CCNQ::AE::FAILURE() );
-  }
+  };
 }
 
 sub install {
@@ -51,6 +64,7 @@ sub install {
   my $cv = $db->info();
 
   $cv->cb(sub{
+    info("Info for CouchDB '${db_name}' database");
     if(!receive(@_)) {
       $db->create()->cb(sub{
         receive(@_);
