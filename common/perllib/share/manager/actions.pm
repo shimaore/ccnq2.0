@@ -214,7 +214,7 @@ use constant manager_designs => {
   get_request_status => sub {
     my ($params,$context,$mcv) = @_;
 
-    my $cv = CCNQ::CouchDB::view(CCNQ::API::provisioning_db,{
+    my $cv = CCNQ::CouchDB::view(CCNQ::Manager::manager_db,{
       view => 'report/requests',
       _id  => [$params->{params}->{request_id}],
     },$mcv);

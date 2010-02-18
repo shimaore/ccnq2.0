@@ -190,7 +190,7 @@ sub view {
   $cv->cb(sub{
     my $view = receive(@_);
     if(!$view) {
-      debug("Document $params->{_id} not found.");
+      debug("Document ".join(',',@key_prefix)." not found.");
       $mcv->send(CCNQ::AE::FAILURE("Not found."));
       return;
     }
