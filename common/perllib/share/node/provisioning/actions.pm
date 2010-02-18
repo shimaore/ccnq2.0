@@ -19,10 +19,19 @@ use CCNQ::AE;
 use CCNQ::API;
 use CCNQ::CouchDB;
 
+use constant provisioning_designs => {
+  report => {
+    language => 'javascript',
+    views    => {
+    },
+  },
+};
+
 {
   install => sub {
     my ($params,$context,$mcv) = @_;
-    $mcv->send(CCNQ::AE::SUCCESS);
+    my $cv = CCNQ::CouchDB::install(CCNQ::API::provisioning_db,provisioning_designs,$mcv);
+    $context->{condvar}->cb($cv);
   },
 
   update => sub {
