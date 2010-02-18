@@ -89,14 +89,36 @@ sub process {
   Rating::Process::process($fh, sub {
     my ($cbef) = @_;
     bless $cbef;
-    $cb->($cbef);    
+    $cb->($cbef);
   });
 }
 
-sub dump {
-  # Dump all the fields that do not start with _
-  # Then dump to->e164, from->e164, and _jurisdiction, which is an arrayref of
-  # { jurisdiction_name => percentage } hashrefs.
+sub new {
+  my $this = shift;
+  my $class = ref($this) || $this;
+  my $self = shift;
+  return bless $self, $class;
+}
+
+sub cleanup {
+  # Remove all the fields that do not start with _
+  my $self = shift;
+  if(!defined($self) || !ref($self)) {
+    return $self;
+  }
+  if(ref($self) eq 'ARRAY') {
+    return [map { cleanup($_) } @{$self}];
+  }
+  if(ref($self) eq 'HASH') {
+    return { map { $_ => cleanup($self->{$_}) } grep { /^[^_]/ } keys %{$self} };
+  }
+  if(ref($self) eq 'Math::BigInt') {
+    return $self->bstr();
+  }
+  if(ref($self) eq 'Math::BigFloat') {
+    return $self->bstr();
+  }
+  return cleanup(%{$self});
 }
 
 
@@ -114,8 +136,8 @@ sub from {
 
 sub rounding {
   my ($self,$amount) = @_;
-  if(defined $self->decimals) {
-    return $amount->precision(-$self->decimals);
+  if($self->decimals) {
+    return $amount->ffround(-$self->decimals,'+inf');
   } else {
     return $amount;
   }
@@ -132,7 +154,7 @@ sub AUTOLOAD {
   # Return the value if any
   return $self->{$name} if exists($self->{$name});
   # Unknown field error
-  error("Unknown field $name");
+  debug("Unknown field $name");
   return undef;
 }
 

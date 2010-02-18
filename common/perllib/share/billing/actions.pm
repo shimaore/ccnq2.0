@@ -26,7 +26,7 @@ use CCNQ::AE;
   billing_entry => sub {
     # Create a new CBEF entry
     
-    CCNQ::Rating::Event::create_flat_cbef({
+    CCNQ::Rating::create_flat_cbef({
       %{$params},
       collecting_node => CCNQ::Install::host_name,
       request_uuid    => $params->{activity},

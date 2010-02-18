@@ -18,14 +18,6 @@ use strict; use warnings;
 
 # The rating table is a generic tool to store information related to a given prefix.
 
-# Generally speaking, a given rating table will provide two values for each
-# lookup:
-#   a per_unit value, provided by the table's data
-#   a unit name, which is part of the table's metadata (and therefor shared by all values)
-# Examples of "unit" names:
-#    billing_period       for rates stored per period (e.g. to account for partial month billing of a DID)
-#    minute               for rates stored per minute (as is normally the case for duration-based rates)
-
 use Tree::Trie;
 use Memoize;
 
@@ -46,16 +38,35 @@ sub file_name {
   return File::Spec->catfile(qw(),$self->name);
 }
 
+=head1 load($file_name)
+
+The default format for a flat file describing a rating table is:
+- one header line: tab-delimited list of column names
+- one or more lines of tab-delimited values
+
+One column MUST be called 'prefix' and is used as the prefix key for
+the values on the same line.
+
+=cut
+
 sub load {
   my ($self) = @_;
   open(my $fh, '<', $self->file_name) or die $self->file_name.": $!";
   Rating::Process::process($fh, sub {
     my ($data) = @_;
+    # Note: using delete might not be a good idea since we won't know
+    #       which prefix was actually used when we do the query.
     my $prefix = delete $data->{prefix};
     $self->trie->add_data($prefix,$data);
   });
   close($fh) or die $self->file_name.": $!";
 }
+
+=head1 lookup($key)
+
+Returns a hashref of values associated with the longest match for the prefix.
+
+=cut
 
 sub lookup {
   my ($self,$key) = @_;
@@ -66,8 +77,7 @@ sub lookup {
 
 __END__
 
-Fields in results (see CCNQ::Rating::Rate for more details):
-
+Example of fields in results (see CCNQ::Rating::Rate for more details):
 
   country         in 'e164_to_location'
   us_state        in 'e164_to_location'

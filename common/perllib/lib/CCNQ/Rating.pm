@@ -1,3 +1,4 @@
+package CCNQ::Rating;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -13,82 +14,61 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use Math::BigFloat;
 
-XXX The information in this file is most probably inaccurate.
+=head1 create_flat_cbef
 
+Save a flat (non-rated) CBEF.
 
-Steps in the rating process:
+This is used for example to create billable events off the provisioning system.
 
-CBEF as received:
+=cut
 
-  start_date
-  start_time
-  account
-  account_sub
-  event_type
+sub create_flat_cbef {
+  my ($cbef) = @_;
+  rate_and_save_cbef(new CCNQ::Rating::Event($cbef));
+}
 
-Numbers:
+sub rate_and_save_cbef {
+  my ($cbef) = @_;
 
-  from_e164
-  to_e164       destination number, or more generally, which number this relates to
+  my $plan = lookup_plan($cbef->account,$cbef->account_sub);
 
-[Note: more generically, there would be a "numbers" fields with entries in it.]
+  my $rated_cbef = CCNQ::Rating::Rate::rate_cbef($cbef,$plan);
 
-Spent units:
+  # For each tax jurisdiction, compute the amount owed
+  # Note: this is applied to the total cost, we don't
+  #       know (yet) how to differentiate tax rates on
+  #       duration_cost vs count_cost.
+  for my $tax (@{$cbef->tax || []}) {
+    for my $jurisdiction (keys %{$tax}) {
+      my $rate = $tax->{$jurisdiction};
+      my $tax_amount = $cbef->rounding($cbef->cost * ($rate/100.0));
+      $cbef->{taxes}->{$jurisdiction} += $tax_amount;
+      $cbef->{tax_amount} += $tax_amount;
+    }
+  }
+  # Then compute the grand-total cost of the call (including taxes)
+  $cbef->{total_cost} = $cbef->cost + $cbef->tax_amount;
 
-  event_count
-  duration
+  # Save the new (rated) CBEF...
+  CCNQ::Rating::Event::save_rated_cbef($rated_cbef);
 
-[Note: more generically, there would be a "spent" field with {value,unit} pairs in it.]
+  # ...and update per account/sub-account summaries.
+  # (TBD)
+  update_counters($cbef->account,$cbef->account_sub,$cbef);
+}
 
-Plus the following CBEF elements which are generally not used for rating:
+=head2 save_rated_cbef
 
-  timestamp
-  collecting_node
-  event_description
-  request_uuid
+Save a rated CBEF (as JSON).
 
+=cut
 
+sub save_rated_cbef {
+  my ($cbef) = @_;
+  my $json = encode_json($cbef->cleanup);
+  # I guess this should go into the billing database or something.
+}
 
-Then the account+account_sub is used to locate a specific Plan; the Plan is then used to run the rating.
-
-
-  my $plan = lookup_plan_for($cbef->{account},$cbef->{account_sub});
-  CCNQ::Rating::Rate($cbef,$plan);
-  return $cbef; # A Rated CBEF
-
-
-
-
-
-
-
-event_types:
-  connected_inbound_call
-  connected_outbound_call
-  connected_onnet_call
-  failed_inbound_call   # not needed; set count to 0 (see CCNQ::Rating::Event)
-  failed_outbound_call
-  failed_onnet_call
-  sms
-  dids_in_use
-  activated_did # On the first day of use.
-
-rate_tables (examples):
-  sms:free-week-ends+1000-free-monthly+6c-extra
-
-
-filter(event) =>
-  rate_table
-  category+subcategory
-
-bucket = per subcategories (can aggregate many)
-
-category: e.g. voice alls, SMS, internet connection
-  sub_category: e.g. week-end SMS, etc.
-  -> maintain buckets per sub_category + unit types
-
-rates:
-  essentially a duration is first converted (once the rate is determined)
-  into a billable_base (based on call minimum duration) + billable_count
-
+'CCNQ::Rating';

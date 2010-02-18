@@ -14,10 +14,14 @@ package Rating::Process;
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-=pod
-  process ($fh,$cb->(\%data))
-    Parse a standard-formatted CBEF file and run each entry through the
-    callback.
+=head1 process ($fh,$cb->(\%data))
+Parse a standard-formatted CBEF file and run each entry through the
+callback.
+
+The standard format for CBEF is:
+- one header line: tab-delimited list of column names
+- one or more lines of tab-delimited values
+
 =cut
 
 sub process {
