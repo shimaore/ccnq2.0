@@ -23,6 +23,9 @@ use CCNQ::AE;
 sub pp
 {
   my $v = shift;
+  if(!defined($v)) {
+    return qq(nil);
+  }
   if(ref($v) eq '') {
     return qq("$v");
   }
@@ -75,23 +78,19 @@ sub install {
     while( my ($design_name,$design_content) = each %{$designs} ) {
       my $id = "_design/${design_name}";
 
-      info("Open old document $id");
-      $db->open_doc($id)->cb(sub{
-        my $old_doc = receive(@_);
-        if($old_doc) {
-          info("Remove old document $id");
-          $db->remove_doc($old_doc)->cb(sub{
-            receive(@_);
-          });
-        }
-      });
-
-      info("Create new document $id");
       $design_content->{_id} = $id;
       $design_content->{language} ||= 'javascript';
       # $design_content->{views} should be specified
 
-      $db->save_doc($design_content)->cb(receive_mcv($mcv));
+      info("Open old document $id");
+      $db->open_doc($id)->cb(sub{
+        my $old_doc = receive(@_);
+        if($old_doc) {
+          $design_content->{_rev} = $old_doc->{_rev};
+        }
+        info("Create new document $id");
+        $db->save_doc($design_content)->cb(receive_mcv($mcv));
+      });
     }
 
   });
