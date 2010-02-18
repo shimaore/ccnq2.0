@@ -15,10 +15,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use AnyEvent::CouchDB;
 use CCNQ::Manager;
 use CCNQ::AE;
 use CCNQ::XMPPAgent;
+use CCNQ::CouchDB;
+use AnyEvent::CouchDB;
 
 use constant js_report_requests => <<'JAVASCRIPT';
   function(doc) {
@@ -36,52 +37,26 @@ use constant js_report_requests => <<'JAVASCRIPT';
   }
 JAVASCRIPT
 
+use constant manager_designs => {
+  report => {
+    language => 'javascript',
+    views    => {
+      requests => {
+        map => js_report_requests,
+        # no reduce function
+      },
+      # Other views for _design/report here
+    },
+  },
+  # Other designs here
+};
+
 {
   install => sub {
     my ($params,$context,$mcv) = @_;
-    my $db_name = CCNQ::Manager::manager_db;
-    info("Creating CouchDB '${db_name}' database");
-    my $couch = couch;
-    my $db = $couch->db($db_name);
-    my $cv = $db->info();
-    $cv->cb(sub{
-      eval { my $info = $_[0]->recv; };
-      if($@) {
-        $db->create()->cb(sub{ $_[0]->recv;
-          info("Created CouchDB '${db_name}' database");
-        });
-      }
 
-      my $design_report = {
-        _id      => '_design/report',
-        language => 'javascript',
-        views    => {
-          requests => {
-            map => js_report_requests,
-            # no reduce function
-          },
-          # Other _design/report views here
-        },
-      };
+    my $cv = CCNQ::CouchDB::install(CCNQ::Manager::manager_db,manager_designs,$mcv);
 
-      # XXX This code actually doesn't work on updates.
-      $db->remove_doc({_id => '_design/report'})->cb(sub{
-        eval { my $info = $_[0]->recv; };
-        if($@) {
-          error("Removing CouchDB views failed: $@");
-        }
-      });
-      $db->save_doc($design_report)->cb( sub{
-        eval { $_[0]->recv; };
-        if($@) {
-          error("Updating CouchDB views failed: $@");
-          $mcv->send(CCNQ::AE::FAILURE($@));
-        } else {
-          info("Created CouchDB views");
-          $mcv->send(CCNQ::AE::SUCCESS);
-        }
-      });
-    });
     $context->{condvar}->cb($cv);
   },
 
@@ -239,40 +214,11 @@ JAVASCRIPT
   get_request_status => sub {
     my ($params,$context,$mcv) = @_;
 
-    my $db = couchdb(CCNQ::Manager::manager_db);
+    my $cv = CCNQ::CouchDB::view(CCNQ::API::provisioning_db,{
+      view => 'report/requests',
+      _id  => [$params->{params}->{request_id}],
+    },$mcv);
 
-    my $request_id = $params->{params}->{request_id};
-
-    my $cv = $db->view(
-        'report/requests',
-        {
-          startkey => [$request_id],
-          endkey   => [$request_id,{}],
-          include_docs => "true",
-          error    => sub {
-            $mcv->send(CCNQ::AE::FAILURE);
-          }
-        }
-    );
-
-    $cv->cb(sub{
-      my $result;
-      eval { $result = $_[0]->recv };
-
-      if($@) {
-        $mcv->send(CCNQ::AE::FAILURE($@));
-        return;
-      }
-
-      if(!$result) {
-        debug("Request $params->{request_id} not found.");
-        $mcv->send(CCNQ::AE::FAILURE("Request not found."));
-        return;
-      }
-
-      debug("Found request");
-      $mcv->send(CCNQ::AE::SUCCESS({rows => $result->{rows}}));
-    });
     $context->{condvar}->cb($cv);
   },
 

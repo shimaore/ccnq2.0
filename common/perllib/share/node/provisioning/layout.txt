@@ -60,9 +60,18 @@ plan_profile:
 
 Note: The manager/request associated with base CCNQ::Proxy::$action will eventually disappear since they are redundant.
 
+The following fields are common (so that we can build views):
 
+  account: $account_id
+  account_sub: $account_sub_id
 
+  number: $number
+  endpoint: $endpoint
 
+Also the following fields are used
+
+  type: $type    --- indicates that this record can be re-submitted via manager-request "$type".
+  description: $description  -- plain text description of the type of routing entry
 
 *** Optional:
 

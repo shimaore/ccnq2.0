@@ -32,6 +32,7 @@ require_ok( 'CCNQ::Install' );
 require_ok( 'CCNQ::Util' );
 require_ok( 'CCNQ::AE' );
 require_ok( 'CCNQ::AE::Run' );
+require_ok( 'CCNQ::CouchDB' );
 require_ok( 'CCNQ::Manager' );
 require_ok( 'CCNQ::MediaProxy' );
 require_ok( 'CCNQ::Monit' );
