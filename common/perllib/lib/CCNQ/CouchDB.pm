@@ -66,15 +66,7 @@ sub install {
   my $db = $couch->db($db_name);
   my $cv = $db->info();
 
-  $cv->cb(sub{
-    info("Info for CouchDB '${db_name}' database");
-    if(!receive(@_)) {
-      $db->create()->cb(sub{
-        receive(@_);
-        info("Created CouchDB '${db_name}' database");
-      });
-    }
-
+  my $install_designs = sub {
     while( my ($design_name,$design_content) = each %{$designs} ) {
       my $id = "_design/${design_name}";
 
@@ -92,7 +84,19 @@ sub install {
         $db->save_doc($design_content)->cb(receive_mcv($mcv));
       });
     }
+  };
 
+  $cv->cb(sub{
+    info("Info for CouchDB '${db_name}' database");
+    if(!receive(@_)) {
+      $db->create()->cb(sub{
+        receive(@_);
+        info("Created CouchDB '${db_name}' database");
+        $install_designs->();
+      });
+    } else {
+      $install_designs->();
+    }
   });
   return $cv;
 }
