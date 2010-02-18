@@ -13,6 +13,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use CCNQ::Activities::Proxy;
+use CCNQ::Activities::Provisioning;
+
 sub {
   my $request = shift;
   # XXX Validate the request.
@@ -33,66 +36,45 @@ sub {
     # customer_proxy_name (e.g. 'wholesale-proxy')
 
     # 1. Save the entire request in the provisioning database
-    {
-      action => 'update',
-      cluster_name => 'provisioning',
-      params => {
-        _id => 'route_did/'.$request->{number},
-        %{$request}
-      }
-    },
+    CCNQ::Activities::Provisioning::update( {
+      _id => 'number/'.$request->{number},
+      type => 'route_did',
+      description => 'Direct customer number routing',
+      %{$request}
+    } ),
 
     # 2. Route the inbound DID through the inbound-proxy
-    {
-      action => 'local_number/update',
-      cluster_name => $request->{inbound_proxy_name},
-      params => {
-        number => $request->{number},
+    CCNQ::Activities::Proxy::local_number_update( {
+        %{$request},
+        cluster_name => $request->{inbound_proxy_name},
         domain => CCNQ::Install::cluster_fqdn($request->{inbound_proxy_name}),
         username => $request->{treatment_type},
         username_domain => CCNQ::Install::cluster_fqdn($request->{inbound_proxy_name}),
-        account => $request->{account},
-        account_sub => $request->{account_sub},
-      }
-    },
+    } ),
 
     # 3. Route the inbound DID through the customer-side proxy
-    {
-      action => 'local_number/update',
+    CCNQ::Activities::Proxy::local_number_update ( {
+      %{$request},
       cluster_name => $request->{customer_proxy_name},
-      params => {
-        number => $request->{number}, # Or with transform
-        domain => CCNQ::Install::cluster_fqdn('ingress-proxy',$request->{customer_sbc_name}),
-        username => $request->{endpoint},
-        username_domain => CCNQ::Install::cluster_fqdn('ingress-proxy',$request->{customer_sbc_name}),
-        account => $request->{account},
-        account_sub => $request->{account_sub},
-      }
-    },
+      number => $request->{number}, # Or with transform
+      domain => CCNQ::Install::cluster_fqdn('ingress-proxy',$request->{customer_sbc_name}),
+      username => $request->{endpoint},
+      username_domain => CCNQ::Install::cluster_fqdn('ingress-proxy',$request->{customer_sbc_name}),
+    } ),
 
     # 4. Route the DID back into the system (onnet-onnet) using the loop on the outbound-proxy
-    {
-      action => 'dr_gateway/update',
+    CCNQ::Activities::Proxy::dr_gateway_update( {
       cluster_name => $request->{outbound_proxy_name},
-      params => {
-        target => $request->{inbound_proxy_name}
-      }
-    },
-    {
-      action => 'dr_rule/update',
+      target => CCNQ::Install::cluster_fqdn($request->{inbound_proxy_name})
+    } ),
+    CCNQ::Activities::Proxy::dr_rule_update( {
       cluster_name => $request->{outbound_proxy_name},
-      params => {
-        outbound_route => 0,
-        description => "Loop for $request->{number}",
-        prefix => $request->{number},
-        priority => 1,
-        target => $request->{inbound_proxy_name},
-      }
-    },
-    {
-      action => 'dr_reload',
-      cluster_name => $request->{outbound_proxy_name},
-    }
+      outbound_route => 0,
+      description => "Loop for $request->{number}",
+      prefix => $request->{number},
+      priority => 1,
+      target => CCNQ::Install::cluster_fqdn($request->{inbound_proxy_name}),
+    } ),
 
     # 6. Add billing entry for the day of creation
     {
