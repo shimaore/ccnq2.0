@@ -18,15 +18,21 @@ use strict; use warnings;
 use Test::More;
 
 use_ok ("CCNQ::AE::Run");
+use_ok ("AnyEvent");
 
-my $cv = CCNQ::AE::Run::attempt_run_module('node','status',{},{});
-ok($cv,"attempt_run_module returned");
-is(ref($cv),'CODE',"attempt_run_module returned CODE");
+my $sub = CCNQ::AE::Run::attempt_run_module('node','status',undef,undef);
+ok($sub,"attempt_run_module returned");
+is(ref($sub),'CODE',"attempt_run_module returned CODE");
 
-my $result = $cv->recv;
-ok($result,"node/status returned");
-is(ref($result),'HASH',"node/status returned HASH");
-is($result->running,1,"node/status returned running");
+my $cv = AnyEvent->condvar;
+$sub->($cv);
+my $r1 = $cv->recv;
+ok($r1,"node/status returned");
+is(ref($r1),'HASH','node/status returns hash');
+ok(exists($r1->{status}),'node/status returned CANCEL (probably could not find the script file)');
+is($r1->{status},'completed','node/status failed');
+is(ref($r1->{params}),'HASH','node/status returned params');
+ok($r1->{params}->{running},'node/status');
 
 done_testing();
 1;
