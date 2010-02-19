@@ -17,8 +17,8 @@
 use strict; use warnings;
 use Test::More;
 
-use_ok ("CCNQ::AE::Run");
-use_ok ("AnyEvent");
+require_ok ("CCNQ::AE::Run");
+require_ok ("AnyEvent");
 
 # host_name is retruned with the response
 $ENV{'CCNQ_host_name'} = 'test-host';
@@ -28,6 +28,7 @@ ok($sub,"attempt_run_module returned");
 is(ref($sub),'CODE',"attempt_run_module returned CODE");
 
 my $cv = AnyEvent->condvar;
+ok($cv,"condvar worked");
 $sub->($cv);
 my $r1 = $cv->recv;
 ok($r1,"node/status returned");

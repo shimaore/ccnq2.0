@@ -114,7 +114,7 @@ sub attempt_run_module {
     eval {
       if($module->can($action)) {
         # Will call AUTOLOAD automatically
-        $module->{$action}->($params,$context,$cv);
+        $module->$action($params,$context,$cv);
       } else {
         debug("attempt_run($function,$action): No action available");
         $cancel->($cv);
