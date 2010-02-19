@@ -35,6 +35,37 @@ use JSON;
 
 use Logger::Syslog;
 
+=head1 REQUIREMENTS
+
+This module assumes that the script in contrib/sip-traces/usr/sbin is
+running on the target (local) machine. Traces are saved in /var/log/traces
+and this module requires mergecap(1), ngrep(1) and a recent version (>= 1.2)
+of tshark(1).
+
+=head1 USAGE
+
+=head2 run($params,$context,$mcv)
+
+Where $params must contain at least one of:
+
+  call_id     to locate by Call-ID
+  to_user     to locate by To username
+  from_user   to locate by From username
+
+and may contain:
+
+  days_ago    to locate only records generated this number of day ago
+              (0 = today)
+  dump_packets  if true the output will be a pcap trace
+                otherwise the output will be a set of JSON records
+
+=head1 PERFORMANCE
+
+This script locates calls within two hundred megabytes of traces (the default
+storage space in the sip-traces capture script) in about one second.
+
+=cut
+
 use constant trace_field_names => [qw(
   frame.time ip.version ip.dsfield.dscp ip.src ip.dst ip.proto udp.srcport udp.dstport
   sip.Call-ID
@@ -204,80 +235,4 @@ SCRIPT
   debug("trace: end");
 } # run
 
-1;
-
-__END__
-
-  if($dump_packets) {
-    debug("trace: starting pcap dump");
-
-    # Output the subset of packets
-    print $script <<SCRIPT;
-#!/bin/sh
-mergecap -w - $base_dir/*.pcap | ngrep -i -l -q -I - -O '$fh' '$ngrep_filter' >/dev/null;
-exec tshark -r "$fh" -R '$tshark_filter' -w -
-SCRIPT
-    close($script);
-
-    if(!open(my $fh,'-|', bin_sh, $script )) {
-      error($!);
-      unlink $script;
-      $mcv->send(CCNQ::AE::FAILURE($!));
-      return;
-    };
-    my $content = '';
-    local $/;
-    $content = <$fh>;
-    if(!close($fh)) {
-      error($!);
-      unlink $script;
-      $mcv->send(CCNQ::AE::FAILURE($!));
-      return;
-    };
-
-    unlink $script;
-    debug("trace: completed pcap dump");
-    $mcv->send(CCNQ::AE::SUCCESS({pcap => [$content]}));
-  } else {
-    debug("trace: starting text dump");
-
-    # Output JSON
-    my $fields = join(' ',map { ('-e', $_) } @{trace_field_names()});
-    print $script <<SCRIPT;
-#!/bin/sh
-mergecap -w - $base_dir/*.pcap | ngrep -i -l -q -I - -O '$fh' '$ngrep_filter' >/dev/null;
-exec tshark -r "$fh" -R '$tshark_filter' -nltad -T fields $fields
-SCRIPT
-    close($script);
-
-    if(!open(my $fh,'-|', bin_sh, $script )) {
-      error($!);
-      unlink $script;
-      $mcv->send(CCNQ::AE::FAILURE($!));
-      return;
-    };
-    my @content = ();
-    while(<$fh>) {
-      chomp;
-      my @values = split(/\t/);
-      my %values = ();
-      for my $i (0..$#values) {
-        my $value = $values[$i];
-        next unless defined $value && $value ne '';
-        $value =~ s/\\"/"/g; # tshark escapes " into \"
-        $values{trace_field_names()->[$i]} = $value;
-      }
-      push @content, {%values};
-    }
-    if(!close($fh)) {
-      error($!);
-      unlink $script;
-      $mcv->send(CCNQ::AE::FAILURE($!));
-      return;
-    };
-
-    unlink $script;
-    debug("trace: completed text dump");
-    $mcv->send(CCNQ::AE::SUCCESS({rows => [@content]}));
-  }
-}
+'CCNQ::Trace';
