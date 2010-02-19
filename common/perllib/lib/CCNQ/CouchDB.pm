@@ -97,6 +97,18 @@ sub install {
   return $cv;
 }
 
+=head1 UPDATE
+
+Updates in CCNQ::CouchDB are used to update a set of fields in an
+existing record, or to create a new record (if the record key is not found).
+Fields not specified in the parameters are left as they were in the existing
+record.
+
+This is different from the usual PUT semantics. To obtain proper PUT
+semantics, do a delete() then an update().
+
+=cut
+
 sub update {
   my ($db_name,$params,$mcv) = @_;
 
@@ -109,7 +121,6 @@ sub update {
 
   my $cv = $couch_db->open_doc($params->{_id});
 
-  # XXX Implement proper CouchDB semantics.
   $cv->cb(sub{
     my $doc;
     $doc = receive(@_);
@@ -162,6 +173,13 @@ sub retrieve {
   });
   return $cv;
 }
+
+=head1 VIEWS
+
+Views in CCNQ::CouchDB always return an array as key. This is used
+so that we can return records that match a prefix.
+
+=cut
 
 sub view {
   my ($db_name,$params,$mcv) = @_;
