@@ -31,7 +31,7 @@ is(CCNQ::Install::manager_cluster_jid(),'manager@conference.private.example.net'
 # Tests that rely on SRC
 require_ok( 'AnyEvent' );
 
-my $sub = CCNQ::AE::Run::attempt_run_module('node','status',undef,undef);
+my $sub = CCNQ::AE::Run::attempt_run('node','status',undef,undef);
 is(ref($sub), 'CODE', 'attempt_run for node/status');
 
 my $cv = AnyEvent->condvar;

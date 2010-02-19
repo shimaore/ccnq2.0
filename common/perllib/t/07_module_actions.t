@@ -23,9 +23,9 @@ require_ok ("AnyEvent");
 # host_name is retruned with the response
 $ENV{'CCNQ_host_name'} = 'test-host';
 
-my $sub = CCNQ::AE::Run::attempt_run_module('node','status',{},{});
-ok($sub,"attempt_run_module returned");
-is(ref($sub),'CODE',"attempt_run_module returned CODE");
+my $sub = CCNQ::AE::Run::attempt_run('node','status',{},{});
+ok($sub,"attempt_run returned");
+is(ref($sub),'CODE',"attempt_run returned CODE");
 
 my $cv = AnyEvent->condvar;
 ok($cv,"condvar worked");

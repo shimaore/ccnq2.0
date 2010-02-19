@@ -20,27 +20,5 @@ use Test::More;
 use_ok ("CCNQ::Install");
 use_ok ("File::Spec");
 
-# find . -name 'actions.pm' | sed -s 's/^\.\///'
-for my $name qw(
-  b2bua/base/actions.pm
-  b2bua/carrier-sbc-config/actions.pm
-  b2bua/client-ocs-sbc/actions.pm
-  b2bua/client-sbc-config/actions.pm
-  b2bua/signaling-server/actions.pm
-  manager/actions.pm
-  mediaproxy/actions.pm
-  mediaproxy/dispatcher/actions.pm
-  mediaproxy/relay/actions.pm
-  node/actions.pm
-  node/api/actions.pm
-  node/provisioning/actions.pm
-  proxy/base/actions.pm
-  proxy/inbound-proxy/actions.pm
-  proxy/outbound-proxy/actions.pm
-  proxy/router-no-registrar/actions.pm
-) {
-  require_ok (File::Spec->catfile(CCNQ::Install::SRC(),$name));
-}
-
 done_testing();
 1;
