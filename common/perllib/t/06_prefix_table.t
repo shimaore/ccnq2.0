@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
-use Test::More;
+use Test::More tests => 30;
 
 use_ok ("CCNQ::Rating::Table");
 
@@ -56,6 +56,7 @@ is( $table->lookup('2536'), undef );
 is( $table->lookup('25367'), undef );
 ok( $table->lookup('253673') );
 ok( $table->lookup('253673')->{value1}, 'mno' );
+ok( $table->lookup('253673837')->{value2}, 'TYZ' );
 
 done_testing();
 1;
