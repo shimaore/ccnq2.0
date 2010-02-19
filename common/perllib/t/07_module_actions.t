@@ -34,7 +34,7 @@ my $r1 = $cv->recv;
 ok($r1,"node/status returned");
 is(ref($r1),'HASH','node/status returns hash');
 ok(exists($r1->{status}),'node/status returned CANCEL (probably could not find the script file)');
-is($r1->{status},'completed','node/status failed: '.$r1->{error});
+is($r1->{status},'completed','node/status failed: '.($r1->{error}||''));
 is(ref($r1->{params}),'HASH','node/status returned params');
 ok($r1->{params}->{running},'node/status');
 
