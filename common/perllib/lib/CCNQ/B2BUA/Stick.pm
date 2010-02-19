@@ -66,7 +66,7 @@ sub install {
       my $profile_template = 'public';
       my $dialplan_template = $profile;
 
-      debug("b2bua/carrier-sbc-config: Creating configuration for name $name / profile $profile.");
+      debug("b2bua/$b2bua_name: Creating configuration for name $name / profile $profile.");
 
       my $port_dn = CCNQ::Install::catdns('port',$name,CCNQ::Install::fqdn);
       my $port_cv = AnyEvent->condvar;
@@ -76,7 +76,7 @@ sub install {
 
       next unless defined($port) && defined($internal_ip);
 
-      debug("b2bua/carrier-sbc-config: Found port $port");
+      debug("b2bua/$b2bua_name: Found port $port");
 
       # Generate sip_profile entries
       $sip_profile_text .= <<"EOT";
@@ -91,7 +91,7 @@ EOT
       my $ingress_cv = AnyEvent->condvar;
       AnyEvent::DNS::a( CCNQ::Install::catdns('ingress',$name,CCNQ::Install::fqdn), $ingress_cv );
       my @ingress = $ingress_cv->recv;
-      debug("b2bua/carrier-sbc-config: Found ingress IPs ".join(',',@ingress));
+      debug("b2bua/$b2bua_name: Found ingress IPs ".join(',',@ingress));
 
       $acl_text .= qq(<list name="sbc-${name}" default="deny">);
       $acl_text .= join('',map { qq(<node type="allow" cidr="$_/32"/>) } @ingress);
@@ -101,7 +101,7 @@ EOT
       my $egress_cv = AnyEvent->condvar;
       AnyEvent::DNS::a( CCNQ::Install::catdns('egress',$name,CCNQ::Install::fqdn), $egress_cv );
       my @egress = $egress_cv->recv;
-      debug("b2bua/carrier-sbc-config: Found egress IPs ".join(',',@egress));
+      debug("b2bua/$b2bua_name: Found egress IPs ".join(',',@egress));
 
       # XXX Only one IP supported at this time.
       # It's OK for a profile to not support 'egress' (e.g. signaling-server).

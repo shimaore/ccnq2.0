@@ -144,9 +144,9 @@ sub make_password {
 # Service definitions
 
 use constant roles_to_functions => {
-  'carrier-sbc'     => [qw( b2bua/cdr b2bua/carrier-sbc-config b2bua/base monit node )],
+  'carrier-sbc'     => [qw( b2bua/cdr b2bua/carrier_sbc_config b2bua/base monit node )],
   'client-sbc'      => [qw( b2bua/cdr b2bua/client-sbc-config  b2bua/base monit node )],
-  'client-ocs-sbc'  => [qw( b2bua/cdr b2bua/client-ocs-sbc b2bua/base monit node )],
+  'client-ocs-sbc'  => [qw( b2bua/cdr b2bua/client_ocs_sbc b2bua/base monit node )],
   'inbound-proxy'   => [qw( proxy/inbound-proxy proxy/base monit node )],
   'outbound-proxy'  => [qw( proxy/outbound-proxy proxy/base monit node )],
   'complete-transparent-proxy' => [qw( proxy/registrar proxy/complete-transparent proxy/base mediaproxy/dispatcher mediaproxy monit node )],

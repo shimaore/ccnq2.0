@@ -1,5 +1,5 @@
 package CCNQ::Actions::node;
-# Copyright (C) 2010  Stephane Alnet
+# Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -21,8 +21,8 @@ use CCNQ::AE::Run;
 use CCNQ::Trace;
 
 sub install_all {
-  my ($params,$context,$mcv) = @_;
-  CCNQ::AE::Run::attempt_on_roles_and_functions('install',$params,$context,$mcv);
+    my ($params,$context,$mcv) = @_;
+    CCNQ::AE::Run::attempt_on_roles_and_functions('install',$params,$context,$mcv);
 }
 
 # Used to provide server-wide status information.

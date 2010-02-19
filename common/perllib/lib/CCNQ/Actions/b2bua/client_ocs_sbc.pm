@@ -1,5 +1,4 @@
-# client-sbc-config/actions.pm
-
+package CCNQ::Actions::b2bua::client_ocs_sbc;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -18,32 +17,32 @@
 use CCNQ::B2BUA;
 use CCNQ::AE;
 
-{
-  install => sub {
-    my ($params,$context,$mcv) = @_;
+sub install {
+  my ($params,$context,$mcv) = @_;
 
-    my $b2bua_name = 'client-ocs-sbc';
+  my $b2bua_name = 'client-ocs-sbc';
 
-    # acls
-    for my $name ($b2bua_name) {
-      CCNQ::B2BUA::copy_file($b2bua_name,qw( autoload_configs ),"${name}.acl.xml");
-    }
+  # acls
+  for my $name ($b2bua_name) {
+    CCNQ::B2BUA::copy_file($b2bua_name,qw( autoload_configs ),"${name}.acl.xml");
+  }
 
-    # dialplan
-    for my $name ($b2bua_name) {
-      CCNQ::B2BUA::copy_file($b2bua_name,qw( dialplan ),"${name}.xml");
-    }
+  # dialplan
+  for my $name ($b2bua_name) {
+    CCNQ::B2BUA::copy_file($b2bua_name,qw( dialplan ),"${name}.xml");
+  }
 
-    # sip_profile
-    for my $name ($b2bua_name) {
-      CCNQ::B2BUA::copy_file($b2bua_name,qw( sip_profiles ),"${name}.xml");
-    }
+  # sip_profile
+  for my $name ($b2bua_name) {
+    CCNQ::B2BUA::copy_file($b2bua_name,qw( sip_profiles ),"${name}.xml");
+  }
 
-    # scripts
-    for my $name (qw( cnam.pl )) {
-      CCNQ::B2BUA::copy_file($b2bua_name,qw( .. scripts ),${name});
-    }
+  # scripts
+  for my $name (qw( cnam.pl )) {
+    CCNQ::B2BUA::copy_file($b2bua_name,qw( .. scripts ),${name});
+  }
 
-    $mcv->send(CCNQ::AE::SUCCESS);
-  },
+  $mcv->send(CCNQ::AE::SUCCESS);
 }
+
+'CCNQ::Actions::b2bua::client_ocs_sbc';

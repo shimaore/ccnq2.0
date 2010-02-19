@@ -1,5 +1,4 @@
-# signaling-server/actions.pm
-
+package CCNQ::Actions::b2bua::signaling_server;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -16,8 +15,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use CCNQ::B2BUA::Stick;
-{
-  install => sub {
-    CCNQ::B2BUA::Stick::install('signaling-server',@_);
-  },
+
+sub install{
+  CCNQ::B2BUA::Stick::install('signaling-server',@_);
 }
+
+'CCNQ::Actions::b2bua::signaling_server';
