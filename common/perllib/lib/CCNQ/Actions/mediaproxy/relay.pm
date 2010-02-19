@@ -1,5 +1,4 @@
-# mediaproxy/relay/actions.pm
-
+package CCNQ::Actions::mediaproxy::relay;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -14,19 +13,19 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+use strict; use warnings;
 
 use CCNQ::Util;
 use CCNQ::AE;
 
-{
-  install => sub {
-    my ($params,$context) = @_;
-    use CCNQ::MediaProxy;
-    CCNQ::MediaProxy::install_default_key('relay');
+sub install {
+  my ($params,$context,$mcv) = @_;
+  use CCNQ::MediaProxy;
+  CCNQ::MediaProxy::install_default_key('relay');
 
-    my $cluster_fqdn = CCNQ::Install::cluster_fqdn($params->{cluster_name});
+  my $cluster_fqdn = CCNQ::Install::cluster_fqdn($params->{cluster_name});
 
-    my $config = <<"EOT";
+  my $config = <<"EOT";
 # start relay configuration
 
 [Relay]
@@ -43,7 +42,8 @@ port_range = 40000:41998
 
 # end relay configuration
 EOT
-    CCNQ::Util::print_to(CCNQ::MediaProxy::mediaproxy_config.'.relay',$config);
-    $mcv->send(CCNQ::AE::SUCCESS);
-  },
+  CCNQ::Util::print_to(CCNQ::MediaProxy::mediaproxy_config.'.relay',$config);
+  $mcv->send(CCNQ::AE::SUCCESS);
 }
+
+'CCNQ::Actions::mediaproxy::relay';

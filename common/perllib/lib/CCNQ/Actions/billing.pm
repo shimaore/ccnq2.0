@@ -1,5 +1,4 @@
-# billing/actions.pm
-
+package CCNQ::Actions::billing;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -14,22 +13,25 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+use strict; use warnings;
 
 use CCNQ::Install;
 use CCNQ::AE;
 
-{
-  install => sub {
-    $mcv->send(CCNQ::AE::SUCCESS);
-  },
-
-  billing_entry => sub {
-    # Create a new CBEF entry
-    
-    CCNQ::Rating::create_flat_cbef({
-      %{$params},
-      collecting_node => CCNQ::Install::host_name,
-      request_uuid    => $params->{activity},
-    });
-  },
+sub install {
+  my ($params,$context,$mcv) = @_;
+  $mcv->send(CCNQ::AE::SUCCESS);
 }
+
+sub billing_entry {
+  my ($params,$context,$mcv) = @_;
+
+  # Create a new CBEF entry
+  CCNQ::Rating::create_flat_cbef({
+    %{$params},
+    collecting_node => CCNQ::Install::host_name,
+    request_uuid    => $params->{activity},
+  });
+}
+
+'CCNQ::Actions::billing';

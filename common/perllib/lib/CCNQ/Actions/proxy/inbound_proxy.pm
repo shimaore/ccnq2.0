@@ -1,5 +1,4 @@
-# proxy/inbound-proxy/actions.pm
-
+package CCNQ::Actions::proxy::inbound_proxy;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -14,15 +13,16 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+use strict; use warnings;
 
 use CCNQ::Proxy;
 use CCNQ::AE;
 
-{
-  install => sub {
-    my ($params,$context,$mcv) = @_;
+sub install {
+  my ($params,$context,$mcv) = @_;
 
-    CCNQ::Util::print_to(CCNQ::Proxy::proxy_mode_file,'inbound-proxy');
-    $mcv->send(CCNQ::AE::SUCCESS);
-  },
+  CCNQ::Util::print_to(CCNQ::Proxy::proxy_mode_file,'inbound-proxy');
+  $mcv->send(CCNQ::AE::SUCCESS);
 }
+
+'CCNQ::Actions::proxy::inbound_proxy';

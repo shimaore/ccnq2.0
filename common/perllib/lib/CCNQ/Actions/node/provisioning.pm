@@ -1,5 +1,4 @@
-# billing/actions.pm
-
+package CCNQ::Actions::node::provisioning;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -14,6 +13,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+use strict; use warnings;
 
 use CCNQ::AE;
 use CCNQ::API;
@@ -27,35 +27,35 @@ use constant provisioning_designs => {
   },
 };
 
-{
-  install => sub {
-    my ($params,$context,$mcv) = @_;
-    my $cv = CCNQ::CouchDB::install(CCNQ::API::provisioning_db,provisioning_designs,$mcv);
-    $context->{condvar}->cb($cv);
-  },
 
-  update => sub {
-    my ($params,$context,$mcv) = @_;
-    my $cv = CCNQ::CouchDB::update(CCNQ::API::provisioning_db,$params,$mcv);
-    $context->{condvar}->cb($cv);
-  },
-
-  delete => sub {
-    my ($params,$context,$mcv) = @_;
-    my $cv = CCNQ::CouchDB::delete(CCNQ::API::provisioning_db,$params,$mcv);
-    $context->{condvar}->cb($cv);
-  },
-
-  retrieve => sub {
-    my ($params,$context,$mcv) = @_;
-    my $cv = CCNQ::CouchDB::retrieve(CCNQ::API::provisioning_db,$params,$mcv);
-    $context->{condvar}->cb($cv);
-  },
-
-  view => sub {
-    my ($params,$context,$mcv) = @_;
-    my $cv = CCNQ::CouchDB::view(CCNQ::API::provisioning_db,$params,$mcv);
-    $context->{condvar}->cb($cv);
-  },
-
+sub install {
+  my ($params,$context,$mcv) = @_;
+  my $cv = CCNQ::CouchDB::install(CCNQ::API::provisioning_db,provisioning_designs,$mcv);
+  $context->{condvar}->cb($cv);
 }
+
+sub update {
+  my ($params,$context,$mcv) = @_;
+  my $cv = CCNQ::CouchDB::update(CCNQ::API::provisioning_db,$params,$mcv);
+  $context->{condvar}->cb($cv);
+}
+
+sub delete {
+  my ($params,$context,$mcv) = @_;
+  my $cv = CCNQ::CouchDB::delete(CCNQ::API::provisioning_db,$params,$mcv);
+  $context->{condvar}->cb($cv);
+}
+
+sub retrieve {
+  my ($params,$context,$mcv) = @_;
+  my $cv = CCNQ::CouchDB::retrieve(CCNQ::API::provisioning_db,$params,$mcv);
+  $context->{condvar}->cb($cv);
+}
+
+sub view {
+  my ($params,$context,$mcv) = @_;
+  my $cv = CCNQ::CouchDB::view(CCNQ::API::provisioning_db,$params,$mcv);
+  $context->{condvar}->cb($cv);
+}
+
+'CCNQ::Actions::node::provisioning';

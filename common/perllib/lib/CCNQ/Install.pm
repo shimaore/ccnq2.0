@@ -145,12 +145,12 @@ sub make_password {
 
 use constant roles_to_functions => {
   'carrier-sbc'     => [qw( b2bua/cdr b2bua/carrier_sbc_config b2bua/base monit node )],
-  'client-sbc'      => [qw( b2bua/cdr b2bua/client-sbc-config  b2bua/base monit node )],
+  'client-sbc'      => [qw( b2bua/cdr b2bua/client_sbc_config  b2bua/base monit node )],
   'client-ocs-sbc'  => [qw( b2bua/cdr b2bua/client_ocs_sbc b2bua/base monit node )],
-  'inbound-proxy'   => [qw( proxy/inbound-proxy proxy/base monit node )],
-  'outbound-proxy'  => [qw( proxy/outbound-proxy proxy/base monit node )],
-  'complete-transparent-proxy' => [qw( proxy/registrar proxy/complete-transparent proxy/base mediaproxy/dispatcher mediaproxy monit node )],
-  'router-no-registrar' => [qw( proxy/router-no-registrar proxy/base monit node )],
+  'inbound-proxy'   => [qw( proxy/inbound_proxy proxy/base monit node )],
+  'outbound-proxy'  => [qw( proxy/outbound_proxy proxy/base monit node )],
+  'complete-transparent-proxy' => [qw( proxy/registrar proxy/complete_transparent proxy/base mediaproxy/dispatcher mediaproxy monit node )],
+  'router-no-registrar' => [qw( proxy/router_no_registrar proxy/base monit node )],
   # ...
   'portal'          => [qw( portal/base node/api monit node )],
   'api'             => [qw( node/api )],

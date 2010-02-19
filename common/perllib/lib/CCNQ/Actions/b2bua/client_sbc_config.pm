@@ -13,11 +13,12 @@ package CCNQ::Actions::b2bua::client_sbc_config;
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+use strict; use warnings;
 
 use CCNQ::B2BUA;
 use CCNQ::AE;
 
-install => sub {
+sub install {
   my ($params,$context,$mcv) = @_;
 
   my $b2bua_name = 'client-sbc-config';

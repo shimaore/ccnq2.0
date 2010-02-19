@@ -60,5 +60,24 @@ require_ok( 'CCNQ::SQL::Base' );
 
 require_ok( 'CCNQ::Rating::Table');
 
+require_ok( 'CCNQ::Actions::b2bua::base' );
+require_ok( 'CCNQ::Actions::b2bua::carrier_sbc_config' );
+require_ok( 'CCNQ::Actions::b2bua::clients_ocs_sbc' );
+require_ok( 'CCNQ::Actions::b2bua::client_sbc_config' );
+require_ok( 'CCNQ::Actions::b2bua::signaling_server' );
+require_ok( 'CCNQ::Actions::billing' );
+require_ok( 'CCNQ::Actions::manager' );
+require_ok( 'CCNQ::Actions::mediaproxy' );
+require_ok( 'CCNQ::Actions::mediaproxy::dispatcher' );
+require_ok( 'CCNQ::Actions::mediaproxy::relay' );
+require_ok( 'CCNQ::Actions::monit' );
+require_ok( 'CCNQ::Actions::node' );
+require_ok( 'CCNQ::Actions::node::api' );
+require_ok( 'CCNQ::Actions::node::provisioning' );
+require_ok( 'CCNQ::Actions::proxy::base' );
+require_ok( 'CCNQ::Actions::proxy::inbound_proxy' );
+require_ok( 'CCNQ::Actions::proxy::outbound_proxy' );
+require_ok( 'CCNQ::Actions::proxy::router_no_registrar' );
+
 done_testing();
 1;

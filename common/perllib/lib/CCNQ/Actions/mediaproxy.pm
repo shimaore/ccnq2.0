@@ -1,5 +1,4 @@
-# mediaproxy/actions.pm
-
+package CCNQ::Actions::mediaproxy;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -14,25 +13,27 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+use strict; use warnings;
 
-{
-  install => sub {
-    my ($params,$context,$mcv) = @_;
-    use CCNQ::MediaProxy;
-    use CCNQ::Util;
-    use CCNQ::AE;
-    use File::Spec;
-    use File::Copy;
-    for my $file (qw( ca.pem crl.pem )) {
-      my $src = File::Spec->catfile(CCNQ::MediaProxy::mediaproxy_directory,$file);
-      my $dst = File::Spec->catfile(CCNQ::MediaProxy::mediaproxy_install_conf,'tls',$file);
-      CCNQ::MediaProxy::try_install($src,$dst);
-    }
-    my $dispatcher_file = CCNQ::MediaProxy::mediaproxy_config.'.dispatcher';
-    my $relay_file      = CCNQ::MediaProxy::mediaproxy_config.'.relay';
-    my $config_dispatcher = -f($dispatcher_file) ? CCNQ::Util::content_of($dispatcher_file) : '';
-    my $config_relay      = -f($relay_file)      ? CCNQ::Util::content_of($relay_file)      : '';
-    my $config = <<'EOT';
+use CCNQ::MediaProxy;
+use CCNQ::Util;
+use CCNQ::AE;
+use File::Spec;
+use File::Copy;
+
+sub install {
+  my ($params,$context,$mcv) = @_;
+
+  for my $file (qw( ca.pem crl.pem )) {
+    my $src = File::Spec->catfile(CCNQ::MediaProxy::mediaproxy_directory,$file);
+    my $dst = File::Spec->catfile(CCNQ::MediaProxy::mediaproxy_install_conf,'tls',$file);
+    CCNQ::MediaProxy::try_install($src,$dst);
+  }
+  my $dispatcher_file = CCNQ::MediaProxy::mediaproxy_config.'.dispatcher';
+  my $relay_file      = CCNQ::MediaProxy::mediaproxy_config.'.relay';
+  my $config_dispatcher = -f($dispatcher_file) ? CCNQ::Util::content_of($dispatcher_file) : '';
+  my $config_relay      = -f($relay_file)      ? CCNQ::Util::content_of($relay_file)      : '';
+  my $config = <<'EOT';
 [TLS]
 certs_path = /etc/mediaproxy/tls
 ;verify_interval = 300
@@ -50,9 +51,10 @@ certs_path = /etc/mediaproxy/tls
 ;additional_dictionary = radius/dictionary
 
 EOT
-    CCNQ::Util::print_to(CCNQ::MediaProxy::mediaproxy_config,$config.$config_dispatcher.$config_relay);
-    unlink($dispatcher_file);
-    unlink($relay_file);
-    $mcv->send(CCNQ::AE::SUCCESS);
-  },
+  CCNQ::Util::print_to(CCNQ::MediaProxy::mediaproxy_config,$config.$config_dispatcher.$config_relay);
+  unlink($dispatcher_file);
+  unlink($relay_file);
+  $mcv->send(CCNQ::AE::SUCCESS);
 }
+
+'CCNQ::Actions::mediaproxy';

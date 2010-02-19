@@ -1,5 +1,4 @@
-# mediaproxy/dispatcher/actions.pm
-
+package CCNQ::Actions::mediaproxy::dispatcher;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -14,17 +13,17 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+use strict; use warnings;
 
 use CCNQ::Util;
 use CCNQ::AE;
 
-{
-  install => sub {
-    my ($params,$context,$mcv) = @_;
+sub install {
+  my ($params,$context,$mcv) = @_;
 
-    use CCNQ::MediaProxy;
-    CCNQ::MediaProxy::install_default_key('dispatcher');
-    my $config = <<'EOT';
+  use CCNQ::MediaProxy;
+  CCNQ::MediaProxy::install_default_key('dispatcher');
+  my $config = <<'EOT';
 # start dispatcher configuration
 
 [Dispatcher]
@@ -44,7 +43,8 @@ passport = None
 
 # end dispatcher configuration
 EOT
-    CCNQ::Util::print_to(CCNQ::MediaProxy::mediaproxy_config.'.dispatcher',$config);
-    $mcv->send(CCNQ::AE::SUCCESS);
-  },
+  CCNQ::Util::print_to(CCNQ::MediaProxy::mediaproxy_config.'.dispatcher',$config);
+  $mcv->send(CCNQ::AE::SUCCESS);
 }
+
+'CCNQ::Actions::mediaproxy::dispatcher';
