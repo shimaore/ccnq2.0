@@ -21,24 +21,27 @@ use strict; use warnings;
 use Tree::Trie;
 use Memoize;
 
-memoize('new');
 sub new {
   my $this = shift;
   my $self = {
-    name => shift,
     trie => new Tree::Trie {deepsearch => 'prefix'},
   };
-  bless $self;
-  $self->load;
-  return $self;
+  return bless $self;
 }
 
-sub file_name {
-  my ($self) = @_;
-  return File::Spec->catfile(qw(),$self->name);
+=head1 $table->insert(\%data)
+
+The parameters must at least contain one field named "prefix" which
+is used as the key for the record.
+
+=cut
+
+sub insert {
+  my ($self,$data) = @_;
+  $self->{trie}->add_data($data->{prefix},$data);
 }
 
-=head1 load($file_name)
+=head1 load_from_file($file_name)
 
 The default format for a flat file describing a rating table is:
 - one header line: tab-delimited list of column names
@@ -49,17 +52,19 @@ the values on the same line.
 
 =cut
 
-sub load {
+sub file_name {
   my ($self) = @_;
+  return $self->{name} && File::Spec->catfile(qw(),$self->{name});
+}
+
+memoize('load_from_file');
+sub load_from_file {
+  my $self = new CCNQ::Rating::Table;
+  $self->{name} = shift;
   open(my $fh, '<', $self->file_name) or die $self->file_name.": $!";
-  Rating::Process::process($fh, sub {
-    my ($data) = @_;
-    # Note: using delete might not be a good idea since we won't know
-    #       which prefix was actually used when we do the query.
-    my $prefix = delete $data->{prefix};
-    $self->trie->add_data($prefix,$data);
-  });
+  Rating::Process::process($fh, sub { $self->insert(@_) });
   close($fh) or die $self->file_name.": $!";
+  return $self;
 }
 
 =head1 lookup($key)
@@ -70,7 +75,7 @@ Returns a hashref of values associated with the longest match for the prefix.
 
 sub lookup {
   my ($self,$key) = @_;
-  return $self->trie->lookup($key);
+  return $self->{trie}->lookup($key);
 }
 
 1;
