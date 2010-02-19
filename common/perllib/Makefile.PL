@@ -41,6 +41,7 @@ requires      'Carp'                      => 0;
 requires      'AnyEvent::HTTP'            => '1.44';
 
 requires      'Tree::Trie'                => 0;
+requires      'UNIVERSAL::require'        => 0;
 
 test_requires 'Test::More' => 0;
 
