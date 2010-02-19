@@ -37,7 +37,7 @@ sub request_to_activity {
   my ($request_type) = @_;
 
   use UNIVERSAL::require;
-  my $request_module = "CCNQ::Manager::Requests::${request_type}";
+  my $module = "CCNQ::Manager::Requests::${request_type}";
   if($module->require) {
     return $module->can('run');
   } else {
