@@ -62,7 +62,7 @@ require_ok( 'CCNQ::Rating::Table');
 
 require_ok( 'CCNQ::Actions::b2bua::base' );
 require_ok( 'CCNQ::Actions::b2bua::carrier_sbc_config' );
-require_ok( 'CCNQ::Actions::b2bua::clients_ocs_sbc' );
+require_ok( 'CCNQ::Actions::b2bua::client_ocs_sbc' );
 require_ok( 'CCNQ::Actions::b2bua::client_sbc_config' );
 require_ok( 'CCNQ::Actions::b2bua::signaling_server' );
 require_ok( 'CCNQ::Actions::billing' );
