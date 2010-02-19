@@ -1,5 +1,4 @@
-package CCNQ::Activites::Provisioning
-
+package CCNQ::Activites::Provisioning;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -14,6 +13,7 @@ package CCNQ::Activites::Provisioning
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+use strict; use warnings;
 
 use constant PROVISIONING_CLUSTER_NAME => 'provisioning';
 
