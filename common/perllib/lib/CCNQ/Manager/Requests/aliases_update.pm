@@ -1,3 +1,4 @@
+package CCNQ::Manager::Requests::aliases_update;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -14,4 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use CCNQ::Activities::Proxy;
-&CCNQ::Activities::Proxy::aliases_update;
+*run = \&CCNQ::Activities::Proxy::aliases_update;
+
+'CCNQ::Manager::Requests::aliases_update';

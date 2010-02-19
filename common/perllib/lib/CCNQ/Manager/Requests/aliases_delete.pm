@@ -1,3 +1,4 @@
+package CCNQ::Manager::Requests::aliases_delete;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -14,4 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use CCNQ::Activities::Proxy;
-&CCNQ::Activities::Proxy::aliases_delete;
+*run = \&CCNQ::Activities::Proxy::aliases_delete;
+
+'CCNQ::Manager::Requests::aliases_delete';

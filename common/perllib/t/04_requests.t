@@ -20,34 +20,5 @@ use Test::More;
 use_ok ("CCNQ::Install");
 use_ok ("File::Spec");
 
-# find manager/requests -name '*.pm'
-for my $name qw(
-  manager/requests/aliases_delete.pm
-  manager/requests/aliases_update.pm
-  manager/requests/domain_delete.pm
-  manager/requests/domain_update.pm
-  manager/requests/dr_gateway_delete.pm
-  manager/requests/dr_gateway_update.pm
-  manager/requests/dr_rule_delete.pm
-  manager/requests/dr_rule_update.pm
-  manager/requests/inbound_delete.pm
-  manager/requests/inbound_update.pm
-  manager/requests/local_number_delete.pm
-  manager/requests/local_number_update.pm
-  manager/requests/node_status_query.pm
-  manager/requests/endpoint_delete.pm
-  manager/requests/endpoint_update.pm
-  manager/requests/endpoint_number_delete.pm
-  manager/requests/endpoint_number_update.pm
-) {
-  # require_ok ("$path/$name")  does not work.
-  # I need the equivalent of "perl -wc".
-  my $file_name = File::Spec->catfile(CCNQ::Install::SRC(),$name);
-  system(qq(perl -wc "${file_name}" > /dev/null 2>/dev/null)) == 0 || die "$name failed";
-}
-
-# Does not work with
-#  ./common/bin/xmpp_agent.pl
-
 done_testing();
 1;

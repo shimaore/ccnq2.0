@@ -1,3 +1,4 @@
+package CCNQ::Manager::Requests::node_status_query;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -13,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-sub {
+sub run {
   my $request = shift;
   # Return list of activities required to complete this request.
   return (
@@ -23,3 +24,5 @@ sub {
     },
   );
 }
+
+'CCNQ::Manager::Requests::node_status_query';

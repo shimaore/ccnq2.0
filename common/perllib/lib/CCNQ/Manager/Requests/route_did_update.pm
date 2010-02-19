@@ -1,3 +1,4 @@
+package CCNQ::Manager::Requests::route_did_update;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -16,7 +17,7 @@
 use CCNQ::Activities::Proxy;
 use CCNQ::Activities::Provisioning;
 
-sub {
+sub run {
   my $request = shift;
   # XXX Validate the request.
 
@@ -93,3 +94,5 @@ sub {
 
   );
 }
+
+'CCNQ::Manager::Requests::route_did_update';

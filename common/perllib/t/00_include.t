@@ -79,5 +79,27 @@ require_ok( 'CCNQ::Actions::proxy::inbound_proxy' );
 require_ok( 'CCNQ::Actions::proxy::outbound_proxy' );
 require_ok( 'CCNQ::Actions::proxy::router_no_registrar' );
 
+# These will eventually go.
+require_ok( 'CCNQ::Manager::Requests::aliases_delete' );
+require_ok( 'CCNQ::Manager::Requests::aliases_update' );
+require_ok( 'CCNQ::Manager::Requests::domain_delete' );
+require_ok( 'CCNQ::Manager::Requests::domain_update' );
+require_ok( 'CCNQ::Manager::Requests::dr_gateway_delete' );
+require_ok( 'CCNQ::Manager::Requests::dr_gateway_update' );
+require_ok( 'CCNQ::Manager::Requests::dr_rule_delete' );
+require_ok( 'CCNQ::Manager::Requests::dr_rule_update' );
+require_ok( 'CCNQ::Manager::Requests::endpoint_delete' );
+require_ok( 'CCNQ::Manager::Requests::endpoint_update' );
+require_ok( 'CCNQ::Manager::Requests::endpoint_number_delete' );
+require_ok( 'CCNQ::Manager::Requests::endpoint_number_update' );
+require_ok( 'CCNQ::Manager::Requests::inbound_delete' );
+require_ok( 'CCNQ::Manager::Requests::inbound_update' );
+require_ok( 'CCNQ::Manager::Requests::local_number_delete' );
+require_ok( 'CCNQ::Manager::Requests::local_number_update' );
+
+require_ok( 'CCNQ::Manager::Requests::node_status_query' );
+require_ok( 'CCNQ::Manager::Requests::route_did_update' );
+require_ok( 'CCNQ::Manager::Requests::trace_query' );
+
 done_testing();
 1;
