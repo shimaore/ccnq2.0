@@ -93,6 +93,44 @@ sub attempt_run {
   };
 }
 
+sub attempt_run_module {
+  my ($function,$action,$params,$context) = @_;
+
+  use UNIVERSAL::require;
+  debug(qq(attempt_run($function,$action): started));
+  my $module = "CCNQ::Actions::${function}";
+
+  # Errors which lead to not being able to submit the request are not reported.
+  my $cancel = sub { debug("attempt_run($function,$action): cancel"); shift->send(CCNQ::AE::CANCEL); };
+
+  warning(qq(attempt_run($function,$action): Invalid module "${module}", skipping)),
+  return $cancel unless $module->require;
+
+  return sub {
+    my $cv = shift;
+    debug("start of attempt_run($function,$action)->($cv)");
+
+    my $result = undef;
+    eval {
+      if($module->can($action)) {
+        # Will call AUTOLOAD automatically
+        $module->{$action}->($params,$context,$cv);
+      } else {
+        debug("attempt_run($function,$action): No action available");
+        $cancel->($cv);
+      }
+      return;
+    };
+
+    if($@) {
+      my $error_msg = "attempt_run($function,$action): failed with error $@";
+      debug($error_msg);
+      $cv->send(CCNQ::AE::FAILURE($error_msg));
+    }
+    debug("end of attempt_run($function,$action)->($cv)");
+  };
+}
+
 sub attempt_on_roles_and_functions {
   my ($action,$params,$context,$mcv) = @_;
   $params ||= {};
