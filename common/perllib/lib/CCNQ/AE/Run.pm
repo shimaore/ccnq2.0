@@ -99,6 +99,7 @@ sub attempt_run_module {
   use UNIVERSAL::require;
   debug(qq(attempt_run($function,$action): started));
   my $module = "CCNQ::Actions::${function}";
+  $module =~ s{/}{::}g;
 
   # Errors which lead to not being able to submit the request are not reported.
   my $cancel = sub { debug("attempt_run($function,$action): cancel"); shift->send(CCNQ::AE::CANCEL); };
