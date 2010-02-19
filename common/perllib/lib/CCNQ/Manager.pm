@@ -36,17 +36,10 @@ use constant::defer manager_requests_dir =>
 sub request_to_activity {
   my ($request_type) = @_;
 
-  # Try to find a file in manager/requests to handle the request.
-  my $request_file = File::Spec->catfile(manager_requests_dir,"${request_type}.pm");
-  if( -e $request_file ) {
-    my $eval = CCNQ::Util::content_of($request_file);
-    return undef if !defined($eval);
-    my $sub = eval($eval);
-    if($@) {
-      error("Request ${request_type} code is invalid: $@");
-      return undef;
-    }
-    return $sub;
+  use UNIVERSAL::require;
+  my $request_module = "CCNQ::Manager::Requests::${request_type}";
+  if($module->require) {
+    return $module->can('run');
   } else {
     error("Request ${request_type} does not exist");
     return undef;
