@@ -38,7 +38,7 @@ is used as the key for the record.
 
 sub insert {
   my ($self,$data) = @_;
-  $self->{trie}->add_data($data->{prefix},$data);
+  $self->{trie}->add_data($data->{prefix} => $data);
 }
 
 =head1 load_from_file($file_name)
@@ -75,7 +75,7 @@ Returns a hashref of values associated with the longest match for the prefix.
 
 sub lookup {
   my ($self,$key) = @_;
-  return $self->{trie}->lookup($key);
+  return $self->{trie}->lookup_data($key);
 }
 
 1;

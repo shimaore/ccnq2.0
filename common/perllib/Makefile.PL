@@ -40,6 +40,8 @@ requires      'Carp'                      => 0;
 # Dependencies for the api
 requires      'AnyEvent::HTTP'            => '1.44';
 
+requires      'Tree::Trie'                => 0;
+
 test_requires 'Test::More' => 0;
 
 # Copy everything in 'share'.
