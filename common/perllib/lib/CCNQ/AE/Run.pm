@@ -114,8 +114,9 @@ sub attempt_run_module {
     my $result = undef;
     eval {
       if($module->can($action)) {
-        # Will call AUTOLOAD automatically
         $module->can($action)->($params,$context,$cv);
+      } elsif($module->can('_dispatch') { # Eventually replace with AUTOLOAD
+        $module->can('_dispatch')->($action,$params,$context,$cv);
       } else {
         debug("attempt_run($function,$action): No action available");
         $cancel->($cv);
