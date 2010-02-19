@@ -20,11 +20,11 @@ use Test::More;
 use_ok ("CCNQ::AE::Run");
 
 my $cv = CCNQ::AE::Run::attempt_run_module('node','status',{},{});
-is_ok($cv,"attempt_run_module returned");
+ok($cv,"attempt_run_module returned");
 is(ref($cv),'CODE',"attempt_run_module returned CODE");
 
 my $result = $cv->recv;
-is_ok($result,"node/status returned");
+ok($result,"node/status returned");
 is(ref($result),'HASH',"node/status returned HASH");
 is($result->running,1,"node/status returned running");
 
