@@ -56,7 +56,6 @@ sub install {
   info("Creating CouchDB '${db_name}' database");
   my $couch = couch;
   my $db = $couch->db($db_name);
-  my $cv = $db->info();
 
   my $install_designs = sub {
     while( my ($design_name,$design_content) = each %{$designs} ) {
@@ -79,6 +78,7 @@ sub install {
     }
   };
 
+  my $cv = $db->info();
   $cv->cb(sub{
     info("Info for CouchDB '${db_name}' database");
     if(!receive(@_)) {
