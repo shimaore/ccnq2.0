@@ -58,8 +58,7 @@ require_ok( 'CCNQ::Activities::Proxy' );
 require_ok( 'CCNQ::SQL' );
 require_ok( 'CCNQ::SQL::Base' );
 
-# XXX Portal
-# XXX Rating
+require_ok( 'CCNQ::Rating::Table');
 
 done_testing();
 1;
