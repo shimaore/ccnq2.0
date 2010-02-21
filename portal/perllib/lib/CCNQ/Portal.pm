@@ -31,7 +31,13 @@ use 5.008;
 our $VERSION = '0.02';
 
 use strict; use warnings;
-use base qw(CCNQ::Object);
+use CCNQ::Portal::Session;
+
+sub new {
+  my $this = shift; my $class = ref($this) || $this;
+  my $self = {};
+  return bless $self, $class;
+}
 
 # Must be set by the startup code.
 our $site;
