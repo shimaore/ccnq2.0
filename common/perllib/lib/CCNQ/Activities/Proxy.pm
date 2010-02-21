@@ -23,14 +23,12 @@ sub aliases_update {
     {
       action => 'aliases/update',
       cluster_name => $request->{cluster_name},
-      params => {
-        map { $_ => $request->{$_} } qw(
+      params => { map { $_ => $request->{$_} } qw(
           username
           domain
           target_username
           target_domain
-        )
-      }
+      )}
     },
   );
 }
@@ -42,9 +40,10 @@ sub aliases_delete {
     {
       action => 'aliases/delete',
       cluster_name => $request->{cluster_name},
-      params => {
-        map { $_ => $request->{$_} } qw( username domain )
-      }
+      params => { map { $_ => $request->{$_} } qw(
+        username
+        domain
+      )}
     },
   );
 }
@@ -56,11 +55,9 @@ sub domain_update {
     {
       action => 'domain/update',
       cluster_name => $request->{cluster_name},
-      params => {
-        map { $_ => $request->{$_} } qw(
+      params => { map { $_ => $request->{$_} } qw(
           domain
-        )
-      }
+      )}
     },
   );
 }
@@ -72,9 +69,9 @@ sub domain_delete {
     {
       action => 'domain/delete',
       cluster_name => $request->{cluster_name},
-      params => {
-        map { $_ => $request->{$_} } qw( domain )
-      }
+      params => { map { $_ => $request->{$_} } qw(
+        domain
+      )}
     },
   );
 }
@@ -86,16 +83,14 @@ sub dr_gateway_update {
     {
       action => 'dr_gateway/update',
       cluster_name => $request->{cluster_name},
-      params => {
-        map { $_ => $request->{$_} } qw(
+      params => { map { $_ => $request->{$_} } qw(
           target
           strip_digit
           prefix
           realm
           login
           password
-        )
-      }
+      )}
     },
     {
       action => 'dr_reload',
@@ -111,9 +106,9 @@ sub dr_gateway_delete {
     {
       action => 'dr_gateway/delete',
       cluster_name => $request->{cluster_name},
-      params => {
-        map { $_ => $request->{$_} } qw( target )
-      }
+      params => { map { $_ => $request->{$_} } qw(
+          target
+      )}
     },
     {
       action => 'dr_reload',
@@ -129,15 +124,13 @@ sub dr_rule_update {
     {
       action => 'dr_rule/update',
       cluster_name => $request->{cluster_name},
-      params => {
-        map { $_ => $request->{$_} } qw(
+      params => { map { $_ => $request->{$_} } qw(
           outbound_route
           description
           prefix
           priority
           target
-        )
-      }
+      )}
     },
     {
       action => 'dr_reload',
@@ -153,9 +146,11 @@ sub dr_rule_delete {
     {
       action => 'dr_rule/delete',
       cluster_name => $request->{cluster_name},
-      params => {
-        map { $_ => $request->{$_} } qw( outbound_route prefix priority )
-      }
+      params => { map { $_ => $request->{$_} } qw(
+        outbound_route
+        prefix
+        priority
+      )}
     },
     {
       action => 'dr_reload',
@@ -171,11 +166,9 @@ sub inbound_update {
     {
       action => 'inbound/update',
       cluster_name => $request->{cluster_name},
-      params => {
-        map { $_ => $request->{$_} } qw(
+      params => { map { $_ => $request->{$_} } qw(
           source
-        )
-      }
+      )}
     },
     {
       action => 'trusted_reload',
@@ -192,9 +185,9 @@ sub inbound_delete {
     {
       action => 'inbound/delete',
       cluster_name => $request->{cluster_name},
-      params => {
-        map { $_ => $request->{$_} } qw( source )
-      }
+      params => { map { $_ => $request->{$_} } qw(
+        source
+      )}
     },
     {
       action => 'trusted_reload',
@@ -210,8 +203,7 @@ sub local_number_update {
     {
       action => 'local_number/update',
       cluster_name => $request->{cluster_name},
-      params => {
-        map { $_ => $request->{$_} } qw(
+      params => { map { $_ => $request->{$_} } qw(
           number
           domain
           username
@@ -224,8 +216,7 @@ sub local_number_update {
           outbound_route
           account
           account_sub
-        )
-      }
+      )}
     },
   );
 }
@@ -238,9 +229,10 @@ sub local_number_delete {
     {
       action => 'local_number/delete',
       cluster_name => $request->{cluster_name},
-      params => {
-        map { $_ => $request->{$_} } qw( number domain )
-      }
+      params => { map { $_ => $request->{$_} } qw(
+        number
+        domain
+      )}
     },
   );
 }
@@ -252,8 +244,7 @@ sub endpoint_update {
     {
       action => 'endpoint/update',
       cluster_name => $request->{cluster_name},
-      params => {
-        map { $_ => $request->{$_} } qw(
+      params => { map { $_ => $request->{$_} } qw(
           username
           domain
           password
@@ -271,8 +262,7 @@ sub endpoint_update {
           ignore_caller_outbound_route
           ignore_default_outbound_route
           check_from
-        )
-      }
+      )}
     },
   );
 }
@@ -285,9 +275,11 @@ sub endpoint_delete {
     {
       action => 'endpoint/delete',
       cluster_name => $request->{cluster_name},
-      params => {
-        map { $_ => $request->{$_} } qw( username domain ip )
-      }
+      params => { map { $_ => $request->{$_} } qw(
+        username
+        domain
+        ip
+      )}
     },
   );
 }
@@ -299,13 +291,11 @@ sub endpoint_number_update {
     {
       action => 'endpoint_number/update',
       cluster_name => $request->{cluster_name},
-      params => {
-        map { $_ => $request->{$_} } qw(
+      params => { map { $_ => $request->{$_} } qw(
           username
           domain
           number
-        )
-      }
+      )}
     },
   );
 }
@@ -317,13 +307,11 @@ sub endpoint_number_delete {
     {
       action => 'endpoint_number/delete',
       cluster_name => $request->{cluster_name},
-      params => {
-        map { $_ => $request->{$_} } qw(
+      params => { map { $_ => $request->{$_} } qw(
           username
           domain
           number
-        )
-      }
+      )}
     },
   );
 }
