@@ -25,7 +25,7 @@ sub db {
 sub load {
   my ($user_id) = @_;
   # Access the database to load information about the specified user.
-  my $doc = $self->db->open_doc($user_id)->recv;
+  my $doc = db()->open_doc($user_id)->recv;
   $doc->{_user_id} = $user_id;
   return bless $doc;
 }
