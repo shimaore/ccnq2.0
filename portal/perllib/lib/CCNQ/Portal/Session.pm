@@ -38,7 +38,7 @@ sub user {
 sub locale {
   my $self = shift;
   # Try to automatically select a locale if none has been chosen.
-  if(!session->('locale')) {
+  if(!session('locale')) {
     session locale =>
       # Use the user's preferred locale if one is available.
         ($self->user && $self->user->default_locale)
