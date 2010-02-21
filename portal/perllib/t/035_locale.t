@@ -21,7 +21,7 @@ use_ok 'CCNQ::Portal::Locale';
 
 my $locale = CCNQ::Portal::Locale->new('en-US');
 ok($locale,'Created locale');
-is($local->id,'en-US','Stored locale');
+is($locale->id,'en-US','Stored locale');
 ok($locale->lang,'Created lang');
 ok($locale->loc('Test string'),'Loc works');
 is($locale->loc('Test string 1234'),'Test string 1234','Unknown string works');
