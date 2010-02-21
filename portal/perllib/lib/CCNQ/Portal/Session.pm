@@ -35,6 +35,7 @@ sub start {
   session old_locale => session('locale');
   # Reset the locale so that the user's locale might be selected automatically.
   session locale => undef;
+  return $self;
 }
 
 sub end {
@@ -42,6 +43,7 @@ sub end {
   session user_id => undef;
   session expires => undef;
   # Keep the user's locale.
+  return $self;
 }
 
 sub user {
