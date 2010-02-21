@@ -17,8 +17,9 @@
 use strict; use warnings;
 use Test::More;
 
-use_ok ("Dancer");
+require_ok ("Dancer");
 
+use Dancer;
 set(session => 'Cookie');
 set(session_cookie_key => 'bob is dancing in the spring');
 
