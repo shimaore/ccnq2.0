@@ -13,11 +13,11 @@ package CCNQ::I18N;
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+use strict; use warnings;
+
 use base 'Locale::Maketext';
-
-our @EXPORT = qw( _ );
-
-use CCNQ::Install;
+use File::ShareDir;
+use File::Spec;
 
 use constant CCNQ_PORTAL_MAKEFILE_MODULE_NAME => 'CCNQ-Portal';
 use constant i18n_base => File::ShareDir::dist_dir(CCNQ_PORTAL_MAKEFILE_MODULE_NAME);

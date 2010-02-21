@@ -44,15 +44,4 @@ sub loc {
   die "No language ".$self->id." available for $_[0]";
 }
 
-sub loc_duration {}
-
-sub loc_timestamp {}
-
-sub loc_date {}
-
-sub loc_amount {
-  my $self = shift;
-  my ($currency,$value) = @_;
-}
-
 'CCNQ::Portal::Locale';
