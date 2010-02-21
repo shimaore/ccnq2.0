@@ -23,12 +23,11 @@ BEGIN {
 set(session => 'Simple');
 
 
-use_ok 'CCNQ::Portal';
 use_ok 'CCNQ::Portal::Site';
-CCNQ::Portal->set_site(CCNQ::Portal::Site->new(default_locale => 'en-US'));
+my $site = CCNQ::Portal::Site->new(default_locale => 'en-US'));
 
 use_ok 'CCNQ::Portal::Session';
-my $session = CCNQ::Portal::Session->new;
+my $session = CCNQ::Portal::Session->new($site);
 ok($session,'Created session');
 ok(!$session->user,'No user before session start');
 ok($session->locale,'Locale is present');
