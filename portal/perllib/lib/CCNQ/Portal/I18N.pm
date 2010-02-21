@@ -30,11 +30,12 @@ use Filter::Simple;
 # or http://search.cpan.org/dist/perl-5.10.0/pod/perl5100delta.pod#Regular_expressions
 
 sub loc {
+  use CCNQ::Portal;
   return CCNQ::Portal->current_session->locale->loc(@_);
 }
 
 FILTER {
-  s{_\((.*?)\)_}{ (CCNQ::Portal::I18N::loc($1)) }g;
+  s{_\((.*?)\)_}{ (CCNQ::Portal::I18N->loc($1)) }g;
 };
 
 1;
