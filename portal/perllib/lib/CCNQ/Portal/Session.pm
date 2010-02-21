@@ -17,6 +17,7 @@ use strict; use warnings;
 
 use Dancer ':syntax';
 use CCNQ::Portal::Locale;
+use CCNQ::Portal::User;
 
 # When using Dancer, this is a fake.
 sub new {
@@ -48,7 +49,7 @@ sub user {
   # Make sure the session hasn't expired.
   return undef if session('expires') && session('expires') > time();
   # Return the proper user object.
-  return session('user_id') && new CCNQ::Portal::User(session('user_id'));
+  return session('user_id') && CCNQ::Portal::User->new(session('user_id'));
 }
 
 sub locale {

@@ -16,7 +16,8 @@ package CCNQ::Portal::UserProfile;
 use strict; use warnings;
 
 sub db {
-  XXX Returns a proper DB object
+  # XXX Returns a proper DB object
+  return undef;
 }
 
 # Class method: load an existing user from the database.
