@@ -14,6 +14,8 @@ sub start {
   session user_id => shift;
   # XXX Should be configurable, and able to say "+15m".
   session expires => time() + 15 * 60;
+  # Save the locale that might have been selected earlier.
+  session old_locale => session('locale');
   # Reset the locale so that the user's locale might be selected automatically.
   session locale => undef;
 }
@@ -40,6 +42,8 @@ sub locale {
     session locale =>
       # Use the user's preferred locale if one is available.
         ($self->user && $self->user->default_locale)
+      # Use the user's previous session's locale if one was selected.
+      || session('old_locale')
       # XXX Use the browser's preferred locales!
       # Otherwise default to the site's preferred locale.
       || CCNQ::Portal::site->default_locale;

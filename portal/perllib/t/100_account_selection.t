@@ -22,8 +22,9 @@ BEGIN {
     use_ok 'Dancer::Config', 'setting';
 }
 
-setting(session_cookie_key => 'bob is dancing in the spring');
-set(session => 'Cookie');
+# setting(session_cookie_key => 'bob is dancing in the spring');
+# set(session => 'Cookie');
+set(session => 'Simple');
 
 require_ok ("CCNQ::Portal");
 require_ok ("CCNQ::Portal::Site");
