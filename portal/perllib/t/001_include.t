@@ -1,0 +1,46 @@
+# Tests for inclusion of different CCNQ::Portal modules.
+
+# Copyright (C) 2009  Stephane Alnet
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+use strict; use warnings;
+use Test::More;
+
+require_ok( 'CCNQ::I18N' );
+require_ok( 'CCNQ::Portal' );
+
+require_ok( 'CCNQ::Portal::Auth' );
+require_ok( 'CCNQ::Portal::Formatter' );
+require_ok( 'CCNQ::Portal::I18N' );
+require_ok( 'CCNQ::Portal::Locale' );
+require_ok( 'CCNQ::Portal::Session' );
+require_ok( 'CCNQ::Portal::Site' );
+require_ok( 'CCNQ::Portal::User' );
+require_ok( 'CCNQ::Portal::UserProfile' );
+
+# require_ok( 'CCNQ::Portal::LDAP' );
+# require_ok( 'CCNQ::Portal::Auth::LDAP' );
+
+require_ok( 'CCNQ::Outer::AccountSelection' );
+require_ok( 'CCNQ::Outer::LocaleSelection' );
+require_ok( 'CCNQ::Outer::MenuGenerator' );
+require_ok( 'CCNQ::Outer::Menus' );
+require_ok( 'CCNQ::Outer::UserAuthentication' );
+require_ok( 'CCNQ::Outer::UserRegistration' );
+require_ok( 'CCNQ::Outer::UserUpdate' );
+require_ok( 'CCNQ::Outer::Widget' );
+
+
+done_testing();
+1;
