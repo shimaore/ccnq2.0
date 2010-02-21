@@ -68,7 +68,7 @@ sub _untaint_params {
 
   $username = $username->format;
 
-  my $password = $cgi->param(PASSWORD_PARAM);
+  my $password = $request->param(PASSWORD_PARAM);
   return [$username,undef] if not defined $password or $password eq '';
   return [$username,$password];
 }
@@ -122,7 +122,7 @@ sub change {
   my $p = $self->_untaint_params($receiver);
 
   my $user = $session->user;
-  $user = CCNQ::Portal::User::load $p[0];
+  $user = CCNQ::Portal::User::load $p->[1];
 =pod
   $cb->(FAILED,...);
   if($user) {
