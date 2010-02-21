@@ -24,6 +24,6 @@ test_requires 'String::CRC32' => 0;
 test_requires 'Crypt::Rijndael' => 0;
 
 # Copy everything in 'share'.
-# install_share;
+install_share;
 
 WriteAll;
