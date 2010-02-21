@@ -12,12 +12,12 @@ post '/login' => sub {
       CCNQ::Portal::current_session->start(shift);
       return widget();
     });
-}
+};
 
 get '/logout' => sub {
   CCNQ::Portal::current_session->end();
   return widget();
-}
+};
 
 sub widget {
   if(session('user_id')) {
