@@ -19,7 +19,7 @@ sub loc {
 }
 
 FILTER {
-  s{_\((.*?)\)_}{ (CCNQ::Portal::I18::loc($1)) }g;
+  s{_\((.*?)\)_}{ (CCNQ::Portal::I18N::loc($1)) }g;
 };
 
 1;
