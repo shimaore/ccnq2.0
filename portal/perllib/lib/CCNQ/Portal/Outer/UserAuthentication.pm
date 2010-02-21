@@ -8,7 +8,7 @@ use CCNQ::Portal::Outer::Widget qw(if_ok);
 
 post '/login' => sub {
   if_ok(
-    CCNQ::Portal::site->security->authenticate(params,session),
+    CCNQ::Portal->site->security->authenticate(params,session),
     sub {
       CCNQ::Portal::current_session->start(shift);
       return widget();
@@ -43,8 +43,8 @@ sub authenticate_widget {
     values => {},
     # Actual validation is done in Outer::UserAuthentication
     validate => {
-      CCNQ::Portal::site->security->USERNAME_PARAM() => 'VALUE',
-      CCNQ::Portal::site->security->PASSWORD_PARAM() => 'VALUE',
+      CCNQ::Portal->site->security->USERNAME_PARAM() => 'VALUE',
+      CCNQ::Portal->site->security->PASSWORD_PARAM() => 'VALUE',
     },
     action => '/login',
   );

@@ -46,7 +46,7 @@ sub locale {
       || session('old_locale')
       # XXX Use the browser's preferred locales!
       # Otherwise default to the site's preferred locale.
-      || CCNQ::Portal::site->default_locale;
+      || CCNQ::Portal->site->default_locale;
   }
   return session('locale') && new CCNQ::Portal::Locale(session('locale'));
 }

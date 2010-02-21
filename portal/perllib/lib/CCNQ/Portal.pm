@@ -42,7 +42,7 @@ sub new {
 # Must be set by the startup code.
 our $site;
 
-# e.g.   $CCNQ::Portal::site = new CCNQ::Portal::Site( default_locale => 'en-US', security => new CCNQ::Portal::Auth::LDAP( ... ) )
+# e.g.   CCNQ::Portal->set_site(CCNQ::Portal::Site->new( default_locale => 'en-US', security => new CCNQ::Portal::Auth::LDAP( ... ) )
 
 sub set_site {
   $site = shift;
