@@ -30,7 +30,7 @@ use Filter::Simple;
 # or http://search.cpan.org/dist/perl-5.10.0/pod/perl5100delta.pod#Regular_expressions
 
 sub loc {
-  return CCNQ::Portal::current_session->locale->loc(@_);
+  return CCNQ::Portal->current_session->locale->loc(@_);
 }
 
 FILTER {

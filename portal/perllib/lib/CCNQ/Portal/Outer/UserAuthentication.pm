@@ -25,13 +25,13 @@ post '/login' => sub {
   if_ok(
     CCNQ::Portal->site->security->authenticate(params,session),
     sub {
-      CCNQ::Portal::current_session->start(shift);
+      CCNQ::Portal->current_session->start(shift);
       return widget();
     });
 };
 
 get '/logout' => sub {
-  CCNQ::Portal::current_session->end();
+  CCNQ::Portal->current_session->end();
   return widget();
 };
 

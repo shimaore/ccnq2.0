@@ -22,8 +22,8 @@ use CCNQ::Portal::I18N;
 use CGI::FormBuilder;
 
 sub available_accounts {
-  if(CCNQ::Portal::current_session->user) {
-    return CCNQ::Portal::current_session->user->profile->portal_accounts;
+  if(CCNQ::Portal->current_session->user) {
+    return CCNQ::Portal->current_session->user->profile->portal_accounts;
   } else {
     return [];
   }
