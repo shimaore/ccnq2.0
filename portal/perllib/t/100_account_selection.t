@@ -17,9 +17,11 @@
 use strict; use warnings;
 use Test::More;
 
-require_ok ("Dancer");
+BEGIN {
+    use_ok 'Dancer';
+    use_ok 'Dancer::Config', 'setting';
+}
 
-use Dancer;
 set(session => 'Cookie');
 set(session_cookie_key => 'bob is dancing in the spring');
 

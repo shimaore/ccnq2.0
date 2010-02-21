@@ -7,7 +7,7 @@ all_from      'lib/CCNQ/Portal.pm';
 # Specific dependencies
 requires      'CCNQ'                      => '0.01';
 
-requires      'Dancer'                    => '1.130';
+requires      'Dancer'                    => '1.155'; # pre-1.160 github
 requires      'CGI::FormBuilder'          => '3.0501';
 
 ## Portal requirements
