@@ -19,11 +19,8 @@ our @EXPORT = qw( _ );
 
 use CCNQ::Install;
 
-# XXX Differentiate between language and locale.
-# XXX e.g. "en" vs "en_US" -- Locale::Maketext::Lexicon handles them just fine.
-
-use constant::defer i18n_directory =>
-  sub { File::Spec->catfile(CCNQ::Install::SRC,qw( common i18n )) };
+use constant i18n_base => File::ShareDir::dist_dir(MAKEFILE_MODULE_NAME);
+use constant i18n_directory => File::Spec->catfile(i18n_base,qw( i18n ));
 
 # See http://cpansearch.perl.org/src/DRTECH/Locale-Maketext-Lexicon-0.77/docs/webl10n.html
 
