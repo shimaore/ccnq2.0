@@ -19,7 +19,8 @@ our @EXPORT = qw( _ );
 
 use CCNQ::Install;
 
-use constant i18n_base => File::ShareDir::dist_dir(MAKEFILE_MODULE_NAME);
+use constant CCNQ_PORTAL_MAKEFILE_MODULE_NAME => 'CCNQ-Portal';
+use constant i18n_base => File::ShareDir::dist_dir(CCNQ_PORTAL_MAKEFILE_MODULE_NAME);
 use constant i18n_directory => File::Spec->catfile(i18n_base,qw( i18n ));
 
 # See http://cpansearch.perl.org/src/DRTECH/Locale-Maketext-Lexicon-0.77/docs/webl10n.html

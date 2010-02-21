@@ -91,8 +91,8 @@ use constant::defer cookie => sub {
 
 # Try to guess the source location from the value of $0.
 
-use constant MAKEFILE_MODULE_NAME => 'CCNQ';
-use constant SRC => File::ShareDir::dist_dir(MAKEFILE_MODULE_NAME);
+use constant CCNQ_MAKEFILE_MODULE_NAME => 'CCNQ';
+use constant SRC => File::ShareDir::dist_dir(CCNQ_MAKEFILE_MODULE_NAME);
 
 # host_name and domain_name resolution
 use Net::Domain;
