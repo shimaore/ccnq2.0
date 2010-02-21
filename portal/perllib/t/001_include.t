@@ -22,7 +22,6 @@ require_ok( 'CCNQ::Portal' );
 
 require_ok( 'CCNQ::Portal::Auth' );
 require_ok( 'CCNQ::Portal::Formatter' );
-require_ok( 'CCNQ::Portal::I18N' );
 require_ok( 'CCNQ::Portal::Locale' );
 require_ok( 'CCNQ::Portal::Session' );
 require_ok( 'CCNQ::Portal::Site' );
