@@ -1,6 +1,7 @@
 package CCNQ::Portal::Session;
 
 use Dancer ':syntax';
+use CCNQ::Portal::Locale;
 
 # When using Dancer, this is a fake.
 sub new {
@@ -48,7 +49,7 @@ sub locale {
       # Otherwise default to the site's preferred locale.
       || CCNQ::Portal->site->default_locale;
   }
-  return session('locale') && new CCNQ::Portal::Locale(session('locale'));
+  return session('locale') && CCNQ::Portal::Locale->new(session('locale'));
 }
 
 'CCNQ::Portal::Session';
