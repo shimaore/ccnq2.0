@@ -15,19 +15,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
-use Test::More;
+use Test::More import => ['!pass'];
 
-BEGIN {
-  use_ok 'Dancer';
-}
-
+use_ok 'Dancer';
 set(session => 'Simple');
 
 require_ok ("CCNQ::Portal");
 require_ok ("CCNQ::Portal::Site");
 require_ok ("CCNQ::Portal::Outer::AccountSelection");
 
-CCNQ::Portal::set_site(CCNQ::Portal::Site->new(default_locale => 'en-US'));
+my $site = CCNQ::Portal::Site->new(default_locale => 'en-US');
+ok($site,'Created site');
+CCNQ::Portal->set_site($site);
+ok(CCNQ::Portal->site,'Site is registered');
 
 # Make sure we can actually generate a form.
 my $form = CCNQ::Portal::Outer::AccountSelection::form();

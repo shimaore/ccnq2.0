@@ -43,6 +43,7 @@ sub form {
     message => _('Invalid account')_,
     required => 1,
   );
+  return $form;
 } 
 
 =pod
