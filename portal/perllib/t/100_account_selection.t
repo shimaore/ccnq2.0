@@ -26,7 +26,7 @@ require_ok ("CCNQ::Portal");
 require_ok ("CCNQ::Portal::Site");
 require_ok ("CCNQ::Portal::Outer::AccountSelection");
 
-$CCNQ::Portal::site = new CCNQ::Portal::Site(default_locale => 'en-US');
+CCNQ::Portal::set_site(CCNQ::Portal::Site->new(default_locale => 'en-US'));
 
 # Make sure we can actually generate a form.
 my $form = CCNQ::Portal::Outer::AccountSelection::form();

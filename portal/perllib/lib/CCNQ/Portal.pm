@@ -38,6 +38,10 @@ our $site;
 
 # e.g.   $CCNQ::Portal::site = new CCNQ::Portal::Site( default_locale => 'en-US', security => new CCNQ::Portal::Auth::LDAP( ... ) )
 
+sub set_site {
+  $site = shift;
+}
+
 sub site {
   return $site;
 }
