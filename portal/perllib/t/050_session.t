@@ -17,6 +17,11 @@
 use strict; use warnings;
 use Test::More;
 
+BEGIN {
+  use_ok 'Dancer';
+}
+set(session => 'Simple');
+
 use CCNQ::Portal::Session;
 my $session = CCNQ::Portal::Session->new;
 ok($session,'created session');
