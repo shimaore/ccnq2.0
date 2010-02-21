@@ -16,6 +16,7 @@ package CCNQ::Portal::Session;
 use strict; use warnings;
 
 use Dancer ':syntax';
+use CCNQ::Portal;
 use CCNQ::Portal::Locale;
 use CCNQ::Portal::User;
 
@@ -46,10 +47,15 @@ sub end {
   return $self;
 }
 
+sub expired {
+  my $self = shift;
+  return session('expires') && session('expires') > time();
+}
+
 sub user {
   my $self = shift;
   # Make sure the session hasn't expired.
-  return undef if session('expires') && session('expires') > time();
+  return undef if $self->expired;
   # Return the proper user object.
   return session('user_id') && CCNQ::Portal::User->new(session('user_id'));
 }
