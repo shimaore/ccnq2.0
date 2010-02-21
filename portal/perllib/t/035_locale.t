@@ -17,25 +17,14 @@
 use strict; use warnings;
 use Test::More;
 
-BEGIN {
-  use_ok 'Dancer';
-}
-set(session => 'Simple');
+use_ok 'CCNQ::Portal::Locale';
 
-
-use_ok 'CCNQ::Portal';
-use_ok 'CCNQ::Portal::Site';
-CCNQ::Portal->set_site(CCNQ::Portal::Site->new(default_locale => 'en-US'));
-
-use_ok 'CCNQ::Portal::Session';
-my $session = CCNQ::Portal::Session->new;
-ok($session,'Created session');
-ok(!$session->user,'No user before session start');
-ok($session->locale,'Locale is present');
-is($session->locale->id,'en-US','Locale selected is default');
-
-# ok($session->start('bob')->user,'user created');
-# is($session->user->id,'bob','proper user');
+my $locale = CCNQ::Portal::Locale->new('en-US');
+ok($locale,'Created locale');
+is($local->id,'en-US','Stored locale');
+ok($locale->lang,'Created lang');
+ok($locale->loc('Test string'),'Loc works');
+is($locale->loc('Test string 1234'),'Test string 1234','Unknown string works');
 
 done_testing();
 1;
