@@ -17,16 +17,19 @@
 use strict; use warnings;
 use Test::More;
 
+require_ok( 'CCNQ::Portal::Site' );
+require_ok( 'CCNQ::Portal::Formatter' ); # Obsolete, we use CGI::FormBuilder instead
+
 require_ok( 'CCNQ::I18N' );
+require_ok( 'CCNQ::Portal::Locale' );
+
+
 require_ok( 'CCNQ::Portal' );
 
 require_ok( 'CCNQ::Portal::Auth' );
-require_ok( 'CCNQ::Portal::Formatter' );
-require_ok( 'CCNQ::Portal::Locale' );
 require_ok( 'CCNQ::Portal::Session' );
-require_ok( 'CCNQ::Portal::Site' );
-require_ok( 'CCNQ::Portal::User' );
 require_ok( 'CCNQ::Portal::UserProfile' );
+require_ok( 'CCNQ::Portal::User' );
 
 # require_ok( 'CCNQ::Portal::LDAP' );
 # require_ok( 'CCNQ::Portal::Auth::LDAP' );

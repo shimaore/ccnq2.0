@@ -73,4 +73,4 @@ sub amount {
 }
 
 
-1;
+'CCNQ::I18N';
