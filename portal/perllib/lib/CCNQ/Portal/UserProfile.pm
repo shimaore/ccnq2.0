@@ -25,7 +25,7 @@ sub db {
 sub load {
   my ($user_id) = @_;
   # Access the database to load information about the specified user.
-  my $doc = db->open_doc($user_id)->recv;
+  my $doc = $self->db->open_doc($user_id)->recv;
   $doc->{_user_id} = $user_id;
   return bless $doc;
 }
@@ -38,7 +38,7 @@ sub load {
 sub update {
   my $self = shift;
   my $params = ref($_[0]) ? $_[0] : {@_};
-  my $doc = db->open_doc($self->{_user_id})->recv;
+  my $doc = $self->db->open_doc($self->{_user_id})->recv;
   for my $f (qw(name email default_locale portal_accounts)) {
     $doc->{$f} = $self->{$f} if exists $self->{$f} && defined $self->{$f};
   }
@@ -73,4 +73,4 @@ sub default_locale { return shift->{default_locale} }
 
 sub portal_accounts { return shift->{portal_accounts} }
 
-1;
+'CCNQ::Portal::UserProfile';
