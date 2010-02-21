@@ -32,14 +32,14 @@ require_ok( 'CCNQ::Portal::UserProfile' );
 # require_ok( 'CCNQ::Portal::LDAP' );
 # require_ok( 'CCNQ::Portal::Auth::LDAP' );
 
-require_ok( 'CCNQ::Outer::AccountSelection' );
-require_ok( 'CCNQ::Outer::LocaleSelection' );
-require_ok( 'CCNQ::Outer::MenuGenerator' );
-require_ok( 'CCNQ::Outer::Menus' );
-require_ok( 'CCNQ::Outer::UserAuthentication' );
-require_ok( 'CCNQ::Outer::UserRegistration' );
-require_ok( 'CCNQ::Outer::UserUpdate' );
-require_ok( 'CCNQ::Outer::Widget' );
+require_ok( 'CCNQ::Portal::Outer::AccountSelection' );
+require_ok( 'CCNQ::Portal::Outer::LocaleSelection' );
+require_ok( 'CCNQ::Portal::Outer::MenuGenerator' );
+require_ok( 'CCNQ::Portal::Outer::Menus' );
+require_ok( 'CCNQ::Portal::Outer::UserAuthentication' );
+require_ok( 'CCNQ::Portal::Outer::UserRegistration' );
+require_ok( 'CCNQ::Portal::Outer::UserUpdate' );
+require_ok( 'CCNQ::Portal::Outer::Widget' );
 
 
 done_testing();
