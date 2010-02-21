@@ -18,12 +18,9 @@ use strict; use warnings;
 use Test::More;
 
 BEGIN {
-    use_ok 'Dancer';
-    use_ok 'Dancer::Config', 'setting';
+  use_ok 'Dancer';
 }
 
-# setting(session_cookie_key => 'bob is dancing in the spring');
-# set(session => 'Cookie');
 set(session => 'Simple');
 
 require_ok ("CCNQ::Portal");

@@ -38,7 +38,10 @@ sub lang {
 
 sub loc {
   my $self = shift;
-  $self->lang->maketext(@_);
+  if($self->lang) {
+    return $self->lang->maketext(@_);
+  }
+  die "No language ".$self->id." available for $_[0]";
 }
 
 sub loc_duration {}
