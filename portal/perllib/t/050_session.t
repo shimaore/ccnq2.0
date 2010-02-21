@@ -18,8 +18,8 @@ use strict; use warnings;
 use Test::More;
 
 use CCNQ::Portal::Session;
-my $session
-ok($session = CCNQ::Portal::Session->new,'created session');
+my $session = CCNQ::Portal::Session->new;
+ok($session,'created session');
 is($session->start('bob')->user->id,'bob','set user');
 
 
