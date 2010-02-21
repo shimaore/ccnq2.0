@@ -15,6 +15,8 @@ package CCNQ::Portal::Locale;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
 
+use CCNQ::I18N;
+
 =pod
 
   new CCNQ::Portal::User $user_id
