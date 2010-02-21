@@ -31,8 +31,12 @@ ok(!$session->user,'No user before session start');
 ok($session->locale,'Locale is present');
 is($session->locale->id,'en-US','Locale selected is default');
 
-# ok($session->start('bob')->user,'user created');
-# is($session->user->id,'bob','proper user');
+$session->start('bob');
+ok(!$session->expired,'expired too fast');
+ok($session->user,'user created');
+ok(!$session->expired,'expired too fast');
+is($session->user->id,'bob','proper user');
+ok(!$session->expired,'expired too fast');
 
 done_testing();
 1;

@@ -32,7 +32,7 @@ sub start {
   my $self = shift;
   session user_id => shift;
   # XXX Should be configurable, and able to say "+15m".
-  session expires => time() + 15 * 60;
+  session expires => (time() + 15 * 60);
   # Save the locale that might have been selected earlier.
   session old_locale => session('locale');
   # Reset the locale so that the user's locale might be selected automatically.
@@ -50,7 +50,7 @@ sub end {
 
 sub expired {
   my $self = shift;
-  return session('expires') && session('expires') > time();
+  return session('expires') && session('expires') < time();
 }
 
 sub user {
