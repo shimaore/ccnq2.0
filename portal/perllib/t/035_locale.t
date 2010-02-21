@@ -26,5 +26,8 @@ ok($locale->lang,'Created lang');
 ok($locale->loc('Test string'),'Loc works');
 is($locale->loc('Test string 1234'),'Test string 1234','Unknown string works');
 
+my $locale2 = CCNQ::Portal::Locale->new('fr-FR');
+is($locale2->loc('Test String Example'),"Exemple de test",'Translation works');
+
 done_testing();
 1;

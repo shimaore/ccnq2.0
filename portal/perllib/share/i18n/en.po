@@ -1,0 +1,2 @@
+msgid "Test String Example"
+msgstr "Test String Example"
