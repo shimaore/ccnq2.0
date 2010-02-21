@@ -29,7 +29,7 @@ use constant::defer i18n_directory =>
 
 use Locale::Maketext::Lexicon {
         'en' => ['Auto'],
-        '*' => [Gettext => File::Spec->catfile(i18n_directory,'*.po'],
+        '*' => [Gettext => File::Spec->catfile(i18n_directory,qw( *.po ))],
         ### Uncomment to decode lexicon entries into Unicode strings
         # _decode => 1,
         ### Uncomment to fallback when a key is missing from lexicons
