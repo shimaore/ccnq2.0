@@ -35,6 +35,7 @@ sub lang {
 }
 
 sub loc {
+  my $self = shift;
   $self->lang->maketext(@_);
 }
 
