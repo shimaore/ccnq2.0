@@ -59,26 +59,6 @@ sub _untaint_params {
 }
 
 =pod
-  render_auth_prompt($renderer)
-    Renders a login prompt for authentication purposes.
-=cut
-
-sub render_authenticate_prompt {
-  my $self = shift;
-  my ($renderer) = @_;
-  $renderer->make_form( ...
-    [
-      USERNAME_PARAM() => {
-        ...
-      },
-      PASSWORD_PARAM() => {
-        ...
-      },
-    ]
-  );
-}
-
-=pod
   authenticate($receveiver,$session)
     Should be called by the prompt returned by render_auth_prompt.
     Returns either a unique Portal::User, or undef (if authentication failed, etc.).
@@ -128,12 +108,14 @@ sub change {
 
   my $user = $session->user;
   $user = CCNQ::Portal::User::load $p[0];
+=pod
   $cb->(FAILED,...);
   if($user) {
     $cb->(OK);
   } else {
     $cb->(FAILED);
   }
+=cut
 }
 
 1;
