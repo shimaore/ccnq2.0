@@ -27,11 +27,11 @@ sub new {
     return bless $self, $class;
 }
 
-sub id { $self->{_locale} }
+sub id { $_[0]->{_locale} }
 
 sub lang {
   my $self = shift;
-  $self->{_lang} ||= CCNQ::I18N->get_handle($self->current_locale);
+  $self->{_lang} ||= CCNQ::I18N->get_handle($self->id);
 }
 
 sub loc {
