@@ -15,16 +15,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
-use Test::More;
+use Test::More import => ['!pass'];
 
-BEGIN {
-  use_ok 'Dancer';
-}
+use_ok('Dancer');
 set(session => 'Simple');
 
-
 use_ok 'CCNQ::Portal::Site';
-my $site = CCNQ::Portal::Site->new(default_locale => 'en-US'));
+my $site = CCNQ::Portal::Site->new(default_locale => 'en-US');
+ok($site,'Created site');
 
 use_ok 'CCNQ::Portal::Session';
 my $session = CCNQ::Portal::Session->new($site);
