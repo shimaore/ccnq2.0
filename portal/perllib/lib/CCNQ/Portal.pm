@@ -49,12 +49,12 @@ sub site {
   return $site;
 }
 
-use CCNQ::Portal::Session;
 
 our $session;
 
 sub current_session {
   my $self = shift;
+  use CCNQ::Portal::Session;
   return $session ||= CCNQ::Portal::Session->new($self->site);
 }
 

@@ -16,7 +16,6 @@ package CCNQ::Portal::Session;
 use strict; use warnings;
 
 use Dancer ':syntax';
-use CCNQ::Portal;
 use CCNQ::Portal::Locale;
 use CCNQ::Portal::User;
 
@@ -64,6 +63,7 @@ sub locale {
   my $self = shift;
   # Try to automatically select a locale if none has been chosen.
   if(!session('locale')) {
+    use CCNQ::Portal;
     session locale =>
       # Use the user's preferred locale if one is available.
         ($self->user && $self->user->default_locale)
