@@ -2,6 +2,7 @@ package CCNQ::Portal::Outer::UserAuthentication;
 
 use Dancer ':syntax';
 use CCNQ::Portal;
+use CCNQ::Portal::I18N;
 
 use CCNQ::Portal::Outer::Widget qw(if_ok);
 
