@@ -3,9 +3,13 @@ use inc::Module::Install;
 # Define metadata
 name          'CCNQ-Portal';
 all_from      'lib/CCNQ/Portal.pm';
+license       'gpl';
 
 # Specific dependencies
 requires      'CCNQ'                      => '0.01';
+
+requires      'File::ShareDir'            => '1.01';
+requires      'File::Spec'                => 0; # '3.2501'
 
 requires      'Dancer'                    => '1.155'; # pre-1.160 github
 requires      'CGI::FormBuilder'          => '3.0501';
