@@ -22,9 +22,11 @@ use CCNQ::Portal::User;
 # When using Dancer, this is a fake.
 sub new {
   my $this = shift; my $class = ref($this) || $this;
-  my $self = {};
+  my $self = { site => $_[0] };
   return bless $self, $class;
 }
+
+sub site { $_[0]->{site} }
 
 sub start {
   my $self = shift;
@@ -63,7 +65,6 @@ sub locale {
   my $self = shift;
   # Try to automatically select a locale if none has been chosen.
   if(!session('locale')) {
-    use CCNQ::Portal;
     session locale =>
       # Use the user's preferred locale if one is available.
         ($self->user && $self->user->default_locale)
@@ -71,7 +72,7 @@ sub locale {
       || session('old_locale')
       # XXX Use the browser's preferred locales!
       # Otherwise default to the site's preferred locale.
-      || CCNQ::Portal->site->default_locale;
+      || $self->site->default_locale;
   }
   return session('locale') && CCNQ::Portal::Locale->new(session('locale'));
 }
