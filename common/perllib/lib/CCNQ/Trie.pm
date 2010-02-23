@@ -2,6 +2,9 @@
 # A formal description of tries can be found at:
 # http://www.cs.queensu.ca/home/daver/235/Notes/Tries.pdf
 
+# Stephane: I imported Tree::Trie 1.5 because it would not install
+# properly on Debian/Lenny (because of Pod-related failing tests).
+
 package CCNQ::Trie;
 
 require 5;
