@@ -21,6 +21,8 @@ use CCNQ::AE;
 use File::Spec;
 use File::Copy;
 
+use Logger::Syslog;
+
 sub install {
   my ($params,$context,$mcv) = @_;
 

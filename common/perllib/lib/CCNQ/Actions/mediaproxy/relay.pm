@@ -18,6 +18,8 @@ use strict; use warnings;
 use CCNQ::Util;
 use CCNQ::AE;
 
+use Logger::Syslog;
+
 sub install {
   my ($params,$context,$mcv) = @_;
   use CCNQ::MediaProxy;

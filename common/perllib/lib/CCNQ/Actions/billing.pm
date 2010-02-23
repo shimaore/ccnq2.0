@@ -18,6 +18,8 @@ use strict; use warnings;
 use CCNQ::Install;
 use CCNQ::AE;
 
+use Logger::Syslog;
+
 sub install {
   my ($params,$context,$mcv) = @_;
   $mcv->send(CCNQ::AE::SUCCESS);

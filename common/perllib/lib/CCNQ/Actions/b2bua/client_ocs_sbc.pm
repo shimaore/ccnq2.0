@@ -18,6 +18,8 @@ use strict; use warnings;
 use CCNQ::B2BUA;
 use CCNQ::AE;
 
+use Logger::Syslog;
+
 sub install {
   my ($params,$context,$mcv) = @_;
 

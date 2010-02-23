@@ -22,6 +22,8 @@ use File::Spec;
 
 use CCNQ::Monit;
 
+use Logger::Syslog;
+
 sub install {
   my ($params,$context,$mcv) = @_;
   for my $file qw( couchdb.monitrc freeswitch.monitrc local.monitrc monitrc opensips.monitrc ) {

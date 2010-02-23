@@ -30,6 +30,7 @@ use AnyEvent;
 use AnyEvent::CouchDB;
 use CCNQ::HTTPD;
 use JSON;
+use Logger::Syslog;
 
 use CCNQ::AE;
 use CCNQ::XMPPAgent;

@@ -19,6 +19,8 @@ use CCNQ::B2BUA;
 use CCNQ::Util;
 use CCNQ::AE;
 
+use Logger::Syslog;
+
 use constant vars_xml => 'vars.xml';
 
 sub install {

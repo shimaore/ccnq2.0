@@ -168,7 +168,7 @@ sub _response {
         debug("Activity response $activity_response->{_id} updated.");
 
         if($response->{error}) {
-          info("Activity $response->{activity} failed with error $response->{error}, re-submitting");
+          error("Activity $response->{activity} failed with error $response->{error}, re-submitting");
           delete $activity->{status};
           delete $activity->{error};
           delete $activity->{from};

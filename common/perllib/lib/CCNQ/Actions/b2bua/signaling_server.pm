@@ -17,6 +17,8 @@ use strict; use warnings;
 
 use CCNQ::B2BUA::Stick;
 
+use Logger::Syslog;
+
 sub install{
   CCNQ::B2BUA::Stick::install('signaling-server',@_);
 }

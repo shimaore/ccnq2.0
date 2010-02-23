@@ -23,6 +23,8 @@ use AnyEvent::DNS;
 use File::Spec;
 use File::Path;
 
+use Logger::Syslog;
+
 sub install {
   my ($params,$context,$mcv) = @_;
   use Logger::Syslog;

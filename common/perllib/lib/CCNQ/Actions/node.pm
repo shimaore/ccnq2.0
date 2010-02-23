@@ -19,6 +19,7 @@ use Carp;
 use CCNQ::AE;
 use CCNQ::AE::Run;
 use CCNQ::Trace;
+use Logger::Syslog;
 
 sub install_all {
     my ($params,$context,$mcv) = @_;

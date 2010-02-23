@@ -18,6 +18,7 @@ use strict; use warnings;
 use CCNQ::AE;
 use CCNQ::API;
 use CCNQ::CouchDB;
+use Logger::Syslog;
 
 use constant provisioning_designs => {
   report => {
