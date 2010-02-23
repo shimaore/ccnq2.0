@@ -78,6 +78,7 @@
       <condition field="destination_number" expression="^call-(.*)$">
         <action application="set" data="ccnq_direction=ingress"/>
         <action application="set" data="progress_timeout=12"/>
+        <action application="set" data="force_transfer_context=refer-$${profile_name}"/>
         <action application="bridge" data="sofia/internal-$${profile_name}/$1@$${ingress_target}"/>
       </condition>
     </extension>
@@ -90,4 +91,29 @@
     </extension>
 
   </context>
+
+  <!-- ingress + REFER -->
+  <context name="ingress-$${profile_name}">
+
+    <extension name="unloop">
+      <condition field="${unroll_loops}" expression="^true$"/>
+      <condition field="${sip_looped_call}" expression="^true$">
+        <action application="deflect" data="${destination_number}"/>
+      </condition>
+    </extension>
+
+    <extension name="refer">
+      <!-- do not accept REFER pointing to the destination_number at the local domain -->
+      <condition field="${sip_refer_to}">
+       <expression><![CDATA[<sip:${destination_number}@${domain_name}]]></expression>
+      </condition>
+      <condition field="${sip_refer_to}">
+        <expression><![CDATA[<sip:(.*)@(.*)>]]></expression>
+        <action application="set" data="refer_user=$1"/>
+        <action application="set" data="refer_domain=$2"/>
+        <action application="bridge" data="sofia/internal-$${profile_name}/${refer_user}@${refer_domain}"/>
+      </condition>
+    </extension>
+  </context>
+
 </include>
