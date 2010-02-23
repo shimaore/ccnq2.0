@@ -18,13 +18,13 @@ use strict; use warnings;
 
 # The rating table is a generic tool to store information related to a given prefix.
 
-use Tree::Trie;
+use CCNQ::Trie;
 use Memoize;
 
 sub new {
   my $this = shift;
   my $self = {
-    trie => new Tree::Trie {deepsearch => 'prefix'},
+    trie => new CCNQ::Trie {deepsearch => 'prefix'},
   };
   return bless $self;
 }
