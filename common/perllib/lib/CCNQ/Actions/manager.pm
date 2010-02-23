@@ -20,6 +20,7 @@ use CCNQ::AE;
 use CCNQ::XMPPAgent;
 use CCNQ::CouchDB;
 use AnyEvent::CouchDB;
+use Logger::Syslog;
 
 use constant js_report_requests => <<'JAVASCRIPT';
   function(doc) {
