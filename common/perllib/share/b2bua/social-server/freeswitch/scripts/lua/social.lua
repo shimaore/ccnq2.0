@@ -99,7 +99,7 @@ if(call_rate > 0) {
   # Autres tests?
 } else {
   # Appel gratuit
-  
+
   # Le verrouillage parental ne fonctionne pas sur les appels gratuits.
 }
 
@@ -160,6 +160,10 @@ if(duree_maximale) {
 }
 
 place_call(to);
+
+ -- See   http://wiki.freeswitch.org/wiki/FreeSwitch_Scheduler_API#Scheduled_transfer_dialplan_application
+ -- See   transfer_after_bridge       http://wiki.freeswitch.org/wiki/Variable_transfer_after_bridge
+ -- See   transfer_fallback_extension
 
 
 
