@@ -71,6 +71,7 @@ sub insert
       and    defined $gwlist   && $gwlist   ne '';
 
     my $description = $groupid == 0 ? 'Default' : $params->{description};
+    $description ||= '(none given)';
 
     my @sql_params = split(/[,;]/,$gwlist);
 
