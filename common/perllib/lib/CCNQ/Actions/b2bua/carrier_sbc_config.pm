@@ -30,6 +30,7 @@ sub install {
   use Logger::Syslog;
 
   my $b2bua_name = 'carrier-sbc-config';
+  my $cluster_fqdn = CCNQ::Install::cluster_fqdn($params->{cluster_name});
 
   debug("b2bua/$b2bua_name: Installing dialplan/template");
   for my $name (qw( dash-e164 dash level3 option-service transparent )) {
@@ -145,7 +146,7 @@ EOT
       <X-PRE-PROCESS cmd="set" data="internal_sip_ip=${internal_ip}"/>
       <X-PRE-PROCESS cmd="set" data="external_sip_ip=${external_ip}"/>
 
-      <X-PRE-PROCESS cmd="set" data="ingress_target=inbound-proxy.\$\${cluster_name}"/>
+      <X-PRE-PROCESS cmd="set" data="ingress_target=inbound-proxy.${cluster_fqdn}"/>
       <X-PRE-PROCESS cmd="set" data="egress_target=${egress}"/>
       <X-PRE-PROCESS cmd="include" data="template/${dialplan_template}.xml"/>
 EOT

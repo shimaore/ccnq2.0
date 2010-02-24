@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <include>
 
-  <X-PRE-PROCESS cmd="set" data="profile_name=ocs"/>
-  <X-PRE-PROCESS cmd="set" data="egress_target=egress-proxy.$${cluster_name}"/>
-
   <!-- egress: from OCS to the rest of the world -->
   <context name="egress-ocs">
 

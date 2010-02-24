@@ -24,6 +24,7 @@ sub install {
   my ($params,$context,$mcv) = @_;
 
   my $b2bua_name = 'client-ocs-sbc';
+  my $cluster_fqdn = CCNQ::Install::cluster_fqdn($params->{cluster_name});
 
   # acls
   for my $name ($b2bua_name) {
@@ -31,9 +32,14 @@ sub install {
   }
 
   # dialplan
-  for my $name ($b2bua_name) {
-    CCNQ::B2BUA::copy_file($b2bua_name,qw( dialplan ),"${name}.xml");
-  }
+  my $dialplan_text = <<"EOT";
+<X-PRE-PROCESS cmd="set" data="egress_target=egress-proxy.${cluster_fqdn}"/>
+
+<X-PRE-PROCESS cmd="set" data="profile_name=ocs"/>
+<X-PRE-PROCESS cmd="include" data="template/client-ocs-sbc.xml"/>
+EOT
+  my $dialplan_file = CCNQ::B2BUA::install_dir(qw( dialplan ), "${b2bua_name}.xml" );
+  CCNQ::Util::print_to($dialplan_file,$dialplan_text);
 
   # sip_profile
   for my $name ($b2bua_name) {

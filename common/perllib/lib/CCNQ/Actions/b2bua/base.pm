@@ -32,10 +32,8 @@ sub install {
     my $txt = shift;
     my $host_fqdn    = CCNQ::Install::fqdn;
     my $domain_name  = CCNQ::Install::domain_name;
-    my $cluster_fqdn = CCNQ::Install::cluster_fqdn($params->{cluster_name});
     return <<EOT . $txt;
       <X-PRE-PROCESS cmd="set" data="host_name=${host_fqdn}"/>
-      <X-PRE-PROCESS cmd="set" data="cluster_name=${cluster_fqdn}"/>
       <X-PRE-PROCESS cmd="set" data="domain_name=${domain_name}"/>
 EOT
   });
