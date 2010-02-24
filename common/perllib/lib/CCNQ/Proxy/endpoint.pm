@@ -147,6 +147,7 @@ SQL
     if(defined $ip)
     {
         push @res, $self->_avp_set($ip,$domain,'src_subs',$username);
+        push @res, $self->_avp_set($ip,$domain,'forwarding_sbc',$forwarding_sbc?1:undef),
     }
 
     return (
@@ -160,7 +161,6 @@ SQL
         $self->_avp_set($username,$domain,'strip_digit',$strip_digit),
         $self->_avp_set($username,$domain,'allow_onnet',$allow_onnet?1:undef),
         $self->_avp_set($username,$domain,'user_force_mp',$always_mp?1:undef),
-        $self->_avp_set($username,$domain,'forwarding_sbc',$forwarding_sbc?1:undef),
         $self->_avp_set($username,$domain,'user_outbound_route',$user_outbound_route),
         $self->_avp_set($username,$domain,'ignore_caller_outbound_route',$ignore_caller_outbound_route?1:undef),
         $self->_avp_set($username,$domain,'ignore_default_outbound_route',$ignore_default_outbound_route?1:undef),
@@ -207,6 +207,7 @@ SQL
     if(defined $ip)
     {
         push @res, $self->_avp_set($ip,$domain,'src_subs',undef);
+        push @res, $self->_avp_set($ip,$domain,'forwarding_sbc',undef),
     }
 
     return @res;

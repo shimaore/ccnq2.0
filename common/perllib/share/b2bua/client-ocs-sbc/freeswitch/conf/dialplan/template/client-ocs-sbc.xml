@@ -42,6 +42,7 @@
         <action application="set" data="ccnq_account=${regex(${sip_req_params}|account=([^;]*)|%1)}"/>
         <action application="set" data="ccnq_account_sub=${regex(${sip_req_params}|account_sub=([^;]*)|%1)}"/>
         <action application="set" data="effective_caller_id_number=${ccnq_from_e164}"/>
+        <action application="set" data="sip_invite_from_params=trunk=sip:${sip_received_ip}:${sip_received_port}"/>
         <action application="bridge" data="sofia/sbc-$${profile_name}/+${ccnq_to_e164}@$${egress_target}"/>
       </condition>
     </extension>
