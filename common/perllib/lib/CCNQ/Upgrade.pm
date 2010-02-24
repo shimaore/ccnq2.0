@@ -28,6 +28,9 @@ sub run {
     unless -d CCNQ::Install::CCN()
         or mkpath(CCNQ::Install::CCN());
 
+  # Keep the host and domain names, but re-resolve the list of clusters.
+  unlink CCNQ::Install::clusters_file;
+
   # Make sure all variables are available:
   eval { CCNQ::Install::cookie()        };  my $warn1 = $@;
   eval { CCNQ::Install::fqdn()          };  my $warn2 = $@;

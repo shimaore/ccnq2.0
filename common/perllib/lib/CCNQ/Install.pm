@@ -59,7 +59,6 @@ sub get_variable {
   my $guess = $guess_tool->();
   info("Found ${what} ${guess}, please edit ${file} if needed.");
   CCNQ::Util::print_to($file,$guess);
-  exit(1);
 }
 
 =pod
