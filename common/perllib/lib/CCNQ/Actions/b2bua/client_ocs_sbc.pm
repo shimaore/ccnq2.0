@@ -41,6 +41,11 @@ EOT
   my $dialplan_file = CCNQ::B2BUA::install_dir(qw( dialplan ), "${b2bua_name}.xml" );
   CCNQ::Util::print_to($dialplan_file,$dialplan_text);
 
+  # dialplan/template
+  for my $name (qw( client-ocs-sbc )) {
+    CCNQ::B2BUA::copy_file($b2bua_name,qw( dialplan template ),"${name}.xml");
+  }
+
   # sip_profile
   for my $name ($b2bua_name) {
     CCNQ::B2BUA::copy_file($b2bua_name,qw( sip_profiles ),"${name}.xml");
