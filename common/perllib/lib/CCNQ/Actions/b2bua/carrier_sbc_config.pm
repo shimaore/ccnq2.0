@@ -1,4 +1,4 @@
-package CCNQ::Actions::carrier_sbc_config;
+package CCNQ::Actions::b2bua::carrier_sbc_config;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
