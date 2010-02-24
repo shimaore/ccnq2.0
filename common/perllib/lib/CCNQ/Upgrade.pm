@@ -34,11 +34,10 @@ sub run {
   # Make sure all variables are available:
   eval { CCNQ::Install::cookie()        };  my $warn1 = $@;
   eval { CCNQ::Install::fqdn()          };  my $warn2 = $@;
-  eval { CCNQ::Install::SRC()           };  my $warn3 = $@;
-  eval { CCNQ::Install::cluster_names() };  my $warn4 = $@;
+  eval { CCNQ::Install::cluster_names() };  my $warn3 = $@;
 
-  die $warn1.$warn2.$warn3.$warn4
-    if $warn1 || $warn2 || $warn3 || $warn4;
+  die $warn1.$warn2.$warn3
+    if $warn1 || $warn2 || $warn3;
 
   my $program = AnyEvent->condvar;
   my $context = {
