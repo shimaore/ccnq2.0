@@ -1,5 +1,5 @@
 package portal;
-use Dancer ':syntax';
+use Dancer;
 use Template;
 
 use CCNQ::Portal::Site;
@@ -25,7 +25,7 @@ get '/' => sub {
   my $template_name = 'index';
   $template_name = 'result' if vars->{result};
   my $vars = vars;
-  template $template_name {
+  template $template_name => {
     lh => CCNQ::Portal->current_session->locale,
     accounts => CCNQ::Portal::Outer::AccountSelection->available_accounts,
     account => CCNQ::Portal::Outer::AccountSelection->account,
