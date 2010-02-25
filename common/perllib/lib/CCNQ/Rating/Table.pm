@@ -21,6 +21,19 @@ use strict; use warnings;
 use CCNQ::Trie;
 use Memoize;
 
+# Alternatively to using a Trie, the data could be simply stored in CouchDB
+# and retrieved using the following algorithm:
+# - query for /$table/_all_docs with parameters:
+#      include_docs=true       # to get the data at the same time
+#      descending=true
+#      startkey=$query_string
+#      limit=1
+#   (meaning: "find the prefix immediately before or equal to this query_string".)
+# - if the id returned is a prefix of the query_string
+#   (i.e. $id = substr($query_string,0,length($id)))
+#   then we found the longest prefix, and the data is available.
+# - otherwise, no match found.
+
 sub new {
   my $this = shift;
   my $self = {

@@ -21,6 +21,7 @@ use_ok ("CCNQ::Rating::Table");
 
 my $table = new CCNQ::Rating::Table;
 $table->insert( { prefix => '1',                value1 => 'abc', value2 => 'TYZ' } );
+$table->insert( { prefix => '123',              value1 => 'ABD', value2 => 'KLO' } );
 $table->insert( { prefix => '1234',             value1 => 'def', value2 => 'KJJ' } );
 $table->insert( { prefix => '123456',           value1 => 'ghi', value2 => 'KJJ' } );
 $table->insert( { prefix => '1234567890123456', value1 => 'jkl', value2 => 'KJJ' } );
@@ -30,7 +31,7 @@ $table->insert( { prefix => '253673',           value1 => 'mno', value2 => 'TYZ'
 is( $table->lookup('1')->{value1}, 'abc' );
 is( $table->lookup('1')->{value2}, 'TYZ' );
 is( $table->lookup('12')->{value1}, 'abc' );
-is( $table->lookup('123')->{value1}, 'abc' );
+is( $table->lookup('123')->{value1}, 'ABD' );
 is( $table->lookup('1234')->{value1}, 'def' );
 is( $table->lookup('12345')->{value1}, 'def' );
 is( $table->lookup('123456')->{value1}, 'ghi' );
