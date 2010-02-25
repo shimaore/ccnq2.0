@@ -13,7 +13,7 @@ sub init {
 sub filter {
     my ($self, $text) = @_;
 
-    my $args = $self->{_ARGS}
+    my $args = $self->{_ARGS};
     return _($text,@{$args})_;
 }
 
