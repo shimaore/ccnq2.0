@@ -1,5 +1,5 @@
 package portal;
-use Dancer;
+use Dancer ':syntax';
 use Template;
 
 use CCNQ::Portal::Site;
