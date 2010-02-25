@@ -25,7 +25,7 @@ require_ok ("CCNQ::Portal::Outer::AccountSelection");
 
 my $site = CCNQ::Portal::Site->new(default_locale => 'en-US');
 ok($site,'Created site');
-use CCNQ::Portal ($site);
+use_ok 'CCNQ::Portal', $site;
 ok(CCNQ::Portal->site,'Site is registered');
 
 done_testing();
