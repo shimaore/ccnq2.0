@@ -15,6 +15,8 @@ package CCNQ::Portal::Outer::Widget;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
 
+use Dancer ':syntax';
+
 sub if_ok {
   my ($response,$cb) = @_;
   return throw_error($response) || $cb->($response->[1]);
@@ -23,7 +25,8 @@ sub if_ok {
 sub throw_error {
   my ($response) = @_;
   return undef if $response->[0] eq 'ok';
-  return q(<div class="error">).$response->[1].q(</div>);
+  var error => $response->[1];
+  { error => $response->[1] };
 }
 
 =pod
@@ -35,4 +38,4 @@ sub _in {
 }
 =cut
 
-1;
+'CCNQ::Portal::Outer::Widget';

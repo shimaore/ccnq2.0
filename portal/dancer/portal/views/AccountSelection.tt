@@ -1,0 +1,20 @@
+<fieldset><legend><% lh.loc('Account selection') %></legend>
+<% IF accounts.size %>
+  <% IF accounts.size > 1 %>
+    <select name="account">
+      <option value=""></option>
+      <% FOREACH this IN accounts %>
+        <% IF this eq session.account %>
+          <option value="<% this | html %>" selected><% this | html %></option>
+        <% ELSE %>
+          <option value="<% this | html %>"><% this | html %></option>
+        <% END %>
+      <% END %>
+    </select>
+  <% ELSE %>
+    <% lh.loc('Account [_1]',session.account) %>
+  <% END %>
+<% ELSE %>
+  <% lh.loc('No account available') | html %>
+<% END %>
+</fieldset>

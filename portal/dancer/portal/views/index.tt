@@ -1,0 +1,5 @@
+<% IF error %>
+  <div class="error"><% lh.loc(error) | html %></div>
+<% ELSE %>
+  <div class="content"><% lh.loc(result) | html %></div>
+<% END %>

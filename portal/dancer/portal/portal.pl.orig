@@ -1,0 +1,27 @@
+#!/usr/bin/env perl
+use strict; use warnings;
+
+
+# Could use CCNQ::Install::get_variable().
+use constant site_default_locale => 'en-US';
+
+
+# This is an example "portal" CGI / mod_perl script.
+
+use CCNQ::Portal;
+
+sub main {
+  my $cgi = new CGI('');
+  my $site = new CCNQ::Portal::Site(
+    base_uri => $cgi->url(-base => 1),
+    default_locale => site_default_locale,
+    security => new CCNQ::Portal::Auth::LDAP,
+  );
+  my $session = new CCNQ::Portal::Session($cgi,$site);
+  if(ref($session)) {
+    my $dispatcher = new CCNQ::Portal::Dispatcher( ... );
+    $dispatcher->run($cgi,$session);
+  } else {
+    print $session;
+  }
+}

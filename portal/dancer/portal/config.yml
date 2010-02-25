@@ -1,0 +1,3 @@
+layout: "main"
+logger: "file"
+template: template_toolkit
