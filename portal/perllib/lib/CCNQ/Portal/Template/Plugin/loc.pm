@@ -1,4 +1,4 @@
-package CCNQ::Template::Plugin::loc;
+package CCNQ::Portal::Template::Plugin::loc;
 use Template::Plugin::Filter;
 use base qw( Template::Plugin::Filter );
 
@@ -17,4 +17,4 @@ sub filter {
     return _($text,@{$args})_;
 }
 
-'CCNQ::Template::Plugin::Loc';
+'CCNQ::Portal::Template::Plugin::Loc';

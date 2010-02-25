@@ -43,7 +43,7 @@ require_ok( 'CCNQ::Portal::Outer::UserRegistration' );
 require_ok( 'CCNQ::Portal::Outer::UserUpdate' );
 require_ok( 'CCNQ::Portal::Outer::Widget' );
 
-require_ok( 'CCNQ::Portal::Template::Plugin' );
+require_ok( 'CCNQ::Portal::Template::Plugin::loc' );
 
 done_testing();
 1;
