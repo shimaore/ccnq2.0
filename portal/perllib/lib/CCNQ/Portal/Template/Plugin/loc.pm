@@ -7,6 +7,8 @@ use CCNQ::Portal;
 sub init {
     my $self = shift;
     $self->{ _DYNAMIC } = 1;
+    my $name = $self->{ _CONFIG }->{ name } || 'loc';
+    $self->install_filter($name);
     return $self;
 }
 
