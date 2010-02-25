@@ -17,4 +17,14 @@ sub filter {
     return _($text,@{$args})_;
 }
 
+=head1 loc Filter
+
+Use as follows:
+
+    <% | loc %>String to be localized<% END %>
+
+    <% | loc param1 %>String to be localized with param [_1]<% END %>
+
+=cut
+
 'CCNQ::Portal::Template::Plugin::Loc';
