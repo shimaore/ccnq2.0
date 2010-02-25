@@ -29,18 +29,12 @@ our $VERSION = '0.02';
 
 use strict; use warnings;
 
-sub new {
-  my $this = shift; my $class = ref($this) || $this;
-  my $self = {};
-  return bless $self, $class;
-}
-
 # Must be set by the startup code.
 our $site;
 
-# e.g.   CCNQ::Portal->set_site(CCNQ::Portal::Site->new( default_locale => 'en-US', security => new CCNQ::Portal::Auth::LDAP( ... ) )
+# e.g.   use CCNQ::Portal (CCNQ::Portal::Site->new( default_locale => 'en-US', security => new CCNQ::Portal::Auth::LDAP( ... ) )
 
-sub set_site {
+sub import {
   my $self = shift;
   $site = shift;
 }

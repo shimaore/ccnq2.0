@@ -20,19 +20,13 @@ use Test::More import => ['!pass'];
 use_ok 'Dancer';
 set(session => 'Simple');
 
-require_ok ("CCNQ::Portal");
 require_ok ("CCNQ::Portal::Site");
 require_ok ("CCNQ::Portal::Outer::AccountSelection");
 
 my $site = CCNQ::Portal::Site->new(default_locale => 'en-US');
 ok($site,'Created site');
-CCNQ::Portal->set_site($site);
+use CCNQ::Portal ($site);
 ok(CCNQ::Portal->site,'Site is registered');
-
-# Make sure we can actually generate a form.
-my $form = CCNQ::Portal::Outer::AccountSelection::form();
-ok(defined($form),'account selection form');
-ok(defined($form->render()),'account selection form render');
 
 done_testing();
 1;

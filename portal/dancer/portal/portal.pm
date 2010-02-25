@@ -1,17 +1,14 @@
 package portal;
 use Dancer;
 use Template;
-use CCNQ::Portal;
 
-=pod
+use CCNQ::Portal::Site;
+my $site = CCNQ::Portal::Site->new(
+  default_locale => 'en-US',
+  # security => ...
+);
 
-Would need to be able to pass:
-  PLUGINS => {
-    loc => 'CCNQ::Template::Plugin::loc',
-  },
-to Template->new.
-
-=cut
+use CCNQ::Portal ( $site );
 
 use CCNQ::Portal::Outer::UserAuthentication;
 use CCNQ::Portal::Outer::AccountSelection;

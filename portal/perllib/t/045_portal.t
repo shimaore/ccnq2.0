@@ -17,9 +17,8 @@
 use strict; use warnings;
 use Test::More;
 
-use_ok 'CCNQ::Portal';
 use_ok 'CCNQ::Portal::Site';
-CCNQ::Portal->set_site(CCNQ::Portal::Site->new(default_locale => 'en-US'));
+use_ok 'CCNQ::Portal', (CCNQ::Portal::Site->new(default_locale => 'en-US'));
 
 done_testing();
 1;
