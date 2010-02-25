@@ -34,7 +34,7 @@ sub available_accounts {
   }
 }
 
-sub set {
+sub account {
   my $account = shift;
   my $accounts = available_accounts;
 
@@ -55,7 +55,7 @@ sub set {
 post '/account/:account' => sub {
   # Note: we don't use CGI::FormBuilder's here.
   my $account = params->{account};
-  set($account);
+  account($account);
 };
 
 'CCNQ::Portal::Outer::AccountSelection';

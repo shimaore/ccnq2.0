@@ -31,7 +31,7 @@ get '/' => sub {
   template $template_name {
     lh => CCNQ::Portal->current_session->locale,
     accounts => CCNQ::Portal::Outer::AccountSelection->available_accounts,
-    account => CCNQ::Portal::Outer::AccountSelection->set,
+    account => CCNQ::Portal::Outer::AccountSelection->account,
     %{$vars},
   };
 };
