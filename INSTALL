@@ -125,6 +125,11 @@ EOT
   sudo adduser --gecos '' --disabled-password couchdb
   sudo chown couchdb /usr/local/var/*/couchdb
 
+# * On the Portal server(s):
+
+  sudo aptitude install memcached
+  cpan Cache::Memcached
+
 # * On the proxy servers:
 
   # Install OpenSIPS (note: we provide "amd64"-type Debian packages only)
