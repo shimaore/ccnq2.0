@@ -8,7 +8,8 @@ my $site = CCNQ::Portal::Site->new(
   # security => ...
 );
 
-use CCNQ::Portal ( $site );
+use CCNQ::Portal;
+CCNQ::Portal->import($site);
 
 use CCNQ::Portal::Outer::UserAuthentication;
 use CCNQ::Portal::Outer::AccountSelection;
