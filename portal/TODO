@@ -38,3 +38,29 @@ Uses Data::Currency
 
 -> I think I'll use Dancer. Sessions will be either stored in memcached (using Dancer::Session::Memcached) or cookies (Dancer::Session::Cookie).
    Server-side we're using Dancer::Handler::PSGI.
+
+UPDATE:
+
+.. CGI::FormBuilder is no longer maintained. (Also it doesn't use "label" etc.) FormFu is too unstable. Remaining options:
+- bring my Form creation stuff into a module that includes validation, etc. Recreate FormBuiler. :(
+- use static forms with Template::Toolkit and [1] for internationalization. (Remember: internationalization is required at least for labels and error messages, both client and server-side.)
+(The issue with that is still validation: difficult to cross javascript validation with Perl server-side validation.)
+
+* One solution for I18N is to generate the JavaScript validation code using TT as well and use the I18N functions inside that code as well.
+* See http://plugins.jquery.com/project/validate for possible client-side validation.
+
+.. so server-side I'm going to end up writing generic code for validation (hashref to hashref), suitable for direct JSON interfacing.
+   Also need another interface (input) to do normalization (e.g. when asking for a date).
+   Then the templating (Dancer::Template::TemplateToolkit) takes care of display.
+
+[1] http://mail.template-toolkit.org/pipermail/templates/2008-July/010292.html which says:
+"" Locale::Maketext is definitely great, here's what I do besides
+  template.en
+  template.fr
+etc. based on the MT object. In TT code itself, I simply get a MT
+object and pass it:
+
+   lh => $lh,
+
+[% lh.maketext('Great googly moogly, why did you kill me [_1]?', you) %]
+""

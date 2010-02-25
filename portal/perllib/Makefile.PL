@@ -12,7 +12,8 @@ requires      'File::ShareDir'            => '1.01';
 requires      'File::Spec'                => 0; # '3.2501'
 
 requires      'Dancer'                    => '1.155'; # pre-1.160 github
-requires      'CGI::FormBuilder'          => '3.0501';
+requires      'Template::Toolkit'         => 0;
+requires      'CGI::FormBuilder'          => '3.0501'; # probably not
 
 ## Portal requirements
 requires      'Locale::Maketext::Lexicon'     => 0;
