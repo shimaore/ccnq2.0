@@ -24,7 +24,7 @@ INTERFACE=$1
 # Size of the capture spool / ring (in Mo)
 DEFAULT_SIZE_MB=100
 # What should we capture?
-DEFAULT_FILTER="udp or icmp or tcp port 5060"
+DEFAULT_FILTER="udp or icmp or tcp portrange 5060-5099"
 
 mkdir -p /var/run/traces
 mkdir -p /var/log/traces
