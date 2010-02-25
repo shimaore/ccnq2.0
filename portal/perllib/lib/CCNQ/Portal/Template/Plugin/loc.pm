@@ -2,7 +2,7 @@ package CCNQ::Portal::Template::Plugin::loc;
 use Template::Plugin::Filter;
 use base qw( Template::Plugin::Filter );
 
-use CCNQ::Portal::I18N;
+use CCNQ::Portal;
 
 sub init {
     my $self = shift;
@@ -14,7 +14,7 @@ sub filter {
     my ($self, $text) = @_;
 
     my $args = $self->{_ARGS};
-    return _($text,@{$args})_;
+    return CCNQ::Portal->current_session->locale->loc($text,@{$args});
 }
 
 =head1 loc Filter
@@ -27,4 +27,4 @@ Use as follows:
 
 =cut
 
-'CCNQ::Portal::Template::Plugin::Loc';
+'CCNQ::Portal::Template::Plugin::loc';
