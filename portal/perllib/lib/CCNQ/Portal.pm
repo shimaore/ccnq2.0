@@ -36,7 +36,7 @@ our $site;
 
 sub import {
   my $self = shift;
-  $site = shift;
+  $site ||= shift;
 }
 
 sub site {
