@@ -1,5 +1,5 @@
 # PSGI application bootstraper for Dancer
-use lib '/Users/stephane/Artisan/Telecoms/ccnq2.0/portal';
+use lib '/Users/stephane/Artisan/Telecoms/ccnq2.0/portal/dancer/portal';
 use portal;
 
 use Dancer::Config 'setting';
