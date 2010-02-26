@@ -3,6 +3,7 @@ use Template::Plugin::Filter;
 use base qw( Template::Plugin::Filter );
 
 use CCNQ::Portal;
+use Logger::Syslog;
 
 sub init {
     my $self = shift;
@@ -15,6 +16,8 @@ sub init {
 sub filter {
     my ($self, $text, $args, $config) = @_;
 
+    debug("text in  = $text, args = (".join(',',@{$args}).")");
+
     $text = CCNQ::Portal->current_session->locale->loc($text,@{$args});
     for ($text) {
         s/&/&amp;/g;
@@ -22,6 +25,9 @@ sub filter {
         s/>/&gt;/g;
         s/"/&quot;/g;
     }
+
+    debug("text out = $text");
+
     return $text;
 }
 
