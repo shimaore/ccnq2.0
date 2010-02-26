@@ -1,3 +1,4 @@
+<% IF session.user_id %>
 <% USE loc %>
 <fieldset><legend><% | loc %>Account selection<% END %></legend>
 <% IF accounts.size %>
@@ -19,3 +20,4 @@
   <% | loc %>No account available<% END %>
 <% END %>
 </fieldset>
+<% END %>
