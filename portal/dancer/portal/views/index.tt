@@ -1,5 +1,5 @@
 <% IF error %>
-  <div class="error"><% lh.loc(error) | html %></div>
+  <div class="error"><% error | loc | html %></div>
 <% ELSE %>
-  <div class="content"><% lh.loc(result) | html %></div>
+  <div class="content"><% result | loc | html %></div>
 <% END %>

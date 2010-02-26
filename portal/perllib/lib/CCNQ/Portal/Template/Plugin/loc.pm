@@ -6,7 +6,6 @@ use CCNQ::Portal;
 
 sub init {
     my $self = shift;
-    $self->{ _DYNAMIC } = 1;
     my $name = $self->{ _CONFIG }->{ name } || 'loc';
     $self->install_filter($name);
     return $self;
@@ -15,8 +14,7 @@ sub init {
 sub filter {
     my ($self, $text) = @_;
 
-    my $args = $self->{_ARGS};
-    return CCNQ::Portal->current_session->locale->loc($text,@{$args});
+    return CCNQ::Portal->current_session->locale->loc($text);
 }
 
 =head1 loc Filter
@@ -24,8 +22,6 @@ sub filter {
 Use as follows:
 
     <% | loc %>String to be localized<% END %>
-
-    <% | loc param1 %>String to be localized with param [_1]<% END %>
 
 =cut
 
