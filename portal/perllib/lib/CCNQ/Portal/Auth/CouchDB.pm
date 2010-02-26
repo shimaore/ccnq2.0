@@ -1,4 +1,4 @@
-package CCNQ::Portal::Auth::Dummy;
+package CCNQ::Portal::Auth::CouchDB;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
