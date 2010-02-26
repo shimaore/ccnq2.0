@@ -31,7 +31,7 @@ msgstr "Pas de comptes disponibles"
 msgid "Language"
 msgstr "Langue"
 
-msgid "You're logged in as [_1]."
+msgid "You are logged in as [_1]."
 msgstr "Nom d'utilisateur: [_1]"
 
 msgid "Logout"
