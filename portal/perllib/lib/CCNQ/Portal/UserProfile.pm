@@ -34,8 +34,8 @@ sub load {
   my $class = shift;
   my ($user_id) = @_;
   my $doc = $class->_load($user_id);
-  $doc->{_user_id} = $user_id;
-  return bless $doc;
+  session user_name => $doc->{user_name};
+  return bless $doc, $class;
 }
 
 sub _load {
@@ -43,7 +43,7 @@ sub _load {
   my ($user_id) = @_;
   # Access the database to load information about the specified user.
   my $doc = $self->db->open_doc($user_id)->recv;
-  return $doc;
+  return $doc || { _id => $user_id };
 }
 
 =pod
@@ -54,7 +54,7 @@ sub _load {
 sub update {
   my $self = shift;
   my $params = ref($_[0]) ? $_[0] : {@_};
-  my $doc = $self->_load($self->{_user_id});
+  my $doc = $self->_load($self->{_id});
   for my $f (qw(name email default_locale portal_accounts)) {
     $doc->{$f} = $self->{$f} if exists $self->{$f} && defined $self->{$f};
   }
