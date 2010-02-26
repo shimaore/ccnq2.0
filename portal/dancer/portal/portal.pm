@@ -23,7 +23,7 @@ use CCNQ::Portal::Outer::AccountSelection;
 #     }
 # };
 
-any [ 'get', 'post' ] '/' => sub {
+any [ 'get', 'post' ] => '/' => sub {
   my $template_name = 'index';
   $template_name = 'result' if vars->{result};
   my $vars = vars;
