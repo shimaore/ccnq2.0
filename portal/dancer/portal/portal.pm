@@ -30,6 +30,7 @@ CCNQ::Portal->import($site);
 
 use CCNQ::Portal::Outer::UserAuthentication;
 use CCNQ::Portal::Outer::AccountSelection;
+use CCNQ::Portal::Outer::LocaleSelection;
 
 # before sub {
 #     if (!session('user_id') && request->path_info !~ m{^/(login|public)}) {
