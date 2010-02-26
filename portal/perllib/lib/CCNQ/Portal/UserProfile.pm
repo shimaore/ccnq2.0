@@ -18,6 +18,8 @@ use strict; use warnings;
 use CCNQ::Portal;
 use AnyEvent::CouchDB;
 
+use Dancer ':syntax';
+
 sub db {
   return couchdb(CCNQ::Portal::portal_db);
 }
