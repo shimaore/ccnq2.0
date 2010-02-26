@@ -3,7 +3,7 @@ use Dancer;
 use Template;
 
 use CCNQ::Portal::Site;
-use CCNQ::Portal::Auth::Dummy;
+use CCNQ::Portal::Auth::CouchDB;
 my $site = CCNQ::Portal::Site->new(
   default_locale => 'en-US',
   security => CCNQ::Portal::Auth::CouchDB->new(),
