@@ -38,7 +38,7 @@ ok(!$session->expired,'expired too fast');
 is($session->user->id,'bob','proper user');
 ok(!$session->expired,'expired too fast');
 ok($session->user->profile,'profile OK');
-ok(!defined($session->user->profile->name),'name OK')
+ok(!defined($session->user->profile->name),'name OK');
 ok(!$session->expired,'expired too fast');
 
 done_testing();
