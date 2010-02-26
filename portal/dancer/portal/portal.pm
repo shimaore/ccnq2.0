@@ -3,9 +3,10 @@ use Dancer;
 use Template;
 
 use CCNQ::Portal::Site;
+use CCNQ::Portal::Auth::Dummy;
 my $site = CCNQ::Portal::Site->new(
   default_locale => 'en-US',
-  # security => ...
+  security => CCNQ::Portal::Auth::Dummy->new(),
 );
 
 use CCNQ::Portal;
