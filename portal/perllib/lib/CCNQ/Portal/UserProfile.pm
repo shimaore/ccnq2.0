@@ -32,7 +32,8 @@ load
 
 sub load {
   my $class = shift;
-  my $doc = $class->_load(@_);
+  my ($user_id) = @_;
+  my $doc = $class->_load($user_id);
   $doc->{_user_id} = $user_id;
   return bless $doc;
 }
