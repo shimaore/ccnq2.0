@@ -66,16 +66,16 @@ sub create {
 
 sub _untaint_params {
   my $self = shift;
-  my ($request) = @_;
+  my ($params) = @_;
 
-  my $untainter = CGI::Untaint->new($request->Vars);
+  my $untainter = CGI::Untaint->new($params);
 
   my $username = $untainter->extract(-as_email=>USERNAME_PARAM);
   return [undef,undef] if not defined $username;
 
   $username = $username->format;
 
-  my $password = $request->param(PASSWORD_PARAM);
+  my $password = $params->{PASSWORD_PARAM};
   return [$username,undef] if not defined $password or $password eq '';
   return [$username,$password];
 }
