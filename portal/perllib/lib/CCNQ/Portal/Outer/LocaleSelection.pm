@@ -25,6 +25,4 @@ post '/locale/:locale' => sub {
   return get();
 };
 
-get '/locale' => \&html;
-
 1;
