@@ -48,15 +48,23 @@ sub _load {
 }
 
 =pod
-  $profile->update( name => $name, email => $email, default_locale => $default_locale )
-  $profile->update( { name => $name, email => $email, default_locale => $default_locale })
+  $profile->update( name => $name, email => $email, ... )
+  $profile->update( { name => $name, email => $email, ... })
+
+Valid fields are:
+* name - the user's complete name
+* email - the user's email address
+* default_locale - the user's preferred locale
+* portal_accounts - list of accounts the user has access to
+* password - the user's password (when using CCNQ::Portal::Auth::CouchDB)
+  XXX we should probably store something like a random salt + SHA1 hash
 =cut
 
 sub update {
   my $self = shift;
   my $params = ref($_[0]) ? $_[0] : {@_};
   my $doc = $self->_load($self->{_id});
-  for my $f (qw(name email default_locale portal_accounts)) {
+  for my $f (qw(name email default_locale portal_accounts password)) {
     $doc->{$f} = $self->{$f} if exists $self->{$f} && defined $self->{$f};
   }
   my $cv = $self->db->save_doc($doc);
