@@ -1,16 +1,16 @@
-<fieldset id="UserAuthentication"><legend><% lh.loc('Authentication') %></legend>
+<fieldset id="UserAuthentication"><legend><% | loc %>Authentication<% END %></legend>
 <% IF session.user_id %>
   <div class="logged-in">
-    <p><% lh.loc('You're logged in as [_1].', session.user_id) | html %></p>
-    <p><a href="/logout"><% lh.loc('Logout') | html %></a></p>
+    <p><% | locp(session.user_id) | html %>You're logged in as [_1].<% END %></p>
+    <p><a href="/logout"><% | loc | html %>Logout<% END %></a></p>
   <div>
   <!-- XXX SwitchUser -->
 <% ELSE %>
   <form action="/login" method="POST">
     <div class="logged-out">
-      <label for="username"><% lh.loc('Username') | html %></label>
+      <label for="username"><% | loc | html %>Username<% END %></label>
       <input name="username" type="text" class="required"/>
-      <label for="password"><% lh.loc('Password) | html %></label>
+      <label for="password"><% | loc | html %>Password<% END %></label>
       <input name="password" type="password" class="required"/>
     </div>
   </form>

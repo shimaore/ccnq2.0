@@ -4,7 +4,7 @@
     <select name="account">
       <option value=""></option>
       <% FOREACH this IN accounts %>
-        <% IF this eq session.account %>
+        <% IF this == session.account %>
           <option value="<% this | html %>" selected><% this | html %></option>
         <% ELSE %>
           <option value="<% this | html %>"><% this | html %></option>
@@ -12,9 +12,9 @@
       <% END %>
     </select>
   <% ELSE %>
-    <% lh.loc('Account [_1]',session.account) %>
+    <% | locp(session.account) | html %>Account [_1]<% END %>
   <% END %>
 <% ELSE %>
-  <% lh.loc('No account available') | html %>
+  <% | loc | html %>No account available<% END %>
 <% END %>
 </fieldset>
