@@ -1,6 +1,7 @@
 <% USE loc %>
 <fieldset><legend><% | loc %>Language<% END %></legend>
   <!-- XXX use flags -->
+  <!-- XXX highlight current locale -->
   <a href="/locale/en">en</a>
   <a href="/locale/fr">fr</a>
 </fieldset>
