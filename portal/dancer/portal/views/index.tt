@@ -2,5 +2,7 @@
 <% IF error %>
   <div class="error"><% error | loc %></div>
 <% ELSE %>
+<% IF result %>
   <div class="content"><% result | loc %></div>
+<% END %>
 <% END %>
