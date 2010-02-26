@@ -1,12 +1,12 @@
 body {
     font-family: Lucida,sans-serif;   
-    color: #eee;
-    background-color: #1f1b1a;
+    color: black;
+    background-color: white;
 }
 
 #content {
     color: #000;
-    background-color: #eee;
+    background-color: white;
     padding: 1em;
     margin: 1em;
     padding-top: 0.5em;
