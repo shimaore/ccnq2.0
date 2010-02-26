@@ -41,10 +41,11 @@ sub update {
   my $self = shift;
   my $params = ref($_[0]) ? $_[0] : {@_};
   my $doc = $self->db->open_doc($self->{_user_id})->recv;
+  $doc ||= { _id => $self->{_user_id} };
   for my $f (qw(name email default_locale portal_accounts)) {
     $doc->{$f} = $self->{$f} if exists $self->{$f} && defined $self->{$f};
   }
-  db->save_doc($doc)->recv;
+  $self->db->save_doc($doc)->recv;
 }
 
 =pod
