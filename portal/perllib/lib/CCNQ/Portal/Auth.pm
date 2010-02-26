@@ -72,7 +72,7 @@ sub _untaint_params {
 
   my $untainter = CGI::Untaint->new($params);
 
-  my $username = $untainter->extract(-as_email=>USERNAME_PARAM);
+  my $username = $untainter->extract(-as_printable=>USERNAME_PARAM);
   return [undef,undef] if not defined $username;
 
   $username = $username->format;
