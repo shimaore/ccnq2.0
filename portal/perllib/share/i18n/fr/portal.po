@@ -12,3 +12,31 @@ msgstr "Compte"
 
 msgid "Portal"
 msgstr "Portail"
+
+msgid "Account selection"
+msgstr "Numéro de compte"
+
+msgid "Account [_1]"
+msgstr "Compte [_1]"
+
+msgid "Authentication"
+msgstr "Authentification"
+
+msgid "Select"
+msgstr "Choisir"
+
+msgid "No accounts available"
+msgstr "Pas de comptes disponibles"
+
+msgid "Language"
+msgstr "Langue"
+
+msgid "You're logged in as [_1]."
+msgstr "Nom d'utilisateur: [_1]"
+
+msgid "Logout"
+msgstr "Déconnexion"
+
+msgid "Log in"
+msgstr "Connecter"
+
