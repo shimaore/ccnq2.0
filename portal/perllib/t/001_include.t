@@ -33,6 +33,8 @@ require_ok( 'CCNQ::Portal::User' );
 
 # require_ok( 'CCNQ::Portal::LDAP' );
 # require_ok( 'CCNQ::Portal::Auth::LDAP' );
+require_ok( 'CCNQ::Portal::Auth::Dummy' );
+require_ok( 'CCNQ::Portal::Auth::CouchDB' );
 
 require_ok( 'CCNQ::Portal::Outer::AccountSelection' );
 require_ok( 'CCNQ::Portal::Outer::LocaleSelection' );
