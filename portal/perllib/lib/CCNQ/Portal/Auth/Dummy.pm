@@ -20,7 +20,7 @@ use CCNQ::Portal::I18N;
 sub new {
   my $this  = shift;
   my $class = ref($this) || $this;
-  my $self  = shift;
+  my $self  = {};
   bless $self, $class;
 }
 
