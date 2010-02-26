@@ -23,7 +23,7 @@ use CCNQ::Portal::Outer::Widget qw(if_ok);
 
 post '/login' => sub {
   if_ok(
-    CCNQ::Portal->site->security->authenticate(scalar(params),session),
+    CCNQ::Portal->site->security->authenticate(scalar(params),CCNQ::Portal->current_session),
     sub {
       CCNQ::Portal->current_session->start(shift);
     });

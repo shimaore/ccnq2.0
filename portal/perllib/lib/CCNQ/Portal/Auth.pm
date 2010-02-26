@@ -97,7 +97,7 @@ sub authenticate {
 
   my $user_id = $self->auth(@{$p});
   if(defined($user_id)) {
-    $session->change_user(new Portal::User $user_id);
+    $session->start($user_id);
     return ['ok',$user_id];
   } else {
     return ['error',_('Authentication failed')_];
