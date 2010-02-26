@@ -23,13 +23,26 @@ sub db {
 }
 
 # Class method: load an existing user from the database.
+=head1
+load
+
+  CCNQ::Portal::UserProfile->load($user_id)
+
+=cut
 
 sub load {
-  my ($user_id) = @_;
-  # Access the database to load information about the specified user.
-  my $doc = db()->open_doc($user_id)->recv;
+  my $class = shift;
+  my $doc = $class->_load(@_);
   $doc->{_user_id} = $user_id;
   return bless $doc;
+}
+
+sub _load {
+  my $self = shift;
+  my ($user_id) = @_;
+  # Access the database to load information about the specified user.
+  my $doc = $self->db->open_doc($user_id)->recv;
+  return $doc;
 }
 
 =pod
@@ -40,8 +53,7 @@ sub load {
 sub update {
   my $self = shift;
   my $params = ref($_[0]) ? $_[0] : {@_};
-  my $doc = $self->db->open_doc($self->{_user_id})->recv;
-  $doc ||= { _id => $self->{_user_id} };
+  my $doc = $self->_load($self->{_user_id});
   for my $f (qw(name email default_locale portal_accounts)) {
     $doc->{$f} = $self->{$f} if exists $self->{$f} && defined $self->{$f};
   }
