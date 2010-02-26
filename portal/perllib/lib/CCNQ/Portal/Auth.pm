@@ -75,9 +75,9 @@ sub _untaint_params {
   my $username = $untainter->extract(-as_printable=>USERNAME_PARAM);
   return [undef,undef] if not defined $username;
 
-  $username = $username->format;
+  # $username = $username->format;
 
-  my $password = $params->{PASSWORD_PARAM};
+  my $password = $params->{PASSWORD_PARAM()};
   return [$username,undef] if not defined $password or $password eq '';
   return [$username,$password];
 }
