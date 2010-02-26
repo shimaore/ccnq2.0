@@ -5,4 +5,5 @@
   <% END %>
   <% IF is_admin %>
   <div class="menu"><a href="/agents">Agent Management</div>
+  <% END %>
 </div>
