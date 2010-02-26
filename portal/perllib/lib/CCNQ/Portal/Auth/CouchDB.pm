@@ -30,9 +30,7 @@ sub auth
 
   my $profile = CCNQ::Portal::UserProfile->load($user_id);
 
-  return undef unless defined $profile && defined $profile->{password};
-
-  my $ok = $password eq $profile->{password};
+  my $ok = $profile->verify_password($password);
 
   return $ok ? $user_id : undef;
 }
@@ -44,7 +42,7 @@ sub auth_change {
   return ['error',_('Missing parameters')_] unless defined $user_id and defined $password;
 
   my $profile = CCNQ::Portal::UserProfile->load($user_id);
-  $profile->update( password => $password );
+  $profile->change_password($password);
 
   return ['ok'];
 }
@@ -59,7 +57,8 @@ sub create {
   my $user_id = $username;
 
   my $profile = CCNQ::Portal::UserProfile->load($user_id);
-  $profile->update( password => $password, name => $name, email => $email );
+  $profile->update( name => $name, email => $email );
+  $profile->change_password( password => $password );
   return ['ok'];
 }
 

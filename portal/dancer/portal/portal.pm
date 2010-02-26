@@ -11,11 +11,16 @@ my $site = CCNQ::Portal::Site->new(
     my $template_name = 'index';
     $template_name = 'result' if vars->{result};
     my $vars = vars;
+    my $is_admin = CCNQ::Portal->current_session->user &&
+      CCNQ::Portal->current_session->user->profile->{is_admin} || 0;
+    my $is_sysadmin = CCNQ::Portal->current_session->user &&
+      CCNQ::Portal->current_session->user->profile->{is_sysadmin} || 0;
     template $template_name => {
+      %{$vars},
       lh => CCNQ::Portal->current_session->locale,
       accounts => CCNQ::Portal::Outer::AccountSelection->available_accounts,
       account => CCNQ::Portal::Outer::AccountSelection->account,
-      %{$vars},
+      is_admin => $is_admin, is_sysadmin => $is_sysadmin,
     };
   },
 );

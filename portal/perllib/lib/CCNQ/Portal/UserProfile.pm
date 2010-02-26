@@ -56,15 +56,14 @@ Valid fields are:
 * email - the user's email address
 * default_locale - the user's preferred locale
 * portal_accounts - list of accounts the user has access to
-* password - the user's password (when using CCNQ::Portal::Auth::CouchDB)
-  XXX we should probably store something like a random salt + SHA1 hash
 =cut
 
 sub update {
   my $self = shift;
   my $params = ref($_[0]) ? $_[0] : {@_};
   my $doc = $self->_load($self->{_id});
-  for my $f (qw(name email default_locale portal_accounts password)) {
+  for my $f (qw(name email default_locale portal_accounts
+                is_admin is_sysadmin )) {
     $doc->{$f} = $self->{$f} if exists $self->{$f} && defined $self->{$f};
   }
   my $cv = $self->db->save_doc($doc);
@@ -98,5 +97,24 @@ sub default_locale { return shift->{default_locale} }
 =cut
 
 sub portal_accounts { return shift->{portal_accounts} }
+
+# Other (yet undocumented) options
+
+# XXX Change these to use random salt + SHA1 or other scheme.
+
+sub verify_password {
+  my ($self,$password) = @_;
+  return defined($self->{password}) && $self->{password} eq $password;
+}
+
+sub change_password {
+  my ($self,$password) = @_;
+  return undef if !defined($password);
+
+  my $doc = $self->_load($self->{_id});
+  $doc->{password} = $password;
+  my $cv = $self->db->save_doc($doc);
+  CCNQ::CouchDB::receive($cv);
+}
 
 'CCNQ::Portal::UserProfile';
