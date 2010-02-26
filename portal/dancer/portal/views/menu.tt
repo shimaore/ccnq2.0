@@ -1,0 +1,8 @@
+<div class="mainmenu">
+  <div class="menu"><a href="/">Summary</a></div>
+  <% IF is_sysadmin %>
+  <div class="menu"><a href="/users">User Management</div>
+  <% END %>
+  <% IF is_admin %>
+  <div class="menu"><a href="/agents">Agent Management</div>
+</div>
