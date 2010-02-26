@@ -1,5 +1,5 @@
 <% USE loc %><% USE locp %>
-<fieldset><legend><% lh.loc('Account selection') %></legend>
+<fieldset><legend><% | loc | html %>Account selection<% END %></legend>
 <% IF accounts.size %>
   <% IF accounts.size > 1 %>
     <select name="account">
