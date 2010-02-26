@@ -1,17 +1,17 @@
-<% USE loc %><% USE locp %>
+<% USE loc %>
 <fieldset id="UserAuthentication"><legend><% | loc %>Authentication<% END %></legend>
 <% IF session.user_id %>
   <div class="logged-in">
-    <p><% | locp(session.user_id) %>You're logged in as [_1].<% END %></p>
-    <p><a href="/logout"><% | loc | html %>Logout<% END %></a></p>
+    <p><% | loc(session.user_id) %>You're logged in as [_1].<% END %></p>
+    <p><a href="/logout"><% | loc %>Logout<% END %></a></p>
   <div>
   <!-- XXX SwitchUser -->
 <% ELSE %>
   <form action="/login" method="POST">
     <div class="logged-out">
-      <label for="username"><% | loc | html %>Username<% END %></label>
+      <label for="username"><% | loc %>Username<% END %></label>
       <input name="username" type="text" class="required"/>
-      <label for="password"><% | loc | html %>Password<% END %></label>
+      <label for="password"><% | loc %>Password<% END %></label>
       <input name="password" type="password" class="required"/>
     </div>
   </form>

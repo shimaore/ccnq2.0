@@ -1,5 +1,5 @@
-<% USE loc %><% USE locp %>
-<fieldset><legend><% | loc | html %>Account selection<% END %></legend>
+<% USE loc %>
+<fieldset><legend><% | loc %>Account selection<% END %></legend>
 <% IF accounts.size %>
   <% IF accounts.size > 1 %>
     <select name="account">
@@ -13,9 +13,9 @@
       <% END %>
     </select>
   <% ELSE %>
-    <% | locp(session.account) %>Account [_1]<% END %>
+    <% | loc(session.account) %>Account [_1]<% END %>
   <% END %>
 <% ELSE %>
-  <% | loc | html %>No account available<% END %>
+  <% | loc %>No account available<% END %>
 <% END %>
 </fieldset>
