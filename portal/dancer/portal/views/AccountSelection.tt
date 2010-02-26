@@ -3,6 +3,8 @@
 <fieldset><legend><% | loc %>Account selection<% END %></legend>
 <% IF accounts.size %>
   <% IF accounts.size > 1 %>
+  <form action="/account" method="POST">
+    <div class="account-select">
     <select name="account">
       <option value=""></option>
       <% FOREACH this IN accounts %>
@@ -13,6 +15,8 @@
         <% END %>
       <% END %>
     </select>
+    <input type="submit" value="<% | loc %>Select<% END %>">
+  </form>
   <% ELSE %>
     <% | loc(session.account) %>Account [_1]<% END %>
   <% END %>
