@@ -37,8 +37,8 @@ ok($session->user,'user created');
 ok(!$session->expired,'expired too fast');
 is($session->user->id,'bob','proper user');
 ok(!$session->expired,'expired too fast');
-# This should fail since we have no local database defined.
-ok(!eval { $session->user->profile },'where did the profile come from?');
+ok($session->user->profile,'profile OK');
+is($session->user->profile->name,undef,'name OK')
 ok(!$session->expired,'expired too fast');
 
 done_testing();
