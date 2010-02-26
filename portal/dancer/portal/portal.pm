@@ -35,7 +35,7 @@ use CCNQ::Portal::Outer::AccountSelection;
 # };
 
 any '/' => sub {
-  $site->default_content();
+  $site->default_content->();
 };
 
 true;
