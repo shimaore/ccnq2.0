@@ -13,7 +13,7 @@
       <% END %>
     </select>
   <% ELSE %>
-    <% | locp(session.account) | html %>Account [_1]<% END %>
+    <% | locp(session.account) %>Account [_1]<% END %>
   <% END %>
 <% ELSE %>
   <% | loc | html %>No account available<% END %>
