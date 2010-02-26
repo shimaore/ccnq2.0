@@ -52,10 +52,15 @@ sub account {
   return session('account');
 }
 
-post '/account/:account' => sub {
+post '/account' => sub {
   my $account = params->{account};
   account($account);
   CCNQ::Portal->site->default_content->();
+}
+
+post '/account/:account' => sub {
+  my $account = params->{account};
+  account($account);
 };
 
 'CCNQ::Portal::Outer::AccountSelection';
