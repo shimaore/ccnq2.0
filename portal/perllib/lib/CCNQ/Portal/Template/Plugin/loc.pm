@@ -6,16 +6,15 @@ use CCNQ::Portal;
 
 sub init {
     my $self = shift;
-    $self->{ _DYNAMIC } = 1;
-    my $name = $self->{ _CONFIG }->{ name } || 'loc';
+    $self->{_DYNAMIC} = 1;
+    my $name = $self->{_CONFIG}->{name} || 'loc';
     $self->install_filter($name);
     return $self;
 }
 
 sub filter {
-    my ($self, $text) = @_;
+    my ($self, $text, $args, $config) = @_;
 
-    my $args = $self->{_ARGS};
     $text = CCNQ::Portal->current_session->locale->loc($text,@{$args});
     for ($text) {
         s/&/&amp;/g;
