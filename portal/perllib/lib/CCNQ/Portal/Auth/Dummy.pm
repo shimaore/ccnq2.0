@@ -14,15 +14,9 @@ package CCNQ::Portal::Auth::Dummy;
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
+use base qw( CCNQ::Portal::Auth );
 
 use CCNQ::Portal::I18N;
-
-sub new {
-  my $this  = shift;
-  my $class = ref($this) || $this;
-  my $self  = {};
-  bless $self, $class;
-}
 
 sub auth
 {

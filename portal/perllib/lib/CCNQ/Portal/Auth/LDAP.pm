@@ -14,6 +14,7 @@ package CCNQ::Portal::Auth::LDAP;
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
+use base qw( CCNQ::Portal::Auth );
 
 use Net::LDAP;
 use CCNQ::Portal::I18N;
@@ -26,13 +27,6 @@ use CCNQ::Portal::I18N;
   })
 
 =cut
-
-sub new {
-  my $this  = shift;
-  my $class = ref($this) || $this;
-  my $self  = shift;
-  bless $self, $class;
-}
 
 sub auth
 {

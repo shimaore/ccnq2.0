@@ -22,6 +22,13 @@ use constant PASSWORD_PARAM => 'password';
 
 use constant MUST_BE_INSTANTIATED => ' must be instantiated by an implementation class';
 
+sub new {
+  my $this  = shift;
+  my $class = ref($this) || $this;
+  my $self  = ref($_[0]) ? shift : {@_};
+  bless $self, $class;
+}
+
 =pod
   $user_id = auth($request)
     Method must return $user_id iff the login/password combination
