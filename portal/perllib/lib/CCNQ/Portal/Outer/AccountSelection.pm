@@ -28,7 +28,7 @@ use CCNQ::Portal;
 
 sub available_accounts {
   if(CCNQ::Portal->current_session->user) {
-    return CCNQ::Portal->current_session->user->profile->portal_accounts;
+    return CCNQ::Portal->current_session->user->profile->portal_accounts || [];
   } else {
     return [];
   }
