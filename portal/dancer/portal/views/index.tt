@@ -1,3 +1,4 @@
+<% USE loc %>
 <% IF error %>
   <div class="error"><% error | loc | html %></div>
 <% ELSE %>
