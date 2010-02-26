@@ -1,10 +1,14 @@
 msgid "Test String Example"
 msgstr "Exemple de test"
+
 msgid "Username"
 msgstr "Nom d'utilisateur"
+
 msgid "Password"
 msgstr "Mot de passe"
+
 msgid "Account"
 msgstr "Compte"
+
 msgid "Portal"
 msgstr "Portail"
