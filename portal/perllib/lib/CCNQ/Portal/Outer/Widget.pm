@@ -15,6 +15,8 @@ package CCNQ::Portal::Outer::Widget;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
 
+our @EXPORT_OK = qw( &if_ok );
+
 use Dancer ':syntax';
 
 sub if_ok {
