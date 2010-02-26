@@ -1,3 +1,4 @@
+<% USE loc %><% USE locp %>
 <fieldset id="UserAuthentication"><legend><% | loc %>Authentication<% END %></legend>
 <% IF session.user_id %>
   <div class="logged-in">
