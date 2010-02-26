@@ -17,6 +17,7 @@ use strict; use warnings;
 
 use CCNQ::Portal;
 use AnyEvent::CouchDB;
+use CCNQ::CouchDB;
 
 use Dancer ':syntax';
 
@@ -44,7 +45,8 @@ sub _load {
   my $self = shift;
   my ($user_id) = @_;
   # Access the database to load information about the specified user.
-  my $doc = $self->db->open_doc($user_id)->recv;
+  my $cv = $self->db->open_doc($user_id);
+  my $doc = CCNQ::CouchDB::receive($cv);
   return $doc || { _id => $user_id };
 }
 
@@ -60,7 +62,8 @@ sub update {
   for my $f (qw(name email default_locale portal_accounts)) {
     $doc->{$f} = $self->{$f} if exists $self->{$f} && defined $self->{$f};
   }
-  $self->db->save_doc($doc)->recv;
+  my $cv = $self->db->save_doc($doc);
+  CCNQ::CouchDB::receive($cv);
 }
 
 =pod
