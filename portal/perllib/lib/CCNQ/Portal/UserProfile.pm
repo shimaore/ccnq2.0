@@ -19,8 +19,6 @@ use CCNQ::Portal;
 use AnyEvent::CouchDB;
 use CCNQ::CouchDB;
 
-use Dancer ':syntax';
-
 sub db {
   return couchdb(CCNQ::Portal::portal_db);
 }
@@ -37,7 +35,6 @@ sub load {
   my $class = shift;
   my ($user_id) = @_;
   my $doc = $class->_load($user_id);
-  session user_name => $doc->{user_name};
   return bless $doc, $class;
 }
 
