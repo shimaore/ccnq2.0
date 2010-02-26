@@ -15,9 +15,11 @@ package CCNQ::Portal::UserProfile;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
 
+use CCNQ::Portal;
+use AnyEvent::CouchDB;
+
 sub db {
-  # XXX Returns a proper DB object
-  return undef;
+  return couchdb(CCNQ::Portal::portal_db);
 }
 
 # Class method: load an existing user from the database.

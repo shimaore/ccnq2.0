@@ -29,6 +29,8 @@ our $VERSION = '0.02';
 
 use strict; use warnings;
 
+use constant portal_db => 'portal';
+
 # Must be set by the startup code.
 our $site;
 
