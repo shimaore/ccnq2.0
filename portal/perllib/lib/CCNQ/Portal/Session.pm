@@ -67,7 +67,7 @@ sub locale {
   if(!session('locale')) {
     session locale =>
       # Use the user's preferred locale if one is available.
-        ($self->user && $self->user->default_locale)
+        ($self->user && $self->user->profile->default_locale)
       # Use the user's previous session's locale if one was selected.
       || session('old_locale')
       # XXX Use the browser's preferred locales!
