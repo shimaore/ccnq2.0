@@ -1,8 +1,8 @@
 layout: "main"
 logger: "file"
-template: template_toolkit
 session: 'memcached'
 memcached_servers: "127.0.0.1:11211"
+template: template_toolkit
 engines:
   template_toolkit:
     PLUGIN_BASE: 'CCNQ::Portal::Template::Plugin'
