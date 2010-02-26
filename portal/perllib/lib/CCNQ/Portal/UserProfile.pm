@@ -100,11 +100,24 @@ sub portal_accounts { return shift->{portal_accounts} }
 
 # Other (yet undocumented) options
 
+# These are only used by CCNQ::Portal::Auth::CouchDB .
 # XXX Change these to use random salt + SHA1 or other scheme.
 
 sub verify_password {
   my ($self,$password) = @_;
-  return defined($self->{password}) && $self->{password} eq $password;
+  # Make sure we have two defined values to compare.
+  return undef unless defined($self->{password}) && defined($password);
+  # Stop if they do not match.
+  return undef if $self->{password} ne $password;
+
+  # Save the last login time.
+  my $doc = $self->_load($self->{_id});
+  $doc->{last_login} = time();
+  my $cv = $self->db->save_doc($doc);
+  CCNQ::CouchDB::receive($cv);
+
+  # Return success.
+  return 1;
 }
 
 sub change_password {
