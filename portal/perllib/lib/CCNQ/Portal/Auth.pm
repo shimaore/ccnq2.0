@@ -64,6 +64,8 @@ sub create {
     if the fields in receiver are valid.
 =cut
 
+use CGI::Untaint;
+
 sub _untaint_params {
   my $self = shift;
   my ($params) = @_;
