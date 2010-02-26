@@ -31,6 +31,8 @@ sub auth
 
   return undef unless defined $username and defined $password;
 
+  my $user_id = $username;
+
   my $ok = 1;
   return $ok ? $user_id : undef;
 }
