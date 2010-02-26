@@ -27,12 +27,12 @@ post '/login' => sub {
     sub {
       CCNQ::Portal->current_session->start(shift);
     });
-  pass; # send back to '/'
+    CCNQ::Portal->site->default_content->();
 };
 
 get '/logout' => sub {
   CCNQ::Portal->current_session->end();
-  pass; # send back to '/'
+  CCNQ::Portal->site->default_content->();
 };
 
 'CCNQ::Portal::Outer::UserAuthentication';

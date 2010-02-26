@@ -53,9 +53,9 @@ sub account {
 }
 
 post '/account/:account' => sub {
-  # Note: we don't use CGI::FormBuilder's here.
   my $account = params->{account};
   account($account);
+  CCNQ::Portal->site->default_content->();
 };
 
 'CCNQ::Portal::Outer::AccountSelection';

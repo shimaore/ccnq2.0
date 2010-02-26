@@ -40,4 +40,8 @@ sub security {
   return $_[0]->{security};
 }
 
+sub default_content {
+  return $_[0]->{default_content};
+}
+
 1;

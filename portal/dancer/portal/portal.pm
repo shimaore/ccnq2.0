@@ -7,6 +7,17 @@ use CCNQ::Portal::Auth::Dummy;
 my $site = CCNQ::Portal::Site->new(
   default_locale => 'en-US',
   security => CCNQ::Portal::Auth::Dummy->new(),
+  default_content => sub {
+    my $template_name = 'index';
+    $template_name = 'result' if vars->{result};
+    my $vars = vars;
+    template $template_name => {
+      lh => CCNQ::Portal->current_session->locale,
+      accounts => CCNQ::Portal::Outer::AccountSelection->available_accounts,
+      account => CCNQ::Portal::Outer::AccountSelection->account,
+      %{$vars},
+    };
+  },
 );
 
 use CCNQ::Portal;
@@ -23,16 +34,8 @@ use CCNQ::Portal::Outer::AccountSelection;
 #     }
 # };
 
-any [ 'get', 'post' ] => '/' => sub {
-  my $template_name = 'index';
-  $template_name = 'result' if vars->{result};
-  my $vars = vars;
-  template $template_name => {
-    lh => CCNQ::Portal->current_session->locale,
-    accounts => CCNQ::Portal::Outer::AccountSelection->available_accounts,
-    account => CCNQ::Portal::Outer::AccountSelection->account,
-    %{$vars},
-  };
+any '/' => sub {
+  $site->default_content();
 };
 
 true;
