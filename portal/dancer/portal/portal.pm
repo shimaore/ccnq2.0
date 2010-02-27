@@ -1,6 +1,7 @@
 package portal;
 use Dancer;
 use Template;
+use encoding 'utf8';
 
 use CCNQ::Portal::Site;
 use CCNQ::Portal::Auth::CouchDB;
