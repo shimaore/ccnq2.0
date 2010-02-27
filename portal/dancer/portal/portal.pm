@@ -1,6 +1,7 @@
 package portal;
 use Dancer;
 use Template;
+use Encode;
 use encoding 'utf8';
 
 use CCNQ::Portal::Site;
@@ -23,12 +24,13 @@ my $site = CCNQ::Portal::Site->new(
         = CCNQ::Portal->current_session->user->profile->{is_sysadmin} || 0;
     }
 
-    template $template_name => {
+    my $s = template $template_name => {
       %{$vars},
       lh => CCNQ::Portal->current_session->locale,
       accounts => CCNQ::Portal::Outer::AccountSelection->available_accounts,
       account => CCNQ::Portal::Outer::AccountSelection->account,
     };
+    return encode_utf8($s);
   },
 );
 
