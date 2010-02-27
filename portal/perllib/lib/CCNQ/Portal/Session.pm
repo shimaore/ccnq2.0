@@ -31,13 +31,18 @@ sub site { $_[0]->{site} }
 sub start {
   my $self = shift;
   session user_id => shift;
-  # XXX Should be configurable, and able to say "+15m".
-  session expires => (time() + 15 * 60);
+  $self->update;
   # Save the locale that might have been selected earlier.
   session old_locale => session('locale');
   # Reset the locale so that the user's locale might be selected automatically.
   session locale => undef;
   return $self;
+}
+
+sub update {
+  my $self = shift;
+  # XXX Should be configurable, and able to say "+15m".
+  session expires => (time() + 15 * 60);
 }
 
 sub end {
@@ -57,6 +62,8 @@ sub user {
   my $self = shift;
   # Make sure the session hasn't expired.
   return undef if $self->expired;
+  # Then refresh it.
+  $self->update;
   # Return the proper user object.
   return session('user_id') && CCNQ::Portal::User->new(session('user_id'));
 }
