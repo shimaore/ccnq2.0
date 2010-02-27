@@ -17,7 +17,7 @@ sub init {
 sub filter {
     my ($self, $text, $args, $config) = @_;
 
-    @args = map &encode_utf8 @{$args};
+    @args = map { encode_utf8($_) } @{$args};
 
     $text = CCNQ::Portal->current_session->locale->loc($text,@args);
     for ($text) {
