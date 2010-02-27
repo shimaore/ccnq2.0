@@ -1,6 +1,7 @@
 package CCNQ::Portal::Template::Plugin::loc;
 use Template::Plugin::Filter;
 use base qw( Template::Plugin::Filter );
+use Encode;
 
 use CCNQ::Portal;
 use Logger::Syslog;
@@ -28,7 +29,7 @@ sub filter {
 
     debug("text out = $text");
 
-    return $text;
+    return encode_utf8($text);
 }
 
 =head1
