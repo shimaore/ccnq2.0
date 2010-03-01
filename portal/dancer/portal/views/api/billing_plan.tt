@@ -1,0 +1,125 @@
+<div id="plan-manager">
+
+<!-- This is currently only a demo. Eventually this page should
+ contain a bit of javascript that will populate DIVs based on the value,
+ and conversely submit a value that contains all the DIVs. -->
+
+<style type="text/css">
+.plan-guard { width: 100px; height: 100px; padding: 0.5em; float: left; margin: 10px 10px 10px 0; }
+.plan-action { width: 100px; height: 100px; padding: 0.5em; float: left; margin: 10px 10px 10px 0; }
+.plan-action { width: 150px; height: 150px; padding: 0.5em; float: left; margin: 10px; }
+</style>
+
+<script type="text/javascript">
+$(function() {
+	$(".plan-guard").draggable( revert: 'valid' );
+	$(".plan-action").draggable( revert: 'valid' );
+
+	$(".step-guard").droppable({
+	  accept: '.plan-guard',
+		drop: function(event, ui) {
+			$(this).children('ul').append('<li>'+ui+'</li>');
+		}
+	});
+
+	$(".step-action").droppable({
+	  accept: '.plan-action',
+		drop: function(event, ui) {
+			$(this).children('ul').append('<li>'+ui+'</li>');
+		}
+	});
+
+	$(".step-guard-items").sortable({ placeholder: 'ui-state-highlight' });
+	$(".step-action-items").sortable({ placeholder: 'ui-state-highlight' });
+
+  $("#plan").sortable({
+	  placeholder: 'ui-state-highlight'
+  });
+
+});
+</script>
+
+<div id="plan_toolbar">
+  <fieldset id="plan_guards">
+    <legend>Guards</legend>
+    <div class="ui-widget-content plan-guard">
+      <input type="hidden" name="p0" value="event_type_is">
+      <p>Event type is
+        <select name="p1">
+          <option value="call">Call</option>
+          <option value="sms">SMS</option>
+          <option value="port">Port</option>
+        </select>
+      </p>
+    </div>
+    <div class="ui-widget-content plan-guard">
+      <input type="hidden" name="p0" value="national_call">
+      <p>National</p>
+    </div>
+    <div class="ui-widget-content plan-guard">
+      <input type="hidden" name="p0" value="international_call">
+      <p>International</p>
+    </div>
+    <div class="ui-widget-content plan-guard">
+      <input type="hidden" name="p0" value="us_inter_state">
+      <p>U.S. Interstate</p>
+    </div>
+    <div class="ui-widget-content plan-guard">
+      <input type="hidden" name="p0" value="us_intra_state">
+      <p>U.S. Intrastate</p>
+    </div>
+    <div class="ui-widget-content plan-guard">
+      <input type="hidden" name="p0" value="to_country">
+      <p>To country
+        <select name="p1">
+          <option value="fr">France</option>
+          <option value="us">U.S.A.</option>
+          <option value="..">...</option>
+        </select>
+      </p>
+    </div>
+    <div class="ui-widget-content plan-guard">
+      <input type="hidden" name="p0" value="from_country">
+      <p>From country
+        <select name="p1">
+          <option value="fr">France</option>
+          <option value="us">U.S.A.</option>
+          <option value="..">...</option>
+        </select>
+      </p>
+    </div>
+    <!-- etc ..-->
+
+  </fieldset>
+
+  <fieldset id="plan_actions">
+    <legend>Actions</legend>
+    <div class="ui-widget-content plan-action">
+      <input type="hidden" name="p0" value="is_billable">
+      <p>Is billable</p>
+    </div>
+    <div class="ui-widget-content plan-action">
+      <input type="hidden" name="p0" value="is_non_billable">
+      <p>Is non-billable</p>
+    </div>
+    <!-- etc -->
+  </fieldset>
+</div>
+
+<ul id="plan">
+  <li id="step0">
+    <p>Step 1</p>
+    <div class="step-guard"><ul class="items"></ul></div>
+    <div class="step-action"><ul class="items"></ul></div>
+  </li>
+  <ul id="step1">
+    <p>Step 2</p>
+    <div class="step-guard"><ul class="items"></ul></div>
+    <div class="step-action"><ul class="items"></ul></div>
+  </li>
+</ul>
+
+<div id="trash">
+</div>
+
+</div>
