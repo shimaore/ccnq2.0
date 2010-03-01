@@ -3,7 +3,7 @@
 <head><% USE loc %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title><% | loc %>Portal<% END %></title>
-<link rel="stylesheet" type="text/css" href="/css/style.css" />
+<!-- <link rel="stylesheet" type="text/css" href="/css/style.css" /> -->
 <link rel="stylesheet" type="text/css" href="/css/menu.css" />
 <!-- jquery + jquery.ui -->
 <link rel="stylesheet" type="text/css" href="/themes/le-frog/jquery-ui.css" />
