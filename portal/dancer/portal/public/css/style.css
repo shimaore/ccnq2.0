@@ -47,6 +47,7 @@ a {
 
 h1 {
     float: left;
+    margin-left: 2em;
 }
 
 #mainmenu {

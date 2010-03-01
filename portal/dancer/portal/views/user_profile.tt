@@ -14,7 +14,7 @@
   </p>
   <p class="ui-helper-clearfix">
   <label for="name"><% | loc %>Billing accounts<% END %></label>
-  <input type="text" name="billing_accounts" value="<% field.portal_accounts | html %>" <% IF not is_admin %>readonly<% END %> />
+  <input type="text" name="billing_accounts" value="<% field.billing_accounts | html %>" <% IF not is_admin %>readonly<% END %> />
   </p>
   <p class="ui-helper-clearfix">
   <label for="default_locale"><% | loc %>Language<% END %></label>
