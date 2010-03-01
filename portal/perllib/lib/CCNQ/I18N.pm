@@ -49,6 +49,10 @@ sub fr::ord { ordinate_to_fr($_[1]) }
 #use Lingua::FR::Numbers::Ordinate;
 #sub fr::ord { ordinate_fr($_[1]) }
 
+sub encoding {
+  return 'utf-8';
+}
+
 # Note that numf and quant are provided by default.
 
 sub duration {
