@@ -1,3 +1,4 @@
+<% USE loc %>
 <form action="/user_profile" method="POST">
   <label for="name"><% loc %>Name<% END %>
   <input type="text" name="name"  value="<% field.name %>"  <% IF not is_admin %>readonly<% END %> />
