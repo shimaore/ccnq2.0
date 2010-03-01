@@ -53,4 +53,4 @@ input {
     border: 1px solid black;
 }
 
-@import "menu.css";
+@import url(menu.css);
