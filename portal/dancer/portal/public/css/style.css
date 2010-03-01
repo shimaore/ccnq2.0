@@ -52,3 +52,5 @@ a {
 input {
     border: 1px solid black;
 }
+
+@import "menu.css";

@@ -2,8 +2,9 @@
 <fieldset id="UserAuthentication"><legend><% | loc %>Authentication<% END %></legend>
 <% IF session.user_id %>
   <div class="logged-in">
-    <p><% | loc(user_name || session.user_id) %>You are logged in as [_1].<% END %></p>
-    <p><a href="/logout"><% | loc %>Logout<% END %></a></p>
+    <% | loc(user_name || session.user_id) %>You are logged in as [_1].<% END %>
+    <br/>
+    <a href="/logout"><% | loc %>Logout<% END %></a>
   <div>
   <!-- XXX SwitchUser -->
 <% ELSE %>
