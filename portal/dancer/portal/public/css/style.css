@@ -71,3 +71,11 @@ div.success { border: 1px solid #0C0; }
 input, select {
     border: 1px solid black;
 }
+
+label {
+    width: 20em;
+}
+
+label.required {
+    font-weight: bold;
+}
