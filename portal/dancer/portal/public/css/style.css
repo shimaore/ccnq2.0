@@ -1,5 +1,5 @@
 body {
-    font-family: Lucida,sans-serif;   
+    font-family: Lucida,sans-serif;
     color: black;
     background-color: white;
 }
@@ -12,7 +12,7 @@ body {
     padding-top: 0.5em;
 }
 
-a { 
+a {
     color: #222;
 }
 
@@ -24,7 +24,12 @@ a {
     color: #ddd;
 }
 
-pre {
-    font-family: \"lucida console\",\"monaco\",\"andale mono\",\"bitstream vera sans mono\",\"consolas\",monospace;
+
+.menu {
+
+}
+
+.active {
+    font-weight: bold;
 }
 
