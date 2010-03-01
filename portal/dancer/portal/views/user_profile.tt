@@ -1,22 +1,22 @@
 <% USE loc %>
-<form action="/user_profile" method="POST">
-  <p>
+<form action="/user_profile" method="POST" class="ui-widget">
+  <p class="ui-helper-clearfix">
   <label for="name"><% | loc %>Name<% END %></label>
   <input type="text" name="name" value="<% field.name | html %>"  <% IF not is_admin %>readonly<% END %> />
   </p>
-  <p>
+  <p class="ui-helper-clearfix">
   <label for="name"><% | loc %>Email<% END %></label>
   <input type="text" name="email" value="<% field.email | html %>" <% IF not is_admin %>readonly<% END %> />
   </p>
-  <p>
+  <p class="ui-helper-clearfix">
   <label for="name"><% | loc %>Portal accounts<% END %></label>
   <input type="text" name="portal_accounts" value="<% field.portal_accounts | html %>" <% IF not is_admin %>readonly<% END %> />
   </p>
-  <p>
+  <p class="ui-helper-clearfix">
   <label for="name"><% | loc %>Billing accounts<% END %></label>
   <input type="text" name="billing_accounts" value="<% field.portal_accounts | html %>" <% IF not is_admin %>readonly<% END %> />
   </p>
-  <p>
+  <p class="ui-helper-clearfix">
   <label for="default_locale"><% | loc %>Language<% END %></label>
   <select name="default_locale">
     <option value=""></option>
@@ -24,7 +24,7 @@
     <% IF field.default_locale == "fr" %><option value="fr" selected>fr</option><% ELSE %><option value="fr">fr</option><% END %>
   </select>
   </p>
-  <p>
+  <p class="ui-helper-clearfix">
   <input type="submit" value="<% | loc %>Save<% END %>" />
   </p>
 </form>
