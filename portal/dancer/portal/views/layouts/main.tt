@@ -7,7 +7,7 @@
 <link rel="stylesheet" type="text/css" href="/css/menu.css" />
 <!-- jquery + jquery.ui -->
 <link rel="stylesheet" type="text/css" href="/themes/le-frog/jquery-ui.css" />
-<script type="text/javascript" src="/js/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="/js/jquery-1.4.2.min.js"></script>
 <script type="text/javascript" src="/js/jquery-ui.min.js"></script>
 <!-- / jquery + jquery.ui -->
 </head>
