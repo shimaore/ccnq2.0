@@ -20,7 +20,7 @@
   <div id="locale"><% INCLUDE views/LocaleSelection.tt %></div>
   <div id="account"><% INCLUDE views/AccountSelection.tt %></div>
   <div id="auth"><% INCLUDE views/UserAuthentication.tt %></div>
-  <div id="background-menubar" style="height: 10ex;">&nbsp;</div>
+  <div class="ui-helper-clearfix" style="height: 0px;">&nbsp;</div>
 </div>
 <div id="content" class="ui-widget-content"><% content %></div>
 <div id="footer"><% INCLUDE views/footer.tt %></div>
