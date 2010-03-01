@@ -15,6 +15,10 @@ package CCNQ::Portal::Outer::UserUpdate;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
 
+use Dancer ':syntax';
+use CCNQ::Portal;
+use CCNQ::Portal::I18N;
+
 use CGI::Untaint;
 
 sub retrieve {
@@ -44,10 +48,10 @@ sub update {
 
   my $params = {
     default_language => params->{default_language},
-  }
+  };
   # XXX Replace with a global list of supported languages.
   unless(grep { $params->{default_language} eq $_} qw( en fr )) {
-    var error => 'Invalid language';
+    var error => _('Invalid language')_;
     return;
   }
 
@@ -60,7 +64,7 @@ sub update {
     if($email) {
       $params->{email} = $email->format;
     } else {
-      var error => 'Invalid email address';
+      var error => _('Invalid email address')_;
       return;
     }
 
