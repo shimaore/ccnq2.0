@@ -41,6 +41,8 @@ use CCNQ::Portal::Outer::UserUpdate;
 use CCNQ::Portal::Outer::AccountSelection;
 use CCNQ::Portal::Outer::LocaleSelection;
 
+use CCNQ::Portal::Inner::billing_plan;
+
 # before sub {
 #     if (!session('user_id') && request->path_info !~ m{^/(login|public)}) {
 #         # Pass the original path requested along to the handler:
