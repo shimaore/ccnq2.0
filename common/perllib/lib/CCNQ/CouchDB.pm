@@ -19,15 +19,16 @@ use strict; use warnings;
 use Logger::Syslog;
 use AnyEvent::CouchDB;
 use CCNQ::AE;
+use Encode;
 
 sub pp {
   my $v = shift;
   return qq(nil)  if !defined($v);
-  return qq("$v") if !ref($v);
+  return encode_utf8(qq("$v")) if !ref($v);
   return '[ '.join(', ', map { pp($_) } @{$v}).' ]' if ref($v) eq 'ARRAY' ;
   return '{ '.join(', ', map { qq("$_": ).pp($v->{$_}) } sort keys %{$v}).' }'
     if ref($v) eq 'HASH';
-  return qq("$v");
+  return encode_utf8(qq("$v"));
 }
 
 sub receive {
