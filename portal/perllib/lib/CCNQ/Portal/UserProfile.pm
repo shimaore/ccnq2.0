@@ -64,7 +64,8 @@ sub update {
   my $doc = $self->_load($self->{_id});
   for my $f (qw(name email default_locale portal_accounts
                 is_admin is_sysadmin )) {
-    $doc->{$f} = $self->{$f} if exists $self->{$f} && defined $self->{$f};
+    $self->{$f} = $doc->{$f} = $params->{$f}
+      if exists $params->{$f} && defined $params->{$f};
   }
   my $cv = $self->db->save_doc($doc);
   CCNQ::CouchDB::receive($cv);
