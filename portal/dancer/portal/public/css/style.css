@@ -33,3 +33,14 @@ a {
     font-weight: bold;
 }
 
+#UserAuthentication {
+    float: right;
+}
+
+#AccountSelection {
+    float: right;
+}
+
+#LocaleSelection {
+    float: right;
+}

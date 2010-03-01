@@ -1,6 +1,6 @@
 <% IF session.user_id %>
 <% USE loc %>
-<fieldset><legend><% | loc %>Account selection<% END %></legend>
+<fieldset id="AccountSelection"><legend><% | loc %>Account selection<% END %></legend>
 <% IF accounts.size %>
   <% IF accounts.size > 1 %>
   <form action="/account" method="POST">

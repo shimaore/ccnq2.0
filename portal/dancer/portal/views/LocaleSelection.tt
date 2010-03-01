@@ -1,5 +1,5 @@
 <% USE loc %>
-<fieldset><legend><% | loc %>Language<% END %></legend>
+<fieldset id="LocaleSelection"><legend><% | loc %>Language<% END %></legend>
   <!-- XXX use flags -->
   <!-- use a loop -->
   <% IF session.locale == "en" %><span class="active">en</span><% ELSE %><a href="/locale/en">en</a><% END %>
