@@ -29,8 +29,8 @@ msgstr "Portail"
 msgid "Account selection"
 msgstr "Numéro de compte"
 
-msgid "Account [_1]"
-msgstr "Compte [_1]"
+msgid "Account %1"
+msgstr "Compte %1"
 
 msgid "Authentication"
 msgstr "Authentification"
@@ -44,8 +44,8 @@ msgstr "Pas de comptes disponibles"
 msgid "Language"
 msgstr "Langue"
 
-msgid "You are logged in as [_1]."
-msgstr "Nom d'utilisateur: [_1]"
+msgid "You are logged in as %1."
+msgstr "Nom d'utilisateur: %1"
 
 msgid "Logout"
 msgstr "Déconnexion"
