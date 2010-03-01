@@ -10,7 +10,7 @@ my $site = CCNQ::Portal::Site->new(
   default_content => sub {
     my $template_name = 'index';
     $template_name = 'result' if vars->{result};
-    $template_name = $vars->{template_name} if $vars->{template_name};
+    $template_name = vars->{template_name} if vars->{template_name};
 
     my $vars = vars;
 
