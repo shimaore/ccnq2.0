@@ -63,4 +63,19 @@ msgid "Agent Manageemnt"
 msgstr "Gestion des revendeurs"
 
 msgid "User Profile"
-msgstr "Profile utilisateur"
+msgstr "Profil utilisateur"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "Email"
+msgstr "Mél"
+
+msgid "Portal accounts"
+msgstr "Compte(s) accessible(s) sur le portail"
+
+msgid "Billing accounts"
+msgstr "Compte(s) de facturation"
+
+msgid "Save"
+msgstr "Enregistrer"
