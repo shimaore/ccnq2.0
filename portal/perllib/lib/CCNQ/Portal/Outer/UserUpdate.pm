@@ -104,7 +104,7 @@ post '/user_profile' => sub {
   var template_name => 'user_profile';
   update(CCNQ::Portal->current_session->user->id);
   return CCNQ::Portal->site->default_content->();
-}
+};
 
 # Admin updates another user's profile.
 post '/user_profile/:user_id' => sub {
@@ -113,6 +113,6 @@ post '/user_profile/:user_id' => sub {
   var template_name => 'user_profile';
   update(params->{user_id});
   return CCNQ::Portal->site->default_content->();
-}
+};
 
 'CCNQ::Portal::Outer::UserUpdate';
