@@ -26,7 +26,7 @@ sub pp {
   return qq(nil)  if !defined($v);
   return encode_utf8(qq("$v")) if !ref($v);
   return '[ '.join(', ', map { pp($_) } @{$v}).' ]' if ref($v) eq 'ARRAY' ;
-  return '{ '.join(', ', map { qq("$_": ).pp($v->{$_}) } sort keys %{$v}).' }'
+  return '{ '.join(', ', map { pp($_).q(: ).pp($v->{$_}) } sort keys %{$v}).' }'
     if ref($v) eq 'HASH';
   return encode_utf8(qq("$v"));
 }
