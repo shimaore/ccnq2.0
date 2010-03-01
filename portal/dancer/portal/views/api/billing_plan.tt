@@ -83,12 +83,12 @@
     <p>Step 1</p>
     <div class="step-guard ui-widget-header"><p>Guards</p><ul class="items"></ul></div>
     <div class="step-action ui-widget-header"><p>Actions</p><ul class="items"></ul></div>
-  </li>
+  </ul>
   <ul id="step1">
     <p>Step 2</p>
     <div class="step-guard ui-widget-header"><p>Guards</p><ul class="items"></ul></div>
     <div class="step-action ui-widget-header"><p>Actions</p><ul class="items"></ul></div>
-  </li>
+  </ul>
 </ul>
 
 <div id="trash">

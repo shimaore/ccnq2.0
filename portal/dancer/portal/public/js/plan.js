@@ -7,7 +7,7 @@ $(function() {
 	  activeClass: 'ui-state-hover',
 	  hoverClass: 'ui-state-hover',
 		drop: function(event, ui) {
-			$(this).children('ul').append('<li>'+ui+'</li>');
+			$(this).children('ul').append('<li>'+ui.html+'</li>');
 		}
 	});
 
