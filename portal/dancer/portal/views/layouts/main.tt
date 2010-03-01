@@ -14,7 +14,8 @@
 <body>
 <div id="header" class="ui-widget-header">
   <h1><% | loc %>Portal<% END %></h1>
-  <div id="menu"><% INCLUDE views/menu.tt %></div>
+  <div id="mainmenu"><% INCLUDE views/menu.tt %></div>
+  <div style="clear: both; height: 0px;">&nbsp;</div>
 </div>
 <div id="taskbar" class="ui-widget-content">
   <div id="locale"><% INCLUDE views/LocaleSelection.tt %></div>
