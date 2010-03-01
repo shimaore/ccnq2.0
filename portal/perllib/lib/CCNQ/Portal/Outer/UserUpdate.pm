@@ -103,6 +103,7 @@ post '/user_profile' => sub {
   return unless CCNQ::Portal->current_session->user;
   var template_name => 'user_profile';
   update(CCNQ::Portal->current_session->user->id);
+  retrieve(CCNQ::Portal->current_session->user->id);
   return CCNQ::Portal->site->default_content->();
 };
 
@@ -112,6 +113,7 @@ post '/user_profile/:user_id' => sub {
   return unless CCNQ::Portal->current_session->user->profile->is_admin;
   var template_name => 'user_profile';
   update(params->{user_id});
+  retrieve(params->{user_id});
   return CCNQ::Portal->site->default_content->();
 };
 
