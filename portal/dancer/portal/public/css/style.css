@@ -66,10 +66,10 @@ input, select {
 }
 
 label {
-    width: 8em;
+    width: 35%;
     float: left;
     text-align: right;
-    margin-right: 0.5em;
+    margin-right: 2%;
     display: block;
 }
 
@@ -78,5 +78,5 @@ label.required {
 }
 
 .submit input {
-    margin-left: 8.5em;
+    margin-left: 37%;
 }
