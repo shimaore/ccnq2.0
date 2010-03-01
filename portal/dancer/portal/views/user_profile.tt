@@ -24,7 +24,7 @@
     <% IF field.default_locale == "fr" %><option value="fr" selected>fr</option><% ELSE %><option value="fr">fr</option><% END %>
   </select>
   </p>
-  <p class="ui-helper-clearfix">
+  <p class="ui-helper-clearfix submit">
   <input type="submit" value="<% | loc %>Save<% END %>" />
   </p>
 </form>
