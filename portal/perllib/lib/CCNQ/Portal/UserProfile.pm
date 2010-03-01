@@ -98,6 +98,20 @@ sub default_locale { return shift->{default_locale} }
 
 sub portal_accounts { return shift->{portal_accounts} }
 
+=pod
+  is_admin
+    Returns whether a user is an administrator for the portal.
+=cut
+
+sub is_admin { return shift->{is_admin} }
+
+=pod
+  is_sysadmin
+    Returns whether a user is a super-administrator for the portal
+=cut
+
+sub is_sysadmin { return shift->{is_sysadmin} }
+
 # Other (yet undocumented) options
 
 # These are only used by CCNQ::Portal::Auth::CouchDB .
