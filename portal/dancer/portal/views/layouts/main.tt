@@ -1,10 +1,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="<% session.locale %>" xml:lang="<% session.locale %>">
 <head><% USE loc %>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title><% | loc %>Portal<% END %></title>
 <link rel="stylesheet" type="text/css" href="/css/style.css" />
 <link rel="stylesheet" type="text/css" href="/css/menu.css" />
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!-- jquery + jquery.ui -->
+<link rel="stylesheet" type="text/css" href="/themes/le-frog/jquery-ui.css" />
+<script type="text/javascript" src="/js/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="/js/jquery-ui.min.js"></script>
+<!-- / jquery + jquery.ui -->
 </head>
 <body>
 <h1><% | loc %>Portal<% END %></h1>
