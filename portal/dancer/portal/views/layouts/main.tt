@@ -14,6 +14,8 @@
 <body>
 <div id="header" class="ui-widget-header">
   <h1><% | loc %>Portal<% END %></h1>
+</div>
+<div id="menubar" class="ui-widget">
   <div id="menu"><% INCLUDE views/menu.tt %></div>
   <div id="locale"><% INCLUDE views/LocaleSelection.tt %></div>
   <div id="account"><% INCLUDE views/AccountSelection.tt %></div>
