@@ -27,7 +27,7 @@ sub filter {
 
     # Template.pm doesn't do further processing, and Dancer (like LWP) expects
     # an encoded (binary) stream.
-    # $text = encode_utf8($text);
+    $text = encode_utf8($text);
     return $text;
 }
 
