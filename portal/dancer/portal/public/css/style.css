@@ -49,6 +49,14 @@ a {
     float: left;
 }
 
+#content {
+    clear: both;
+}
+
+#footer {
+    clear: both;
+}
+
 input {
     border: 1px solid black;
 }
