@@ -1,4 +1,5 @@
 <% USE loc %>
+<div class="ui-widget">
 <% IF error %>
   <div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;">
     <p>
@@ -11,3 +12,4 @@
   <div class="content"><% result | loc %></div>
 <% END %>
 <% END %>
+</div>

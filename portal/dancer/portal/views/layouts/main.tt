@@ -13,13 +13,13 @@
 </head>
 <body>
 <h1><% | loc %>Portal<% END %></h1>
-<div id="header">
+<div id="header" class="ui-widget-header">
   <div id="menu"><% INCLUDE views/menu.tt %></div>
   <div id="locale"><% INCLUDE views/LocaleSelection.tt %></div>
   <div id="account"><% INCLUDE views/AccountSelection.tt %></div>
   <div id="auth"><% INCLUDE views/UserAuthentication.tt %></div>
 </div>
-<div id="content"><% content %></div>
+<div id="content" class="ui-widget-content"><% content %></div>
 <div id="footer"><% INCLUDE views/footer.tt %></div>
 </body>
 </html>
