@@ -12,8 +12,8 @@
 
 <script type="text/javascript">
 $(function() {
-	$(".plan-guard").draggable({ revert: 'valid' });
-	$(".plan-action").draggable({ revert: 'valid' });
+	$(".plan-guard").draggable({ revert: true });
+	$(".plan-action").draggable({ revert: true });
 
 	$(".step-guard").droppable({
 	  accept: '.plan-guard',
