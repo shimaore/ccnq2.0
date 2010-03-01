@@ -1,6 +1,9 @@
 <% USE loc %>
 <% IF error %>
-  <div class="ui-state-error"><% error | loc %></div>
+  <div class="ui-state-error">
+    <span style="float: left; margin-right: 0.3em;" class="ui-icon ui-icon-alert"></span>
+    <% error | loc %>
+  </div>
 <% ELSE %>
 <% IF result %>
   <div class="content"><% result | loc %></div>
