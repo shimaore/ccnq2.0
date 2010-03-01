@@ -35,6 +35,7 @@ use Locale::Maketext::Lexicon {
         'fr' => [Gettext => i18n_gettext_location('fr')],
         ### Uncomment to decode lexicon entries into Unicode strings
         _decode => 1,
+        _encoding => 'utf8',
         ### Uncomment to fallback when a key is missing from lexicons
         _auto   => 1,
         ### Uncomment to use %1 / %quant(%1) instead of [_1] / [quant, _1]
