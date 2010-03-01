@@ -44,7 +44,7 @@ sub update {
   my $user = CCNQ::Portal::User->new($user_id);
   return unless $user->profile;
 
-  my $untainter = CGI::Untaint->new($params);
+  my $untainter = CGI::Untaint->new(params);
 
   my $params = {
     default_language => params->{default_language},
