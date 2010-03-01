@@ -7,7 +7,7 @@ $(function() {
 	  activeClass: 'ui-state-hover',
 	  hoverClass: 'ui-state-hover',
 		drop: function(event, ui) {
-			$(this).children('ul').append('<li>'+ui.html+'</li>');
+			$(this).children('ul').append('<li><div class="ui-widget-content plan-guard">'+ui.innerHTML+'</div></li>');
 		}
 	});
 
@@ -16,7 +16,7 @@ $(function() {
 	  activeClass: 'ui-state-hover',
 	  hoverClass: 'ui-state-hover',
 		drop: function(event, ui) {
-			$(this).children('ul').append('<li>'+ui+'</li>');
+			$(this).children('ul').append('<li><div class="ui-widget-content plan-action">'+ui.innerHTML+'</div></li>');
 		}
 	});
 
