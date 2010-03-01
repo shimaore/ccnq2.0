@@ -16,8 +16,7 @@ $(function() {
 		}
 	});
 
-	$(".step-guard-items").sortable({ placeholder: 'ui-state-highlight' });
-	$(".step-action-items").sortable({ placeholder: 'ui-state-highlight' });
+	$(".items").sortable({ placeholder: 'ui-state-highlight' });
 
   $("#plan").sortable({
 	  placeholder: 'ui-state-highlight'

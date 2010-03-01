@@ -81,13 +81,13 @@
 <ul id="plan">
   <li id="step0">
     <p>Step 1</p>
-    <div class="step-guard"><ul class="items"></ul></div>
-    <div class="step-action"><ul class="items"></ul></div>
+    <div class="step-guard"><p>Guards</p><ul class="items"></ul></div>
+    <div class="step-action"><p>Actions</p><ul class="items"></ul></div>
   </li>
   <ul id="step1">
     <p>Step 2</p>
-    <div class="step-guard"><ul class="items"></ul></div>
-    <div class="step-action"><ul class="items"></ul></div>
+    <div class="step-guard"><p>Guards</p><ul class="items"></ul></div>
+    <div class="step-action"><p>Actions</p><ul class="items"></ul></div>
   </li>
 </ul>
 
