@@ -1,12 +1,12 @@
 <ul id="nav">
   <li><a href="/"><% | loc %>Summary<% END %></a></li>
   <% IF is_sysadmin %>
-  <li><a href="/users"><% | loc %>User Management<% END %></li>
+  <li><a href="/users"><% | loc %>User Management<% END %></a></li>
   <% END %>
   <% IF is_admin %>
-  <li><a href="/agents"><% | loc %>Agent Management<% END %></li>
+  <li><a href="/agents"><% | loc %>Agent Management<% END %></a></li>
   <% END %>
   <% IF session.user_id %>
-  <li><a href="/user_profile"><% | loc %>User Profile<% END %></li>
+  <li><a href="/user_profile"><% | loc %>User Profile<% END %></a></li>
   <% END %>
 </ul>
