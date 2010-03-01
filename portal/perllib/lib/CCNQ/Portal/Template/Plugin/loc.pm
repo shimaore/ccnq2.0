@@ -17,10 +17,6 @@ sub init {
 sub filter {
     my ($self, $text, $args, $config) = @_;
 
-    # With my .po file in UTF-8 and data coming from CouchDB in Unicode,
-    # it seems things go easier if I first convert the data to UTF-8.
-    @args = map { encode_utf8($_) } @{$args};
-
     $text = CCNQ::Portal->current_session->locale->loc($text,@args);
     for ($text) {
         s/&/&amp;/g;
@@ -29,6 +25,9 @@ sub filter {
         s/"/&quot;/g;
     }
 
+    # Template.pm doesn't do further processing, and Dancer (like LWP) expects
+    # an encoded (binary) stream.
+    $text = encode_utf8($text);
     return $text;
 }
 
