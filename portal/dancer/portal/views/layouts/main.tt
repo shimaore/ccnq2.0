@@ -11,7 +11,7 @@
 <script type="text/javascript" src="/js/jquery-ui.min.js"></script>
 <!-- / jquery + jquery.ui -->
 </head>
-<body>
+<body class="ui-widget ui-widget-content">
 <div id="header" class="ui-widget ui-widget-header">
   <h1><% | loc %>Portal<% END %></h1>
 </div>
@@ -20,7 +20,7 @@
   <div id="locale"><% INCLUDE views/LocaleSelection.tt %></div>
   <div id="account"><% INCLUDE views/AccountSelection.tt %></div>
   <div id="auth"><% INCLUDE views/UserAuthentication.tt %></div>
-  <div id="background-menubar" style="height: 3em;">&nbsp;</div>
+  <div id="background-menubar" style="height: 6ex;">&nbsp;</div>
 </div>
 <div id="content" class="ui-widget-content"><% content %></div>
 <div id="footer"><% INCLUDE views/footer.tt %></div>
