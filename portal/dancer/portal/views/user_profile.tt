@@ -15,8 +15,8 @@
   <label for="default_locale"><% | loc %>Language<% END %>
   <select name="default_locale">
     <option value=""></option>
-    <% IF field.default_locale == "en" %><option value="en" selected>en</option><% ELSE %><option value="en" selected>en</option><% END %>
-    <% IF field.default_locale == "fr" %><option value="fr" selected>fr</option><% ELSE %><option value="fr" selected>fr</option><% END %>
+    <% IF field.default_locale == "en" %><option value="en" selected>en</option><% ELSE %><option value="en">en</option><% END %>
+    <% IF field.default_locale == "fr" %><option value="fr" selected>fr</option><% ELSE %><option value="fr">fr</option><% END %>
   </select>
   <br/>
   <input type="submit">

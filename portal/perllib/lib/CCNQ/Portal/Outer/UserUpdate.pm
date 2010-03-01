@@ -30,7 +30,7 @@ sub retrieve {
   var field => {
     name              => $user->profile->name,
     email             => $user->profile->email,
-    default_language  => $user->profile->default_locale,
+    default_locale    => $user->profile->default_locale,
     portal_accounts   => join(' ',@{$user->profile->portal_accounts}),
     is_admin          => $user->profile->portal_accounts,
     # XXX billing_accounts (via API)
@@ -47,10 +47,10 @@ sub update {
   my $untainter = CGI::Untaint->new(params);
 
   my $params = {
-    default_language => params->{default_language},
+    default_locale => params->{default_locale} || '',
   };
   # XXX Replace with a global list of supported languages.
-  unless(grep { $params->{default_language} eq $_} qw( en fr )) {
+  unless(grep { $params->{default_locale} eq $_} qw( en fr )) {
     var error => _('Invalid language')_;
     return;
   }
