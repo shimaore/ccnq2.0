@@ -68,6 +68,6 @@ div.success { border: 1px solid #0C0; }
     clear: both;
 }
 
-input {
+input, select {
     border: 1px solid black;
 }
