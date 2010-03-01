@@ -24,14 +24,25 @@ a {
     color: #ddd;
 }
 
-
-.menu {
-
-}
-
 .active {
     font-weight: bold;
 }
+
+.error { color: black; }
+div.error, tr.error {
+  background: #800;
+  color: white;
+  padding: 0 3px;
+}
+div.error { border: 1px solid #C00; }
+
+.success { color: black; }
+div.success, tr.success {
+  background: #080;
+  color: white;
+  padding: 0 3px;
+}
+div.success { border: 1px solid #0C0; }
 
 #UserAuthentication {
     float: right;
