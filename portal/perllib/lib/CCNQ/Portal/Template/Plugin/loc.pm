@@ -17,7 +17,7 @@ sub init {
 sub filter {
     my ($self, $text, $args, $config) = @_;
 
-    $text = CCNQ::Portal->current_session->locale->loc($text,@args);
+    $text = CCNQ::Portal->current_session->locale->loc($text,@{$args});
     for ($text) {
         s/&/&amp;/g;
         s/</&lt;/g;
