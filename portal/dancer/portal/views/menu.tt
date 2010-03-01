@@ -1,4 +1,4 @@
-<div class="mainmenu">
+<div id="mainmenu">
   <div class="menu"><a href="/">Summary</a></div>
   <% IF is_sysadmin %>
   <div class="menu"><a href="/users">User Management</div>

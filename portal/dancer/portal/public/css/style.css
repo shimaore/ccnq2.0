@@ -45,6 +45,10 @@ a {
     float: right;
 }
 
+#mainmenu {
+    float: left;
+}
+
 input {
     border: 1px solid black;
 }
