@@ -33,7 +33,7 @@ use Encode;
 
 sub loc {
   use CCNQ::Portal;
-  return encode_utf8(CCNQ::Portal->current_session->locale->loc(@_));
+  return CCNQ::Portal->current_session->locale->loc(@_);
 }
 
 FILTER {
