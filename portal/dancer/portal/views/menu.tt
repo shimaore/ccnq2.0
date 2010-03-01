@@ -9,4 +9,4 @@
   <% IF session.user_id %>
   <li><a href="/user_profile"><% | loc %>User Profile<% END %></li>
   <% END %>
-</div>
+</ul>
