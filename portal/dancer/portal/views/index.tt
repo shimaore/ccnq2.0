@@ -1,6 +1,6 @@
 <% USE loc %>
 <% IF error %>
-  <div class="error"><% error | loc %></div>
+  <div class="ui-state-error"><% error | loc %></div>
 <% ELSE %>
 <% IF result %>
   <div class="content"><% result | loc %></div>
