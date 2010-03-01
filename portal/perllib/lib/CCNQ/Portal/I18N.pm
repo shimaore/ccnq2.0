@@ -29,9 +29,11 @@ use Filter::Simple;
 # See http://www.unix.com/shell-programming-scripting/70177-perl-regex-help-matching-parentheses-2.html
 # or http://search.cpan.org/dist/perl-5.10.0/pod/perl5100delta.pod#Regular_expressions
 
+use Encode;
+
 sub loc {
   use CCNQ::Portal;
-  return CCNQ::Portal->current_session->locale->loc(@_);
+  return encode_utf8(CCNQ::Portal->current_session->locale->loc(@_));
 }
 
 FILTER {
