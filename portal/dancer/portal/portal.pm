@@ -36,6 +36,7 @@ use CCNQ::Portal;
 CCNQ::Portal->import($site);
 
 use CCNQ::Portal::Outer::UserAuthentication;
+use CCNQ::Portal::Outer::UserUpdate;
 use CCNQ::Portal::Outer::AccountSelection;
 use CCNQ::Portal::Outer::LocaleSelection;
 
