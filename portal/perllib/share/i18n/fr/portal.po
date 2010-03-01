@@ -53,3 +53,14 @@ msgstr "Déconnexion"
 msgid "Log in"
 msgstr "Connecter"
 
+msgid "Summary"
+msgstr "Accueil"
+
+msgid "User Management"
+msgstr "Gestion des utilisateurs"
+
+msgid "Agent Manageemnt"
+msgstr "Gestion des revendeurs"
+
+msgid "User Profile"
+msgstr "Profile utilisateur"

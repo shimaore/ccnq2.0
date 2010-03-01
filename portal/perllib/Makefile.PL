@@ -15,6 +15,7 @@ requires      'Dancer'                    => '1.155'; # pre-1.160 github
 requires      'Template'                  => 0;
 
 requires      'CGI::Untaint'              => 0;
+requires      'CGI::Untaint::email'       => 0;
 
 ## Portal requirements
 requires      'Locale::Maketext::Lexicon'     => 0;

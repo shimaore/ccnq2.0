@@ -1,0 +1,22 @@
+<form action="/user_profile" method="POST">
+  <label for="name"><% loc %>Name<% END %>
+  <input type="text" name="name"  value="<% field.name %>"  <% IF not is_admin %>readonly<% END %> />
+  <br/>
+  <label for="name"><% loc %>Email<% END %>
+  <input type="text" name="email" value="<% field.email %>" <% IF not is_admin %>readonly<% END %> />
+  <br/>
+  <label for="name"><% loc %>Portal accounts<% END %>
+  <input type="text" name="portal_accounts" value="<% field.portal_accounts %>" <% IF not is_admin %>readonly<% END %> />
+  <br/>
+  <label for="name"><% loc %>Billing accounts<% END %>
+  <input type="text" name="billing_accounts" value="<% field.portal_accounts %>" <% IF not is_admin %>readonly<% END %> />
+  <br/>
+  <label for="default_locale"><% |loc %>Language<% END %>
+  <select name="default_locale">
+    <option value=""></option>
+    <% IF field.default_locale == "en" %><option value="en" selected>en</option><% ELSE %><option value="en" selected>en</option><% END %>
+    <% IF field.default_locale == "fr" %><option value="fr" selected>fr</option><% ELSE %><option value="fr" selected>fr</option><% END %>
+  </select>
+  <br/>
+  <input type="submit">
+</form>
