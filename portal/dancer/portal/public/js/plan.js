@@ -4,6 +4,8 @@ $(function() {
 
 	$(".step-guard").droppable({
 	  accept: '.plan-guard',
+	  activeClass: 'ui-state-hover',
+	  hoverClass: 'ui-state-hover',
 		drop: function(event, ui) {
 			$(this).children('ul').append('<li>'+ui+'</li>');
 		}
@@ -11,6 +13,8 @@ $(function() {
 
 	$(".step-action").droppable({
 	  accept: '.plan-action',
+	  activeClass: 'ui-state-hover',
+	  hoverClass: 'ui-state-hover',
 		drop: function(event, ui) {
 			$(this).children('ul').append('<li>'+ui+'</li>');
 		}
