@@ -75,7 +75,7 @@
     </div>
     <div class="ui-widget-content plan-action">
       <input type="hidden" name="p0" value="use_amount_from_bucket"/>
-      <p>Use amount from bucket<select /></p>
+      <p>Use amount from bucket<select></select></p>
     </div>
     <div class="ui-widget-content plan-action">
       <input type="hidden" name="p0" value="set_periods_values"/>
@@ -84,7 +84,7 @@
     </div>
     <div class="ui-widget-content plan-action">
       <input type="hidden" name="p0" value="set_periods_table_to_e164"/>
-      <p>set_periods_table_to_e164:<select/></p>
+      <p>set_periods_table_to_e164:<select></select></p>
     </div>
     <div class="ui-widget-content plan-action">
       <input type="hidden" name="p0" value="add_count_cost"/>
@@ -92,7 +92,7 @@
     </div>
     <div class="ui-widget-content plan-action">
       <input type="hidden" name="p0" value="add_count_cost_table_to_e164"/>
-      <p>add_count_cost_table_to_e164:<select/></p>
+      <p>add_count_cost_table_to_e164:<select></select></p>
     </div>
     <div class="ui-widget-content plan-action">
       <input type="hidden" name="p0" value="add_duration_rate"/>
@@ -100,7 +100,7 @@
     </div>
     <div class="ui-widget-content plan-action">
       <input type="hidden" name="p0" value="add_duration_rate_table_to_e164"/>
-      <p>add_duration_rate_table_to_e164:<select /></p>
+      <p>add_duration_rate_table_to_e164:<select></select></p>
     </div>
     <div class="ui-widget-content plan-action">
       <input type="hidden" name="p0" value="add_jurisdiction"/>
