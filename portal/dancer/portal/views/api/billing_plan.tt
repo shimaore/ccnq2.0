@@ -11,7 +11,7 @@
 
 <script type="text/javascript" src="/js/plan.js"></script>
 
-<div id="plan_toolbar" style="width: 50%;">
+<div id="plan_toolbar" style="width: 40%;">
   <fieldset id="plan_guards">
     <legend>Guards</legend>
     <div class="ui-widget-content plan-guard">
