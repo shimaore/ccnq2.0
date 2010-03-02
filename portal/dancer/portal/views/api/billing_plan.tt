@@ -78,18 +78,20 @@
   </fieldset>
 </div>
 
-<ul id="plan" style="width: 50%; float: right;">
-  <li id="step0">
-    <p>Step 1</p>
-    <div class="step-guard ui-widget-header"><p>Guards</p><ul class="items"></ul></div>
-    <div class="step-action ui-widget-header"><p>Actions</p><ul class="items"></ul></div>
+<div  style="width: 50%; float: right;">
+  <ul id="plan">
+    <li id="step0">
+      <p>Step 1</p>
+      <div class="step-guard ui-widget-header"><p>Guards</p><ul class="items"></ul></div>
+      <div class="step-action ui-widget-header"><p>Actions</p><ul class="items"></ul></div>
+    </ul>
+    <ul id="step1">
+      <p>Step 2</p>
+      <div class="step-guard ui-widget-header"><p>Guards</p><ul class="items"></ul></div>
+      <div class="step-action ui-widget-header"><p>Actions</p><ul class="items"></ul></div>
+    </ul>
   </ul>
-  <ul id="step1">
-    <p>Step 2</p>
-    <div class="step-guard ui-widget-header"><p>Guards</p><ul class="items"></ul></div>
-    <div class="step-action ui-widget-header"><p>Actions</p><ul class="items"></ul></div>
-  </ul>
-</ul>
+</div>
 
 <div id="trash">
 </div>
