@@ -11,7 +11,7 @@
 
 <script type="text/javascript" src="/js/plan.js"></script>
 
-<div id="plan_toolbar">
+<div id="plan_toolbar" style="float: left;">
   <fieldset id="plan_guards">
     <legend>Guards</legend>
     <div class="ui-widget-content plan-guard">
@@ -78,7 +78,7 @@
   </fieldset>
 </div>
 
-<ul id="plan">
+<ul id="plan" style="float: right;">
   <li id="step0">
     <p>Step 1</p>
     <div class="step-guard ui-widget-header"><p>Guards</p><ul class="items"></ul></div>
