@@ -62,48 +62,48 @@
   <fieldset id="plan_actions">
     <legend>Actions</legend>
     <div class="ui-widget-content plan-action">
-      <input type="hidden" name="p0" value="is_billable">
+      <input type="hidden" name="p0" value="is_billable"/>
       <p>Is billable</p>
     </div>
     <div class="ui-widget-content plan-action">
-      <input type="hidden" name="p0" value="is_non_billable">
+      <input type="hidden" name="p0" value="is_non_billable"/>
       <p>Is non-billable</p>
     </div>
     <div class="ui-widget-content plan-action">
-      <input type="hidden" name="p0" value="use_minutes_from_bucket">
+      <input type="hidden" name="p0" value="use_minutes_from_bucket"/>
       <p>Use minutes from bucket<select /></p>
     </div>
     <div class="ui-widget-content plan-action">
-      <input type="hidden" name="p0" value="use_amount_from_bucket">
+      <input type="hidden" name="p0" value="use_amount_from_bucket"/>
       <p>Use amount from bucket<select /></p>
     </div>
     <div class="ui-widget-content plan-action">
-      <input type="hidden" name="p0" value="set_periods_values">
+      <input type="hidden" name="p0" value="set_periods_values"/>
       <p>Initial duration:<input/></p>
       <p>Increment duration:<input/></p>
     </div>
     <div class="ui-widget-content plan-action">
-      <input type="hidden" name="p0" value="set_periods_table_to_e164">
+      <input type="hidden" name="p0" value="set_periods_table_to_e164"/>
       <p>set_periods_table_to_e164:<select/></p>
     </div>
     <div class="ui-widget-content plan-action">
-      <input type="hidden" name="p0" value="add_count_cost">
+      <input type="hidden" name="p0" value="add_count_cost"/>
       <p>add_count_cost:<input/></p>
     </div>
     <div class="ui-widget-content plan-action">
-      <input type="hidden" name="p0" value="add_count_cost_table_to_e164">
+      <input type="hidden" name="p0" value="add_count_cost_table_to_e164"/>
       <p>add_count_cost_table_to_e164:<select/></p>
     </div>
     <div class="ui-widget-content plan-action">
-      <input type="hidden" name="p0" value="add_duration_rate">
+      <input type="hidden" name="p0" value="add_duration_rate"/>
       <p>add_duration_rate:<input /></p>
     </div>
     <div class="ui-widget-content plan-action">
-      <input type="hidden" name="p0" value="add_duration_rate_table_to_e164">
+      <input type="hidden" name="p0" value="add_duration_rate_table_to_e164"/>
       <p>add_duration_rate_table_to_e164:<select /></p>
     </div>
     <div class="ui-widget-content plan-action">
-      <input type="hidden" name="p0" value="add_jurisdiction">
+      <input type="hidden" name="p0" value="add_jurisdiction"/>
       <p>add_jurisdiction</p>
       <p>name: <input /></p>
       <p>percentage <input /></p>
