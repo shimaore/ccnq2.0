@@ -4,14 +4,9 @@
  contain a bit of javascript that will populate DIVs based on the value,
  and conversely submit a value that contains all the DIVs. -->
 
-<style type="text/css">
-.plan-guard { width: 50px; height: 50px; padding: 0.5em; float: left; margin: 10px 10px 10px 0; }
-.plan-action { width: 50px; height: 50px; padding: 0.5em; float: left; margin: 10px 10px 10px 0; }
-</style>
-
 <script type="text/javascript" src="/js/plan.js"></script>
 
-<div id="plan_toolbar" style="width: 40%;">
+<div id="plan_toolbar">
   <fieldset id="plan_guards">
     <legend>Guards</legend>
     <div class="ui-widget-content plan-guard">
@@ -78,7 +73,7 @@
   </fieldset>
 </div>
 
-<div  style="width: 50%; float: right;">
+<div id="plan_workspace">
   <ul id="plan">
     <li id="step0">
       <p>Step 1</p>
