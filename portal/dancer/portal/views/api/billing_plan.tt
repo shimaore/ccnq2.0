@@ -71,7 +71,7 @@
     </div>
     <div class="ui-widget-content plan-action">
       <input type="hidden" name="p0" value="use_minutes_from_bucket"/>
-      <p>Use minutes from bucket<select /></p>
+      <p>Use minutes from bucket<select></select></p>
     </div>
     <div class="ui-widget-content plan-action">
       <input type="hidden" name="p0" value="use_amount_from_bucket"/>
