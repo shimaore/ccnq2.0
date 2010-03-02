@@ -1,5 +1,5 @@
-.plan-guard { width: 50px; height: 50px; padding: 0.5em; float: left; margin: 10px 10px 10px 0; }
-.plan-action { width: 50px; height: 50px; padding: 0.5em; float: left; margin: 10px 10px 10px 0; }
+.plan-guard { width: 100px; height: 50px; padding: 0.1em; float: left; margin: 7px 7px 7px 0; }
+.plan-action { width: 100px; height: 50px; padding: 0.1em; float: left; margin: 7px 7px 7px 0; }
 
 #plan_toolbar {
   width: 40%;
