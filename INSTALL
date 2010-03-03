@@ -74,6 +74,7 @@ EOT
   # Required for AnyEvent::CouchDB
   sudo aptitude -y install libdata-dump-streamer-perl libio-all-perl libdata-dump-perl libtest-deep-perl
   # Now add non-Debian Perl modules.
+  # XXX Replace these with how to use dh-make-perl : dh-make-perl --build --cpan <package-name> && dpkg-buildpackage
   cpan File::ShareDir # Obsolete version in Debian Lenny or testing
   sudo cpan EV
   sudo cpan AnyEvent::XMPP
