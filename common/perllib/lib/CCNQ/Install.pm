@@ -149,7 +149,7 @@ use constant roles_to_functions => {
   'client-ocs-sbc'  => [qw( b2bua/cdr b2bua/client_ocs_sbc b2bua/base monit node )],
   'inbound-proxy'   => [qw( proxy/inbound_proxy proxy/base monit node )],
   'outbound-proxy'  => [qw( proxy/outbound_proxy proxy/base monit node )],
-  'complete-transparent-proxy' => [qw( proxy/registrar proxy/complete_transparent proxy/base mediaproxy/dispatcher mediaproxy monit node )],
+  'complete-transparent-proxy' => [qw( proxy/complete_transparent proxy/base mediaproxy/dispatcher mediaproxy monit node )],
   'router-no-registrar' => [qw( proxy/router_no_registrar proxy/base monit node )],
   # ...
   'portal'          => [qw( portal/base node/api monit node )],
