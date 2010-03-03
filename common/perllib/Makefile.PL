@@ -42,7 +42,7 @@ requires      'AnyEvent::HTTP'            => '1.44';
 
 requires      'UNIVERSAL::require'        => 0;
 
-test_requires 'Test::More' => 0;
+test_requires 'Test::More' => '0.94';
 
 # Copy everything in 'share'.
 install_share;

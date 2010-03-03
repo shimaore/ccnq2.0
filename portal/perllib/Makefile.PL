@@ -24,7 +24,7 @@ requires      'Lingua::FR::Numbers::Ordinate' => 0;
 ## Proxy requirements
 # requires      'DBI' => 0;
 
-test_requires 'Test::More' => 0;
+test_requires 'Test::More' => '0.94';
 # Required to test with Dancer::Session::Cookies.
 test_requires 'Crypt::CBC' => 0;
 test_requires 'String::CRC32' => 0;
