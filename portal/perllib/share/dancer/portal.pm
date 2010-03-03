@@ -43,14 +43,6 @@ use CCNQ::Portal::Outer::LocaleSelection;
 
 use CCNQ::Portal::Inner::billing_plan;
 
-# before sub {
-#     if (!session('user_id') && request->path_info !~ m{^/(login|public)}) {
-#         # Pass the original path requested along to the handler:
-#         var requested_path => request->path_info;
-#         request->path_info('/login');
-#     }
-# };
-
 any '/' => sub {
   $site->default_content->();
 };
