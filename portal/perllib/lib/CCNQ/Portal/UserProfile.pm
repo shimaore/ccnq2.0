@@ -99,7 +99,7 @@ sub default_locale { return shift->{default_locale} }
     Return an arrayref of authorized accounts for this portal user.
 =cut
 
-sub portal_accounts { return shift->{portal_accounts} }
+sub portal_accounts { return shift->{portal_accounts} || [] }
 
 =pod
   is_admin
