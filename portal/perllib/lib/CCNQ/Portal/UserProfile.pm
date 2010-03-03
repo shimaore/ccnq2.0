@@ -69,6 +69,8 @@ sub update {
   }
   my $cv = $self->db->save_doc($doc);
   CCNQ::CouchDB::receive($cv);
+  # Reset the session's locale to (potentially) use the new one.
+  CCNQ::Portal->current_session->force_locale();
 }
 
 =pod

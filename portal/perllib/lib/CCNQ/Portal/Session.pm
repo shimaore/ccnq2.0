@@ -32,6 +32,12 @@ sub start {
   my $self = shift;
   session user_id => shift;
   $self->update;
+  $self->force_locale;
+  return $self;
+}
+
+sub force_locale {
+  my $self = shift;
   # Save the locale that might have been selected earlier.
   session old_locale => session('locale');
   # Reset the locale so that the user's locale might be selected automatically.
