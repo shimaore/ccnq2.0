@@ -1,4 +1,4 @@
-# Copyright (C) 2009  Stephane Alnet
+# Copyright (C) 2009-2010  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -21,11 +21,11 @@
 # * Update apt's sources.list to import the "testing" distribution
 #   (needed for some packages on the API and MediaProxy servers):
 
-  cat <<EOT | sudo tee -a /etc/apt/sources.list > /dev/null
+  cat <<'EOT' | sudo tee -a /etc/apt/sources.list > /dev/null
 # Testing packages required by CCNQ2.0 for Erlang/CouchDB, MediaProxy
 deb     http://ftp.us.debian.org/debian/   testing main contrib
 EOT
-  cat <<EOT | sudo tee /etc/apt/preferences > /dev/null
+  cat <<'EOT' | sudo tee /etc/apt/preferences > /dev/null
 # Install Debian/Lenny packages by default
 Package: *
 Pin: release a=lenny
@@ -38,14 +38,14 @@ Pin-Priority: -1
 EOT
 
   sudo aptitude update
-  sudo aptitude dist-upgrade
+  sudo aptitude -y dist-upgrade
 
 
 # * Note: I've noticed that Lenny installs a /etc/rsyslog.conf which creates /var/log/user.log, but it never gets cleaned up.
 # I recommend:
 
-  mv /etc/rsyslog.conf /etc/rsyslog.conf.bak
-  cat <<EOT | sudo tee /etc/rsyslog.conf >/dev/null
+  sudo mv /etc/rsyslog.conf /etc/rsyslog.conf.bak
+  cat <<'EOT' | sudo tee /etc/rsyslog.conf >/dev/null
 $ModLoad imuxsock # provides support for local system logging
 $ModLoad imklog   # provides kernel logging support (previously done by rklogd)
 $ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat
@@ -53,7 +53,6 @@ $FileOwner root
 $FileGroup adm
 $FileCreateMode 0640
 $DirCreateMode 0755
-$IncludeConfig /etc/rsyslog.d/*.conf
 auth,authpriv.*                 /var/log/auth.log
 *.*;auth,authpriv.none          -/var/log/syslog
 EOT
@@ -62,7 +61,7 @@ EOT
 # * Note: for high performance, the directory /opt/freeswitch/db must be
 # in memory.
    grep '/opt/freeswitch/db' /etc/fstab || \
-   echo 'tmpfs /opt/freeswitch/db tmpfs defaults 0 0' >> /etc/fstab
+   echo 'tmpfs /opt/freeswitch/db tmpfs defaults 0 0' | sudo tee -a /etc/fstab >/dev/null
 
 
 # * On all servers, install the program:
@@ -72,27 +71,33 @@ EOT
   # Required for AnyEvent::DBI
   sudo aptitude -y install libdbi-perl
   # Required for AnyEvent::CouchDB
-  sudo aptitude -y install libdata-dump-streamer-perl libio-all-perl libdata-dump-perl libtest-deep-perl
+  sudo aptitude -y install liburi-perl libjson-xs-perl libdata-dump-streamer-perl libio-all-perl libdata-dump-perl libtest-deep-perl
   # Now add non-Debian Perl modules.
-  # XXX Replace these with how to use dh-make-perl : dh-make-perl --build --cpan <package-name> && dpkg-buildpackage
-  cpan File::ShareDir # Obsolete version in Debian Lenny or testing
-  sudo cpan EV
-  sudo cpan AnyEvent::XMPP
-  sudo cpan AnyEvent::Watchdog
-  sudo cpan constant::defer
-  sudo cpan Test::More
-  # The proxies need AnyEvent::DBI
-  sudo cpan AnyEvent::DBI
-  # The (manager) client also needs AnyEvent::CouchDB
-  sudo cpan AnyEvent::HTTP CouchDB::View AnyEvent::CouchDB
-  # Generally speaking you might want to install/upgrade those for better performance with AnyEvent
-  sudo cpan Async::Interrupt EV Guard JSON JSON::XS Net::SSLeay
+
+  # Manual instructions moved to doc/INSTALL.perl
+
+  # -- You need to install:
+  #  File::ShareDir # Obsolete version in Debian Lenny or testing
+  #  EV AnyEvent::XMPP AnyEvent::Watchdog constant::defer Test::More
+  #  AnyEvent::DBI AnyEvent::HTTP CouchDB::View AnyEvent::CouchDB
+  #  Async::Interrupt Guard JSON JSON::XS Net::SSLeay
+
+  # ------ Equivalent (from our servers): ------------
+  (mkdir /tmp/perl && cd /tmp/perl && \
+    wget http://opensource.sotelips.net/~stephane/perl/all.tar.gz && \
+    tar xzvf all.tar.gz && \
+    for file in *.deb; do echo "Installing $file"; sudo dpkg -i $file; done && \
+    rm *.deb all.tar.gz && cd && rmdir /tmp/perl && echo "Done." )
 
   # Download the latest release of the code
   mkdir -p ~/src && (cd ~/src && git clone git://github.com/stephanealnet/ccnq2.0.git)
 
   # Build the Perl modules and install them
-  cd ~/src/ccnq2.0/common/perllib && perl Makefile.PL && make && make test && make install
+  (cd ~/src/ccnq2.0/common/perllib && perl Makefile.PL && make && make test && sudo make install)
+
+  # On the web portal server, you should also do:
+  # (cd ~/src/ccnq2.0/portal/perllib && perl Makefile.PL && make && make test && sudo make install)
+  # .. but I haven't built the dependencies yet, so you should wait on that.
 
 # * On the API server:
 #
@@ -130,6 +135,10 @@ EOT
 
   sudo aptitude install memcached
   cpan Cache::Memcached
+
+  # On the web portal server, you should also do:
+  # (cd ~/src/ccnq2.0/portal/perllib && perl Makefile.PL && make && make test && sudo make install)
+  # .. but I haven't built the dependencies yet, so you should wait on that.
 
 # * On the proxy servers:
 
@@ -200,13 +209,14 @@ EOT
   sudo mkdir /etc/ccn
   hexdump -C /dev/urandom | head -1 | md5sum | sudo tee /etc/ccn/cookie > /dev/null
 
+  # Monitor /var/log/syslog to see any errors.
   sudo tail -f /var/log/syslog &
 
-  # Then run twice:
-  sudo ccnq2_upgrade
+  # Then run:
   sudo ccnq2_upgrade
 
-  # Monitor syslog during the execution of the scripts to know what to do next.
+  # Monitor syslog during the execution of the script to know what to do next.
+  # If syslog shows no line containing the word "error" then you should be OK.
 
 # * On the proxies:
 
@@ -235,7 +245,7 @@ SQL
   git pull
 
   # Install the updated modules
-  cd ~/src/ccnq2.0/common/perllib && perl Makefile.PL && make && make test && sudo make install
+  (cd ~/src/ccnq2.0/common/perllib && perl Makefile.PL && make && make test && sudo make install)
 
   # Upgrade the configuration(s) as needed
   sudo ccnq2_upgrade
@@ -251,7 +261,7 @@ SQL
   # and add a user <host_name> with password <password> in your jabber server.
 
   # Try again. This time the user should connect properly.
-  # Then run xmpp_agent.pl in the background.
+  ccnq2_xmpp_agent &
 
   # The "API" and "Manager" servers are functions inside the xmpp_agent tool which
   # are automatically started on "api" and "manager" nodes.
@@ -261,3 +271,16 @@ SQL
   #     opensips   (for access to the OpenSIPS FIFO)
   #     daemon     (for access to the FreeSwitch CLI / FIFO)
   #
+
+  vi /etc/group
+
+# * If you intent to use the "sip-traces" API:
+
+  sudo aptitude install -t testing tshark
+  (cd ~/src/ccnq2.0/contrib && sudo cp sip-traces/usr/sbin/sip-traces /usr/sbin && sudo chmod +x /usr/sbin/sip-traces)
+  sudo /usr/sbin/sip-traces eth0 &
+  sudo /usr/sbin/sip-traces eth1 &
+
+  # (I'm working on a proper installer and /etc/init.d script.)
+
+# These instructions last tested on 2010/03/03
