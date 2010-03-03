@@ -67,7 +67,10 @@ sub expired {
 sub user {
   my $self = shift;
   # Make sure the session hasn't expired.
-  return undef if $self->expired;
+  if($self->expired) {
+    $self->end;
+    return undef;
+  }
   # Then refresh it.
   $self->update;
   # Return the proper user object.
