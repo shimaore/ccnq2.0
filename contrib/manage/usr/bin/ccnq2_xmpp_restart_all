@@ -24,10 +24,8 @@
 if [ "x$SERVERS" == "x" ]; then source /etc/ccn/servers; fi
 
 # I assume you use ssh-agent and sudo NOPASSWD.
-# I also assume you installed the source in ~/src/ccnq2.0 as mentioned
-# in INSTALL.
 
 for s in $SERVERS; do
-  echo "Server $s"
+  echo "Server $s: restarting xmpp_agent"
   ssh $SSH_OPTIONS $s 'sudo killall tail; killall perl; (nohup ccnq2_xmpp_agent </dev/null >/dev/null 2>/dev/null &)' || echo 'Failed'
 done
