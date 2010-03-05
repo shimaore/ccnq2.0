@@ -86,6 +86,8 @@ use constant traces_base_dir => '/var/log/traces';
 
 use constant bin_sh => '/bin/sh';
 
+use constant trace_max_lines => 50;
+
 sub install {
   my $base_dir = traces_base_dir;
   my $group = 'wireshark';
@@ -243,6 +245,7 @@ SCRIPT
           $values{trace_field_names()->[$i]} = $value;
         }
         push @content, {%values};
+        shift @content if $#content > trace_max_lines;
       };
 
     $cv->cb(sub {
