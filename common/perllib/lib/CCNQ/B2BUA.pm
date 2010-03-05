@@ -47,7 +47,9 @@ sub finish {
 }
 
 sub install_dir {
-  return File::Spec->catfile(CCNQ::B2BUA::freeswitch_install_conf,@_);
+  my $file_name = pop;
+  mk_dir(@_);
+  return File::Spec->catfile(CCNQ::B2BUA::freeswitch_install_conf,@_,$file_name);
 }
 
 sub install_file {
