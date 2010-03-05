@@ -278,8 +278,16 @@ SQL
 
   sudo aptitude install -t testing tshark
   (cd ~/src/ccnq2.0/contrib && sudo cp sip-traces/usr/sbin/sip-traces /usr/sbin && sudo chmod +x /usr/sbin/sip-traces)
-  sudo /usr/sbin/sip-traces eth0 &
-  sudo /usr/sbin/sip-traces eth1 &
+
+  # Make sure dumpcap will work
+  sudo groupadd -r wireshark
+  sudo chgrp wireshark /usr/bin/dumpcap
+  # Set the "s" bit for root, but restrict to group wireshark
+  sudo chmod 04750 /usr/bin/dumpcap
+  sudo adduser `whoami` wireshark
+
+  /usr/sbin/sip-traces eth0 &
+  /usr/sbin/sip-traces eth1 &
 
   # (I'm working on a proper installer and /etc/init.d script.)
 
