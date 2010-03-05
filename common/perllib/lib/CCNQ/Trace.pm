@@ -87,13 +87,20 @@ use constant traces_base_dir => '/var/log/traces';
 use constant bin_sh => '/bin/sh';
 
 sub install {
-  CCNQ::Util::execute(<<'SHELL');
-    sudo groupadd -r wireshark;
-    sudo chgrp wireshark /usr/bin/dumpcap &&
-    sudo chgrp wireshark /usr/bin/dumpcap &&
-    sudo chmod 04750 /usr/bin/dumpcap &&
-    sudo adduser `whoami` wireshark
-SHELL
+  my $base_dir = traces_base_dir;
+  my $group = 'wireshark';
+  my $dumpcap = '/usr/bin/dumpcap';
+
+  CCNQ::Util::execute('groupadd', '-r', $group);
+
+  CCNQ::Util::execute('chgrp','wireshark',$dumpcap);
+  CCNQ::Util::execute('chmod','04750',    $dumpcap);
+
+  CCNQ::Util::execute('mkdir',         $base_dir);
+  CCNQ::Util::execute('chgrp',$group,  $base_dir);
+  CCNQ::Util::execute('chmod','ug+rwx',$base_dir);
+  CCNQ::Util::execute('chmod','og-rwx',$base_dir);
+  CCNQ::Util::execute('chmod','g+s',   $base_dir);
 }
 
 sub run {
