@@ -3,7 +3,7 @@
 <!-- from: national number -->
 <extension name="cleanup-caller-id-1" continue="true">
   <condition field="destination_number" expression="^call"/>
-  <condition field="caller_id_number" expression="^1([2-9][0-9]{9})$">
+  <condition field="caller_id_number" expression="^(1[2-9][0-9]{9})$">
     <action application="set" data="effective_caller_id_number=$1"/>
   </condition>
 </extension>
