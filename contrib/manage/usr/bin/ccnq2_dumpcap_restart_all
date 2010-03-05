@@ -27,8 +27,9 @@ if [ "x$SERVERS" == "x" ]; then source /etc/ccn/servers; fi
 
 for s in $SERVERS; do
   echo "Server $s: restarting dumpcap"
-  ssh $SSH_OPTIONS $s 'sudo killall dumpcap; 
+  ssh $SSH_OPTIONS $s 'killall dumpcap;
     for INTERFACE in `/sbin/ifconfig | perl -nle '\''/^(eth\d+)/ and print $1'\''`; do
-      (nohup /usr/sbin/sip-traces ${INTERFACE} </dev/null >/dev/null 2>/dev/null &);
+      echo "Server $s interface ${INTERFACE}";
+      (nohup ccnq2_sip_traces ${INTERFACE} </dev/null >/dev/null 2>/dev/null &);
     done' || echo 'Failed'
 done
