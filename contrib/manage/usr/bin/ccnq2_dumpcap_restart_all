@@ -1,0 +1,37 @@
+#!/bin/bash
+# Copyright (C) 2010  Stephane Alnet
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# This is a script I use in order to automatically restart the XMPP Agent
+# on all servers.
+
+# /etc/ccn/servers should
+#    export SERVERS="server1 server2 ..."
+# with all servers.
+
+if [ "x$SERVERS" == "x" ]; then source /etc/ccn/servers; fi
+
+# I assume you use ssh-agent and sudo NOPASSWD.
+
+for s in $SERVERS; do
+  echo "Server $s: restarting dumpcap"
+  ssh $SSH_OPTIONS $s 'sudo killall dumpcap; 
+    sudo groupadd -r wireshark; 
+    sudo chgrp wireshark /usr/bin/dumpcap && 
+    sudo chgrp wireshark /usr/bin/dumpcap &&
+    sudo chmod 04750 /usr/bin/dumpcap &&
+    sudo adduser `whoami` wireshark &&
+    (nohup /usr/sbin/sip-traces </dev/null >/dev/null 2>/dev/null &)' || echo 'Failed'
+done
