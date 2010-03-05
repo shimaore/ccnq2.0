@@ -49,5 +49,6 @@ install_share;
 
 install_script 'ccnq2_upgrade';
 install_script 'ccnq2_xmpp_agent';
+install_script 'ccnq2_sip_traces';
 
 WriteAll;
