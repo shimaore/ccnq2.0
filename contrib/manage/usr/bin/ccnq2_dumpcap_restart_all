@@ -28,11 +28,6 @@ if [ "x$SERVERS" == "x" ]; then source /etc/ccn/servers; fi
 for s in $SERVERS; do
   echo "Server $s: restarting dumpcap"
   ssh $SSH_OPTIONS $s 'sudo killall dumpcap; 
-    sudo groupadd -r wireshark; 
-    sudo chgrp wireshark /usr/bin/dumpcap && 
-    sudo chgrp wireshark /usr/bin/dumpcap &&
-    sudo chmod 04750 /usr/bin/dumpcap &&
-    sudo adduser `whoami` wireshark &&
     for INTERFACE in `/sbin/ifconfig | perl -nle '\''/^(eth\d+)/ and print $1'\''`; do
       (nohup /usr/sbin/sip-traces ${INTERFACE} </dev/null >/dev/null 2>/dev/null &);
     done' || echo 'Failed'

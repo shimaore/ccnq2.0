@@ -60,6 +60,8 @@ sub install {
   CCNQ::Util::execute('/etc/init.d/opensips','restart');
 
   debug("Restarted OpenSIPS");
+
+  CCNQ::Trace::install();
   $mcv->send(CCNQ::AE::SUCCESS);
 }
 

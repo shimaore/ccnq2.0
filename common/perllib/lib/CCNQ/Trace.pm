@@ -30,6 +30,7 @@ use CCNQ::Install;
 use CCNQ::AE;
 use File::Temp;
 use AnyEvent::Util;
+use CCNQ::Util;
 
 use JSON;
 
@@ -81,7 +82,19 @@ use constant trace_field_names => [qw(
   sip.User-Agent
 )];
 
+use constant traces_base_dir => '/var/log/traces';
+
 use constant bin_sh => '/bin/sh';
+
+sub install {
+  CCNQ::Util::execute(<<'SHELL');
+    sudo groupadd -r wireshark;
+    sudo chgrp wireshark /usr/bin/dumpcap &&
+    sudo chgrp wireshark /usr/bin/dumpcap &&
+    sudo chmod 04750 /usr/bin/dumpcap &&
+    sudo adduser `whoami` wireshark
+SHELL
+}
 
 sub run {
   my ($params,$context,$mcv) = @_;
@@ -148,7 +161,7 @@ sub run {
 
   my $tshark_filter = $make_tshark_filter->();
 
-  my $base_dir = '/var/log/traces';
+  my $base_dir = traces_base_dir;
 
   my $cv;
 

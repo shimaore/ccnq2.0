@@ -26,7 +26,6 @@ DEFAULT_SIZE_MB=100
 # What should we capture?
 DEFAULT_FILTER="udp or icmp or tcp portrange 5060-5099"
 
-mkdir -p /var/run/traces
 mkdir -p /var/log/traces
 
 # Capture 1Mo per file, up to the indicated size

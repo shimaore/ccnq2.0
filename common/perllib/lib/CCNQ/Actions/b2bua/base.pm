@@ -71,6 +71,7 @@ EOT
   CCNQ::Util::execute('/etc/init.d/freeswitch','stop');
   CCNQ::Util::execute('/etc/init.d/freeswitch','start');
 
+  CCNQ::Trace::install();
   $mcv->send(CCNQ::AE::SUCCESS);
 }
 

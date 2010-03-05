@@ -67,7 +67,7 @@ EOT
 # * On all servers, install the program:
 #
   sudo aptitude update
-  sudo aptitude -y install monit libjson-perl libnet-libidn-perl libauthen-sasl-perl libxml-writer-perl libwww-perl libyaml-perl libexpat-dev liblogger-syslog-perl libio-stringy-perl git-core libnet-ssleay-perl build-essential libmodule-install-perl libuniversal-require-perl
+  sudo aptitude -y install monit psmisc libjson-perl libnet-libidn-perl libauthen-sasl-perl libxml-writer-perl libwww-perl libyaml-perl libexpat-dev liblogger-syslog-perl libio-stringy-perl git-core libnet-ssleay-perl build-essential libmodule-install-perl libuniversal-require-perl
   # Required for AnyEvent::DBI
   sudo aptitude -y install libdbi-perl
   # Required for AnyEvent::CouchDB
