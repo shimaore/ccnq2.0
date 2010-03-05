@@ -96,7 +96,7 @@ sub install {
   CCNQ::Util::execute('chgrp','wireshark',$dumpcap);
   CCNQ::Util::execute('chmod','04750',    $dumpcap);
 
-  CCNQ::Util::execute('mkdir',         $base_dir);
+  CCNQ::Util::execute('mkdir','-p',    $base_dir);
   CCNQ::Util::execute('chgrp',$group,  $base_dir);
   CCNQ::Util::execute('chmod','ug+rwx',$base_dir);
   CCNQ::Util::execute('chmod','o-rwx', $base_dir);
