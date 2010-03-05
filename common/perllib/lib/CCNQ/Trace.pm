@@ -179,12 +179,15 @@ sub run {
     debug("trace: starting pcap dump");
 
     # Output the subset of packets
-    print $script <<SCRIPT;
+    my $script_content = <<SCRIPT;
 #!/bin/sh
 mergecap -w - $base_dir/*.pcap | ngrep -i -l -q -I - -O '$fh' '$ngrep_filter' >/dev/null;
 exec tshark -r "$fh" -R '$tshark_filter' -w -
 SCRIPT
+    print $script $script_content;
     close($script);
+
+    debug("script content: $script_content");
 
     my $content = '';
     $cv = AnyEvent::Util::run_cmd [ bin_sh, $script ],
@@ -205,12 +208,15 @@ SCRIPT
 
     # Output JSON
     my $fields = join(' ',map { ('-e', $_) } @{trace_field_names()});
-    print $script <<SCRIPT;
+    my $script_content = <<SCRIPT;
 #!/bin/sh
 mergecap -w - $base_dir/*.pcap | ngrep -i -l -q -I - -O '$fh' '$ngrep_filter' >/dev/null;
 exec tshark -r "$fh" -R '$tshark_filter' -nltad -T fields $fields
 SCRIPT
+    print $script $script_content;
     close($script);
+
+    debug("script content: $script_content");
 
     my @content = ();
     # My assumptions about the callback are:
