@@ -33,7 +33,7 @@ for s in $SERVERS; do
     sudo chgrp wireshark /usr/bin/dumpcap &&
     sudo chmod 04750 /usr/bin/dumpcap &&
     sudo adduser `whoami` wireshark &&
-    for INTERFACE in `/sbin/ifconfig | perl -nle '/^(eth\d+)/ and print $1'`; do
+    for INTERFACE in `/sbin/ifconfig | perl -nle '\''/^(eth\d+)/ and print $1'\''`; do
       (nohup /usr/sbin/sip-traces ${INTERFACE} </dev/null >/dev/null 2>/dev/null &);
     done' || echo 'Failed'
 done
