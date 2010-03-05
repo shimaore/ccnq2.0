@@ -99,7 +99,7 @@ sub install {
   CCNQ::Util::execute('mkdir',         $base_dir);
   CCNQ::Util::execute('chgrp',$group,  $base_dir);
   CCNQ::Util::execute('chmod','ug+rwx',$base_dir);
-  CCNQ::Util::execute('chmod','og-rwx',$base_dir);
+  CCNQ::Util::execute('chmod','o-rwx', $base_dir);
   CCNQ::Util::execute('chmod','g+s',   $base_dir);
 }
 
