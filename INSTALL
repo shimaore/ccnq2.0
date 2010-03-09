@@ -172,6 +172,18 @@ EOT
   # The following command adds the current user to group "opensips":
   sudo adduser `whoami` opensips
 
+# * On the mediaproxy servers (the ones doing RTP/UDPTL redirection):
+
+  # Install MediaProxy relay
+  sudo aptitude install python python-support libnetfilter-conntrack1 python-cjson python-twisted-core python-twisted-names python-zopeinterface
+  # Versions required for mediaproxy-common include python-application (>= 1.1.5) and python-gnutls (>= 1.1.8) which are not in Debian/Lenny
+  sudo aptitude install python-application/testing python-gnutls/testing
+  cd ~/src
+  wget http://opensource.sotelips.net/~stephane/mp-2.3.8/mediaproxy-common_2.3.8_amd64.deb
+  wget http://opensource.sotelips.net/~stephane/mp-2.3.8/mediaproxy-relay_2.3.8_all.deb
+  sudo dpkg -i mediaproxy-common_2.3.8_amd64.deb
+  sudo dpkg -i mediaproxy-relay_2.3.8_all.deb
+
 # * On the SBC servers:
 
   # Install FreeSwitch
