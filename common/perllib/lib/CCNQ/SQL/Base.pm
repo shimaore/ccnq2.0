@@ -23,12 +23,22 @@ use Logger::Syslog;
 use CCNQ::Install;
 use CCNQ::AE;
 
+sub _failure {
+  my $cv = AnyEvent->condvar;
+  $cv->send(CCNQ::AE::FAILURE(@_));
+  return $cv;
+}
+
 sub _build_callback {
   my ($db,$sql,$args,$cb) = @_;
   debug("Postponing $sql with (".join(',',@{$args}).") and callback $cb");
   return sub {
-    debug("Executing $sql with (".join(',',@{$args}).") and callback $cb");
-    $db->exec($sql,@{$args},$cb);
+    if($#_) {
+      debug("Executing $sql with (".join(',',@{$args}).") and callback $cb");
+      $db->exec($sql,@{$args},$cb);
+    } else {
+      $cv->send(CCNQ::AE::FAILURE("Database error: $@"));
+    }
   };
 }
 
@@ -40,9 +50,13 @@ sub do_sql {
   my $cv = AnyEvent->condvar;
 
   my $run = sub {
-    $db->commit( sub {
-      $cv->send(CCNQ::AE::SUCCESS);
-    });
+    if($#_) {
+      $db->commit( sub {
+        $cv->send(CCNQ::AE::SUCCESS);
+      });
+    } else {
+      $cv->send(CCNQ::AE::FAILURE("Database error: $@"));
+    }
   };
 
   while(@cmds) {
@@ -59,7 +73,14 @@ sub do_sql {
 sub do_delete
 {
     my ($self,$params) = @_;
-    return $self->do_sql($self->delete($params));
+
+    my @delete_commands = $self->delete($params);
+
+    if(!@delete_commands) {
+      return _failure("Invalid parameters");
+    }
+
+    return $self->do_sql(@delete_commands);
 }
 
 sub do_update
@@ -72,7 +93,16 @@ sub do_update
     my $old_params = {%{$params}};
     my $new_params = {%{$params}};
 
-    return $self->do_sql($self->delete($old_params),$self->insert($new_params));
+    my @delete_commands = $self->delete($old_params);
+    my @insert_commands = $self->insert($new_params);
+
+    # Parameter errors are indicated by the methods returning
+    # empty lists.
+    if(!@delete_commands || !@insert_commands) {
+      return _failure("Invalid parameters");
+    }
+
+    return $self->do_sql(@delete_commands,@insert_commands);
 }
 
 =pod
@@ -167,9 +197,7 @@ sub run
 =cut
 
     error("Invalid action $action");
-    my $cv = AnyEvent->condvar;
-    $cv->send(CCNQ::AE::FAILURE("Invalid action $action"));
-    return $cv;
+    return _failure("Invalid action $action");
 }
 
 1;
