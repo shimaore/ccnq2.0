@@ -31,6 +31,7 @@ use Logger::Syslog;
 use JSON;
 
 use constant handler_timeout => 20;
+use constant MESSAGE_FRAGMENT_SIZE => 8*1024;
 
 =pod
 
@@ -101,10 +102,30 @@ sub _send_im_message {
   authenticate_response($body);
   my $json_body    = encode_json($body);
   debug("_send_im_message(): dest=$dest, body=$json_body");
-  my $immsg = new AnyEvent::XMPP::IM::Message(to => $dest, body => $json_body);
   use Carp;
   confess("No connection") unless $context->{connection};
-  $immsg->send($context->{connection});
+
+  # If the body is too long, split the JSON into multiple fragments.
+  if(length($json_body) > MESSAGE_FRAGMENT_SIZE) {
+    my $chunk_max = int(length($json_body)/MESSAGE_FRAGMENT_SIZE);
+    my $message_id = rand();
+    for my $chunk (0..$chunk_max) {
+      my $offset = $chunk*MESSAGE_FRAGMENT_SIZE;
+      my $last   = $chunk == $chunk_max;
+      my $fragment = {
+        message_id => $message_id,
+        offset     => $offset,
+        last       => $last,
+        fragment   => substr($json_body,$offset,MESSAGE_FRAGMENT_SIZE),
+      };
+      my $fragment_body = encode_json($fragment);
+      my $immsg = new AnyEvent::XMPP::IM::Message(to => $dest, body => $fragment_body);
+      $immsg->send($context->{connection});
+    }
+  } else {
+    my $immsg = new AnyEvent::XMPP::IM::Message(to => $dest, body => $json_body);
+    $immsg->send($context->{connection});
+  }
   $body->{submitted} = time;
   return ['ok'];
 }
@@ -159,6 +180,41 @@ sub handle_message {
 
   error("Object received is not an hashref"),
   return unless defined($request_body) && ref($request_body) eq 'HASH';
+
+  if($request_body->{fragment}) {
+
+    error("No message_id"),
+    return unless defined $request_body->{message_id};
+
+    error("No offset"),
+    return unless $request_body->{offset};
+
+    my $message_id  = $request_body->{message_id};
+    my $offset      = $request_body->{offset};
+
+    $context->{fragments}->{$message_id} || '';
+
+    if($offset != length($context->{fragments}->{$message_id})) {
+      delete $context->{fragments}->{$message_id};
+      error("Out-of-order fragment");
+      return;
+    }
+
+    $context->{fragments}->{$message_id} .= $request_body->{fragment};
+    if($request_body->{last}) {
+      # Last fragment received, process.
+      eval {
+        $request_body = decode_json( delete $context->{fragments}->{$message_id} );
+      };
+      error("Object received is not an hashref"),
+      return unless defined($request_body) && ref($request_body) eq 'HASH';
+    } else {
+      # Wait for more fragments.
+      # XXX Lost fragments will result in leaking memory (since e.g. a started
+      # reconstruction may never complete).
+      return;
+    }
+  }
 
   error("Message contains no activity UUID"),
   return unless $request_body->{activity};
