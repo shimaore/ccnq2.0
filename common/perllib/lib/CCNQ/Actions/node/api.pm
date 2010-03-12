@@ -253,13 +253,13 @@ sub _session_ready {
 }
 
 sub _response {
-  my ($params,$context,$mcv) = @_;
-  my $activity = $params->{activity};
+  my ($response,$context,$mcv) = @_;
+  my $activity = $response->{activity};
   if($activity) {
     my $cb = $context->{api_callback}->{$activity};
     if($cb) {
       debug("node/api: Using callback for activity $activity");
-      $cb->($params,$context);
+      $cb->($response,$context);
     } else {
       debug("node/api: Activity $activity has no registered callback");
     }
