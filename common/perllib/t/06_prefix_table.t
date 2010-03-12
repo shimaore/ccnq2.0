@@ -19,7 +19,15 @@ use Test::More tests => 31;
 
 use_ok ("CCNQ::Rating::Table");
 
-my $table = new CCNQ::Rating::Table;
+my $name = 'testing-prefix-table'.rand(100000);
+my $table = new CCNQ::Rating::Table($name);
+eval {
+  $table->db->drop->recv;
+  $table->db->create->recv;
+};
+# Only do testing if we have a local CouchDB server with a proper database.
+done_testing() unless $table->info->recv;
+
 $table->insert( { prefix => '1',                value1 => 'abc', value2 => 'TYZ' } );
 $table->insert( { prefix => '123',              value1 => 'ABD', value2 => 'KLO' } );
 $table->insert( { prefix => '1234',             value1 => 'def', value2 => 'KJJ' } );
@@ -58,6 +66,9 @@ is( $table->lookup('25367'), undef );
 ok( $table->lookup('253673') );
 ok( $table->lookup('253673')->{value1}, 'mno' );
 ok( $table->lookup('253673837')->{value2}, 'TYZ' );
+
+# Remove the temporary table
+$table->db->drop->recv;
 
 done_testing();
 1;

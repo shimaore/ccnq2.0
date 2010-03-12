@@ -18,8 +18,8 @@ use strict; use warnings;
 
 # The rating table is a generic tool to store information related to a given prefix.
 
-use CCNQ::Trie;
-use Memoize;
+use AnyEvent::CouchDB;
+use CCNQ::CouchDB;
 
 # Alternatively to using a Trie, the data could be simply stored in CouchDB
 # and retrieved using the following algorithm:
@@ -36,10 +36,16 @@ use Memoize;
 
 sub new {
   my $this = shift;
+  my $name = shift;
   my $self = {
-    trie => new CCNQ::Trie {deepsearch => 'prefix'},
+    name => $name,
+    db => couchdb($name),
   };
   return bless $self;
+}
+
+sub db {
+  return $_[0]->{db};
 }
 
 =head1 $table->insert(\%data)
@@ -51,33 +57,9 @@ is used as the key for the record.
 
 sub insert {
   my ($self,$data) = @_;
-  $self->{trie}->add_data($data->{prefix} => $data);
-}
-
-=head1 load_from_file($file_name)
-
-The default format for a flat file describing a rating table is:
-- one header line: tab-delimited list of column names
-- one or more lines of tab-delimited values
-
-One column MUST be called 'prefix' and is used as the prefix key for
-the values on the same line.
-
-=cut
-
-sub file_name {
-  my ($self) = @_;
-  return $self->{name} && File::Spec->catfile(qw(),$self->{name});
-}
-
-memoize('load_from_file');
-sub load_from_file {
-  my $self = new CCNQ::Rating::Table;
-  $self->{name} = shift;
-  open(my $fh, '<', $self->file_name) or die $self->file_name.": $!";
-  Rating::Process::process($fh, sub { $self->insert(@_) });
-  close($fh) or die $self->file_name.": $!";
-  return $self;
+  $data->{_id} = $data->{prefix};
+  my $update = $self->db->save_doc($data);
+  CCNQ::CouchDB::receive($update);
 }
 
 =head1 lookup($key)
@@ -88,7 +70,25 @@ Returns a hashref of values associated with the longest match for the prefix.
 
 sub lookup {
   my ($self,$key) = @_;
-  return $self->{trie}->lookup_data($key);
+  # - query for /$table/_all_docs with parameters:
+  #      include_docs=true       # to get the data at the same time
+  #      descending=true
+  #      startkey=$query_string
+  #      limit=1
+
+  my $query = $self->db->all_docs({
+    include_docs => 'true',
+    descending   => 'true',
+    startkey     => $key,
+    limit        => 1,
+  });
+  my $result = CCNQ::CouchDB::receive($query);
+  return undef unless $result && $result->{rows} && $result->{rows}->[0]
+    && defined $result->{rows}->[0]->{id};
+
+  my $id = $result->{rows}->[0]->{id};
+  return undef unless substr($key,0,length($id)) eq $id;
+  return $result->{rows}->[0]->{doc};
 }
 
 1;
