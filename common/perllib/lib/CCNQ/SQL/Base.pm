@@ -105,84 +105,6 @@ sub do_update
     return $self->do_sql(@delete_commands,@insert_commands);
 }
 
-=pod
-sub do_list
-{
-    my $self = shift;
-    my ($sql_callback,$output_callback,$list_params) = @_;
-
-    my ($sql,$params,$post_process) = $self->list($list_params);
-
-    $sql = $sql_callback->($sql);
-
-    ## XXX Replace with callback
-    my $sth = $self->run_sql_command($sql,$params);
-    return if not $sth;
-    my $names = $sth->{NAME};
-    my $nb_rows = 0;
-    while(my $content = $sth->fetchrow_arrayref)
-    {
-        my ($_content,$_names) = ($content,$names);
-        ($_content,$_names) = $post_process->($_content,$_names) if defined $post_process;
-        $output_callback->($_content,$_names);
-        $nb_rows++;
-    }
-    return $nb_rows;
-}
-
-sub do_query
-{
-    my ($self,$params) = @_;
-
-    my $result = {};
-    my @rows = ();
-
-    my $sql_callback = sub
-    {
-        my $sql = shift;
-
-        $sql .= " LIMIT $params->{_limit}",
-        $result->{limit} = $params->{_limit}
-            if exists $params->{_limit}
-            and defined $params->{_limit};
-
-        $sql .= " OFFSET $params->{_offset}",
-        $result->{offset} = $params->{_offset}
-            if exists $params->{_offset}
-            and defined $params->{_offset};
-        return $sql;
-    };
-
-    my $result_callback = sub
-    {
-        my ($content,$names) = @_;
-        # No content?
-        return unless defined $content and $content;
-
-        my %values;
-
-        my @content = @{$content};
-        for my $name (@{$names})
-        {
-          my $value = shift @content;
-          my $display_name = $name;
-          $display_name =~ s/[!*]$//;
-
-          $values{lc($display_name)} = $value
-            unless $name =~ /!$/; # no value
-        }
-
-        push @rows, {%values};
-    };
-
-    my $nb_rows = $self->do_list($sql_callback,$result_callback,$params);
-    $result->{total_rows} = $nb_rows;
-    $result->{rows} = [@rows];
-
-    return ['ok',$result];
-}
-=cut
-
 sub run
 {
     my $self = shift;
@@ -192,9 +114,6 @@ sub run
     # unless I rewrite the code to work properly.
     return $self->do_delete($params) if $action eq 'delete';
     return $self->do_update($params) if $action eq 'update';
-=pod
-    return $self->do_query($params)  if $action eq 'query';
-=cut
 
     error("Invalid action $action");
     return _failure("Invalid action $action");

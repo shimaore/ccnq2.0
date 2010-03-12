@@ -108,15 +108,4 @@ SQL
     return @res;
 }
 
-sub list
-{
-    my $self = shift;
-
-    return (<<'SQL',[],undef);
-            SELECT DISTINCT groupid AS "Outbound_Route", description AS "Description", prefix AS "Prefix", priority AS "Priority", gwlist AS "Target"
-            FROM dr_rules main
-            ORDER BY groupid, prefix, priority ASC
-SQL
-}
-
 1;

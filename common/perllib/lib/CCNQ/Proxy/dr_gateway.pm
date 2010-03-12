@@ -87,22 +87,4 @@ SQL
     );
 }
 
-sub list
-{
-    my $self = shift;
-
-    return (
-        <<'SQL',
-            SELECT DISTINCT address AS "Target", strip AS "Strip_Digit", pri_prefix AS "Prefix",
-                    (SELECT value FROM avpops WHERE domain = main.address AND attribute = ?) AS "Realm",
-                    (SELECT value FROM avpops WHERE domain = main.address AND attribute = ?) AS "Login",
-                    (SELECT value FROM avpops WHERE domain = main.address AND attribute = ?) AS "Password"
-            FROM dr_gateways main
-            ORDER BY address ASC
-SQL
-        [$self->avp->{uac_realm},$self->avp->{uac_user},$self->avp->{uac_pass}],
-        undef
-    );
-}
-
 1;

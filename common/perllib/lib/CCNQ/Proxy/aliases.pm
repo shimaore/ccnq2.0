@@ -77,14 +77,4 @@ sub delete
 SQL
 }
 
-sub list
-{
-    my $self = shift;
-    return (<<'SQL',[],undef);
-        SELECT alias_username AS username, alias_domain AS domain, username AS target_username, domain AS target_domain
-        FROM aliases
-        ORDER BY username, domain, alias_username, alias_domain ASC
-SQL
-}
-
 1;

@@ -75,13 +75,4 @@ SQL
     );
 }
 
-sub list
-{
-    my $self = shift;
-
-    return (<<'SQL',[],undef);
-      SELECT src_ip AS Source FROM trusted ORDER BY src_ip ASC
-SQL
-}
-
 1;

@@ -68,13 +68,4 @@ sub delete
 SQL
 }
 
-sub list
-{
-    my $self = shift;
-    return (<<'SQL',[],undef);
-        SELECT domain AS Domain FROM domain
-        ORDER BY domain ASC
-SQL
-}
-
 1;
