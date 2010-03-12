@@ -25,8 +25,9 @@ eval {
   $table->db->drop->recv;
   $table->db->create->recv;
 };
+
 # Only do testing if we have a local CouchDB server with a proper database.
-done_testing() unless $table->db->info->recv;
+if($table->db->info->recv) {
 
 $table->insert( { prefix => '1',                value1 => 'abc', value2 => 'TYZ' } );
 $table->insert( { prefix => '123',              value1 => 'ABD', value2 => 'KLO' } );
@@ -69,6 +70,7 @@ ok( $table->lookup('253673837')->{value2}, 'TYZ' );
 
 # Remove the temporary table
 $table->db->drop->recv;
+}
 
 done_testing();
 1;
