@@ -29,25 +29,25 @@ sub _failure {
   return $cv;
 }
 
-sub _build_callback {
-  my ($db,$sql,$args,$cb) = @_;
-  debug("Postponing $sql with (".join(',',@{$args}).") and callback $cb");
-  return sub {
-    if($#_) {
-      debug("Executing $sql with (".join(',',@{$args}).") and callback $cb");
-      $db->exec($sql,@{$args},$cb);
-    } else {
-      $cv->send(CCNQ::AE::FAILURE("Database error: $@"));
-    }
-  };
-}
-
 sub do_sql {
   my ($self,@cmds) = @_;
 
   my $db = $self->_db;
 
   my $cv = AnyEvent->condvar;
+
+  my $build_callback = sub {
+    my ($sql,$args,$cb) = @_;
+    debug("Postponing $sql with (".join(',',@{$args}).") and callback $cb");
+    return sub {
+      if($#_) {
+        debug("Executing $sql with (".join(',',@{$args}).") and callback $cb");
+        $db->exec($sql,@{$args},$cb);
+      } else {
+        $cv->send(CCNQ::AE::FAILURE("Database error: $@"));
+      }
+    };
+  };
 
   my $run = sub {
     if($#_) {
@@ -62,7 +62,7 @@ sub do_sql {
   while(@cmds) {
     my $args = pop(@cmds) || [];
     my $sql  = pop(@cmds);
-    $run = _build_callback($db,$sql,$args,$run);
+    $run = $build_callback->($sql,$args,$run);
   }
 
   $db->begin_work( $run );
