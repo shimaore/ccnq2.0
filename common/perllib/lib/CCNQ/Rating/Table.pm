@@ -44,7 +44,7 @@ sub new {
   return bless $self;
 }
 
-sub db {
+sub _db {
   return $_[0]->{db};
 }
 
@@ -58,7 +58,7 @@ is used as the key for the record.
 sub insert {
   my ($self,$data) = @_;
   $data->{_id} = $data->{prefix};
-  my $update = $self->db->save_doc($data);
+  my $update = $self->_db->save_doc($data);
   CCNQ::CouchDB::receive($update);
 }
 
@@ -76,7 +76,7 @@ sub lookup {
   #      startkey=$query_string
   #      limit=1
 
-  my $query = $self->db->all_docs({
+  my $query = $self->_db->all_docs({
     include_docs => 'true',
     descending   => 'true',
     startkey     => $key,
