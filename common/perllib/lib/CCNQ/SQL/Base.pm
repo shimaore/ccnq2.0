@@ -40,7 +40,7 @@ sub do_sql {
     my ($sql,$args,$cb) = @_;
     debug("Postponing $sql with (".join(',',@{$args}).") and callback $cb");
     return sub {
-      if($#_) {
+      if(!$@) {
         debug("Executing $sql with (".join(',',@{$args}).") and callback $cb");
         $db->exec($sql,@{$args},$cb);
       } else {
@@ -50,7 +50,7 @@ sub do_sql {
   };
 
   my $run = sub {
-    if($#_) {
+    if(!$@) {
       $db->commit( sub {
         $cv->send(CCNQ::AE::SUCCESS);
       });
