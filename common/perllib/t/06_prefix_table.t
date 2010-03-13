@@ -16,8 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
 
-__END__
-
 # XXX This is currently broken.
 use Test::More tests => 31;
 
