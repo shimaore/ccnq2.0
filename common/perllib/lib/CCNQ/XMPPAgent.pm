@@ -189,7 +189,7 @@ sub handle_message {
     return unless defined $request_body->{message_id};
 
     error("No offset"),
-    return unless $request_body->{offset};
+    return unless defined $request_body->{offset};
 
     my $message_id  = $request_body->{message_id};
     my $offset      = $request_body->{offset};
