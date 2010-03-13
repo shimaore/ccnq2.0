@@ -109,6 +109,7 @@ sub _send_im_message {
   if(length($json_body) > MESSAGE_FRAGMENT_SIZE) {
     my $chunk_max = int(length($json_body)/MESSAGE_FRAGMENT_SIZE);
     my $message_id = rand();
+    debug("_send_im_message(): splitting into $chunk_max fragments, message_id = $message_id");
     for my $chunk (0..$chunk_max) {
       my $offset = $chunk*MESSAGE_FRAGMENT_SIZE;
       my $last   = $chunk == $chunk_max;
@@ -121,6 +122,7 @@ sub _send_im_message {
       my $fragment_body = encode_json($fragment);
       my $immsg = new AnyEvent::XMPP::IM::Message(to => $dest, body => $fragment_body);
       $immsg->send($context->{connection});
+      debug("_send_im_message(): sent fragment $chunk of $chunk_max");
     }
   } else {
     my $immsg = new AnyEvent::XMPP::IM::Message(to => $dest, body => $json_body);
@@ -196,7 +198,7 @@ sub handle_message {
 
     if($offset != length($context->{fragments}->{$message_id})) {
       delete $context->{fragments}->{$message_id};
-      error("Out-of-order fragment");
+      error("Out-of-order fragment (offset=$offset)");
       return;
     }
 
