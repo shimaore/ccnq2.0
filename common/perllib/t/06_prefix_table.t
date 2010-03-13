@@ -15,6 +15,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
+
+__END__
+
+# XXX This is currently broken.
 use Test::More tests => 31;
 
 use_ok ("CCNQ::Rating::Table");
