@@ -40,14 +40,3 @@ CREATE TABLE dr_gw_lists (
     gwlist CHAR(255) NOT NULL,
     description CHAR(128) DEFAULT '' NOT NULL
 );
-
---
--- Maps a username@domain to a specific groupid (in dr_rules).
-INSERT INTO version (table_name, table_version) values ('dr_groups','2');
-CREATE TABLE dr_groups (
-    id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    username CHAR(64) NOT NULL,
-    domain CHAR(128) DEFAULT '' NOT NULL,
-    groupid CHAR(255) NOT NULL,
-    description CHAR(128) DEFAULT '' NOT NULL
-);
