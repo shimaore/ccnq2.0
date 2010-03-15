@@ -29,6 +29,7 @@ use AnyEvent::XMPP::Util qw/split_jid/;
 use Logger::Syslog;
 
 use JSON;
+use MIME::Base64 ();
 
 use constant handler_timeout => 20;
 use constant MESSAGE_FRAGMENT_SIZE => 8*1024;
@@ -113,11 +114,12 @@ sub _send_im_message {
     for my $chunk (0..$chunk_max) {
       my $offset = $chunk*MESSAGE_FRAGMENT_SIZE;
       my $last   = $chunk == $chunk_max;
+      my $fragment = substr($json_body,$offset,MESSAGE_FRAGMENT_SIZE);
       my $fragment = {
         message_id => $message_id,
         offset     => $offset,
         last       => $last,
-        fragment   => substr($json_body,$offset,MESSAGE_FRAGMENT_SIZE),
+        fragment   => MIME::Base64::encode($fragment),
       };
       my $fragment_body = encode_json($fragment);
       my $immsg = new AnyEvent::XMPP::IM::Message(to => $dest, body => $fragment_body);
@@ -202,7 +204,8 @@ sub handle_message {
       return;
     }
 
-    $context->{fragments}->{$message_id} .= $request_body->{fragment};
+    my $decoded_fragment = MIME::Base64::decode($request_body->{fragment});
+    $context->{fragments}->{$message_id} .= $decoded_fragment;
     if($request_body->{last}) {
       # Last fragment received, process.
       eval {

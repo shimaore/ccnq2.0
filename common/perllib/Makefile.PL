@@ -36,6 +36,7 @@ requires      'IO::Scalar'                => 0;
 
 requires      'Digest::SHA1'              => 0;
 requires      'Carp'                      => 0;
+requires      'MIME::Base64'              => 0;
 
 # Dependencies for the api
 requires      'AnyEvent::HTTP'            => '1.44';
