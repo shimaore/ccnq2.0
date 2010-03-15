@@ -33,6 +33,7 @@ use AnyEvent::Util;
 use CCNQ::Util;
 
 use JSON;
+use MIME::Base64 ();
 
 use Logger::Syslog;
 
@@ -202,7 +203,7 @@ SCRIPT
       undef $fh;
       unlink $script;
       debug("trace: completed pcap dump");
-      $mcv->send(CCNQ::AE::SUCCESS({pcap => $content}));
+      $mcv->send(CCNQ::AE::SUCCESS({pcap => MIME::Base64::encode($content)}));
     });
 
   } else {
