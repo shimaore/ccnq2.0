@@ -196,7 +196,8 @@ sub handle_message {
     my $message_id  = $request_body->{message_id};
     my $offset      = $request_body->{offset};
 
-    $context->{fragments}->{$message_id} || '';
+    $context->{fragments}->{$message_id} = ''
+      if ! exists($context->{fragments}->{$message_id});
 
     if($offset != length($context->{fragments}->{$message_id})) {
       delete $context->{fragments}->{$message_id};
