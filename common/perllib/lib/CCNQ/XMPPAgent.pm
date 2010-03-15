@@ -114,12 +114,12 @@ sub _send_im_message {
     for my $chunk (0..$chunk_max) {
       my $offset = $chunk*MESSAGE_FRAGMENT_SIZE;
       my $last   = $chunk == $chunk_max;
-      my $fragment = substr($json_body,$offset,MESSAGE_FRAGMENT_SIZE);
+      my $fragment_content = substr($json_body,$offset,MESSAGE_FRAGMENT_SIZE);
       my $fragment = {
         message_id => $message_id,
         offset     => $offset,
         last       => $last,
-        fragment   => MIME::Base64::encode($fragment),
+        fragment   => MIME::Base64::encode($fragment_content),
       };
       my $fragment_body = encode_json($fragment);
       my $immsg = new AnyEvent::XMPP::IM::Message(to => $dest, body => $fragment_body);
