@@ -168,7 +168,7 @@ sub add_duration_rate_estimate {
   }
 
   if($initial < $remaining_duration) {
-    my $increments = ($remaing_duration-$initial)/$cbef->increment_duration;
+    my $increments = ($remaining_duration-$initial)/$cbef->increment_duration;
     my $seconds = $increment->bceil() * $cbef->increment_duration;
     $cbef->{estimated_duration} = $initial + $seconds;
   }
@@ -224,80 +224,33 @@ sub add_jurisdiction {
 
 =head1 CBEF Guards
 
-=cut
-
-use constant cbef_guards => {
-
 =head2 event_type_is
 
 Event type is [type]  (event_type == $1)
-
-=cut
-
-  event_type_is => sub {
-    my ($cbef,$event_type) = @_;
-    return $cbef->event_type eq $event_type;
-  },
 
 =head2 national_call
 
 National calls        (to.country == from.country)
 
-=cut
-  national_call => sub {
-    my ($cbef) = @_;
-    return $cbef->to->country eq $cbef->from->country;
-  },
-
 =head2 international_call
 
 International calls   (to.country != from.country)
-
-=cut
-  international_call => sub {
-    my ($cbef) = @_;
-    return $cbef->to->country ne $cbef->from->country;
-  },
 
 =head2 us_inter_state
 
 US Inter-state        (to.country == us && from.country == us && to.state != from.state)
 
-=cut
-  us_inter_state  => sub {
-    my ($cbef) = @_;
-    return $cbef->to->country eq 'us' && $cbef->from->country eq 'us' && $cbef->to->us_state ne $cbef->from->us_state;
-  },
-
 =head2 us_intra_state
 
 US Intra-state        (to.country == us && from.country == us && to.state == from.state)
-
-=cut
-  us_intra_state  => sub {
-    my ($cbef) = @_;
-    return $cbef->to->country eq 'us' && $cbef->from->country eq 'us' && $cbef->to->us_state eq $cbef->from->us_state;
-  },
 
 =head2 to_country
 
 To [country]          (to.country == $1)
 
-=cut
-  to_country => sub {
-    my ($cbef,$country) = @_;
-    return $cbef->to->country eq $country;
-  },
-
 =head2 from_country
 
 From [country]        (from.country == $1)
-
-=cut
-  from_country => sub {
-    my ($cbef,$country) = @_;
-    return $cbef->from->country eq $country;
-  },
 
 =head2 to_table
 
@@ -305,84 +258,117 @@ To [table]            (table->lookup(to.e164))
 
 (The destination appears in the table.)
 
-=cut
-  to_table => sub {
-    my ($cbef,$table) = @_;
-    return $table->lookup($cbef->to->e164}) ? 1 : 0;
-  },
-
 =head2 from_table
 
 From [table]          (table->lookup(from.e164))
 
 (The source appears in the table.)
 
-=cut
-  from_table => sub {
-    my ($cbef,$table) = @_;
-    return $table->lookup($cbef->from->e164) ? 1 : 0;
-  },
-
 =head2 zero_duration
 
 Zero call duration
-
-=cut
-  zero_duration => sub {
-    my ($cbef) = @_;
-    return undef if $cbef->estimate;
-    return $cbef->duration == 0;
-  },
 
 =head2 non_zero_duration
 
 Non-zero call duration
 
-=cut
-  non_zero_duration => sub {
-    my ($cbef) = @_;
-    return 1 if $cbef->estimate;
-    return $cbef->duration > 0;
-  },
-
 =head2 shorter_than
 
 Call duration < [value]
 
-=cut
-  shorter_than => sub {
-    my ($cbef,$duration) = @_;
-    return undef if $cbef->estimate;
-    return $cbef->duration < $duration;
-  },
-
 =head2 zero_count
 
 Zero count
-
-=cut
-  zero_count => sub {
-    my ($cbef) = @_;
-    return undef if $cbef->estimate;
-    return $cbef->count == 0;
-  },
 
 =head2 non_zero_count
 
 Non-zero count
 
 =cut
+
+#  Rating periods -- in some cases, calls are rated differently based on time periods.
+=pod UNIMPLEMENTED
+    Day is [mon,tue,...]  (dow(start_date) == $1)
+    Call started between time1 and time2
+=cut
+
+
+use constant cbef_guards => {
+
+  event_type_is => sub {
+    my ($cbef,$event_type) = @_;
+    return $cbef->event_type eq $event_type;
+  },
+
+  national_call => sub {
+    my ($cbef) = @_;
+    return $cbef->to->country eq $cbef->from->country;
+  },
+
+  international_call => sub {
+    my ($cbef) = @_;
+    return $cbef->to->country ne $cbef->from->country;
+  },
+
+  us_inter_state  => sub {
+    my ($cbef) = @_;
+    return $cbef->to->country eq 'us' && $cbef->from->country eq 'us' && $cbef->to->us_state ne $cbef->from->us_state;
+  },
+
+  us_intra_state  => sub {
+    my ($cbef) = @_;
+    return $cbef->to->country eq 'us' && $cbef->from->country eq 'us' && $cbef->to->us_state eq $cbef->from->us_state;
+  },
+
+  to_country => sub {
+    my ($cbef,$country) = @_;
+    return $cbef->to->country eq $country;
+  },
+
+  from_country => sub {
+    my ($cbef,$country) = @_;
+    return $cbef->from->country eq $country;
+  },
+
+  to_table => sub {
+    my ($cbef,$table) = @_;
+    return $table->lookup($cbef->to->e164) ? 1 : 0;
+  },
+
+  from_table => sub {
+    my ($cbef,$table) = @_;
+    return $table->lookup($cbef->from->e164) ? 1 : 0;
+  },
+
+  zero_duration => sub {
+    my ($cbef) = @_;
+    return undef if $cbef->estimate;
+    return $cbef->duration == 0;
+  },
+
+  non_zero_duration => sub {
+    my ($cbef) = @_;
+    return 1 if $cbef->estimate;
+    return $cbef->duration > 0;
+  },
+
+  shorter_than => sub {
+    my ($cbef,$duration) = @_;
+    return undef if $cbef->estimate;
+    return $cbef->duration < $duration;
+  },
+
+  zero_count => sub {
+    my ($cbef) = @_;
+    return undef if $cbef->estimate;
+    return $cbef->count == 0;
+  },
+
   non_zero_count => sub {
     my ($cbef) = @_;
     return 1 if $cbef->estimate;
     return $cbef->count > 0;
   },
-
-#  Rating periods -- in some cases, calls are rated differently based on time periods.
-=pod
-    Day is [mon,tue,...]  (dow(start_date) == $1)
-    Call started between time1 and time2
-=cut
 
 };
 
@@ -391,68 +377,84 @@ Per-CBEF Actions
 
 Note: these should probably appear in the order they are listed here.
 
-=cut
-
-use constant cbef_actions => {
-
 =pod is_billable
 
 Mard record as billable
-
-=cut
-  is_billable => sub {
-    my ($cbef) = @_;
-    $cbef->{billable_count} = $cbef->{count};
-  },
 
 =head2 is_non_billable
 
 Mark record as non-billable
 
-=cut
-  is_non_billable => sub {
-    my ($cbef) = @_;
-    $cbef->{billable_count} = 0;
-  },
-
 =head2 use_minutes_from_bucket
 
 Use minutes from bucket: [bucket]
-
-=cut
-  use_minutes_from_bucket => sub {
-    my ($cbef,$bucket) = @_;
-    $cbef->{duration_bucket} = $bucket;
-  },
 
 =head2 use_amount_from_bucket
 
 Use amount from bucket: [bucket]
 
+=head2 set_periods_values
+
+Set initial period: [initial] with increment period [increment]
+
+=head2 set_periods_table_to_e164
+
+Use initial period and increment period from table: [table] using destination number
+
+=head2 add_count_cost
+
+Add count-based cost [amount]
+
+=head2 add_count_cost_table_to_e164
+
+Add count-based cost using [table] using destination number
+
+=head2 add_duration_rate
+
+Add duration-based rate [per-minute-rate]
+
+=head2 add_duration_rate_table_to_e164
+
+Add duration-based rating using [table] with rating key: {to.e164, ...}  [table must use same currency as plan]
+
+=head2 add_jurisdiction
+
+Add jurisdiction [jurisdiction] with rate [rate]
+
+=head2 add_jurisdiction_table_to_e164
+
+Add jurisdiction using [table] with key: {to.e164, ...}
+
 =cut
+
+use constant cbef_actions => {
+
+  is_billable => sub {
+    my ($cbef) = @_;
+    $cbef->{billable_count} = $cbef->{count};
+  },
+
+  is_non_billable => sub {
+    my ($cbef) = @_;
+    $cbef->{billable_count} = 0;
+  },
+
+  use_minutes_from_bucket => sub {
+    my ($cbef,$bucket) = @_;
+    $cbef->{duration_bucket} = $bucket;
+  },
+
   use_amount_from_bucket => sub {
     my ($cbef,$bucket) = @_;
     $cbef->{cost_bucket} = $bucket;
   },
 
-
-
-=head2 set_periods_values
-
-Set initial period: [initial] with increment period [increment]
-
-=cut
   set_periods_values => sub {
     my ($cbef,$initial_duration,$increment_duration) = @_;
     $cbef->{initial_duration}   = $initial_duration;
     $cbef->{increment_duration} = $increment_duration;
   },
 
-=head2 set_periods_table_to_e164
-
-Use initial period and increment period from table: [table] using destination number
-
-=cut
   set_periods_table_to_e164 => sub {
     my ($cbef,$table) = @_;
     my $r = $table->lookup($cbef->to->e164);
@@ -462,21 +464,11 @@ Use initial period and increment period from table: [table] using destination nu
     }
   },
 
-=head2 add_count_cost
-
-Add count-based cost [amount]
-
-=cut
   add_count_cost => sub {
     my ($cbef,$amount) = @_;
     add_count_cost($cbef,$amount);
   },
 
-=head2 add_count_cost_table_to_e164
-
-Add count-based cost using [table] using destination number
-
-=cut
   add_count_cost_table_to_e164 => sub {
     my ($cbef,$table) = @_;
     my $r = $table->lookup($cbef->to->e164);
@@ -485,21 +477,11 @@ Add count-based cost using [table] using destination number
     }
   },
 
-=head2 add_duration_rate
-
-Add duration-based rate [per-minute-rate]
-
-=cut
   add_duration_rate => sub {
     my ($cbef,$rate) = @_;
     add_duration_rate($cbef,$rate);
   },
 
-=head2 add_duration_rate_table_to_e164
-
-Add duration-based rating using [table] with rating key: {to.e164, ...}  [table must use same currency as plan]
-
-=cut
   add_duration_rate_table_to_e164 => sub {
     my ($cbef,$table) = @_;
     my $r = $table->lookup($cbef->to->e164);
@@ -508,31 +490,20 @@ Add duration-based rating using [table] with rating key: {to.e164, ...}  [table 
     }
   },
 
-
-=head2 add_jurisdiction
-
-Add jurisdiction [jurisdiction] with rate [rate]
-
-=cut
   add_jurisdiction => sub {
     my ($cbef,$jurisdiction,$rate) = @_;
     add_jurisdiction($cbef,{ $jurisdiction => $rate });
-  }
+  },
 
-=head2 add_jurisdiction_table_to_e164
-
-Add jurisdiction using [table] with key: {to.e164, ...}
-
-=cut
   add_jurisdiction_table_to_e164 => sub {
     my ($cbef,$table) = @_;
     my $r = $table->lookup($cbef->to->e164);
     if($r) {
-      add_jurisdiction($cbef,{ $jurisdiction => $rate });
+      add_jurisdiction($cbef,{ $r->{jurisdiction} => $r->{rate} });
     }
   },
 
-}
+};
 
 1;
 __END__
