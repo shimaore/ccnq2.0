@@ -185,13 +185,33 @@ sub round_up {
   returm $value;
 }
 
+=head2 decimals
+
+The number of decimal digits to round up or down to.
+
+=cut
+
 sub decimals {
   return $self->{decimals} || 0;
 }
 
+=head2 increment
+
+The integer increment to use for storing and substracting values from
+the bucket.
+
+=cut
+
 sub increment {
   return $self->{increment} || 0;
 }
+
+=head2 cap
+
+The maximum number of either monetary unit or seconds that can be
+stored in a bucket instance.
+
+=cut
 
 sub cap {
   return $self->{cap};
