@@ -20,6 +20,8 @@ use CCNQ::AE;
 
 use Logger::Syslog;
 
+use CCNQ::Billing;
+
 sub install {
   my ($params,$context,$mcv) = @_;
   $mcv->send(CCNQ::AE::SUCCESS);
@@ -29,7 +31,7 @@ sub billing_entry {
   my ($params,$context,$mcv) = @_;
 
   # Create a new CBEF entry
-  CCNQ::Rating::create_flat_cbef({
+  CCNQ::Billing::create_flat_cbef({
     %{$params},
     collecting_node => CCNQ::Install::host_name,
     request_uuid    => $params->{activity},

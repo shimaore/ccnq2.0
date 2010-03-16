@@ -31,22 +31,24 @@ sub e164 {
   return $_[0]->{e164};
 }
 
+sub location {
+  $self->{location} = e164_to_location->lookup($self->e164)
+    if !exists($self->{location});
+  return $self->{location};
+}
+
 sub country {
   my ($self) = @_;
-  $self->{location} = e164_to_location->($self->e164)
-    if !exists($self->{location});
-  return $self->{location} && $self->{location}->{country};
+  return $self->location && $self->location->{country};
 }
 
 sub us_state {
   my ($self) = @_;
-  $self->{location} = e164_to_location->($self->e164)
-    if !exists($self->{location});
-  return $self->{location} && $self->{location}->{us_state};
+  return $self->location && $self->location->{us_state};
 }
 
 
-package Rating::Event;
+package CCNQ::Rating::Event;
 
 =pod
 
@@ -118,6 +120,7 @@ sub cleanup {
   if(ref($self) eq 'Math::BigFloat') {
     return $self->bstr();
   }
+  # For objects, assume they are hashref based.
   return cleanup(%{$self});
 }
 
@@ -158,4 +161,4 @@ sub AUTOLOAD {
   return undef;
 }
 
-1;
+'CCNQ::Rating::Event';
