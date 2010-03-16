@@ -35,6 +35,29 @@ use Logger::Syslog;
 use CCNQ::AE;
 use CCNQ::XMPPAgent;
 
+sub _build_response_handler {
+  my ($req) = @_;
+
+  return sub {
+    my ($params,$context) = @_;
+    debug("node/request: Callback in process");
+    if($params->{error}) {
+      my $json_content = encode_json($params->{error});
+      debug("node/request: Request failed: ".$json_content);
+      $req->respond([500,'Request failed',{ 'Content-Type' => 'text/json' },$json_content]);
+    } else {
+      if($params->{result}) {
+        my $json_content = encode_json($params->{result});
+        debug("node/request: Request queued: $params->{status} with $json_content");
+        $req->respond([200,'OK, '.$params->{status},{ 'Content-Type' => 'text/json' },$json_content]);
+      } else {
+        debug("node/request: Request queued: $params->{status}");
+        $req->respond([200,'OK, '.$params->{status}]);
+      }
+    }
+  };
+}
+
 sub _request {
   my ($request,$context,$mcv) = @_;
   # Silently ignore. (These come to us because we are subscribed to the manager MUC.)
@@ -106,23 +129,7 @@ sub _session_ready {
         $req->respond([500,$r->[1]]);
       } else {
         # Callback is used inside the _response handler.
-        $context->{api_callback}->{$body->{activity}} = sub {
-          my ($params,$context) = @_;
-          debug("node/api: Callback in process");
-          if($params->{error}) {
-            debug("node/api: Request failed: ".$params->{error});
-            $req->respond([500,'Request failed',{ 'Content-Type' => 'text/plain' },$params->{error}]);
-          } else {
-            if($params->{result}) {
-              my $json_content = encode_json($params->{result});
-              debug("node/api: Request queued: $params->{status} with $json_content");
-              $req->respond([201,'Request queued: '.$params->{status},{ 'Content-Type' => 'text/json' },$json_content]);
-            } else {
-              debug("node/api: Request queued: $params->{status}");
-              $req->respond([201,'Request queued: '.$params->{status}]);
-            }
-          }
-        };
+        $context->{api_callback}->{$body->{activity}} = _build_response_handler($req);
       }
       $httpd->stop_request;
     },
@@ -165,23 +172,7 @@ sub _session_ready {
         $req->respond([500,$r->[1]]);
       } else {
         # Callback is used inside the _response handler.
-        $context->{api_callback}->{$body->{activity}} = sub {
-          my ($params,$context) = @_;
-          debug("node/request: Callback in process");
-          if($params->{error}) {
-            debug("node/request: Request failed: ".$params->{error});
-            $req->respond([500,'Request failed',{ 'Content-Type' => 'text/plain' },$params->{error}]);
-          } else {
-            if($params->{result}) {
-              my $json_content = encode_json($params->{result});
-              debug("node/request: Request queued: $params->{status} with $json_content");
-              $req->respond([200,'OK, '.$params->{status},{ 'Content-Type' => 'text/json' },$json_content]);
-            } else {
-              debug("node/request: Request queued: $params->{status}");
-              $req->respond([200,'OK, '.$params->{status}]);
-            }
-          }
-        };
+        $context->{api_callback}->{$body->{activity}} = _build_response_handler($req);
       }
       $httpd->stop_request;
     },
@@ -225,23 +216,7 @@ sub _session_ready {
         $req->respond([500,$r->[1]]);
       } else {
         # Callback is used inside the _response handler.
-        $context->{api_callback}->{$body->{activity}} = sub {
-          my ($params,$context) = @_;
-          debug("node/request: Callback in process");
-          if($params->{error}) {
-            debug("node/request: Request failed: ".$params->{error});
-            $req->respond([500,'Request failed',{ 'Content-Type' => 'text/plain' },$params->{error}]);
-          } else {
-            if($params->{result}) {
-              my $json_content = encode_json($params->{result});
-              debug("node/request: Request queued: $params->{status} with $json_content");
-              $req->respond([200,'OK, '.$params->{status},{ 'Content-Type' => 'text/json' },$json_content]);
-            } else {
-              debug("node/request: Request queued: $params->{status}");
-              $req->respond([200,'OK, '.$params->{status}]);
-            }
-          }
-        };
+        $context->{api_callback}->{$body->{activity}} = _build_response_handler($req);
       }
       $httpd->stop_request;
     },
