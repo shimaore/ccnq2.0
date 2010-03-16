@@ -113,8 +113,8 @@ sub _session_ready {
             debug("node/api: Request failed: ".$params->{error});
             $req->respond([500,'Request failed',{ 'Content-Type' => 'text/plain' },$params->{error}]);
           } else {
-            if($params->{params}) {
-              my $json_content = encode_json($params->{params});
+            if($params->{result}) {
+              my $json_content = encode_json($params->{result});
               debug("node/api: Request queued: $params->{status} with $json_content");
               $req->respond([201,'Request queued: '.$params->{status},{ 'Content-Type' => 'text/json' },$json_content]);
             } else {
@@ -172,8 +172,8 @@ sub _session_ready {
             debug("node/request: Request failed: ".$params->{error});
             $req->respond([500,'Request failed',{ 'Content-Type' => 'text/plain' },$params->{error}]);
           } else {
-            if($params->{params}) {
-              my $json_content = encode_json($params->{params});
+            if($params->{result}) {
+              my $json_content = encode_json($params->{result});
               debug("node/request: Request queued: $params->{status} with $json_content");
               $req->respond([200,'OK, '.$params->{status},{ 'Content-Type' => 'text/json' },$json_content]);
             } else {
@@ -232,8 +232,8 @@ sub _session_ready {
             debug("node/request: Request failed: ".$params->{error});
             $req->respond([500,'Request failed',{ 'Content-Type' => 'text/plain' },$params->{error}]);
           } else {
-            if($params->{params}) {
-              my $json_content = encode_json($params->{params});
+            if($params->{result}) {
+              my $json_content = encode_json($params->{result});
               debug("node/request: Request queued: $params->{status} with $json_content");
               $req->respond([200,'OK, '.$params->{status},{ 'Content-Type' => 'text/json' },$json_content]);
             } else {

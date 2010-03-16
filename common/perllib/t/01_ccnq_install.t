@@ -41,8 +41,8 @@ ok(defined($r1),'node/status returned undef');
 is(ref($r1),'HASH','node/status returns hash');
 ok(exists($r1->{status}),'node/status returned CANCEL (probably could not find the script file)');
 is($r1->{status},'completed','node/status failed');
-is(ref($r1->{params}),'HASH','node/status returned params');
-ok($r1->{params}->{running},'node/status');
+is(ref($r1->{result}),'HASH','node/status returned results');
+ok($r1->{result}->{running},'node/status');
 
 done_testing();
 1;

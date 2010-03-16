@@ -51,7 +51,7 @@ use constant STATUS_FAILED    => 'failed';
 sub SUCCESS {
   my $result = shift;
   error(Carp::longmess("$result is not an hashref")) if $result && ref($result) ne 'HASH';
-  return $result ? { status => STATUS_COMPLETED, params => $result, from => CCNQ::Install::host_name }
+  return $result ? { status => STATUS_COMPLETED, result => $result, from => CCNQ::Install::host_name }
                  : { status => STATUS_COMPLETED,                    from => CCNQ::Install::host_name };
 }
 
