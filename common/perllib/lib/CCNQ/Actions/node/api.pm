@@ -55,8 +55,6 @@ sub _session_ready {
     port => $port,
   );
 
-  use CCNQ::API::handler;
-
   $context->{httpd}->reg_cb(
     '' => sub {
       my ($httpd, $req) = @_;
