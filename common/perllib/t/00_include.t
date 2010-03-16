@@ -57,6 +57,13 @@ require_ok( 'CCNQ::Activities::Proxy' );
 require_ok( 'CCNQ::SQL' );
 require_ok( 'CCNQ::SQL::Base' );
 
+require_ok( 'CCNQ::Rating');
+require_ok( 'CCNQ::Rating::Bucket');
+require_ok( 'CCNQ::Rating::Event');
+require_ok( 'CCNQ::Rating::Event::Rated');
+require_ok( 'CCNQ::Rating::Plan');
+require_ok( 'CCNQ::Rating::Process');
+require_ok( 'CCNQ::Rating::Rate');
 require_ok( 'CCNQ::Rating::Table');
 
 require_ok( 'CCNQ::Actions::b2bua::base' );
