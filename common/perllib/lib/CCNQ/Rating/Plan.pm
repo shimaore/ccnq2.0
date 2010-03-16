@@ -42,6 +42,18 @@ sub currency {
 }
 
 =pod
+
+  $decimals = decimals()
+    How many decimals are needed in the currency.
+    (This is used to compute per-item rounding.)
+
+=cut
+
+sub decimals {
+  # return a positive integer
+}
+
+=pod
   @RatingSteps = rating_steps()
     The list of CCNQ::Rating::Rate operations that need to be performed
     to compute a Rated CBEF from a plain CBEF, for this plan.
