@@ -194,7 +194,7 @@ sub increment {
 }
 
 sub cap {
-  return $self->per_minute ? $self->{cap}*seconds_per_minute : $self->{cap};
+  return $self->{cap};
 }
 
 'CCNQ::Rating::Bucket';
