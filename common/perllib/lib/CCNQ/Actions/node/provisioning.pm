@@ -15,47 +15,35 @@ package CCNQ::Actions::node::provisioning;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
 
-use CCNQ::AE;
 use CCNQ::Provisioning;
-use CCNQ::CouchDB;
-use Logger::Syslog;
-
-use constant provisioning_designs => {
-  report => {
-    language => 'javascript',
-    views    => {
-    },
-  },
-};
-
 
 sub install {
   my ($params,$context,$mcv) = @_;
-  my $cv = CCNQ::CouchDB::install(CCNQ::Provisioning::provisioning_db,provisioning_designs,$mcv);
+  my $cv = CCNQ::Provisioning::install($mcv);
   $context->{condvar}->cb($cv);
 }
 
 sub update {
   my ($params,$context,$mcv) = @_;
-  my $cv = CCNQ::CouchDB::update(CCNQ::Provisioning::provisioning_db,$params,$mcv);
+  my $cv = CCNQ::Provisioning::update($params,$mcv);
   $context->{condvar}->cb($cv);
 }
 
 sub delete {
   my ($params,$context,$mcv) = @_;
-  my $cv = CCNQ::CouchDB::delete(CCNQ::Provisioning::provisioning_db,$params,$mcv);
+  my $cv = CCNQ::Provisioning::delete($params,$mcv);
   $context->{condvar}->cb($cv);
 }
 
 sub retrieve {
   my ($params,$context,$mcv) = @_;
-  my $cv = CCNQ::CouchDB::retrieve(CCNQ::Provisioning::provisioning_db,$params,$mcv);
+  my $cv = CCNQ::Provisioning::retrieve($params,$mcv);
   $context->{condvar}->cb($cv);
 }
 
 sub view {
   my ($params,$context,$mcv) = @_;
-  my $cv = CCNQ::CouchDB::view(CCNQ::Provisioning::provisioning_db,$params,$mcv);
+  my $cv = CCNQ::Provisioning::view($params,$mcv);
   $context->{condvar}->cb($cv);
 }
 

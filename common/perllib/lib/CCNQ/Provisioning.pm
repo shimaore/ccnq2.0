@@ -18,4 +18,49 @@ use strict; use warnings;
 
 use constant provisioning_db => 'provisioning';
 
+use CCNQ::CouchDB;
+
+sub update {
+  my ($params,$mcv) = @_;
+  return CCNQ::CouchDB::update(provisioning_db,$params,$mcv);
+}
+
+sub delete {
+  my ($params,$mcv) = @_;
+  return CCNQ::CouchDB::delete(provisioning_db,$params,$mcv);
+}
+
+sub retrieve {
+  my ($params,$mcv) = @_;
+  return CCNQ::CouchDB::retrieve(provisioning_db,$params,$mcv);
+}
+
+sub view {
+  my ($params,$mcv) = @_;
+  return CCNQ::CouchDB::view(provisioning_db,$params,$mcv);
+}
+
+sub lookup_plan {
+  my ($account,$sub_account) = @_;
+  my $mcv = AnyEvent->condvar;
+  retrieve({
+    _id => join('/','sub_account',$account,$sub_account),
+  },$mcv)->recv();
+  my $plan = $mcv->recv()->{result};
+}
+
+use constant provisioning_designs => {
+  report => {
+    language => 'javascript',
+    views    => {
+    },
+  },
+};
+
+sub install {
+  my ($mcv) = @_;
+  return CCNQ::CouchDB::install(CCNQ::Provisioning::provisioning_db,provisioning_designs,$mcv);
+}
+
+
 1;
