@@ -20,7 +20,7 @@ use Test::More;
 require_ok( 'CCNQ::Object' );
 require_ok( 'AnyEvent::Watchdog::Util' );
 
-require_ok( 'CCNQ::API' );
+require_ok( 'CCNQ::Provisioning' );
 require_ok( 'CCNQ::B2BUA' );
 
 require_ok( 'CCNQ::HTTPD' );

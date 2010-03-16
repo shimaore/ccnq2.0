@@ -16,7 +16,7 @@ package CCNQ::Actions::node::provisioning;
 use strict; use warnings;
 
 use CCNQ::AE;
-use CCNQ::API;
+use CCNQ::Provisioning;
 use CCNQ::CouchDB;
 use Logger::Syslog;
 
@@ -31,31 +31,31 @@ use constant provisioning_designs => {
 
 sub install {
   my ($params,$context,$mcv) = @_;
-  my $cv = CCNQ::CouchDB::install(CCNQ::API::provisioning_db,provisioning_designs,$mcv);
+  my $cv = CCNQ::CouchDB::install(CCNQ::Provisioning::provisioning_db,provisioning_designs,$mcv);
   $context->{condvar}->cb($cv);
 }
 
 sub update {
   my ($params,$context,$mcv) = @_;
-  my $cv = CCNQ::CouchDB::update(CCNQ::API::provisioning_db,$params,$mcv);
+  my $cv = CCNQ::CouchDB::update(CCNQ::Provisioning::provisioning_db,$params,$mcv);
   $context->{condvar}->cb($cv);
 }
 
 sub delete {
   my ($params,$context,$mcv) = @_;
-  my $cv = CCNQ::CouchDB::delete(CCNQ::API::provisioning_db,$params,$mcv);
+  my $cv = CCNQ::CouchDB::delete(CCNQ::Provisioning::provisioning_db,$params,$mcv);
   $context->{condvar}->cb($cv);
 }
 
 sub retrieve {
   my ($params,$context,$mcv) = @_;
-  my $cv = CCNQ::CouchDB::retrieve(CCNQ::API::provisioning_db,$params,$mcv);
+  my $cv = CCNQ::CouchDB::retrieve(CCNQ::Provisioning::provisioning_db,$params,$mcv);
   $context->{condvar}->cb($cv);
 }
 
 sub view {
   my ($params,$context,$mcv) = @_;
-  my $cv = CCNQ::CouchDB::view(CCNQ::API::provisioning_db,$params,$mcv);
+  my $cv = CCNQ::CouchDB::view(CCNQ::Provisioning::provisioning_db,$params,$mcv);
   $context->{condvar}->cb($cv);
 }
 
