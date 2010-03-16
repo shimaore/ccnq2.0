@@ -295,4 +295,9 @@ SQL
 
   # (I'm working on a proper installer and /etc/init.d script.)
 
+# * Jabber server configuration:
+#   On ejabberd I change the "default" shaper to accept much higher rates:
+sed -i -e 's/^{shaper, normal, {maxrate, 1000}}\./{shaper, normal, {maxrate, 1000000}}./' /etc/ejabberd/ejabberd.cfg
+
+
 # These instructions last tested on 2010/03/03
