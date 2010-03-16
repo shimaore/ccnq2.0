@@ -14,6 +14,8 @@ package CCNQ::Rating::Rate;
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use CCNQ::Rating::Bucket;
+
 # XXX Build modules?
 
 
@@ -440,13 +442,17 @@ use constant cbef_actions => {
   },
 
   use_minutes_from_bucket => sub {
-    my ($cbef,$bucket) = @_;
-    $cbef->{duration_bucket} = $bucket;
+    my ($cbef,$bucket_name) = @_;
+    $cbef->{duration_bucket} = CCNQ::Rating::Bucket->new($bucket_name);
+    # optionally
+    $cbef->{duration_bucket}->use_account(0); # 0 = use account+sub_account
   },
 
   use_amount_from_bucket => sub {
     my ($cbef,$bucket) = @_;
-    $cbef->{cost_bucket} = $bucket;
+    $cbef->{cost_bucket} = CCNQ::Rating::Bucket->new($bucket_name);
+    # optionally
+    $cbef->{cost_bucket}->use_account(0); # 0 = use account+sub_account
   },
 
   set_periods_values => sub {
