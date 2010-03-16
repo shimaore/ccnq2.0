@@ -30,6 +30,13 @@ sub actions {
 package CCNQ::Rating::Plan;
 use strict; use warnings;
 
+sub new {
+  my $this = shift;
+  my $class = ref($this) || $this;
+  my $self = shift;
+  return bless $self, $class;
+}
+
 =pod
 
   $currency = currency()
@@ -38,7 +45,9 @@ use strict; use warnings;
 =cut
 
 sub currency {
+  my $self = shift;
   # returns a unique currency name
+  return $self->{currency};
 }
 
 =pod
@@ -50,7 +59,9 @@ sub currency {
 =cut
 
 sub decimals {
+  my $self = shift;
   # return a positive integer
+  return $self->{decimals};
 }
 
 =pod
@@ -60,7 +71,9 @@ sub decimals {
 =cut
 
 sub rating_steps {
+  my $self = shift;
   # returns a list of CCNQ::Rating::Plan::RatingStep instances.
+  return map { CCNQ::Rating::Plan::RatingStep->new($_) } $self->{rating_steps};
 }
 
 1;
