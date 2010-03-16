@@ -24,7 +24,9 @@ templates:
   or
   $mcv->send(CCNQ::AE::SUCCESS({ name => value }))
 
-  $mcv->send(CCNQ::AE::FAILURE($error_text))
+  $mcv->send(CCNQ::AE::FAILURE($error_template,$param1,$param2,..))
+
+(FAILURE follows the templates in Locale::Maketext, i.e. [_1], [_2], .. for parameters.)
 
 In _response handlers, since the $mcv->recv value is never used ($mcv has no
 callback), it is possible to simply say:

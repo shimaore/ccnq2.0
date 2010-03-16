@@ -132,19 +132,19 @@ sub run_from_class {
     \$r = \$b->run(\$action,\$params,\$context);
   };
 
-  my $error_msg = "run_from_class($class,$action): ";
+  my $error_msg = "";
   if($r) {
     return $r;
   } else {
-    $error_msg .= "no condvar returned. ";
+    $error_msg = "no condvar returned";
   }
   if($@) {
-    $error_msg .= $@;
+    $error_msg = $@;
   }
 
-  error($error_msg);
+  error("run_from_class($class,$action): $error_msg");
   my $cv = AnyEvent->condvar;
-  $cv->send(CCNQ::AE::FAILURE($error_msg));
+  $cv->send(CCNQ::AE::FAILURE("run_from_class([_1],[_2]): [_3]",$class,$action,$error_msg));
   return $cv;
 }
 

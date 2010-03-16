@@ -77,9 +77,8 @@ sub attempt_run {
     };
 
     if($@) {
-      my $error_msg = "attempt_run($function,$action): failed with error $@";
-      error($error_msg);
-      $cv->send(CCNQ::AE::FAILURE($error_msg));
+      error("attempt_run($function,$action): failed with error $@");
+      $cv->send(CCNQ::AE::FAILURE("attempt_run([_1],[_2]): failed with error [_3]",$function,$action,$@));
     }
     debug("end of attempt_run($function,$action)->($cv)");
   };

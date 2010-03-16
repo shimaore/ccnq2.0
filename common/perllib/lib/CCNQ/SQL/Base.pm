@@ -44,7 +44,7 @@ sub do_sql {
         debug("Executing $sql with (".join(',',@{$args}).") and callback $cb");
         $db->exec($sql,@{$args},$cb);
       } else {
-        $cv->send(CCNQ::AE::FAILURE("Database error: $@"));
+        $cv->send(CCNQ::AE::FAILURE("Database error: [_1]",$@));
       }
     };
   };
@@ -55,7 +55,7 @@ sub do_sql {
         $cv->send(CCNQ::AE::SUCCESS);
       });
     } else {
-      $cv->send(CCNQ::AE::FAILURE("Database error: $@"));
+      $cv->send(CCNQ::AE::FAILURE("Database error: [_1]",$@));
     }
   };
 
@@ -116,7 +116,7 @@ sub run
     return $self->do_update($params) if $action eq 'update';
 
     error("Invalid action $action");
-    return _failure("Invalid action $action");
+    return _failure("Invalid action [_1]",$action);
 }
 
 1;

@@ -57,7 +57,7 @@ sub SUCCESS {
 
 sub FAILURE {
   my $error = shift || 'No error specified';
-  return { status => STATUS_FAILED, error => $error, from => CCNQ::Install::host_name };
+  return { status => STATUS_FAILED, error => [$error,@_], from => CCNQ::Install::host_name };
 }
 
 use constant CANCEL => {};
