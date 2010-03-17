@@ -19,12 +19,11 @@ use Logger::Syslog;
 
 use CCNQ::Install;
 use CCNQ::Util;
-use CCNQ::AE;
 use CCNQ::Proxy;
 use CCNQ::Proxy::Config;
 
-sub install {
-  my ($params,$context,$mcv) = @_;
+sub _install {
+  my ($params,$context) = @_;
 
   # MODEL: Which model is used for the local opensips system
   # Must be onre of the *.recipe names:
@@ -62,61 +61,47 @@ sub install {
   debug("Restarted OpenSIPS");
 
   CCNQ::Trace::install();
-  $mcv->send(CCNQ::AE::SUCCESS);
+  return;
 }
 
 sub _session_ready {
-  my ($params,$context,$mcv) = @_;
+  my ($params,$context) = @_;
   use CCNQ::XMPPAgent;
   debug("Proxy _session_ready");
   CCNQ::XMPPAgent::join_cluster_room($context);
-  $mcv->send(CCNQ::AE::SUCCESS);
+  return;
 }
 
 sub _dispatch {
-  my ($action,$request,$context,$mcv) = @_;
+  my ($action,$request,$context) = @_;
 
-  debug("Ignoring response"),
-  return $mcv->send(CCNQ::AE::CANCEL),
-    if $request->{status};
-
-  error("No action defined"),
-  return $mcv->send(CCNQ::AE::FAILURE('No action defined'))
-   unless $action;
+  die ['No action defined'] unless $action;
 
   my ($module,$command) = ($action =~ m{^(.*)/(delete|update|query)$});
 
-  error("Invalid action $action"),
-  return $mcv->send(CCNQ::AE::FAILURE("Invalid action $action"))
+  die ['Invalid action [_1]',$action]
     unless $module && $command;
 
   use CCNQ::Proxy::Configuration;
-  my $cv = CCNQ::Proxy::Configuration::run_from_class($module,$command,$request->{params},$context);
-  $cv->cb(sub{
-    my $result = shift->recv;
-    $mcv->send($result);
-  });
-  $context->{condvar}->cb($cv) if $cv;
+  return CCNQ::Proxy::Configuration::run_from_class($module,$command,$request->{params},$context);
 }
 
 sub dr_reload {
-  my ($params,$context,$mcv) = @_;
+  my ($params,$context) = @_;
   use CCNQ::AE;
-  CCNQ::AE::execute($context,qw( /usr/sbin/opensipsctl fifo dr_reload ));
-  $mcv->send(CCNQ::AE::SUCCESS);
+  return CCNQ::AE::execute($context,qw( /usr/sbin/opensipsctl fifo dr_reload ));
 }
 
 sub trusted_reload {
-  my ($params,$context,$mcv) = @_;
+  my ($params,$context) = @_;
   use CCNQ::AE;
-  CCNQ::AE::execute($context,qw( /usr/sbin/opensipsctl fifo trusted_reload ));
-  $mcv->send(CCNQ::AE::SUCCESS);
+  return CCNQ::AE::execute($context,qw( /usr/sbin/opensipsctl fifo trusted_reload ));
 }
 
 sub trace {
-  my ($params,$context,$mcv) = @_;
+  my ($params,$context) = @_;
   use CCNQ::Trace;
-  CCNQ::Trace::run($params,$context,$mcv);
+  CCNQ::Trace::run($params,$context);
 }
 
 'CCNQ::Actions::proxy::base';

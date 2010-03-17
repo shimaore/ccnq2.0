@@ -14,17 +14,15 @@ package CCNQ::Actions::proxy::outbound_proxy;
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
-use Logger::Syslog;
 
 use CCNQ::Proxy;
 use CCNQ::Util;
-use CCNQ::AE;
 
-sub install {
-  my ($params,$context,$mcv) = @_;
+sub _install {
+  my ($params,$context) = @_;
 
   CCNQ::Util::print_to(CCNQ::Proxy::proxy_mode_file,'outbound-proxy');
-  $mcv->send(CCNQ::AE::SUCCESS);
+  return;
 }
 
 'CCNQ::Actions::proxy::outbound_proxy';

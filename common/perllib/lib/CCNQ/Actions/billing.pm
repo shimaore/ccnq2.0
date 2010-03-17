@@ -16,22 +16,21 @@ package CCNQ::Actions::billing;
 use strict; use warnings;
 
 use CCNQ::Install;
-use CCNQ::AE;
 
 use Logger::Syslog;
 
 use CCNQ::Billing;
 
-sub install {
-  my ($params,$context,$mcv) = @_;
-  $mcv->send(CCNQ::AE::SUCCESS);
+sub _install {
+  my ($params,$context) = @_;
+  return;
 }
 
 sub billing_entry {
-  my ($params,$context,$mcv) = @_;
+  my ($params,$context) = @_;
 
   # Create a new CBEF entry
-  CCNQ::Billing::create_flat_cbef({
+  return CCNQ::Billing::rate_and_save_cbef({
     %{$params},
     collecting_node => CCNQ::Install::host_name,
     request_uuid    => $params->{activity},

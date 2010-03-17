@@ -17,14 +17,11 @@ use strict; use warnings;
 
 use CCNQ::B2BUA;
 use CCNQ::Util;
-use CCNQ::AE;
-
-use Logger::Syslog;
 
 use constant vars_xml => 'vars.xml';
 
-sub install {
-  my ($params,$context,$mcv) = @_;
+sub _install {
+  my ($params,$context) = @_;
 
   my $b2bua_name = 'base';
 
@@ -72,21 +69,20 @@ EOT
   CCNQ::Util::execute('/etc/init.d/freeswitch','start');
 
   CCNQ::Trace::install();
-  $mcv->send(CCNQ::AE::SUCCESS);
+  return;
 }
 
 sub _session_ready {
-  my ($params,$context,$mcv) = @_;
+  my ($params,$context) = @_;
   use CCNQ::XMPPAgent;
-  debug("B2BUA _session_ready");
   CCNQ::XMPPAgent::join_cluster_room($context);
-  $mcv->send(CCNQ::AE::SUCCESS);
+  return;
 }
 
 sub trace {
-  my ($params,$context,$mcv) = @_;
+  my ($params,$context) = @_;
   use CCNQ::Trace;
-  CCNQ::Trace::run($params,$context,$mcv);
+  return CCNQ::Trace::run($params);
 }
 
 'CCNQ::Actions::b2bua::base';

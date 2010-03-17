@@ -14,7 +14,7 @@ package CCNQ::Billing;
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-=head1 create_flat_cbef
+=head1 rate_and_save_cbef
 
 Save a flat (non-rated) CBEF.
 
@@ -22,35 +22,36 @@ This is used for example to create billable events off the provisioning system.
 
 =cut
 
+use AnyEvent;
 use CCNQ::Rating;
 use CCNQ::Provisioning;
 
 sub rate_cbef {
   my ($cbef) = @_;
-  my $plan = CCNQ::Provisioning::lookup_plan($cbef->account,$cbef->account_sub);
-  return CCNQ::Rating::rate_cbef($cbef,$plan);
+  my $rcv = AE::cv;
+  CCNQ::Provisioning::lookup_plan($cbef->account,$cbef->account_sub)->cb(sub{
+    my $plan = eval { shift->recv };
+    $rcv->send($plan && CCNQ::Rating::rate_cbef($cbef,$plan));
+  });
+  return $rcv;
 }
-
-
-sub create_flat_cbef {
-  my ($cbef) = @_;
-  rate_and_save_cbef($cbef);
-}
-
 
 sub rate_and_save_cbef {
   my ($cbef) = @_;
+  my $rcv = AE::cv;
+  rate_cbef($cbef)->cb(sub{
+    my $rated_cbef = eval { shift->recv };
+    $rated_cbef->compute_taxes();
 
-  my $rated_cbef = rate_cbef($cbef);
-  $cbef->compute_taxes();
-
-  # Save the new (rated) CBEF...
-  CCNQ::Rating::Event::save_rated_cbef($rated_cbef);
-
-  # ...and update per account/sub-account summaries.
-  # (TBD)
-  update_counters($cbef->account,$cbef->account_sub,$cbef);
-  
+    # Save the new (rated) CBEF...
+    CCNQ::Rating::Event::save_rated_cbef($rated_cbef)->cb(sub{
+      eval { shift->recv };
+      # ...and update per account/sub-account summaries.
+      # (TBD)
+      update_counters($cbef->account,$cbef->account_sub,$cbef);
+    });
+  });
+  return $rcv;
 }
 
 =head2 save_rated_cbef

@@ -20,43 +20,33 @@ use strict; use warnings;
 use base qw(CCNQ::SQL);
 
 use Logger::Syslog;
+use AnyEvent;
 use CCNQ::Install;
-use CCNQ::AE;
-
-sub _failure {
-  my $cv = AnyEvent->condvar;
-  $cv->send(CCNQ::AE::FAILURE(@_));
-  return $cv;
-}
 
 sub do_sql {
   my ($self,@cmds) = @_;
 
   my $db = $self->_db;
 
-  my $cv = AnyEvent->condvar;
+  my $cv = AE::cv;
 
   my $build_callback = sub {
     my ($sql,$args,$cb) = @_;
     debug("Postponing $sql with (".join(',',@{$args}).") and callback $cb");
     return sub {
-      if(!$@) {
-        debug("Executing $sql with (".join(',',@{$args}).") and callback $cb");
-        $db->exec($sql,@{$args},$cb);
-      } else {
-        $cv->send(CCNQ::AE::FAILURE("Database error: [_1]",$@));
-      }
+      die ['Database error: [_1]',$@] if $@;
+      debug("Executing $sql with (".join(',',@{$args}).") and callback $cb");
+      $db->exec($sql,@{$args},$cb);
     };
   };
 
   my $run = sub {
-    if(!$@) {
-      $db->commit( sub {
-        $cv->send(CCNQ::AE::SUCCESS);
-      });
-    } else {
-      $cv->send(CCNQ::AE::FAILURE("Database error: [_1]",$@));
-    }
+    die ['Database error: [_1]',$@] if $@;
+    $db->commit(sub {
+      die ['Database error: [_1]',$@] if $@;
+      die ['Commit failed'] unless $_[1];
+      $cv->send;
+    });
   };
 
   while(@cmds) {
@@ -77,7 +67,7 @@ sub do_delete
     my @delete_commands = $self->delete($params);
 
     if(!@delete_commands) {
-      return _failure("Invalid parameters");
+      die ["Invalid parameters"];
     }
 
     return $self->do_sql(@delete_commands);
@@ -99,7 +89,7 @@ sub do_update
     # Parameter errors are indicated by the methods returning
     # empty lists.
     if(!@delete_commands || !@insert_commands) {
-      return _failure("Invalid parameters");
+      die ["Invalid parameters"];
     }
 
     return $self->do_sql(@delete_commands,@insert_commands);
@@ -115,8 +105,7 @@ sub run
     return $self->do_delete($params) if $action eq 'delete';
     return $self->do_update($params) if $action eq 'update';
 
-    error("Invalid action $action");
-    return _failure("Invalid action [_1]",$action);
+    die ['Invalid action [_1]',$action];
 }
 
 1;

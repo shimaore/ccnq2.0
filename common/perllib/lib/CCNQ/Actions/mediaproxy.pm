@@ -17,14 +17,13 @@ use strict; use warnings;
 
 use CCNQ::MediaProxy;
 use CCNQ::Util;
-use CCNQ::AE;
 use File::Spec;
 use File::Copy;
 
 use Logger::Syslog;
 
-sub install {
-  my ($params,$context,$mcv) = @_;
+sub _install {
+  my ($params,$context) = @_;
 
   for my $file (qw( ca.pem crl.pem )) {
     my $src = File::Spec->catfile(CCNQ::MediaProxy::mediaproxy_directory,$file);
@@ -56,7 +55,7 @@ EOT
   CCNQ::Util::print_to(CCNQ::MediaProxy::mediaproxy_config,$config.$config_dispatcher.$config_relay);
   unlink($dispatcher_file);
   unlink($relay_file);
-  $mcv->send(CCNQ::AE::SUCCESS);
+  return;
 }
 
 'CCNQ::Actions::mediaproxy';

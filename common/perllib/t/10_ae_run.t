@@ -1,4 +1,5 @@
-package CCNQ::Actions::proxy::inbound_proxy;
+# Tests for inclusion of different CCQN modules.
+
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -14,15 +15,24 @@ package CCNQ::Actions::proxy::inbound_proxy;
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
+use Test::More;
 
-use CCNQ::Proxy;
-use CCNQ::Util;
+use_ok ("CCNQ::AE");
+use_ok ("CCNQ::CouchDB");
 
-sub _install {
-  my ($params,$context) = @_;
+my $cv1 = CCNQ::AE::execute({},'/bin/echo');
+ok($cv1,'Execute returned condvar');
+my $success1 = eval { $cv1->recv };
+my $error1 = $@;
+ok(!$error1,"Execute echo triggered error: $error1");
+is($success1,'completed',"Execute echo returned: ".CCNQ::CouchDB::pp($success1));
 
-  CCNQ::Util::print_to(CCNQ::Proxy::proxy_mode_file,'inbound-proxy');
-  return;
-}
+my $cv2 = CCNQ::AE::execute({},'/bin/boolala');
+ok($cv2,'Execute returned condvar');
+my $success2 = eval { $cv2->recv };
+my $error2 = $@;
+ok(!$error2,"Execute boolala triggered error: $error2");
+ok($success2 ne 'completed',"Execute echo returned: ".CCNQ::CouchDB::pp($success2));
 
-'CCNQ::Actions::proxy::inbound_proxy';
+done_testing();
+1;

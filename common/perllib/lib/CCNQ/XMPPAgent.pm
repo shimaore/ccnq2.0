@@ -32,7 +32,10 @@ use JSON;
 use MIME::Base64 ();
 
 use constant handler_timeout => 20;
-use constant MESSAGE_FRAGMENT_SIZE => 8*1024;
+use constant MESSAGE_FRAGMENT_SIZE => 32*1024;
+
+use constant STATUS_COMPLETED => 'completed';
+use constant STATUS_FAILED    => 'failed';
 
 =pod
 
@@ -171,6 +174,15 @@ sub authenticate_response {
   $body->{auth} = 'authenticated';
 }
 
+=head2  handle_message($context,$msg)
+
+Handles $msg (an XMPP IM message, which should have a JSON content) in
+the context $context, and return an AnyEvent condvar.
+
+Returns undef if the message could not be processed.
+
+=cut
+
 sub handle_message {
   my ($context,$msg) = @_;
   my $function = $context->{function};
@@ -234,37 +246,83 @@ sub handle_message {
   # Try to process the command.
   my $action = $request_body->{action};
 
-  my $handler = undef;
-  if($request_body->{status}) {
-    # This is a response.
-    $handler = CCNQ::AE::Run::attempt_run($function,'_response',$request_body,$context);
-  } else {
-    # This is a request.
-    $handler = CCNQ::AE::Run::attempt_run($function,$action,$request_body,$context);
-  }
+  my $handler = CCNQ::AE::Run::attempt_run($function,$action,$request_body,$context);
 
-  my $cv = AnyEvent->condvar;
+  debug("No handler for function=$function, action=$action"),
+  return unless $handler;
+
   # Only send a response if:
   # - one was provided (i.e. method is a valid local method), and
   # - the message we received was not already a response.
   # The first test is required since multiple local resources may get
   # the same message, but only one should reply (the one that implements
   # the requested action).
-  $cv->cb(sub {
-    my $response = shift->recv;
-    if($response->{status}) {
-      debug("Sending response");
-      my $response = {
-        (map { $_=>$request_body->{$_} } qw(activity action)),
-        %{$response}
-      };
-      _send_im_message($context,$msg->from,$response);
+  my $send_response = sub {
+    my $error  = $@;
+    my $result = shift;
+
+    # CANCEL is either "die 'cancel'" or ->send('cancel').
+    if($error eq 'cancel' || $result eq 'cancel') {
+      debug("CANCEL for function=$function, action=$action");
+      return;
     }
-  }) if !$request_body->{status};
+
+    # Note that the presence of {status} is what differentiates a
+    # query/request from a response (since {result} is optional).
+
+    # FAILURE is either "die ..." or ->send([$error_template,...]);
+    # Note that both die($error_msg) and die([$error_template,...]) are
+    # valid and supported. (The later uses Maketext-type templates.)
+    if($error || ref($result) eq 'ARRAY') {
+      debug("FAILURE for function=$function, action=$action");
+      _send_im_message($context,$msg->from,{
+        status    => STATUS_FAILED,
+        from      => CCNQ::Install::host_name,
+        activity  => $request_body->{activity},
+        action    => $request_body->{action},
+        error     => $@ || $result,
+        response_at => time(),
+      });
+      return;
+    }
+
+    # SUCCESS is either ->send(undef), ->send('completed'), or ->send({ name => value }).
+    if( $result && $result ne 'completed' && ref($result) ne 'HASH' ) {
+      error(Carp::longmess("Coding error: $result is not a valid response"));
+      return;
+    }
+
+    debug("SUCCESS for function=$function, action=$action");
+    my $response = {
+      status    => STATUS_COMPLETED,
+      from      => CCNQ::Install::host_name,
+      activity  => $request_body->{activity},
+      action    => $request_body->{action},
+      response_at => time(),
+    };
+    # $result is either undef, 'completed' or a hashref.
+    # Only report a valid content -- i.e. a hashref.
+    $response->{result} = $result if ref($result);
+    _send_im_message($context,$msg->from,$response);
+    return;
+  };
+
   # Run the handler.
-  $handler->($cv);
-  # Trigger the response.
-  $context->{condvar}->cb($cv);
+  my $cv = eval { $handler->() };
+  if($@) {
+    $send_response->();
+    return;
+  }
+
+  # No need to send a response if we did not get a callback.
+  debug('No condvar'),
+  return unless $cv;
+
+  $cv->cb(sub{
+    $send_response->(eval { shift->recv });
+  });
+
+  return $cv;
 }
 
 sub _join_room {
@@ -332,7 +390,6 @@ sub start {
     cluster    => $cluster_name,
     role       => $role,
     function   => $function,
-    condvar    => $program,
     joined_muc  => {},
     pending_muc => {},
   };
@@ -365,9 +422,7 @@ sub start {
       debug("Connected as " . $con->jid . " in function $context->{function}");
       $con->send_presence("present");
       # my ($user, $host, $res) = split_jid ($con->jid);
-      my $cv = AnyEvent->condvar;
-      $session_ready_sub->($cv);
-      undef $cv;
+      $program->cb($session_ready_sub->());
     },
     session_error => sub {
       my $con = shift;
@@ -389,7 +444,7 @@ sub start {
       my $con = shift;
       my ($msg) = @_;
       debug($context->{username}.'/'.$context->{resource}.": IM Message from: " . $msg->from . "; body: " . $msg->any_body);
-      handle_message($context,$msg);
+      $program->cb(handle_message($context,$msg));
     },
     message_error => sub {
       my $con = shift;
@@ -441,7 +496,7 @@ sub start {
       my ($room,$msg,$is_echo) = @_;
       debug($context->{username}.'/'.$context->{resource}.": in room: " . $room->jid . ", MUC message from: " . $msg->from . "; body: " . $msg->any_body);
       # my ($user, $host, $res) = split_jid ($msg->to);
-      handle_message($context,$msg);
+      $program->cb(handle_message($context,$msg));
     },
   );
 

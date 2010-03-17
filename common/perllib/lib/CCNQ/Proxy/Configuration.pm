@@ -131,21 +131,9 @@ sub run_from_class {
     my \$b = new CCNQ::Proxy::${class} (\$db,\$challenge);
     \$r = \$b->run(\$action,\$params,\$context);
   };
-
-  my $error_msg = "";
-  if($r) {
-    return $r;
-  } else {
-    $error_msg = "no condvar returned";
-  }
-  if($@) {
-    $error_msg = $@;
-  }
-
-  error("run_from_class($class,$action): $error_msg");
-  my $cv = AnyEvent->condvar;
-  $cv->send(CCNQ::AE::FAILURE("run_from_class([_1],[_2]): [_3]",$class,$action,$error_msg));
-  return $cv;
+  die $@ if $@;
+  return $r if $r;
+  die ['run_from_class([_1],[_2]): no condvar returned',$class,$action];
 }
 
 1;

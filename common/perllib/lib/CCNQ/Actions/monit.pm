@@ -17,15 +17,14 @@ use strict; use warnings;
 
 use CCNQ::Install;
 use CCNQ::Util;
-use CCNQ::AE;
 use File::Spec;
 
 use CCNQ::Monit;
 
 use Logger::Syslog;
 
-sub install {
-  my ($params,$context,$mcv) = @_;
+sub _install {
+  my ($params,$context) = @_;
   for my $file qw( couchdb.monitrc freeswitch.monitrc local.monitrc monitrc opensips.monitrc ) {
     my $src = File::Spec->catfile(CCNQ::Monit::monit_directory,$file);
     my $content = CCNQ::Util::content_of($src);
@@ -35,7 +34,7 @@ sub install {
     CCNQ::Util::print_to($dst,$content);
   }
 
-  $mcv->send(CCNQ::AE::SUCCESS);
+  return;
 }
 
 'CCNQ::Actions::monit';

@@ -16,12 +16,9 @@ package CCNQ::Actions::b2bua::client_ocs_sbc;
 use strict; use warnings;
 
 use CCNQ::B2BUA;
-use CCNQ::AE;
 
-use Logger::Syslog;
-
-sub install {
-  my ($params,$context,$mcv) = @_;
+sub _install {
+  my ($params,$context) = @_;
 
   my $b2bua_name = 'client-ocs-sbc';
   my $cluster_fqdn = CCNQ::Install::cluster_fqdn($params->{cluster_name});
@@ -56,7 +53,7 @@ EOT
     CCNQ::B2BUA::copy_file($b2bua_name,qw( .. scripts ),${name});
   }
 
-  $mcv->send(CCNQ::AE::SUCCESS);
+  return;
 }
 
 'CCNQ::Actions::b2bua::client_ocs_sbc';

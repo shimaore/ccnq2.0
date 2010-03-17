@@ -26,9 +26,8 @@ package CCNQ::Trace;
 
 use strict; use warnings;
 
-use CCNQ::Install;
-use CCNQ::AE;
 use File::Temp;
+use AnyEvent;
 use AnyEvent::Util;
 use CCNQ::Util;
 
@@ -46,7 +45,7 @@ of tshark(1).
 
 =head1 USAGE
 
-=head2 run($params,$context,$mcv)
+=head2 run($params)
 
 Where $params must contain at least one of:
 
@@ -89,7 +88,7 @@ use constant bin_sh => '/bin/sh';
 
 use constant trace_max_lines => 50;
 
-sub install {
+sub _install {
   my $base_dir = traces_base_dir;
   my $group = 'wireshark';
   my $dumpcap = '/usr/bin/dumpcap';
@@ -104,10 +103,11 @@ sub install {
   CCNQ::Util::execute('chmod','ug+rwx',$base_dir);
   CCNQ::Util::execute('chmod','o-rwx', $base_dir);
   CCNQ::Util::execute('chmod','g+s',   $base_dir);
+  return;
 }
 
 sub run {
-  my ($params,$context,$mcv) = @_;
+  my ($params) = @_;
 
   debug("trace: checking parameters");
   my $dump_packets = $params->{params}->{dump_packets} || 0;
@@ -116,16 +116,16 @@ sub run {
   my $from_user    = $params->{params}->{from_user};
   my $days_ago     = $params->{params}->{days_ago} || 0;
 
-  $mcv->send(CCNQ::AE::FAILURE('Invalid to_user')  ), return
+  die ['Invalid to_user']
     if defined $to_user   && $to_user   !~ /^\d+$/;
-  $mcv->send(CCNQ::AE::FAILURE('Invalid from_user')), return
+  die ['Invalid from_user']
     if defined $from_user && $from_user !~ /^\d+$/;
-  $mcv->send(CCNQ::AE::FAILURE('Invalid call_id')  ), return
+  die ['Invalid call_id']
     if defined $call_id   && $call_id   !~ /^[\w@-]+$/;
-  $mcv->send(CCNQ::AE::FAILURE('Invalid days_ago') ), return
+  die ['Invalid days_ago']
     if defined $days_ago  && $days_ago  !~ /^\d{1,5}$/;
 
-  $mcv->send(CCNQ::AE::FAILURE('Missing required parameters')), return
+  die ['Missing required parameters']
     unless defined $call_id or defined $to_user or defined $from_user;
 
   #### Generate a merged capture file #####
@@ -173,7 +173,7 @@ sub run {
 
   my $base_dir = traces_base_dir;
 
-  my $cv;
+  my $rcv = AE::cv;
 
   my $fh     = new File::Temp (SUFFIX => '.pcap');
   my $script = new File::Temp (UNLINK => 0, SUFFIX => '.sh');
@@ -193,7 +193,7 @@ SCRIPT
     debug("script content: $script_content");
 
     my $content = '';
-    $cv = AnyEvent::Util::run_cmd [ bin_sh, $script ],
+    my $cv = AnyEvent::Util::run_cmd [ bin_sh, $script ],
       close_all => 1,
       '>' => \$content;
 
@@ -203,7 +203,7 @@ SCRIPT
       undef $fh;
       unlink $script;
       debug("trace: completed pcap dump");
-      $mcv->send(CCNQ::AE::SUCCESS({pcap => MIME::Base64::encode($content)}));
+      $rcv->send({pcap => MIME::Base64::encode($content)});
     });
 
   } else {
@@ -226,7 +226,7 @@ SCRIPT
     #   - receives line-by-line
     #   - gets 'undef' at EOF.
 
-    $cv = AnyEvent::Util::run_cmd [ bin_sh, $script ],
+    my $cv = AnyEvent::Util::run_cmd [ bin_sh, $script ],
       close_all => 1,
       '<' => '/dev/null',
       '2>' => '/dev/null',
@@ -255,14 +255,13 @@ SCRIPT
       undef $fh;
       unlink $script;
       debug("trace: completed text dump");
-      $mcv->send(CCNQ::AE::SUCCESS({rows => [@content]}));
+      $rcv->send({rows => [@content]});
     });
 
   }
 
   debug("trace: initiating dump");
-  $context->{condvar}->cb($cv);
-  debug("trace: end");
+  return $rcv;
 } # run
 
 'CCNQ::Trace';

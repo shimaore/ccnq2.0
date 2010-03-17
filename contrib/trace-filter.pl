@@ -50,20 +50,15 @@ while(@ARGV) {
 use AnyEvent;
 use CCNQ::Trace;
 
-my $mcv = AnyEvent->condvar;
-
-CCNQ::Trace::run({
+my $rcv = CCNQ::Trace::run({
     dump_packets => $dump_packets,
     call_id      => $call_id,
     to_user      => $to_user,
     from_user    => $from_user,
     days_ago     => $days_ago,
-  },
-  { condvar => $mcv },
-  $mcv
-);
+});
 
 use CCNQ::Portal::Formatter;
-print CCNQ::Portal::Formatter::pp($mcv->recv);
+print CCNQ::Portal::Formatter::pp($rcv->recv);
 
 __END__

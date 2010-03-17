@@ -16,12 +16,11 @@ package CCNQ::Actions::mediaproxy::dispatcher;
 use strict; use warnings;
 
 use CCNQ::Util;
-use CCNQ::AE;
 
 use Logger::Syslog;
 
-sub install {
-  my ($params,$context,$mcv) = @_;
+sub _install {
+  my ($params,$context) = @_;
 
   use CCNQ::MediaProxy;
   CCNQ::MediaProxy::install_default_key('dispatcher');
@@ -46,7 +45,7 @@ passport = None
 # end dispatcher configuration
 EOT
   CCNQ::Util::print_to(CCNQ::MediaProxy::mediaproxy_config.'.dispatcher',$config);
-  $mcv->send(CCNQ::AE::SUCCESS);
+  return;
 }
 
 'CCNQ::Actions::mediaproxy::dispatcher';

@@ -17,24 +17,27 @@
 use strict; use warnings;
 use Test::More;
 
+require_ok( 'CCNQ' );
+
 require_ok( 'CCNQ::Object' );
 require_ok( 'AnyEvent::Watchdog::Util' );
 
-require_ok( 'CCNQ::Provisioning' );
 require_ok( 'CCNQ::B2BUA' );
+require_ok( 'CCNQ::B2BUA::Stick' );
 
 require_ok( 'CCNQ::HTTPD' );
 
-# require_ok( 'CCNQ::I18N' );
-
 require_ok( 'CCNQ::Install' );
 require_ok( 'CCNQ::Util' );
+
 require_ok( 'CCNQ::AE' );
 require_ok( 'CCNQ::AE::Run' );
+require_ok( 'CCNQ::Billing' );
 require_ok( 'CCNQ::CouchDB' );
 require_ok( 'CCNQ::Manager' );
 require_ok( 'CCNQ::MediaProxy' );
 require_ok( 'CCNQ::Monit' );
+require_ok( 'CCNQ::Provisioning' );
 require_ok( 'CCNQ::Trace' );
 require_ok( 'CCNQ::Upgrade' );
 require_ok( 'CCNQ::XMPPAgent' );
@@ -42,17 +45,20 @@ require_ok( 'CCNQ::B2BUA::Stick' );
 
 require_ok( 'CCNQ::Proxy' );
 require_ok( 'CCNQ::Proxy::aliases' );
+require_ok( 'CCNQ::Proxy::Base' );
+require_ok( 'CCNQ::Proxy::Bill' ); # deprecated
 require_ok( 'CCNQ::Proxy::Config' );
 require_ok( 'CCNQ::Proxy::Configuration' );
 require_ok( 'CCNQ::Proxy::domain' );
 require_ok( 'CCNQ::Proxy::dr_gateway' );
 require_ok( 'CCNQ::Proxy::dr_rule' );
-require_ok( 'CCNQ::Proxy::inbound' );
-require_ok( 'CCNQ::Proxy::local_number' );
 require_ok( 'CCNQ::Proxy::endpoint' );
 require_ok( 'CCNQ::Proxy::endpoint_number' );
+require_ok( 'CCNQ::Proxy::inbound' );
+require_ok( 'CCNQ::Proxy::local_number' );
 
 require_ok( 'CCNQ::Activities::Proxy' );
+require_ok( 'CCNQ::Activities::Provisioning' );
 
 require_ok( 'CCNQ::SQL' );
 require_ok( 'CCNQ::SQL::Base' );
@@ -84,6 +90,7 @@ require_ok( 'CCNQ::Actions::proxy::base' );
 require_ok( 'CCNQ::Actions::proxy::inbound_proxy' );
 require_ok( 'CCNQ::Actions::proxy::outbound_proxy' );
 require_ok( 'CCNQ::Actions::proxy::router_no_registrar' );
+require_ok( 'CCNQ::Actions::proxy::complete_transparent' );
 
 # These will eventually go.
 require_ok( 'CCNQ::Manager::Requests::aliases_delete' );

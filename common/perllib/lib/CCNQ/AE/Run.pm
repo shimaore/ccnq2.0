@@ -17,31 +17,25 @@ use strict; use warnings;
 use Logger::Syslog;
 
 use Carp;
+use AnyEvent;
 use CCNQ::Install;
-use CCNQ::Util;
-use CCNQ::AE;
 
-use constant actions_file_name => 'actions.pm';
-sub actions_file {
-  my ($function) = @_;
-  return File::Spec->catfile(CCNQ::Install::SRC,$function,actions_file_name);
-}
+=head2 attempt_run($function,$action,$params,$context)
 
-=pod
+Return undef if the function/action combination does not exist.
 
-  attempt_run locates an "actions.pm" module and returns a sub() that
-  will execute an action in it.
-  "actions.pm" modules must return a hashred, which keys are the action
-  names, and the values are sub()s.
+If the params-set is a response, call that functions' "_response" action,
+if it exists.
 
-  The sub($cv) returned by attempt_run expects one argument, an AnyEvent
-  condvar, which will be sent the result, in the form:
+Otherwise attempt to locate the action inside the function, and use
+the "_dispatch" action (if available) if no specific action is defined.
 
-  { status => 'completed', params => $results }
-  { status => 'failed', error => $error_msg }
+Returns a sub{} that will return an AE::cv which when called will return
+the value for the function/action combination. (The sub{} might fail with
+die(). If die('cancel') is used it means the action should not be replied to.)
 
-  Note: failure is detected by the presence of the "error" field,
-        not by the fact that status is "failed".
+Note: failure is detected by the presence of the "error" field,
+      not by the fact that status is "failed".
 
 =cut
 
@@ -54,56 +48,68 @@ sub attempt_run {
   $module =~ s{/}{::}g;
 
   # Errors which lead to not being able to submit the request are not reported.
-  my $cancel = sub { debug("attempt_run($function,$action): cancel"); shift->send(CCNQ::AE::CANCEL); };
-
   warning(qq(attempt_run($function,$action): Invalid module "${module}", skipping)),
-  return $cancel unless $module->require;
+  return unless $module->require;
 
-  return sub {
-    my $cv = shift;
-    debug("start of attempt_run($function,$action)->($cv)");
-
-    my $result = undef;
-    eval {
-      if($module->can($action)) {
-        $module->can($action)->($params,$context,$cv);
-      } elsif($module->can('_dispatch')) { # Eventually replace with AUTOLOAD
-        $module->can('_dispatch')->($action,$params,$context,$cv);
-      } else {
-        debug("attempt_run($function,$action): No action available");
-        $cancel->($cv);
-      }
-      return;
-    };
-
-    if($@) {
-      error("attempt_run($function,$action): failed with error $@");
-      $cv->send(CCNQ::AE::FAILURE("attempt_run([_1],[_2]): failed with error [_3]",$function,$action,$@));
+  # This is a response.
+  if($params->{status}) {
+    if($module->can('_response')) {
+      return sub {
+        my $rcv = AE::cv;
+        $module->can('_response')->($params,$context)->cb(sub{
+          shift->recv;
+          $rcv->send('cancel');
+        });
+        return $rcv;
+      };
     }
-    debug("end of attempt_run($function,$action)->($cv)");
-  };
+    return;
+  }
+
+  # This is a request.
+  if($module->can($action)) {
+    return sub { $module->can($action)->($params,$context) };
+  } elsif($module->can('_dispatch')) { # Eventually replace with AUTOLOAD
+    return sub { $module->can('_dispatch')->($action,$params,$context) };
+  }
+  return;
 }
 
 sub attempt_on_roles_and_functions {
-  my ($action,$params,$context,$mcv) = @_;
+  my ($action,$params,$context) = @_;
   $params ||= {};
 
+  my $rcv = AE::cv;
   CCNQ::Install::resolve_roles_and_functions(sub {
     my ($cluster_name,$role,$function) = @_;
+
     my $fun = attempt_run($function,$action,{ %{$params}, cluster_name => $cluster_name, role => $role },$context);
+    return unless $fun;
 
-    my $cv = AnyEvent->condvar;
-    $fun->($cv);
+    $rcv->begin;
 
-    info("Waiting for Function: $function Action: $action Cluster: $cluster_name to complete");
+    my $cv = eval { $fun->() };
+    if($@) {
+      error("Function: $function Action: $action Cluster: $cluster_name Failure: $@");
+      $rcv->send;
+    }
+
+    # Assume success if no condvar is returned.
+    # (This is the normal case for "_install".)
+    debug("Function: $function Action: $action Cluster: $cluster_name has already Completed"),
+    return $rcv->end if !$cv;
+
+    debug("Waiting for Function: $function Action: $action Cluster: $cluster_name to complete");
     eval { $cv->recv };
     if($@) {
       error("Function: $function Action: $action Cluster: $cluster_name Failure: $@");
-    } else {
-      info("Function: $function Action: $action Cluster: $cluster_name Completed");
+      $rcv->send;
     }
+
+    debug("Function: $function Action: $action Cluster: $cluster_name Completed");
+    $rcv->end;
   });
-  $mcv->send;
+  return $rcv;
 }
 
 1;

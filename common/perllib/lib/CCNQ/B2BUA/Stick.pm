@@ -26,13 +26,13 @@ package CCNQ::B2BUA::Stick;
 use CCNQ::B2BUA;
 use CCNQ::Install;
 use CCNQ::Util;
-use CCNQ::AE;
+use AnyEvent;
 use AnyEvent::DNS;
+use Logger::Syslog;
 use File::Spec;
 
-sub install {
-    my ($b2bua_name,$params,$context,$mcv) = @_;
-    use Logger::Syslog;
+sub _install {
+    my ($b2bua_name,$params,$context) = @_;
 
     debug("b2bua/$b2bua_name: Installing dialplan/template");
     for my $name ($b2bua_name) {
@@ -69,7 +69,7 @@ sub install {
       debug("b2bua/$b2bua_name: Creating configuration for name $name / profile $profile.");
 
       my $port_dn = CCNQ::Install::catdns('port',$name,CCNQ::Install::fqdn);
-      my $port_cv = AnyEvent->condvar;
+      my $port_cv = AE::cv;
       AnyEvent::DNS::txt( $port_dn, $port_cv );
       my ($port) = $port_cv->recv;
       debug("Query TXT $port_dn -> $port") if defined $port;
@@ -88,7 +88,7 @@ sub install {
 EOT
 
       # Generate ACLs
-      my $ingress_cv = AnyEvent->condvar;
+      my $ingress_cv = AE::cv;
       AnyEvent::DNS::a( CCNQ::Install::catdns('ingress',$name,CCNQ::Install::fqdn), $ingress_cv );
       my @ingress = $ingress_cv->recv;
       debug("b2bua/$b2bua_name: Found ingress IPs ".join(',',@ingress));
@@ -98,7 +98,7 @@ EOT
       $acl_text .= qq(</list>);
 
       # Generate dialplan entries
-      my $egress_cv = AnyEvent->condvar;
+      my $egress_cv = AE::cv;
       AnyEvent::DNS::a( CCNQ::Install::catdns('egress',$name,CCNQ::Install::fqdn), $egress_cv );
       my @egress = $egress_cv->recv;
       debug("b2bua/$b2bua_name: Found egress IPs ".join(',',@egress));
@@ -126,7 +126,7 @@ EOT
     CCNQ::Util::print_to($dialplan_file,$dialplan_text);
 
     CCNQ::B2BUA::finish();
-    $mcv->send(CCNQ::AE::SUCCESS);
+    return;
 }
 
 'CCNQ::B2BUA::Stick';

@@ -18,37 +18,6 @@ use strict; use warnings;
 
 use constant provisioning_db => 'provisioning';
 
-use CCNQ::CouchDB;
-
-sub update {
-  my ($params,$mcv) = @_;
-  return CCNQ::CouchDB::update(provisioning_db,$params,$mcv);
-}
-
-sub delete {
-  my ($params,$mcv) = @_;
-  return CCNQ::CouchDB::delete(provisioning_db,$params,$mcv);
-}
-
-sub retrieve {
-  my ($params,$mcv) = @_;
-  return CCNQ::CouchDB::retrieve(provisioning_db,$params,$mcv);
-}
-
-sub view {
-  my ($params,$mcv) = @_;
-  return CCNQ::CouchDB::view(provisioning_db,$params,$mcv);
-}
-
-sub lookup_plan {
-  my ($account,$sub_account) = @_;
-  my $mcv = AnyEvent->condvar;
-  retrieve({
-    _id => join('/','sub_account',$account,$sub_account),
-  },$mcv)->recv();
-  my $plan = $mcv->recv()->{result};
-}
-
 use constant provisioning_designs => {
   report => {
     language => 'javascript',
@@ -57,10 +26,61 @@ use constant provisioning_designs => {
   },
 };
 
-sub install {
-  my ($mcv) = @_;
-  return CCNQ::CouchDB::install(CCNQ::Provisioning::provisioning_db,provisioning_designs,$mcv);
+use AnyEvent;
+use CCNQ::CouchDB;
+
+sub _install {
+  return CCNQ::CouchDB::install(CCNQ::Provisioning::provisioning_db,provisioning_designs);
 }
 
+sub update {
+  my ($params) = @_;
+  return CCNQ::CouchDB::update(provisioning_db,$params);
+}
+
+sub delete {
+  my ($params) = @_;
+  return CCNQ::CouchDB::delete(provisioning_db,$params);
+}
+
+sub retrieve {
+  my ($params) = @_;
+  return CCNQ::CouchDB::retrieve(provisioning_db,$params);
+}
+
+sub view {
+  my ($params) = @_;
+  return CCNQ::CouchDB::view(provisioning_db,$params);
+}
+
+use AnyEvent::CouchDB;
+
+sub lookup_plan {
+  my ($account,$sub_account) = @_;
+  my $id = join('/','sub_account',$account,$sub_account);
+  my $rcv = AE::cv;
+  couchdb(provisioning_db)->open_doc($id)->cb(sub{
+    my $rec = eval { shift->recv };
+    if($rec && $rec->{plan}) {
+      load_plan($rec->{plan})->cb(sub{
+        $rcv->send(eval {shift->recv});
+      })
+    } else {
+      $rcv->send;
+    }
+  });
+  return $rcv;
+}
+
+sub load_plan {
+  my ($plan) = @_;
+  my $id = join('/','plan',$plan);
+  my $rcv = AE::cv;
+  couchdb(provisioning_db)->open_doc($id)->cb(sub{
+    my $rec = eval { shift->recv };
+    $rcv->send(CCNQ::Rating::Plan->new($rec)) if $rec;
+  });
+  return $rcv;
+}
 
 1;

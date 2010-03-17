@@ -16,29 +16,31 @@ package CCNQ::Actions::node;
 use strict; use warnings;
 
 use Carp;
-use CCNQ::AE;
+use AnyEvent;
 use CCNQ::AE::Run;
 use CCNQ::Trace;
 use Logger::Syslog;
 
 sub install_all {
-    my ($params,$context,$mcv) = @_;
-    CCNQ::AE::Run::attempt_on_roles_and_functions('install',$params,$context,$mcv);
+    my ($params,$context) = @_;
+    return CCNQ::AE::Run::attempt_on_roles_and_functions('_install',$params,$context);
 }
 
 # Used to provide server-wide status information.
 sub status {
-  my ($params,$context,$mcv) = @_;
-  $mcv->send(CCNQ::AE::SUCCESS({running => 1}));
+  my ($params,$context) = @_;
+  my $rcv = AE::cv;
+  $rcv->send({running => 1});
+  return $rcv;
 }
 
 sub restart_all {
-  my ($params,$context,$mcv) = @_;
+  my ($params,$context) = @_;
   use AnyEvent::Watchdog::Util;
   AnyEvent::Watchdog::Util::enabled
     or croak "Not running under watchdog!";
   AnyEvent::Watchdog::Util::restart;
-  $mcv->send(CCNQ::AE::SUCCESS);
+  return;
 }
 
 'CCNQ::Actions::node';

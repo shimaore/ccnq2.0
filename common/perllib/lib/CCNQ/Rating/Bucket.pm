@@ -38,7 +38,18 @@ Note:
 
 =cut
 
+use constant BUCKET_NAME_PREFIX => 'bucket';
+
+use AnyEvent;
 use Math::BigFloat;
+
+sub new {
+  my $this = shift;
+  my $class = ref($this) || $this;
+  my ($name) = @_;
+  my $self = { _name => $name };
+  return bless $self, $class;
+}
 
 =pod
 
@@ -46,11 +57,21 @@ use Math::BigFloat;
 
 =cut
 
-sub name {
+sub short_name {
   my ($self,$cbef) = @_;
   return $self->use_account
     ? $cbef->account
     : $cbef->account.'/'.$cbef->account_sub;
+}
+
+sub base_name {
+  my ($self) = @_;
+  return join('/',BUCKET_NAME_PREFIX,$self->{_name});
+}
+
+sub full_name {
+  my ($self,$cbef) = @_;
+  return join('/',$self->base_name,$self->short_name($cbef));
 }
 
 =head2 get_value
@@ -61,18 +82,18 @@ sub name {
 
 sub get_value {
   my ($self,$cbef) = @_;
-  my $value = $self->_retrieve($self->name($cbef));
+  return $self->_retrieve($self->full_name($cbef));
 }
 
 sub set_value {
   my ($self,$cbef,$value) = @_;
   # Values are always stored properly rounded
-  my $value = $self->round_down($value);
+  $value = $self->round_down($value);
   # The bucket value can never exceed its cap if (it's defined).
   if(defined($self->cap) && $value > $self->cap) {
     $value = $self->cap;
   }
-  $self->_store($self->name($cbef),$value);
+  return $self->_store($self->full_name($cbef),$value);
 }
 
 =head2 use($cbef,$value)
@@ -91,23 +112,35 @@ sub use {
   my $self = shift;
   my ($cbef,$value) = @_;
 
-  return Math::BigFloat->bzero if $value <= 0;
+  my $rcv = AE::cv;
+  
+  if($value <= 0) {
+    $rcv->send(Math::BigFloat->bzero);
+    return $rcv;
+  }
 
   # If the bucket stores money, make sure the currency is the proper one.
   die "Invalid currency" if $self->currency && $cbef->currency ne $self->currency;
 
   $value = $self->round_up($value);
 
-  my $current_bucket_value = $self->get_value($cbef);
+  $self->get_value($cbef)->cb(sub{
+    my $current_bucket_value = eval { shift->recv };
 
-  if($current_bucket_value < $value) {
-    $self->set_value($cbef,Math::BigFloat->bzero);
-    return $value - $current_bucket_value;
-  } else {
-    my $remaining = $current_bucket_value - $value;
-    $self->set_value($cbef,$remaining);
-    return Math::BigFloat->bzero;
-  }
+    if($current_bucket_value < $value) {
+      $self->set_value($cbef,Math::BigFloat->bzero)->cb(sub{
+        eval { shift->recv };
+        $rcv->send($value - $current_bucket_value);
+      });
+    } else {
+      my $remaining = $current_bucket_value - $value;
+      $self->set_value($cbef,$remaining)->cb(sub{
+        eval { shift->recv };
+        $rcv->send(Math::BigFloat->bzero);
+      });
+    }
+  });
+  return $rcv;
 }
 
 =head2 use_account
@@ -129,13 +162,18 @@ sub use_account {
 sub _retrieve {
   my $self = shift;
   my ($key) = @_;
-  XXX
+  my $rcv = AE::cv;
+  CCNQ::Provisioning::retrieve_cv({_id=>$key})->cb(sub{
+    my $rec = eval { shift->recv };
+    $rcv->send($rec && $rec->{result});
+  });
+  return $rcv;
 }
 
 sub _store {
   my $self = shift;
   my ($key,$value) = @_;
-  XXX
+  return CCNQ::Provisioning::update_cv({_id=>$key,value=>$value});
 }
 
 =head1 Bucket type

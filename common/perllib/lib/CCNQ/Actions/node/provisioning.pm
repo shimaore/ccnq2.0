@@ -17,34 +17,29 @@ use strict; use warnings;
 
 use CCNQ::Provisioning;
 
-sub install {
-  my ($params,$context,$mcv) = @_;
-  my $cv = CCNQ::Provisioning::install($mcv);
-  $context->{condvar}->cb($cv);
+sub _install {
+  my ($params,$context) = @_;
+  return CCNQ::Provisioning::install();
 }
 
 sub update {
-  my ($params,$context,$mcv) = @_;
-  my $cv = CCNQ::Provisioning::update($params,$mcv);
-  $context->{condvar}->cb($cv);
+  my ($params,$context) = @_;
+  return CCNQ::Provisioning::update($params);
 }
 
 sub delete {
-  my ($params,$context,$mcv) = @_;
-  my $cv = CCNQ::Provisioning::delete($params,$mcv);
-  $context->{condvar}->cb($cv);
+  my ($params,$context) = @_;
+  return CCNQ::Provisioning::delete($params);
 }
 
 sub retrieve {
-  my ($params,$context,$mcv) = @_;
-  my $cv = CCNQ::Provisioning::retrieve($params,$mcv);
-  $context->{condvar}->cb($cv);
+  my ($params,$context) = @_;
+  return CCNQ::Provisioning::retrieve($params);
 }
 
 sub view {
-  my ($params,$context,$mcv) = @_;
-  my $cv = CCNQ::Provisioning::view($params,$mcv);
-  $context->{condvar}->cb($cv);
+  my ($params,$context) = @_;
+  return CCNQ::Provisioning::view($params);
 }
 
 'CCNQ::Actions::node::provisioning';

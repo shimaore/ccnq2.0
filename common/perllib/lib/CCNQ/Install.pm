@@ -176,7 +176,7 @@ use constant _install_file => q(install.pm);
 # Resolve cluster_name(s)
 
 sub resolve_cluster_names {
-  my $cv = AnyEvent->condvar;
+  my $cv = AE::cv;
   AnyEvent::DNS::txt fqdn, $cv;
   my @cluster_names = $cv->recv;
   return join(' ',@cluster_names);
@@ -192,7 +192,7 @@ use constant::defer cluster_names => sub {
 
 sub resolve_roles {
   my ($cluster_name) = @_;
-  my $cv = AnyEvent->condvar;
+  my $cv = AE::cv;
   AnyEvent::DNS::txt catdns($cluster_name,domain_name), $cv;
   my @roles = $cv->recv;
   return join(' ',@roles);
@@ -220,14 +220,14 @@ use constant internal_ip_tag => 'internal';
 use constant external_ip_tag => 'external';
 
 sub internal_ip {
-  my $cv = AnyEvent->condvar;
+  my $cv = AE::cv;
   AnyEvent::DNS::a catdns(internal_ip_tag,fqdn), $cv;
   my ($internal_ip) = $cv->recv;
   return $internal_ip;
 }
 
 sub external_ip {
-  my $cv = AnyEvent->condvar;
+  my $cv = AE::cv;
   AnyEvent::DNS::a catdns(external_ip_tag,fqdn), $cv;
   my ($external_ip) = $cv->recv;
   return $external_ip;

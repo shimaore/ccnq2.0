@@ -38,7 +38,7 @@ sub run {
   $0 = $program_name;
   # Loop until we are asked to restart ourselves (e.g. after upgrade)
   # or until something breaks (e.g. server died).
-  my $program = AnyEvent->condvar;
+  my $program = AE::cv;
 
   $program->begin;
 

@@ -34,15 +34,13 @@ require_ok( 'AnyEvent' );
 my $sub = CCNQ::AE::Run::attempt_run('node','status',undef,undef);
 is(ref($sub), 'CODE', 'attempt_run for node/status');
 
-my $cv = AnyEvent->condvar;
-$sub->($cv);
+my $cv = $sub->();
+ok($cv,'node/status did not return a condvar');
 my $r1 = $cv->recv;
 ok(defined($r1),'node/status returned undef');
 is(ref($r1),'HASH','node/status returns hash');
-ok(exists($r1->{status}),'node/status returned CANCEL (probably could not find the script file)');
-is($r1->{status},'completed','node/status failed');
-is(ref($r1->{result}),'HASH','node/status returned results');
-ok($r1->{result}->{running},'node/status');
+ok(exists($r1->{running}),'node/status returned CANCEL (probably could not find the script file)');
+is($r1->{running},1,'node/status failed');
 
 done_testing();
 1;

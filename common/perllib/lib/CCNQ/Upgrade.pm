@@ -32,20 +32,15 @@ sub run {
   unlink CCNQ::Install::clusters_file;
 
   # Make sure all variables are available:
-  eval { CCNQ::Install::cookie()        };  my $warn1 = $@;
-  eval { CCNQ::Install::fqdn()          };  my $warn2 = $@;
-  eval { CCNQ::Install::cluster_names() };  my $warn3 = $@;
-
-  die $warn1.$warn2.$warn3
-    if $warn1 || $warn2 || $warn3;
-
-  my $program = AnyEvent->condvar;
-  my $context = {
-    condvar => $program,
+  eval {
+    CCNQ::Install::cookie();
+    CCNQ::Install::fqdn();
+    CCNQ::Install::cluster_names();
   };
+  die $@ if $@;
 
-  CCNQ::AE::Run::attempt_run('node','install_all',undef,$context)->($program);
-  $program->recv;
+  my $program = CCNQ::AE::Run::attempt_run('node','install_all',undef,undef)->();
+  $program->recv();
 }
 
 'CCNQ::Upgrade';

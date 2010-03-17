@@ -16,32 +16,47 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
 
-# XXX This is currently broken.
-use Test::More tests => 31;
+use Test::More;
 
 use_ok ("CCNQ::Rating::Table");
+use_ok ("CCNQ::CouchDB");
 
-my $name = 'testing-prefix-table'.rand(100000);
+done_testing();
+__END__
+
+my $name = 'testing_prefix_table'.int(rand(100000));
 my $table = new CCNQ::Rating::Table($name);
 eval {
   $table->_db->drop->recv;
+};
+warn "Drop says: ".CCNQ::CouchDB::pp($@) if $@;
+eval {
   $table->_db->create->recv;
 };
+warn "Create says: ".CCNQ::CouchDB::pp($@) if $@;
 
 # Only do testing if we have a local CouchDB server with a proper database.
-if($table->_db->info->recv) {
+my $q = eval { $table->_db->info() };
+die CCNQ::CouchDB::pp($@) if $@;
 
-$table->insert( { prefix => '1',                value1 => 'abc', value2 => 'TYZ' } );
-$table->insert( { prefix => '123',              value1 => 'ABD', value2 => 'KLO' } );
-$table->insert( { prefix => '1234',             value1 => 'def', value2 => 'KJJ' } );
-$table->insert( { prefix => '123456',           value1 => 'ghi', value2 => 'KJJ' } );
-$table->insert( { prefix => '1234567890123456', value1 => 'jkl', value2 => 'KJJ' } );
-$table->insert( { prefix => '124',              value1 => 'jkl', value2 => 'KLO' } );
-$table->insert( { prefix => '253673',           value1 => 'mno', value2 => 'TYZ' } );
+my $r = eval { $q->recv };
+warn "Info says: ".CCNQ::CouchDB::pp($@) if $@;
 
+if( !$@ && $r ) {
+
+ok($table->insert( { prefix => '1',                value1 => 'abc', value2 => 'TYZ' } ),'Insert');
+ok($table->insert( { prefix => '123',              value1 => 'ABD', value2 => 'KLO' } ),'Insert');
+ok($table->insert( { prefix => '1234',             value1 => 'def', value2 => 'KJJ' } ),'Insert');
+ok($table->insert( { prefix => '123456',           value1 => 'ghi', value2 => 'KJJ' } ),'Insert');
+ok($table->insert( { prefix => '1234567890123456', value1 => 'jkl', value2 => 'KJJ' } ),'Insert');
+ok($table->insert( { prefix => '124',              value1 => 'jkl', value2 => 'KLO' } ),'Insert');
+ok($table->insert( { prefix => '253673',           value1 => 'mno', value2 => 'TYZ' } ),'Insert');
+
+$table->lookup('18981');
 is( $table->lookup('1')->{value1}, 'abc' );
 is( $table->lookup('1')->{value2}, 'TYZ' );
 is( $table->lookup('12')->{value1}, 'abc' );
+is( $table->lookup('122')->{value1}, 'abc' );
 is( $table->lookup('123')->{value1}, 'ABD' );
 is( $table->lookup('1234')->{value1}, 'def' );
 is( $table->lookup('12345')->{value1}, 'def' );
@@ -57,6 +72,7 @@ is( $table->lookup('1234567890123')->{value1}, 'ghi' );
 is( $table->lookup('12345678901234')->{value1}, 'ghi' );
 is( $table->lookup('123456789012345')->{value1}, 'ghi' );
 is( $table->lookup('1234567890123456')->{value1}, 'jkl' );
+is( $table->lookup('1239')->{value1}, 'ABD' );
 is( $table->lookup('124')->{value1}, 'jkl' );
 is( $table->lookup('12472819')->{value1}, 'jkl' );
 is( $table->lookup('18981')->{value1}, 'abc' );

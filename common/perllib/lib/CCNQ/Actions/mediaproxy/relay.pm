@@ -16,12 +16,11 @@ package CCNQ::Actions::mediaproxy::relay;
 use strict; use warnings;
 
 use CCNQ::Util;
-use CCNQ::AE;
 
 use Logger::Syslog;
 
-sub install {
-  my ($params,$context,$mcv) = @_;
+sub _install {
+  my ($params,$context) = @_;
   use CCNQ::MediaProxy;
   CCNQ::MediaProxy::install_default_key('relay');
 
@@ -45,7 +44,7 @@ port_range = 40000:41998
 # end relay configuration
 EOT
   CCNQ::Util::print_to(CCNQ::MediaProxy::mediaproxy_config.'.relay',$config);
-  $mcv->send(CCNQ::AE::SUCCESS);
+  return;
 }
 
 'CCNQ::Actions::mediaproxy::relay';

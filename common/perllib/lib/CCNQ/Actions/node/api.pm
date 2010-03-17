@@ -32,40 +32,40 @@ use CCNQ::HTTPD;
 use JSON;
 use Logger::Syslog;
 
-use CCNQ::AE;
 use CCNQ::XMPPAgent;
 
 sub _build_response_handler {
   my ($req) = @_;
 
   return sub {
-    my ($params,$context) = @_;
+    my ($response,$context) = @_;
     debug("node/request: Callback in process");
-    if($params->{error}) {
-      my $json_content = encode_json($params->{error});
+    if($response->{error}) {
+      # Note: error might be a string or an arrayref.
+      my $json_content = encode_json($response->{error});
       debug("node/request: Request failed: ".$json_content);
       $req->respond([500,'Request failed',{ 'Content-Type' => 'text/json' },$json_content]);
     } else {
-      if($params->{result}) {
-        my $json_content = encode_json($params->{result});
-        debug("node/request: Request queued: $params->{status} with $json_content");
-        $req->respond([200,'OK, '.$params->{status},{ 'Content-Type' => 'text/json' },$json_content]);
+      if($response->{result}) {
+        my $json_content = encode_json($response->{result});
+        debug("node/request: Request queued: $response->{status} with $json_content");
+        $req->respond([200,'OK, '.$response->{status},{ 'Content-Type' => 'text/json' },$json_content]);
       } else {
-        debug("node/request: Request queued: $params->{status}");
-        $req->respond([200,'OK, '.$params->{status}]);
+        debug("node/request: Request queued: $response->{status}");
+        $req->respond([200,'OK, '.$response->{status}]);
       }
     }
   };
 }
 
 sub _request {
-  my ($request,$context,$mcv) = @_;
+  my ($request,$context) = @_;
   # Silently ignore. (These come to us because we are subscribed to the manager MUC.)
-  $mcv->send(CCNQ::AE::CANCEL);
+  return;
 }
 
 sub _session_ready {
-  my ($params,$context,$mcv) = @_;
+  my ($params,$context) = @_;
 
   my $manager_muc_room = CCNQ::Install::manager_cluster_jid;
   CCNQ::XMPPAgent::_join_room($context,$manager_muc_room);
@@ -92,7 +92,7 @@ sub _session_ready {
       debug("node/api: Processing web request");
       my $body = {
         activity => 'node/api/'.rand(),
-        action => '_request', # ran by the 'manager'
+        action => 'new_request', # ran by the 'manager'
         params => {
           $req->vars
         },
@@ -222,11 +222,11 @@ sub _session_ready {
     },
 
   );
-  $mcv->send(CCNQ::AE::SUCCESS);
+  return;
 }
 
 sub _response {
-  my ($response,$context,$mcv) = @_;
+  my ($response,$context) = @_;
   my $activity = $response->{activity};
   if($activity) {
     my $cb = $context->{api_callback}->{$activity};
@@ -240,7 +240,7 @@ sub _response {
   } else {
     debug("node/api: Response contains no activity ID, ignoring");
   }
-  $mcv->send(CCNQ::AE::CANCEL);
+  return;
 }
 
 'CCNQ::Actions::node::api';

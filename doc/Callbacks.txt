@@ -1,36 +1,35 @@
+Requests files are modules which contain method (called "actions"),
+where each "action" can be any of:
 
-"actions.pm" files must return a hashref which is a list of
-
-   action => callback
-
-where "action" can be any of:
+  _install: used by the installer script
 
   _session_ready: called when the connection with the XMPP server is established
   _response: called when a response is received from another node
   _dispatch: called (if present) when no specific callback is available
 
-  install:   used by the installer script
-  _request: sent by an API node to the manager MUC
+or any "action" defined by the specific application.
 
-  or any "action" defined by the specific application.
+These methods MUST either die() or return a valid AE::cv which will then
+be called to obtain the result of the operation.
 
-The last parameter for the callback is an AnyEvent->condvar variable which
-should be triggered once the callback is done, using one of the following
-templates:
+More specifically, the method (and the AE::cv, except for "die") may:
 
-  $mcv->send(CCNQ::AE::CANCEL); # Cancel the response
+  # Cancel the response without further error processing:
+  die 'cancel'
+  return undef    # method: No condvar means no response (aka Cancel)
+  $rcv->send('cancel')
 
-  $mcv->send(CCNQ::AE::SUCCESS);
-  or
-  $mcv->send(CCNQ::AE::SUCCESS({ name => value }))
+  # Send a "successful" response with or without a result:
+  $rcv->send
+  $rcv->send('completed')
+  $rcv->send({ name => value })  # Successful, with result (must be a hashref)
 
-  $mcv->send(CCNQ::AE::FAILURE($error_template,$param1,$param2,..))
+  # Send a "failure" response with an error message:
+  die [$error_template,$param1,$param2,..]  # Cannot be used inside callbacks
+  $rcv->send([$error_template,$param1,$param2,..])
 
-(FAILURE follows the templates in Locale::Maketext, i.e. [_1], [_2], .. for parameters.)
+(The last case follows the templates in Locale::Maketext, i.e. should use
+[_1], [_2], .. for parameters. This allows for I18N of results.)
 
-In _response handlers, since the $mcv->recv value is never used ($mcv has no
-callback), it is possible to simply say:
-
-  $mcv->send
-
-to indicate completion of the response.
+Here, $rcv is an AE::cv that is created inside the "action" sub if any
+further processing is needed.

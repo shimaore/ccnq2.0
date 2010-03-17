@@ -18,16 +18,15 @@ use strict; use warnings;
 use CCNQ::B2BUA;
 use CCNQ::Install;
 use CCNQ::Util;
-use CCNQ::AE;
+use AnyEvent;
 use AnyEvent::DNS;
 use File::Spec;
 use File::Path;
 
 use Logger::Syslog;
 
-sub install {
-  my ($params,$context,$mcv) = @_;
-  use Logger::Syslog;
+sub _install {
+  my ($params,$context) = @_;
 
   my $b2bua_name = 'carrier-sbc-config';
   my $cluster_fqdn = CCNQ::Install::cluster_fqdn($params->{cluster_name});
@@ -58,7 +57,7 @@ sub install {
 EOT
 
   my $sbc_names_dn = CCNQ::Install::catdns('sbc-names',CCNQ::Install::fqdn);
-  my $sbc_names_cv = AnyEvent->condvar;
+  my $sbc_names_cv = AE::cv;
   AnyEvent::DNS::txt( $sbc_names_dn, $sbc_names_cv );
   my @sbc_names = $sbc_names_cv->recv;
   debug("Query TXT $sbc_names_dn -> ".join(',',@sbc_names));
@@ -79,7 +78,7 @@ EOT
     #   egress     -- A record(s) with the IP address of the carrier's termination SBC
 
     my $profile_dn = CCNQ::Install::catdns('profile',$name,CCNQ::Install::fqdn);
-    my $profile_cv = AnyEvent->condvar;
+    my $profile_cv = AE::cv;
     AnyEvent::DNS::txt( $profile_dn, $profile_cv );
     my ($profile) = $profile_cv->recv;
     debug("Query TXT $profile_dn -> $profile") if defined $profile;
@@ -99,7 +98,7 @@ EOT
     debug("b2bua/$b2bua_name: Creating configuration for name $name / profile $profile.");
 
     my $port_dn = CCNQ::Install::catdns('port',$name,CCNQ::Install::fqdn);
-    my $port_cv = AnyEvent->condvar;
+    my $port_cv = AE::cv;
     AnyEvent::DNS::txt( $port_dn, $port_cv );
     my ($external_port) = $port_cv->recv;
     debug("Query TXT $port_dn -> $external_port") if defined $external_port;
@@ -122,7 +121,7 @@ EOT
 EOT
 
     # Generate ACLs
-    my $ingress_cv = AnyEvent->condvar;
+    my $ingress_cv = AE::cv;
     AnyEvent::DNS::a( CCNQ::Install::catdns('ingress',$name,CCNQ::Install::fqdn), $ingress_cv );
     my @ingress = $ingress_cv->recv;
     debug("b2bua/$b2bua_name: Found ingress IPs ".join(',',@ingress));
@@ -132,7 +131,7 @@ EOT
     $acl_text .= qq(</list>);
 
     # Generate dialplan entries
-    my $egress_cv = AnyEvent->condvar;
+    my $egress_cv = AE::cv;
     AnyEvent::DNS::a( CCNQ::Install::catdns('egress',$name,CCNQ::Install::fqdn), $egress_cv );
     my @egress = $egress_cv->recv;
     debug("b2bua/$b2bua_name: Found egress IPs ".join(',',@egress));
@@ -162,7 +161,7 @@ EOT
   CCNQ::Util::print_to($dialplan_file,$dialplan_text);
 
   CCNQ::B2BUA::finish();
-  $mcv->send(CCNQ::AE::SUCCESS);
+  return;
 }
 
 'CCNQ::Actions::b2bua::carrier_sbc_config';

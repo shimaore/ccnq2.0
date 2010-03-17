@@ -16,9 +16,9 @@ package CCNQ::Actions::manager;
 use strict; use warnings;
 
 use CCNQ::Manager;
-use CCNQ::AE;
 use CCNQ::XMPPAgent;
 use CCNQ::CouchDB;
+use AnyEvent;
 use AnyEvent::CouchDB;
 use Logger::Syslog;
 
@@ -52,27 +52,23 @@ use constant manager_designs => {
   # Other designs here
 };
 
-sub install {
-  my ($params,$context,$mcv) = @_;
-
-  my $cv = CCNQ::CouchDB::install(CCNQ::Manager::manager_db,manager_designs,$mcv);
-
-  $context->{condvar}->cb($cv);
+sub _install {
+  my ($params,$context) = @_;
+  return CCNQ::CouchDB::install(CCNQ::Manager::manager_db,manager_designs);
 }
 
 sub _session_ready {
-  my ($params,$context,$mcv) = @_;
+  my ($params,$context) = @_;
   debug("Manager _session_ready");
   CCNQ::XMPPAgent::join_cluster_room($context);
-  $mcv->send(CCNQ::AE::SUCCESS);
+  return;
 }
 
 # Send requests out (message received from node/api/actions.pm)
-sub _request {
-  my ($request,$context,$mcv) = @_;
+sub new_request {
+  my ($request,$context) = @_;
 
-  error("No request!"),
-  return $mcv->send(CCNQ::AE::FAILURE("No request!"))
+  die ["No request!"]
     unless $request and $request->{params};
 
   $request = $request->{params};
@@ -83,6 +79,9 @@ sub _request {
 
   # Log the request.
   $request->{_id} = $request->{request} if $request->{request};
+
+  my $rcv = AE::cv;
+
   my $cv = $db->save_doc($request);
 
   $cv->cb( sub{ $_[0]->recv;
@@ -103,7 +102,7 @@ sub _request {
         $activity->{next_activity} = $request->{request}.'.'.($activity_rank+1)
           unless $activity_rank == $#activities;
 
-        $mcv->begin;
+        $rcv->begin;
         $db->save_doc($activity)->cb(sub{ $_[0]->recv;
 
           debug("New activity ID=$activity->{activity} was created.");
@@ -121,24 +120,23 @@ sub _request {
           }
 
           $db->save_doc($activity)->cb(sub{$_[0]->recv;
-            $mcv->end;
+            $rcv->end;
             debug("New activity ID=$activity->{activity} was saved.");
           });
         });
       }
 
-      $mcv->send(CCNQ::AE::SUCCESS($request));
+      $rcv->send($request);
       debug("Request ID=$request->{request} submitted");
     });
 
   });
-
-  $context->{condvar}->cb($cv);
+  return $rcv;
 }
 
 # Response to requests
 sub _response {
-  my ($response,$context,$mcv) = @_;
+  my ($response,$context) = @_;
 
   my $action = $response->{action};
   error("No action defined"), return unless $action;
@@ -146,6 +144,8 @@ sub _response {
 
   debug("Trying to locate action=$action activity=$response->{activity}");
   return if $response->{activity} =~ qr{^node/api}; # Not a real response.
+
+  my $rcv = AE::cv;
 
   my $db = couchdb(CCNQ::Manager::manager_db);
 
@@ -168,7 +168,7 @@ sub _response {
         debug("Activity response $activity_response->{_id} updated.");
 
         if($response->{error}) {
-          error("Activity $response->{activity} failed with error $response->{error}, re-submitting");
+          error("Activity $response->{activity} failed with error ".CCNQ::CouchDB::pp($response->{error}).", re-submitting");
           delete $activity->{status};
           delete $activity->{error};
           delete $activity->{from};
@@ -178,12 +178,13 @@ sub _response {
           } else {
             error("Re-submission failed: $res->[1]");
           }
-          $mcv->end;
+          $rcv->send('cancel');
+          return;
         } else {
           # Process the next activity, if any.
           my $next_activity_id = $activity->{next_activity};
           if(!$next_activity_id) {
-            $mcv->end;
+            $rcv->send('cancel');
             return;
           };
           debug("Locating next activity $next_activity_id");
@@ -197,29 +198,28 @@ sub _response {
             }
             $db->save_doc($next_activity)->cb(sub{$_[0]->recv;
               debug("Next activity ID=$next_activity_id submitted.");
-              $mcv->end;
+              $rcv->send('cancel');
+              return;
             });
           });
         }
       });
     } else {
       error("Activity $response->{activity} does not exist!");
-      $mcv->end;
+      $rcv->send('cancel');
+      return;
     }
   });
-  $context->{condvar}->cb($cv);
+  return $rcv;
 }
 
 # API "request status" query
 sub get_request_status {
-  my ($params,$context,$mcv) = @_;
-
-  my $cv = CCNQ::CouchDB::view(CCNQ::Manager::manager_db,{
+  my ($params,$context) = @_;
+  return CCNQ::CouchDB::view(CCNQ::Manager::manager_db,{
     view => 'report/requests',
     _id  => [$params->{params}->{request_id}],
-  },$mcv);
-
-  $context->{condvar}->cb($cv);
+  });
 }
 
 'CCNQ::Actions::manager';
