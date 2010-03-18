@@ -73,7 +73,7 @@ sub new_request {
 
   $request = $request->{params};
 
-  debug("Manager handling request");
+  debug("Manager handling new request");
 
   my $db = couchdb(CCNQ::Manager::manager_db);
 
@@ -86,7 +86,7 @@ sub new_request {
 
   $cv->cb( sub{ $_[0]->recv;
     $request->{request} ||= $request->{_id};
-    debug("Saving request with ID=$request->{request}.");
+    debug("Saving new request with ID=$request->{request}.");
 
     $db->save_doc($request)->cb(sub{ $_[0]->recv;
       # Now split the request into independent activities
