@@ -422,8 +422,10 @@ sub start {
       debug("Connected as " . $con->jid . " in function $context->{function}");
       $con->send_presence("present");
       # my ($user, $host, $res) = split_jid ($con->jid);
-      my $cv = $session_ready_sub->();
-      $program->cb($cv) if $cv;
+      if($session_ready_sub) {
+        my $cv = $session_ready_sub->();
+        $program->cb($cv) if $cv;
+      }
     },
     session_error => sub {
       my $con = shift;
