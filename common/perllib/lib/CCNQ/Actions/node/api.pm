@@ -31,6 +31,7 @@ use AnyEvent::CouchDB;
 use CCNQ::HTTPD;
 use JSON;
 use Logger::Syslog;
+use Carp;
 
 use CCNQ::XMPPAgent;
 
@@ -48,7 +49,7 @@ sub _build_response_handler {
     } else {
       # Since "status" is not the marker used to decide whether there was an error,
       # it should always be 'completed' if no {error} is present.
-      warn("node/api: Coding error: status is $response->{status}, should be 'completed'")
+      error(Carp::longmess("node/api: Coding error: status is '$response->{status}', but no {error} present, should be 'completed'"))
         if $response->{status} ne 'completed';
       if($response->{result}) {
         my $json_content = encode_json($response->{result});
