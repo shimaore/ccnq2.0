@@ -49,7 +49,8 @@ sub do_sql {
     $error->('Database error: [_1]',$@) if $@;
     $db->commit(sub {
       $error->('Database error: [_1]',$@) if $@;
-      $error->('Commit failed') unless $_[1];
+      # It seems the documentation for AnyEvent::DBI is incorrect.
+      # $error->('Commit failed') unless $_[1];
       $cv->send;
     });
   };
