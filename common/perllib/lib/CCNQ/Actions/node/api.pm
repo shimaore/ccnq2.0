@@ -44,8 +44,12 @@ sub _build_response_handler {
       # Note: error might be a string or an arrayref.
       my $json_content = encode_json($response->{error});
       debug("node/api: Request failed: ".$json_content);
-      $req->respond([500,'Request failed',{ 'Content-Type' => 'text/json' },$json_content]);
+      $req->respond([500,'Request submission failed',{ 'Content-Type' => 'text/json' },$json_content]);
     } else {
+      # Since "status" is not the marker used to decide whether there was an error,
+      # it should always be 'completed' if no {error} is present.
+      warn("node/api: Coding error: status is $response->{status}, should be 'completed'")
+        if $response->{status} ne 'completed';
       if($response->{result}) {
         my $json_content = encode_json($response->{result});
         debug("node/api: Request queued: $response->{status} with $json_content");

@@ -56,16 +56,18 @@ sub request_to_activity {
 
 sub activities_for_request {
   my ($request) = @_;
-  my @result = ();
   if($request->{action}) {
     my $sub = request_to_activity($request->{action});
     if($sub) {
+      # XXX This will probably need an eval {} protection at some point.
       return $sub->($request);
     } else {
-      $request->{status} = 'Unknown request';
+      $request->{status} = STATUS_FAILED;
+      $request->{error} = 'Unknown request';
     }
   } else {
-    $request->{status} = 'No action specified';
+    $request->{status} = STATUS_FAILED;
+    $request->{error} = 'No action specified';
   }
   return ();
 }

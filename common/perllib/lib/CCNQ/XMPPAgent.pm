@@ -261,7 +261,7 @@ sub handle_message {
     my $error  = $@;
     my $result = shift;
 
-    debug("send_response got error=$error, result=$result");
+    debug("XMPPAgent: send_response got error=$error, result=$result");
 
     # CANCEL is either "die 'cancel'" or ->send('cancel').
     if($error eq 'cancel' || $result eq 'cancel') {
@@ -293,6 +293,10 @@ sub handle_message {
       error(Carp::longmess("Coding error: $result is not a valid response"));
       return;
     }
+
+    # Cleanup CouchDB extraneous data
+    delete $result->{_id};
+    delete $result->{_rev};
 
     debug("SUCCESS for function=$function, action=$action");
     my $response = {
