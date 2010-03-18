@@ -55,9 +55,14 @@ sub attempt_run {
   if($params->{status}) {
     if($module->can('_response')) {
       return sub {
+        my $cv = $module->can('_response')->($params,$context);
+        return if !$cv;
+        # If the _response needs post-processing we still need to make sure it gets canceled.
         my $rcv = AE::cv;
-        $module->can('_response')->($params,$context)->cb(sub{
-          shift->recv;
+        $cv->cb(sub{
+          eval { shift->recv };
+          # Do not report errors upstream, but still log them.
+          error("Response failed with error: $@") if $@;
           $rcv->send('cancel');
         });
         return $rcv;
