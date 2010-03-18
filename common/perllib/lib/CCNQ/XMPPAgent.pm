@@ -422,7 +422,8 @@ sub start {
       debug("Connected as " . $con->jid . " in function $context->{function}");
       $con->send_presence("present");
       # my ($user, $host, $res) = split_jid ($con->jid);
-      $program->cb($session_ready_sub->());
+      my $cv = $session_ready_sub->();
+      $program->cb($cv) if $cv;
     },
     session_error => sub {
       my $con = shift;
@@ -444,7 +445,8 @@ sub start {
       my $con = shift;
       my ($msg) = @_;
       debug($context->{username}.'/'.$context->{resource}.": IM Message from: " . $msg->from . "; body: " . $msg->any_body);
-      $program->cb(handle_message($context,$msg));
+      my $cv = handle_message($context,$msg);
+      $program->cb($cv) if $cv;
     },
     message_error => sub {
       my $con = shift;
@@ -496,7 +498,8 @@ sub start {
       my ($room,$msg,$is_echo) = @_;
       debug($context->{username}.'/'.$context->{resource}.": in room: " . $room->jid . ", MUC message from: " . $msg->from . "; body: " . $msg->any_body);
       # my ($user, $host, $res) = split_jid ($msg->to);
-      $program->cb(handle_message($context,$msg));
+      my $cv = handle_message($context,$msg);
+      $program->cb($cv) if $cv;
     },
   );
 
