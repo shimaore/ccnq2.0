@@ -217,7 +217,7 @@ sub _response {
 # API "request status" query
 sub get_request_status {
   my ($params,$context) = @_;
-  return CCNQ::CouchDB::view(CCNQ::Manager::manager_db,{
+  return CCNQ::CouchDB::view_cv(CCNQ::Manager::manager_db,{
     view => 'report/requests',
     _id  => [$params->{params}->{request_id}],
   });

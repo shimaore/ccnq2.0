@@ -35,22 +35,22 @@ sub install {
 
 sub update {
   my ($params) = @_;
-  return CCNQ::CouchDB::update(provisioning_db,$params);
+  return CCNQ::CouchDB::update_cv(provisioning_db,$params);
 }
 
 sub delete {
   my ($params) = @_;
-  return CCNQ::CouchDB::delete(provisioning_db,$params);
+  return CCNQ::CouchDB::delete_cv(provisioning_db,$params);
 }
 
 sub retrieve {
   my ($params) = @_;
-  return CCNQ::CouchDB::retrieve(provisioning_db,$params);
+  return CCNQ::CouchDB::retrieve_cv(provisioning_db,$params);
 }
 
 sub view {
   my ($params) = @_;
-  return CCNQ::CouchDB::view(provisioning_db,$params);
+  return CCNQ::CouchDB::view_cv(provisioning_db,$params);
 }
 
 use AnyEvent::CouchDB;
