@@ -126,8 +126,9 @@ sub new_request {
         });
       }
 
-      $rcv->send($request);
       debug("Request ID=$request->{request} submitted");
+      # Send the Request ID back to the API.
+      $rcv->send($request);
     });
 
   });

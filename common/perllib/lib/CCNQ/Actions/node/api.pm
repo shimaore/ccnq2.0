@@ -39,19 +39,19 @@ sub _build_response_handler {
 
   return sub {
     my ($response,$context) = @_;
-    debug("node/request: Callback in process");
+    debug("node/api: Callback in process");
     if($response->{error}) {
       # Note: error might be a string or an arrayref.
       my $json_content = encode_json($response->{error});
-      debug("node/request: Request failed: ".$json_content);
+      debug("node/api: Request failed: ".$json_content);
       $req->respond([500,'Request failed',{ 'Content-Type' => 'text/json' },$json_content]);
     } else {
       if($response->{result}) {
         my $json_content = encode_json($response->{result});
-        debug("node/request: Request queued: $response->{status} with $json_content");
+        debug("node/api: Request queued: $response->{status} with $json_content");
         $req->respond([200,'OK, '.$response->{status},{ 'Content-Type' => 'text/json' },$json_content]);
       } else {
-        debug("node/request: Request queued: $response->{status}");
+        debug("node/api: Request queued: $response->{status}");
         $req->respond([200,'OK, '.$response->{status}]);
       }
     }
@@ -89,7 +89,7 @@ sub _session_ready {
     '/api' => sub {
       my ($httpd, $req) = @_;
 
-      debug("node/api: Processing web request");
+      debug("node/api: Processing web new_request");
       my $body = {
         activity => 'node/api/'.rand(),
         action => 'new_request', # ran by the 'manager'
@@ -137,7 +137,7 @@ sub _session_ready {
     '/request' => sub {
       my ($httpd, $req) = @_;
 
-      debug("node/request: Processing web request");
+      debug("node/api: Processing web get_request_status");
       my $body = {
         activity => 'node/request/'.rand(),
         action => 'get_request_status',
@@ -180,7 +180,7 @@ sub _session_ready {
     '/provisioning' => sub {
       my ($httpd, $req) = @_;
 
-      debug("node/provisioning: Processing web request");
+      debug("node/api: Processing web provisioning retrieve");
       my $body = {
         activity => 'node/provisioning/'.rand(),
         action => 'retrieve',
