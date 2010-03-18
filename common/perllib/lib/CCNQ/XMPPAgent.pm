@@ -321,7 +321,7 @@ sub handle_message {
   }
 
   # No need to send a response if we did not get a callback.
-  debug('No condvar'),
+  debug("CANCEL for function=$function, action=$action (no condvar)"),
   return unless $cv;
 
   $cv->cb(sub{
