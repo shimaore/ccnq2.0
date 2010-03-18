@@ -282,7 +282,7 @@ sub handle_message {
         from      => CCNQ::Install::host_name,
         activity  => $request_body->{activity},
         action    => $request_body->{action},
-        error     => $@ || $result,
+        error     => $error || $result,
         response_at => time(),
       });
       return;
