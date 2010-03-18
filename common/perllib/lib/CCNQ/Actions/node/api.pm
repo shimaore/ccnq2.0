@@ -42,7 +42,9 @@ sub _build_response_handler {
     my ($response,$context) = @_;
     debug("node/api: Callback in process");
     if($response->{error}) {
-      # Note: error might be a string or an arrayref.
+      # Note: error must be an arrayref.
+      error("node/api: {error} must be an ARRAY")
+        unless ref($response->{error}) eq 'ARRAY';
       my $json_content = encode_json($response->{error});
       debug("node/api: Request failed: ".$json_content);
       $req->respond([500,'Request submission failed',{ 'Content-Type' => 'text/json' },$json_content]);

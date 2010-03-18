@@ -275,14 +275,21 @@ sub handle_message {
     # FAILURE is either "die ..." or ->send([$error_template,...]);
     # Note that both die($error_msg) and die([$error_template,...]) are
     # valid and supported. (The later uses Maketext-type templates.)
-    if($error || ref($result) eq 'ARRAY') {
+    # However {error} must always be an arrayref.
+
+    # If ->send([$error]) was used, use that (in preference to what $@ might
+    # have reported).
+    $error = $result if $result && ref($result) eq 'ARRAY';
+    if($error) {
+      # Make sure the error is an arrayref;
+      $error = [$error] if ref($error) ne 'ARRAY';
       debug("FAILURE for function=$function, action=$action");
       _send_im_message($context,$msg->from,{
         status    => STATUS_FAILED,
         from      => CCNQ::Install::host_name,
         activity  => $request_body->{activity},
         action    => $request_body->{action},
-        error     => $error || $result,
+        error     => $error,
         response_at => time(),
       });
       return;
