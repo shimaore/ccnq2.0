@@ -45,7 +45,7 @@ sub receive {
   return $result;
 }
 
-sub _install {
+sub install {
   my ($db_name,$designs) = @_;
   $designs ||= {};
 

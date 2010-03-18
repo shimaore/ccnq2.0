@@ -88,7 +88,7 @@ use constant bin_sh => '/bin/sh';
 
 use constant trace_max_lines => 50;
 
-sub _install {
+sub install {
   my $base_dir = traces_base_dir;
   my $group = 'wireshark';
   my $dumpcap = '/usr/bin/dumpcap';

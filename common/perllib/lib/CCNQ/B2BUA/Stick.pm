@@ -31,7 +31,7 @@ use AnyEvent::DNS;
 use Logger::Syslog;
 use File::Spec;
 
-sub _install {
+sub install {
     my ($b2bua_name,$params,$context) = @_;
 
     debug("b2bua/$b2bua_name: Installing dialplan/template");

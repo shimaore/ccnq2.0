@@ -29,7 +29,7 @@ use constant provisioning_designs => {
 use AnyEvent;
 use CCNQ::CouchDB;
 
-sub _install {
+sub install {
   return CCNQ::CouchDB::install(CCNQ::Provisioning::provisioning_db,provisioning_designs);
 }
 
