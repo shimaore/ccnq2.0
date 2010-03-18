@@ -30,21 +30,26 @@ sub do_sql {
 
   my $cv = AE::cv;
 
+  my $error = sub {
+    error(join(',',@_));
+    $cv->send([@_]);
+  };
+
   my $build_callback = sub {
     my ($sql,$args,$cb) = @_;
     debug("Postponing $sql with (".join(',',@{$args}).") and callback $cb");
     return sub {
-      die ['Database error: [_1]',$@] if $@;
+      $error->('Database error: [_1]',$@) if $@;
       debug("Executing $sql with (".join(',',@{$args}).") and callback $cb");
       $db->exec($sql,@{$args},$cb);
     };
   };
 
   my $run = sub {
-    die ['Database error: [_1]',$@] if $@;
+    $error->('Database error: [_1]',$@) if $@;
     $db->commit(sub {
-      die ['Database error: [_1]',$@] if $@;
-      die ['Commit failed'] unless $_[1];
+      $error->('Database error: [_1]',$@) if $@;
+      $error->('Commit failed') unless $_[1];
       $cv->send;
     });
   };
