@@ -91,13 +91,16 @@ sub do_sql_query {
 
     my ($dbh, $rows, $rv) = @_;
     $#_ or $error->('Database error: [_1]',$@);
-    my %a;
     debug("Sending SQL response");
+    my $map_columns = sub {
+      my %a;
+      @a{@$columns} = @{$_[0]}; # hash-slice the values
+      return \%a; # return the hashref
+    };
+
     $cv->send({
       rows => [
-        map {
-          @a{@$columns} = @$_; {%a} # hash-slice the values, return the hash
-        } @$rows
+        map { $map_columns->($_) } @$rows
       ],
     });
   };
