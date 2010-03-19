@@ -66,6 +66,38 @@ sub do_sql {
   return $cv;
 }
 
+sub do_sql_query {
+  my ($self,$sql,$columns,$args) = @_;
+
+  my $cv = AE::cv;
+
+  my $error = sub {
+    error(join(',',@_));
+    $cv->send([@_]);
+  };
+
+  $error->('Invalid query') unless $sql && $columns;
+
+  $sql =~ s/_columns_/join(',',map { qq("$_") } @{$columns} )/g;
+
+  debug("SQL $sql with args ".join(',',@$args));
+
+  $self->_db->exec($sql,@{$args},sub{
+    my ($dbh, $rows, $rv) = @_;
+    $#_ or $error->($@);
+    my %a;
+    $cv->send({
+      rows => [
+        map {
+          @a{@$columns} = @$_, {%a} # hash-slice the values, return the hash
+        } @$rows
+      ],
+    });
+  });
+
+  return $cv;
+}
+
 sub do_delete
 {
     my ($self,$params) = @_;
@@ -110,6 +142,7 @@ sub run
     # unless I rewrite the code to work properly.
     return $self->do_delete($params) if $action eq 'delete';
     return $self->do_update($params) if $action eq 'update';
+    return $self->do_query($params) if $action eq 'query';
 
     die ['Invalid action [_1]',$action];
 }
