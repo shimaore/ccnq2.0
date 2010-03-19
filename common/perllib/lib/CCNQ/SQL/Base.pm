@@ -88,6 +88,7 @@ sub do_sql_query {
     my ($dbh, $rows, $rv) = @_;
     $#_ or $error->('Database error: [_1]',$@);
     my %a;
+    debug("Sending SQL response");
     $cv->send({
       rows => [
         map {
