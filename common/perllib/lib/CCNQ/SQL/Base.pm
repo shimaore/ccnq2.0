@@ -78,7 +78,7 @@ sub do_sql_query {
 
   $error->('Invalid query') unless $sql && $columns;
 
-  $sql =~ s/_columns_/join(',',map { qq("$_") } @{$columns} )/g;
+  $sql =~ s/_columns_/join(',',map { qq("$_") } @{$columns} )/ge;
 
   debug("SQL $sql with args ".join(',',@$args));
 
