@@ -98,14 +98,9 @@ sub do_sql_query {
     });
   };
 
-  my $run = sub {
-    $error->('Database error: [_1]',$@) if $@;
-    $db->exec($sql,@{$args},$cb);
-  };
-
   debug("Postponing $sql with (".join(',',@{$args}).") and callback $cb");
 
-  $db->begin_work( $run );
+  $db->exec($sql,@{$args},$cb);
 
   return $cv;
 }
