@@ -80,7 +80,8 @@ sub do_sql_query {
 
   $error->('Invalid query') unless $sql && $columns;
 
-  $sql =~ s/_columns_/join(',',map { qq("$_") } @{$columns} )/ge;
+  # Do not map columns.
+  $sql =~ s/_columns_/join(',',@{$columns})/ge;
 
   my $cb = sub{
     $error->('Database error: [_1]',$@) if $@;

@@ -17,7 +17,7 @@ package CCNQ::Proxy::location;
 
 use strict; use warnings;
 
-use base qw(CCNQ::Proxy::Base);
+use base qw(CCNQ::SQL::Base);
 use AnyEvent;
 use Logger::Syslog;
 
