@@ -69,6 +69,8 @@ sub do_sql {
 sub do_sql_query {
   my ($self,$sql,$columns,$args) = @_;
 
+  my $db = $self->_db;
+
   my $cv = AE::cv;
 
   my $error = sub {
@@ -80,11 +82,11 @@ sub do_sql_query {
 
   $sql =~ s/_columns_/join(',',map { qq("$_") } @{$columns} )/ge;
 
-  debug("SQL $sql with args ".join(',',@$args));
+  my $cb = sub{
+    $error->('Database error: [_1]',$@) if $@;
 
-  $self->_db->exec($sql,@{$args},sub{
     my ($dbh, $rows, $rv) = @_;
-    $#_ or $error->($@);
+    $#_ or $error->('Database error: [_1]',$@);
     my %a;
     $cv->send({
       rows => [
@@ -93,7 +95,11 @@ sub do_sql_query {
         } @$rows
       ],
     });
-  });
+  };
+
+  debug("Postponing $sql with (".join(',',@{$args}).") and callback $cb");
+
+  $db->exec($sql,@{$args},$cb);
 
   return $cv;
 }
