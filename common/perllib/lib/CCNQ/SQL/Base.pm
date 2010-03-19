@@ -80,7 +80,7 @@ sub do_sql_query {
 
   $error->('Invalid query') unless $sql && $columns;
 
-  # Do not map columns.
+  # Do not map columns. (Stupid MySQL.)
   $sql =~ s/_columns_/join(',',@{$columns})/ge;
 
   my $cb = sub{
@@ -96,7 +96,7 @@ sub do_sql_query {
     $cv->send({
       rows => [
         map {
-          @a{@$columns} = @$_, {%a} # hash-slice the values, return the hash
+          @a{@$columns} = @$_; {%a} # hash-slice the values, return the hash
         } @$rows
       ],
     });
