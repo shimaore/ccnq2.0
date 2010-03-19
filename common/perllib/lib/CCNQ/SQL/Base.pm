@@ -86,6 +86,9 @@ sub do_sql_query {
   my $cb = sub{
     $error->('Database error: [_1]',$@) if $@;
 
+    # This ensures the $db object is kept alive until we finish.
+    my $dummy = $db;
+
     my ($dbh, $rows, $rv) = @_;
     $#_ or $error->('Database error: [_1]',$@);
     my %a;
