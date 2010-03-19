@@ -34,6 +34,9 @@ sub form
     );
 }
 
+XXX This interface is broken. Updates will change the ID for the gateway,
+which in turn will break the rules in dr_rule.
+
 =cut
 
 
