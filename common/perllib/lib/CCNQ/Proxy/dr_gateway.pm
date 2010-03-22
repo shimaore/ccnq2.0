@@ -29,6 +29,7 @@ sub insert
     my $uac_realm   = $params->{realm};
     my $uac_user    = $params->{login};
     my $uac_pass    = $params->{password};
+    my $description = $params->{description};
 
     return ()
       unless defined $id && $id ne ''
@@ -36,7 +37,7 @@ sub insert
 
     my @res;
     push @res,
-        <<'SQL',[$id,'0',$address,$strip,$pri_prefix,'',''];
+        <<'SQL',[$id,'0',$address,$strip,$pri_prefix,'',$description];
         INSERT INTO dr_gateways(id,type,address,strip,pri_prefix,attrs,description) VALUES (?,?,?,?,?,?)
 SQL
 

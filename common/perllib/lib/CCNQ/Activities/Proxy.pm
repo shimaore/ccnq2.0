@@ -84,12 +84,14 @@ sub dr_gateway_update {
       action => 'dr_gateway/update',
       cluster_name => $request->{cluster_name},
       params => { map { $_ => $request->{$_} } qw(
+          id
           target
           strip_digit
           prefix
           realm
           login
           password
+          description
       )}
     },
     {
@@ -107,6 +109,7 @@ sub dr_gateway_delete {
       action => 'dr_gateway/delete',
       cluster_name => $request->{cluster_name},
       params => { map { $_ => $request->{$_} } qw(
+          id
           target
       )}
     },
