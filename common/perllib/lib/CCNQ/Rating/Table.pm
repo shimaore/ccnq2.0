@@ -20,46 +20,47 @@ use strict; use warnings;
 
 use AnyEvent::CouchDB;
 use CCNQ::CouchDB;
+use CCNQ::Trie;
 
-# Alternatively to using a Trie, the data could be simply stored in CouchDB
-# and retrieved using the following algorithm:
-# - query for /$table/_all_docs with parameters:
-#      include_docs=true       # to get the data at the same time
-#      descending=true
-#      startkey=$query_string
-#      limit=1
-#   (meaning: "find the prefix immediately before or equal to this query_string".)
-# - if the id returned is a prefix of the query_string
-#   (i.e. $id = substr($query_string,0,length($id)))
-#   then we found the longest prefix, and the data is available.
-# - otherwise, no match found.
+=head1 new($name)
+
+Create a new prefix-lookup table based on the content of a CouchDB table.
+
+=cut
 
 sub new {
-  my $this = shift;
+  my $this = shift; $this = ref($this) || $this;
   my $name = shift;
   my $self = {
     name => $name,
     db => couchdb($name),
   };
-  return bless $self;
+  return bless $self, $this;
 }
 
 sub _db {
   return $_[0]->{db};
 }
 
-=head1 $table->insert(\%data)
+sub _trie {
+  my ($self,$data) = @_;
+  if(!$self->{trie}) {
+    my $load = $self->_db->all_docs();
+    my $all_docs = CCNQ::CouchDB::receive($load);
+    $self->{trie} = CCNQ::Trie->new($all_docs);
+  }
+  return $self->{trie};
+}
 
-The parameters must at least contain one field named "prefix" which
-is used as the key for the record.
+=head1 $table->reload()
+
+Reloads the internal Trie structure from the underlying CouchDB table.
 
 =cut
 
-sub insert {
-  my ($self,$data) = @_;
-  $data->{_id} = $data->{prefix};
-  my $update = $self->_db->save_doc($data);
-  CCNQ::CouchDB::receive($update);
+sub reload {
+  my ($self) = @_;
+  delete $self->{trie};
 }
 
 =head1 lookup($key)
@@ -70,25 +71,10 @@ Returns a hashref of values associated with the longest match for the prefix.
 
 sub lookup {
   my ($self,$key) = @_;
-  # - query for /$table/_all_docs with parameters:
-  #      include_docs=true       # to get the data at the same time
-  #      descending=true
-  #      startkey=$query_string
-  #      limit=1
-
-  my $query = $self->_db->all_docs({
-    include_docs => 'true',
-    descending   => 'true',
-    startkey     => $key,
-    limit        => 1,
-  });
-  my $result = CCNQ::CouchDB::receive($query);
-  return undef unless $result && $result->{rows} && $result->{rows}->[0]
-    && defined $result->{rows}->[0]->{id};
-
-  my $id = $result->{rows}->[0]->{id};
-  return undef unless substr($key,0,length($id)) eq $id;
-  return $result->{rows}->[0]->{doc};
+  my $match = $self->_trie->lookup($key);
+  return undef if !defined($match);
+  my $load = $self->_db->open_doc($match);
+  return CCNQ::CouchDB::receive($load);
 }
 
 1;
