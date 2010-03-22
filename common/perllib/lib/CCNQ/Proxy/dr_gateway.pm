@@ -19,30 +19,10 @@ use strict; use warnings;
 
 use base qw(CCNQ::Proxy::Base);
 
-=pod
-
-sub form
-{
-    my $self = shift;
-    return (
-        'Target'      => 'text',
-        'Strip_Digit' => [''=>'None', (map { $_ => "Strip $_ digits" } (1..9)) ],
-        'Prefix'      => 'text'
-        'Realm'       => 'text',
-        'Login'       => 'text',
-        'Password'    => 'text',
-    );
-}
-
-XXX This interface is broken. Updates will change the ID for the gateway,
-which in turn will break the rules in dr_rule.
-
-=cut
-
-
 sub insert
 {
     my ($self,$params) = @_;
+    my $id          = $params->{id};
     my $address     = $params->{target};
     my $strip       = $params->{strip_digit} || 0;
     my $pri_prefix  = $params->{prefix} || '';
@@ -51,12 +31,13 @@ sub insert
     my $uac_pass    = $params->{password};
 
     return ()
-      unless defined $address && $address ne '';
+      unless defined $id && $id ne ''
+           && defined $address && $address ne '';
 
     my @res;
     push @res,
-        <<'SQL',['0',$address,$strip,$pri_prefix,'',''];
-        INSERT INTO dr_gateways(type,address,strip,pri_prefix,attrs,description) VALUES (?,?,?,?,?,?)
+        <<'SQL',[$id,'0',$address,$strip,$pri_prefix,'',''];
+        INSERT INTO dr_gateways(id,type,address,strip,pri_prefix,attrs,description) VALUES (?,?,?,?,?,?)
 SQL
 
     # XXX move the UAC data into the "attrs" field.
@@ -71,15 +52,17 @@ SQL
 sub delete
 {
     my ($self,$params) = @_;
+    my $id = $params->{id};
     my $address = $params->{target};
 
     return ()
-    unless defined $address && $address ne '';
+    unless defined($id) && $id ne ''
+         && defined $address && $address ne '';
 
     my @res;
     push @res,
-        <<'SQL',[$address];
-        DELETE FROM dr_gateways WHERE address = ?
+        <<'SQL',[$id,$address];
+        DELETE FROM dr_gateways WHERE id = ? AND address = ?
 SQL
 
     return (

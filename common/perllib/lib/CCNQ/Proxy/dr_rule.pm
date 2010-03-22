@@ -20,43 +20,6 @@ use strict; use warnings;
 use base qw(CCNQ::Proxy::Base);
 use Logger::Syslog;
 
-=pod
-
-sub form
-{
-    my $self = shift;
-    return (
-        'Outbound_Route' => 'text', # 0 for default, otherwise user-specific (via dr_groups)
-        'Description' => 'text',
-        'Prefix'      => 'text',
-        'Priority'    => 'text',
-        'Target'      => $self->list_of_gateways(), # For now we can select only one gateway
-    );
-}
-
-=cut
-
-=pod
-sub id_of_gateway {
-  my ($self,$target) = @_;
-  my $id = $self->run_sql_once('SELECT gwid FROM dr_gateways WHERE target = ?',$target);
-  warning("Unknown gateway/target $target") if !defined $id;
-  return defined($id) ? $id : $target;
-}
-=cut
-
-sub sql_concat {
-  my $separator = shift;
-  if($#_ > 0) {
-    # XXX CONCAT_WS is a MySQL-ism
-    return qq{CONCAT_WS('$separator',}.join(',',@_).q{)};
-  }
-  if($#_ == 0) {
-    return $_[0];
-  }
-  return ''; # Should not happen, unless $gwlist is improperly formatted
-}
-
 sub insert
 {
     my ($self,$params) = @_;
@@ -73,18 +36,10 @@ sub insert
     my $description = $groupid == 0 ? 'Default' : $params->{description};
     $description ||= '(none given)';
 
-    my @sql_params = split(/[,;]/,$gwlist);
-
-    my $sql_fragment =
-      sql_concat(';',map{ sql_concat(',',map{
-          '(SELECT gwid FROM dr_gateways WHERE address = ?)'
-        } split(/,/))
-      } split(/;/,$gwlist));
-
     my @res;
     push @res,
-        <<"SQL",[$groupid,$prefix,'',$priority,'',@sql_params,$description];
-        INSERT INTO dr_rules(groupid,prefix,timerec,priority,routeid,gwlist,description) VALUES (?,?,?,?,?,${sql_fragment},?)
+        <<"SQL",[$groupid,$prefix,'',$priority,'',$gwlist,$description];
+        INSERT INTO dr_rules(groupid,prefix,timerec,priority,routeid,gwlist,description) VALUES (?,?,?,?,?,?,?)
 SQL
     return @res;
 }
