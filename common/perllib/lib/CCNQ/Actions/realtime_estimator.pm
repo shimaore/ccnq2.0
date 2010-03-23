@@ -1,4 +1,4 @@
-package CCNQ::Actions::node::api;
+package CCNQ::Actions::realtime_estimator;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -15,7 +15,7 @@ package CCNQ::Actions::node::api;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
 
-=head1 realtime_billing
+=head1 realtime_estimator
 
 Provides a REST API to estimate_cbef().
 
@@ -33,9 +33,9 @@ use Logger::Syslog;
 sub _session_ready {
   my ($params,$context) = @_;
 
-  my $host = CCNQ::Install::realtime_billing_rendezvous_host;
-  my $port = CCNQ::Install::realtime_billing_rendezvous_port;
-  info("realtime_billing: Starting web API on ${host}:${port}");
+  my $host = CCNQ::Install::realtime_estimator_rendezvous_host;
+  my $port = CCNQ::Install::realtime_estimator_rendezvous_port;
+  info("realtime_estimator: Starting web API on ${host}:${port}");
   $context->{httpd} = CCNQ::HTTPD->new (
     host => $host,
     port => $port,
@@ -45,7 +45,7 @@ sub _session_ready {
     '/estimate' => sub {
       my ($httpd, $req) = @_;
 
-      debug("realtime_billing: Processing estimate");
+      debug("realtime_estimator: Processing estimate");
 
       use URI;
       my $url = URI->new($req->url);
@@ -82,4 +82,4 @@ sub _session_ready {
   return;
 }
 
-'CCNQ::Actions::realtime_billing';
+'CCNQ::Actions::realtime_estimator';

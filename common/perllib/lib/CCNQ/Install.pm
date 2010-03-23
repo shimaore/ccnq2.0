@@ -155,7 +155,8 @@ use constant roles_to_functions => {
   'portal'          => [qw( portal/base node/api monit node )],
   'api'             => [qw( node/api )],
   'provisioning'    => [qw( node/provisioning )],
-  'realtime_billing' => [qw( node/provisioning realtime_billing)],
+  'realtime_estimator' => [qw( node/provisioning realtime_estimator)],
+  'billing'         => [qw( node/provisioning billing )],
   'manager'         => [qw( manager monit node )],
   'aggregator'      => [qw( billing/aggregator node/api monit node )],
   # ...
@@ -214,6 +215,9 @@ sub resolve_roles_and_functions {
 
 use constant api_rendezvous_host => '127.0.0.1';
 use constant api_rendezvous_port => 9090;
+
+use constant realtime_estimator_rendezvous_host => '127.0.0.1';
+use constant realtime_estimator_rendezvous_port => 7070;
 
 # Try to locate the "internal" and "external" IP addresses, if any are specified.
 
