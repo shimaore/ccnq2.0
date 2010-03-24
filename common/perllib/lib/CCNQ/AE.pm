@@ -50,6 +50,8 @@ sub execute {
   return $rcv;
 }
 
+use Encode;
+
 sub pp {
   my $v = shift;
   return qq(nil)  if !defined($v);

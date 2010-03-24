@@ -21,7 +21,6 @@ sub id_required { die ['ID is required'] }
 use Logger::Syslog;
 use AnyEvent;
 use AnyEvent::CouchDB;
-use Encode;
 use CCNQ::AE;
 
 sub receive_ok {
