@@ -68,7 +68,7 @@ sub load {
       }
     }
     $rcv->send;
-  })
+  });
   return $rcv;
 }
 
