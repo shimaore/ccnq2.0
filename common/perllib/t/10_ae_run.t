@@ -18,21 +18,20 @@ use strict; use warnings;
 use Test::More;
 
 use_ok ("CCNQ::AE");
-use_ok ("CCNQ::CouchDB");
 
 my $cv1 = CCNQ::AE::execute({},'/bin/echo');
 ok($cv1,'Execute returned condvar');
 my $success1 = eval { $cv1->recv };
 my $error1 = $@;
 ok(!$error1,"Execute echo triggered error: $error1");
-is($success1,'completed',"Execute echo returned: ".CCNQ::CouchDB::pp($success1));
+is($success1,'completed',"Execute echo returned: ".CCNQ::AE::pp($success1));
 
 my $cv2 = CCNQ::AE::execute({},'/bin/boolala');
 ok($cv2,'Execute returned condvar');
 my $success2 = eval { $cv2->recv };
 my $error2 = $@;
 ok(!$error2,"Execute boolala triggered error: $error2");
-ok($success2 ne 'completed',"Execute echo returned: ".CCNQ::CouchDB::pp($success2));
+ok($success2 ne 'completed',"Execute echo returned: ".CCNQ::AE::pp($success2));
 
 done_testing();
 1;
