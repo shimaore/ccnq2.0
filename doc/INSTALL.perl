@@ -15,20 +15,20 @@ sudo cpan AnyEvent::HTTP CouchDB::View AnyEvent::CouchDB
 sudo cpan Async::Interrupt EV Guard JSON JSON::XS Net::SSLeay
 
 # ------ Equivalent (on your build server): ------------
-dh-make-perl --build --cpan common-sense
-sudo dpkg -i libcommon-sense-perl_*.deb
-dh-make-perl --build --cpan EV
-
-dh-make-perl --build --cpan Params::Util
-sudo dpkg -i libparams-util-perl_*.deb
-dh-make-perl --build --cpan Class::Inspector
-sudo dpkg -i libclass-inspector-perl_*.deb
-dh-make-perl --build --cpan File::ShareDir
-
 alias dh='dh-make-perl --build --cpan '
 
+dh common-sense
+sudo dpkg -i libcommon-sense-perl_*.deb
+dh EV
+
+dh Params::Util
+sudo dpkg -i libparams-util-perl_*.deb
+dh Class::Inspector
+sudo dpkg -i libclass-inspector-perl_*.deb
+dh File::ShareDir
+
 dh XML::Parser::Expat
-dpkg -i libxml-parser-perl_*.deb
+sudo dpkg -i libxml-parser-perl_*.deb
 dh AnyEvent
 sudo dpkg -i libanyevent-perl_*.deb
 dh Digest::SHA1
@@ -57,7 +57,7 @@ dh AnyEvent::HTTP
 sudo dpkg -i libanyevent-http-perl_*.deb
 
 dh PadWalker
-dpkg -i libpadwalker-perl_*.deb
+sudo dpkg -i libpadwalker-perl_*.deb
 dh CouchDB::View
 sudo dpkg -i libcouchdb-view-perl_*.deb
 dh IO::String
@@ -67,6 +67,5 @@ sudo dpkg -i libio-all-perl_*.deb
 dh AnyEvent::CouchDB
 dh Async::Interrupt
 dh Guard
-dh Net::SSLeay
 
 # We provide pre-built archives for AMD64 architecture, see INSTALL.

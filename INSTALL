@@ -63,7 +63,6 @@ EOT
    grep '/opt/freeswitch/db' /etc/fstab || \
    echo 'tmpfs /opt/freeswitch/db tmpfs defaults 0 0' | sudo tee -a /etc/fstab >/dev/null
 
-
 # * On all servers, install the program:
 #
   sudo aptitude update
@@ -83,11 +82,13 @@ EOT
   #  Async::Interrupt Guard JSON JSON::XS Net::SSLeay
 
   # ------ Equivalent (from our servers): ------------
+  ARCH=amd64
+  # ARCH=i386
   (mkdir /tmp/perl && cd /tmp/perl && \
-    wget http://opensource.sotelips.net/~stephane/perl/all.tar.gz && \
-    tar xzvf all.tar.gz && \
+    wget http://opensource.sotelips.net/~stephane/perl/all-${ARCH}.tar.gz && \
+    tar xzvf all-${ARCH}.tar.gz && \
     for file in *.deb; do echo "Installing $file"; sudo dpkg -i $file; done && \
-    rm *.deb all.tar.gz && cd && rmdir /tmp/perl && echo "Done." )
+    rm *.deb all-${ARCH}.tar.gz && cd && rmdir /tmp/perl && echo "Done." )
 
   # Download the latest release of the code
   mkdir -p ~/src && (cd ~/src && git clone git://github.com/stephanealnet/ccnq2.0.git)
