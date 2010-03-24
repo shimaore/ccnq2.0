@@ -16,10 +16,10 @@ package CCNQ::Portal::UserProfile;
 use strict; use warnings;
 
 use CCNQ::Portal;
-use AnyEvent::CouchDB;
-use CCNQ::CouchDB;
+use CCNQ::AE;
 
 sub db {
+  use AnyEvent::CouchDB;
   return couchdb(CCNQ::Portal::portal_db);
 }
 
@@ -43,7 +43,7 @@ sub _load {
   my ($user_id) = @_;
   # Access the database to load information about the specified user.
   my $cv = $self->db->open_doc($user_id);
-  my $doc = CCNQ::CouchDB::receive($cv);
+  my $doc = CCNQ::AE::receive($cv);
   return $doc || { _id => $user_id };
 }
 
@@ -68,7 +68,7 @@ sub update {
       if exists $params->{$f} && defined $params->{$f};
   }
   my $cv = $self->db->save_doc($doc);
-  CCNQ::CouchDB::receive($cv);
+  CCNQ::AE::receive($cv);
   # Reset the session's locale to (potentially) use the new one.
   CCNQ::Portal->current_session->force_locale();
 }
@@ -131,7 +131,7 @@ sub verify_password {
   my $doc = $self->_load($self->{_id});
   $doc->{last_login} = time();
   my $cv = $self->db->save_doc($doc);
-  CCNQ::CouchDB::receive($cv);
+  CCNQ::AE::receive($cv);
 
   # Return success.
   return 1;
@@ -144,7 +144,7 @@ sub change_password {
   my $doc = $self->_load($self->{_id});
   $doc->{password} = $password;
   my $cv = $self->db->save_doc($doc);
-  CCNQ::CouchDB::receive($cv);
+  CCNQ::AE::receive($cv);
 }
 
 'CCNQ::Portal::UserProfile';

@@ -1,4 +1,4 @@
-package CCNQ::Rating;
+package CCNQ::Actions::cdr;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -13,24 +13,19 @@ package CCNQ::Rating;
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+use strict; use warnings;
 
-use Math::BigFloat;
-
-use AnyEvent;
-use CCNQ::AE;
-use CCNQ::Rating::Rate;
-use CCNQ::Rating::Event;
+use CCNQ::CDR;
 use CCNQ::Rating::Event::Rated;
 
-sub rate_cbef {
-  my ($flat_cbef,$plan) = @_;
-  my $cbef = new CCNQ::Rating::Event($flat_cbef);
-  my $rcv = AE::cv;
-  CCNQ::Rating::Rate::rate_cbef($cbef,$plan)->cb(sub{
-    my $rated_cbef = CCNQ::AE::receive(@_);
-    $rcv->send($rated_cbef && CCNQ::Rating::Event::Rated->new($rated_cbef));
-  });
-  return $rcv;
+sub _install {
+  return CCNQ::CDR::install(@_);
 }
 
-'CCNQ::Rating';
+sub insert {
+  my ($params,$context) = @_;
+  my $rated_cbef = CCNQ::Rating::Event::Rated->new($params);
+  return CCNQ::CDR::insert($rated_cbef);
+}
+
+'CCNQ::Actions::cdr';

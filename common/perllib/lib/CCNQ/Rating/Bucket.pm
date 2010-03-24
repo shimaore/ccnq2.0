@@ -1,4 +1,4 @@
-package Rating::Bucket;
+package CCNQ::Rating::Bucket;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -38,10 +38,10 @@ Note:
 
 =cut
 
-use constant BUCKET_NAME_PREFIX => 'bucket';
-
 use AnyEvent;
 use Math::BigFloat;
+use CCNQ::CouchDB;
+use CCNQ::AE;
 
 sub new {
   my $this = shift;
@@ -51,11 +51,26 @@ sub new {
   return bless $self, $class;
 }
 
-=pod
+=head2 load()
 
-  Probably use a CouchDB as the underlying storage?
+Loads the metadata from the billing database.
 
 =cut
+
+sub load {
+  my ($self) = @_;
+  my $rcv = AE::cv;
+  CCNQ::Billing::retrieve(join('/','bucket',$name)->cb(sub{
+    my $rec = CCNQ::AE::receive(@_);
+    if($rec) {
+      for (qw(currency increment decimals cap)) {
+        $self->{$_} = $rec->{$_};
+      }
+    }
+    $rcv->send;
+  })
+  return $rcv;
+}
 
 sub short_name {
   my ($self,$cbef) = @_;
@@ -66,7 +81,7 @@ sub short_name {
 
 sub base_name {
   my ($self) = @_;
-  return join('/',BUCKET_NAME_PREFIX,$self->{_name});
+  return $self->{_name};
 }
 
 sub full_name {
@@ -74,26 +89,34 @@ sub full_name {
   return join('/',$self->base_name,$self->short_name($cbef));
 }
 
-=head2 get_value
+=head2 ->get_instance($cbef)
 
-  Returns either the currency amount, or number of seconds.
+Retrieves the bucket instance from the bucket database.
 
 =cut
 
-sub get_value {
+sub get_instance {
   my ($self,$cbef) = @_;
   return $self->_retrieve($self->full_name($cbef));
 }
 
-sub set_value {
-  my ($self,$cbef,$value) = @_;
+=head2 ->set_instance_value($instance,$value)
+
+Saves an updated bucket instance into the bucket database.
+(The instance must previously have been retrieved using get_instance.)
+
+=cut
+
+sub set_instance_value {
+  my ($self,$instance,$value) = @_;
   # Values are always stored properly rounded
   $value = $self->round_down($value);
   # The bucket value can never exceed its cap if (it's defined).
   if(defined($self->cap) && $value > $self->cap) {
     $value = $self->cap;
   }
-  return $self->_store($self->full_name($cbef),$value);
+  $instance->{value} = $value;
+  return $self->_store($instance);
 }
 
 =head2 use($cbef,$value)
@@ -102,9 +125,8 @@ sub set_value {
     - a currency amount
     - a duration, in seconds
 
-  Returns zero if the entire amount could be allocated from the bucket.
-  Otherwise returns the number of currency units or seconds which could not
-  be allocated.
+  Decrements the bucket by the value indicated.
+  Returns the number of units that were allocated from the bucket.
 
 =cut
 
@@ -113,30 +135,46 @@ sub use {
   my ($cbef,$value) = @_;
 
   my $rcv = AE::cv;
-  
-  if($value <= 0) {
+
+  my $cv_failed = sub {
     $rcv->send(Math::BigFloat->bzero);
     return $rcv;
+  };
+
+  if($value <= 0) {
+    return $cv_failed;
   }
 
   # If the bucket stores money, make sure the currency is the proper one.
-  die "Invalid currency" if $self->currency && $cbef->currency ne $self->currency;
+  if($self->currency && $cbef->currency ne $self->currency) {
+    error("Invalid currency");
+    return $cv_failed;
+  };
 
   $value = $self->round_up($value);
 
-  $self->get_value($cbef)->cb(sub{
-    my $current_bucket_value = eval { shift->recv };
+  $self->get_instance($cbef)->cb(sub{
+    my $bucket_instance = CCNQ::AE::receive(@_);
+    return $cv_failed unless $bucket_instance;
+
+    my $current_bucket_value = $bucket_instance->{value};
 
     if($current_bucket_value < $value) {
-      $self->set_value($cbef,Math::BigFloat->bzero)->cb(sub{
-        eval { shift->recv };
-        $rcv->send($value - $current_bucket_value);
+      $self->set_instance_value($bucket_instance,Math::BigFloat->bzero)->cb(sub{
+        if(CCNQ::CouchDB::receive_ok(@_,$rcv)) {
+          $rcv->send($current_bucket_value);
+        } else {
+          return $cv_failed;
+        }
       });
     } else {
       my $remaining = $current_bucket_value - $value;
-      $self->set_value($cbef,$remaining)->cb(sub{
-        eval { shift->recv };
-        $rcv->send(Math::BigFloat->bzero);
+      $self->set_instance_value($bucket_instance,$remaining)->cb(sub{
+        if(CCNQ::CouchDB::receive_ok(@_,$rcv)) {
+          $rcv->send($value);
+        } else {
+          return $cv_failed;
+        }
       });
     }
   });
@@ -160,20 +198,13 @@ sub use_account {
 }
 
 sub _retrieve {
-  my $self = shift;
-  my ($key) = @_;
-  my $rcv = AE::cv;
-  CCNQ::Provisioning::retrieve_cv({_id=>$key})->cb(sub{
-    my $rec = eval { shift->recv };
-    $rcv->send($rec && $rec->{result});
-  });
-  return $rcv;
+  my ($self,$key) = shift;
+  return CCNQ::Rating::Bucket::DB::retrieve_bucket_instance($key);
 }
 
 sub _store {
-  my $self = shift;
-  my ($key,$value) = @_;
-  return CCNQ::Provisioning::update_cv({_id=>$key,value=>$value});
+  my ($self,$instance) = shift;
+  return CCNQ::Rating::Bucket::DB::update_bucket_instance($instance);
 }
 
 =head1 Bucket type

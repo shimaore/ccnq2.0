@@ -21,10 +21,22 @@ sub new {
   return bless $self, $class;
 }
 
+=head2 $trie->load(@prefixes)
+
+Insert new prefixes in the trie.
+
+=cut
+
 sub load {
-  my ($self,$data) = @_;
-  for (@{$data}) { $self->insert($_) }
+  my $self = shift;
+  for (@_) { $self->insert($_) }
 }
+
+=head2 $trie->insert($prefix)
+
+Insert a single prefix in the trie.
+
+=cut
 
 sub insert {
   my ($self,$prefix) = @_;
@@ -35,6 +47,13 @@ sub insert {
   }
   $ref->{'00'} = 1;
 }
+
+=head2 $trie->lookup($key)
+
+Returns the longest prefix in the trie matching the given key.
+Returns undef if no such prefix exists.
+
+=cut
 
 sub lookup {
   my ($self,$prefix) = @_;

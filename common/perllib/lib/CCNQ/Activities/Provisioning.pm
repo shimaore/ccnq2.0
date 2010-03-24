@@ -19,6 +19,13 @@ use constant PROVISIONING_CLUSTER_NAME => 'provisioning';
 
 sub update {
   my $request = shift;
+
+  # XXX Proper failure mode inside Manager::Request..?
+  return unless
+    defined $request->{account} &&
+    defined $request->{account_sub} &&
+    defined $request->{type};
+
   # Return list of activities required to complete this request.
   return (
     {

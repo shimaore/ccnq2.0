@@ -21,6 +21,7 @@ use CCNQ::CouchDB;
 use AnyEvent;
 use AnyEvent::CouchDB;
 use Logger::Syslog;
+use CCNQ::AE;
 
 use constant js_report_requests => <<'JAVASCRIPT';
   function(doc) {
@@ -169,7 +170,7 @@ sub _response {
         debug("Activity response $activity_response->{_id} updated.");
 
         if($response->{error}) {
-          error("Activity $response->{activity} failed with error ".CCNQ::CouchDB::pp($response->{error}).", re-submitting");
+          error("Activity $response->{activity} failed with error ".CCNQ::AE::pp($response->{error}).", re-submitting");
           delete $activity->{status};
           delete $activity->{error};
           delete $activity->{from};

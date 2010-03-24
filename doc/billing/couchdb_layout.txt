@@ -1,0 +1,99 @@
+This document specifies record layout for data stored in the billing
+database.
+
+**** Billing information ****
+
+This information is updated via the API/Manager subsystem in order to
+process unrated CBEF (CDRs) and generate rated CBEFs.
+
+user_profile
+
+  _id: "user/${user_id}"
+  type: "user_profile"
+
+  name: $user_name
+  email: $user_email
+  billing_accounts: [ ${account_id}, .. ]
+
+  Notes:
+  "billing_accounts" lists the accounts which this portal user will
+  receive invoices for.
+
+  Other information such as access levels (portal_accounts, pricing
+  access, which operations are available to which users, ..), passwords,
+  etc. are managed directly by the portal front-end and are not stored
+  in the provisioning database.
+
+account_profile:
+
+  _id: "account/${account_id}"
+  type: "account_profile"
+
+  name: $account_name
+  billing_address: { }
+  billing_cycle: $billing_cycle
+
+account_sub_profile:
+
+  _id: "account/${account_id}/${account_sub_id}"
+  type: "account_sub_profile"
+
+  name: $account_sub_name (as printed on bill)
+  plan: ${plan_id}  (reference to "plan/${plan_id}" document)
+
+plan_profile:
+
+  _id: "plan/${plan_id}"
+  type: "plan_profile"
+
+  name: $plan_label (plan name printed on the bill)
+  currency: $currency_name (e.g. "USD", "EUR")
+  rating: [ { name: $name, guards: [ ... ], actions: [ ... ] },
+            { name: $name, guards: [ ... ], actions: [ ... ] },
+            ...
+          ]
+
+  Notes:
+  guards are [ $guard_name, @guard_params ]
+  actions are [ $action_name, @action_params ]
+
+  $guard_name and $action_name are specified in CCNQ::Rating::Rate
+
+bucket:
+  _id: "bucket/${name}"
+  type: "bucket_profile"
+
+  name: ${name}
+  decimals: ${decimals}
+  increment: ${increment}
+  cap: ${cap}
+  currency: ${currency} | undef
+
+  The bucket is duration (seconds) -based iff currency is not present/defined.
+
+rating_table:
+
+  _id: "rating_table/${table_name}"
+  type: "rating_table"
+
+  rows: [
+          { prefix: $prefix, ... },
+          ...
+        ]
+
+rating_table/e164_to_location
+
+  This is a prefix-based rating table that provides location information
+  for any number. The rows content is as follows:
+
+    prefix: E.164 without a "+" sign
+    country: $country_name
+    us_state: $us_state (if $country_name is "us")
+
+  (See CCNQ::Rating::Event::Numbers in CCNQ/Rating/Events.pm.)
+
+
+**** Rated CDRs storage ****
+
+Rated CDRs are stored in a separate (large) CouchDB database which provides
+views for CDR summarization.

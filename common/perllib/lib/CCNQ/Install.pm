@@ -155,8 +155,9 @@ use constant roles_to_functions => {
   'portal'          => [qw( portal/base node/api monit node )],
   'api'             => [qw( node/api )],
   'provisioning'    => [qw( node/provisioning )],
-  'realtime_estimator' => [qw( node/provisioning realtime_estimator)],
-  'billing'         => [qw( node/provisioning billing )],
+  'realtime_estimator' => [qw( billing realtime_estimator)],
+  'billing'         => [qw( billing cdr )],
+  'bucket_db'       => [qw( bucket_db )],
   'manager'         => [qw( manager monit node )],
   'aggregator'      => [qw( billing/aggregator node/api monit node )],
   # ...

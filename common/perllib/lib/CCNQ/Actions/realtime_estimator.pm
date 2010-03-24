@@ -22,6 +22,14 @@ Provides a REST API to estimate_cbef().
 Example valid query:
   GET 'http://127.0.0.1:7070/estimate/{account}/{account_sub}/{event_type}/{from_e164}/{to_e164}'
 
+Returns at least the following fields in JSON format:
+
+  {
+    estimated_duration => $maximum_call_duration_in_seconds,
+    estimated_rate     => $estimated_per_minute_rate_for_the_call,
+    estimated_cost     => $estimated_per_call_cost,
+  }
+
 =cut
 
 use JSON;
@@ -29,6 +37,7 @@ use AnyEvent;
 use CCNQ::HTTPD;
 use JSON;
 use Logger::Syslog;
+use CCNQ::Rating::Rate;
 
 sub _session_ready {
   my ($params,$context) = @_;
@@ -66,7 +75,7 @@ sub _session_ready {
       }
 
       if($req->method eq 'GET') {
-        my $response = estimate_cbef($cbef);
+        my $response = CCNQ::Rating::Rate::estimate_cbef($cbef);
         my $json_content = encode_json($response);
         $req->respond([200,'OK',{ 'Content-Type' => 'text/json' },$json_content]);
       } else {

@@ -1,5 +1,5 @@
-package CCNQ::Provisioning;
-# Copyright (C) 2009  Stephane Alnet
+package CCNQ::Rating::Bucket::DB;
+# Copyright (C) 2010  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -13,12 +13,16 @@ package CCNQ::Provisioning;
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 use strict; use warnings;
 
-use constant provisioning_db => 'provisioning';
+use CCNQ::Install;
 
-use constant provisioning_designs => {
+use AnyEvent;
+use CCNQ::CouchDB;
+
+use constant bucket_db => 'http://'.CCNQ::Install::fdqn('bucket').'/bucket';
+
+use constant cdr_designs => {
   report => {
     language => 'javascript',
     views    => {
@@ -26,31 +30,22 @@ use constant provisioning_designs => {
   },
 };
 
-use AnyEvent;
-use CCNQ::CouchDB;
-
 sub install {
-  return CCNQ::CouchDB::install(CCNQ::Provisioning::provisioning_db,provisioning_designs);
+  my ($params,$context) = @_;
+  return CCNQ::CouchDB::install(cdr_db,cdr_designs);
 }
 
-sub update {
-  my ($params) = @_;
-  return CCNQ::CouchDB::update_cv(provisioning_db,$params);
+use constant BUCKET_NAME_PREFIX => 'bucket';
+
+sub retrieve_bucket_instance {
+  my ($key) = @_;
+  my $id = join('/',BUCKET_NAME_PREFIX,$key);
+  return CCNQ::CouchDB::retrieve_cv(cdr_db,$id);
 }
 
-sub delete {
-  my ($params) = @_;
-  return CCNQ::CouchDB::delete_cv(provisioning_db,$params);
+sub save_bucket_instance {
+  my ($rec) = @_;
+  return CCNQ::CouchDB::update_cv(cdr_db,$rec);
 }
 
-sub retrieve {
-  my ($params) = @_;
-  return CCNQ::CouchDB::retrieve_cv(provisioning_db,$params);
-}
-
-sub view {
-  my ($params) = @_;
-  return CCNQ::CouchDB::view_cv(provisioning_db,$params);
-}
-
-1;
+'CCNQ::Rating::Bucket::DB';

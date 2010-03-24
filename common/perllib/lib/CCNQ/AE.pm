@@ -50,4 +50,26 @@ sub execute {
   return $rcv;
 }
 
+sub pp {
+  my $v = shift;
+  return qq(nil)  if !defined($v);
+  return encode_utf8(qq("$v")) if !ref($v);
+  return '[ '.join(', ', map { pp($_) } @{$v}).' ]' if ref($v) eq 'ARRAY' ;
+  return '{ '.join(', ', map { pp($_).q(: ).pp($v->{$_}) } sort keys %{$v}).' }'
+    if ref($v) eq 'HASH';
+  return encode_utf8(qq("$v"));
+}
+
+sub receive {
+  my $result;
+  eval { $result = $_[0]->recv };
+  if($@) {
+    error("Callback failed: ".pp($@).", with result ".pp($result));
+    return undef;
+  }
+
+  debug("Callback received ".pp($result));
+  return $result;
+}
+
 'CCNQ::AE';

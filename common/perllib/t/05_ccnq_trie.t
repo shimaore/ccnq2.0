@@ -23,7 +23,7 @@ use_ok ("CCNQ::Trie");
 my $table = CCNQ::Trie->new();
 ok($table,'Table created');
 
-$table->load([qw(1 123 1234 123456 1234567890123456 124 253673)]);
+$table->load(qw(1 123 1234 123456 1234567890123456 124 253673));
 
 is( $table->lookup(''), undef );
 is( $table->lookup('1'), '1' );

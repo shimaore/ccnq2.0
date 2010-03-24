@@ -1,0 +1,6 @@
+This document describes the bucket realtime database.
+
+bucket database:
+  _id: "bucket/${name}/${account}"
+  _id: "bucket/${name}/${account}/${account_sub}"
+  value: the current number of units (=balance) for that bucket instance

@@ -18,12 +18,23 @@
 package CCNQ::Rating::Plan::RatingStep;
 use strict; use warnings;
 
+sub new {
+  my $this = shift;
+  my $class = ref($this) || $this;
+  my $self = shift;
+  return bless $self, $class;
+}
+
 sub guards {
   # Returns a list of [ $guard_name, @guard_params ]
+  my $self = shift;
+  # returns a list of CCNQ::Rating::Plan::RatingStep instances.
+  return $self->{guards};
 }
 
 sub actions {
   # Returns a list of [ $action_name, @action_params ]
+  return $self->{actions};
 }
 
 

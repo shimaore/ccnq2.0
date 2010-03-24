@@ -13,14 +13,18 @@ package CCNQ::Rating::Table;
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 use strict; use warnings;
 
-# The rating table is a generic tool to store information related to a given prefix.
+# The rating table is a generic tool to store and retrieve information
+# related to a given prefix.
 
+use AnyEvent;
 use AnyEvent::CouchDB;
-use CCNQ::CouchDB;
+use CCNQ::AE;
+
 use CCNQ::Trie;
+
+use CCNQ::Billing;
 
 =head1 new($name)
 
@@ -33,34 +37,37 @@ sub new {
   my $name = shift;
   my $self = {
     name => $name,
-    db => couchdb($name),
   };
   return bless $self, $this;
 }
 
-sub _db {
-  return $_[0]->{db};
+sub db {
+  return couchdb($_[0]->{name});
 }
 
-sub _trie {
-  my ($self,$data) = @_;
-  if(!$self->{trie}) {
-    my $load = $self->_db->all_docs();
-    my $all_docs = CCNQ::CouchDB::receive($load);
-    $self->{trie} = CCNQ::Trie->new($all_docs);
-  }
-  return $self->{trie};
-}
+=head1 $table->load()
 
-=head1 $table->reload()
-
-Reloads the internal Trie structure from the underlying CouchDB table.
+Loads or reloads the internal Trie structure from the underlying CouchDB table.
+If the operation fails the Trie is left untouched.
 
 =cut
 
-sub reload {
+sub load {
   my ($self) = @_;
-  delete $self->{trie};
+
+  my $rcv = AE::cv;
+
+  $self->db->all_docs()->cb(sub{
+    my $all_docs = CCNQ::AE::receive(@_);
+    if($all_docs) {
+      $self->{trie} = CCNQ::Trie->new(
+        map { $_->{key} } @{$all_docs->{rows}}
+      );
+    }
+    $rcv->send;
+  });
+
+  return $rcv;
 }
 
 =head1 lookup($key)
@@ -71,13 +78,25 @@ Returns a hashref of values associated with the longest match for the prefix.
 
 sub lookup {
   my ($self,$key) = @_;
-  my $match = $self->_trie->lookup($key);
-  return undef if !defined($match);
-  my $load = $self->_db->open_doc($match);
-  return CCNQ::CouchDB::receive($load);
+
+  my $rcv = AE::cv;
+
+  my $match = $self->{trie}->lookup($key);
+
+  if(!defined($match)) {
+    $rcv->send(undef);
+    return $rcv;
+  }
+
+  $self->db->open_doc($match)->cb(sub{
+    my $doc = CCNQ::AE::receive(@_);
+    $rcv->send($doc && $doc->{result});
+  });
+
+  return $rcv;
 }
 
-1;
+'CCNQ::Rating::Table';
 
 __END__
 

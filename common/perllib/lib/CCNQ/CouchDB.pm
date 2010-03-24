@@ -22,27 +22,18 @@ use Logger::Syslog;
 use AnyEvent;
 use AnyEvent::CouchDB;
 use Encode;
+use CCNQ::AE;
 
-sub pp {
-  my $v = shift;
-  return qq(nil)  if !defined($v);
-  return encode_utf8(qq("$v")) if !ref($v);
-  return '[ '.join(', ', map { pp($_) } @{$v}).' ]' if ref($v) eq 'ARRAY' ;
-  return '{ '.join(', ', map { pp($_).q(: ).pp($v->{$_}) } sort keys %{$v}).' }'
-    if ref($v) eq 'HASH';
-  return encode_utf8(qq("$v"));
-}
-
-sub receive {
-  my $result;
-  eval { $result = $_[0]->recv };
-  if($@) {
-    error("CouchDB failed: ".pp($@).", with result ".pp($result));
-    return undef;
+sub receive_ok {
+  my ($cv,$rcv) = @_;
+  my $result = CCNQ::AE::receive($cv);
+  if($result && $result->{ok} eq 'true') {
+    $rcv->send;
+    return 1;
+  } else {
+    $rcv->send(['Operation failed']);
+    return 0;
   }
-
-  debug("CouchDB: received ".pp($result));
-  return $result;
 }
 
 sub install {
