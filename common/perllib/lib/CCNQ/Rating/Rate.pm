@@ -18,6 +18,9 @@ use strict; use warnings;
 use CCNQ::Rating::Bucket;
 use CCNQ::Rating::Table;
 
+our $cbef_guards;
+our $cbef_actions;
+
 sub cv_return {
   my $cv = AE::cv;
   $cv->send(@_);
@@ -41,7 +44,7 @@ sub apply_cbef_guards {
   # Obtain the code piece to run for this guard
   my @guard = @{shift @guards};
   my $guard_name = shift @guard;
-  my $sub = cbef_guards->{$guard_name};
+  my $sub = $cbef_guards->{$guard_name};
   if(!$sub) {
     error("Unknown guard $guard_name");
     $rcv->send(0);
@@ -77,7 +80,7 @@ sub apply_cbef_actions {
 
   my @action = @{shift @actions};
   my $action_name = shift @action;
-  my $sub = cbef_actions->{$action_name};
+  my $sub = $cbef_actions->{$action_name};
   if(!$sub) {
     error("Unknown action $action_name");
     $rcv->send(1);
@@ -466,7 +469,7 @@ Non-zero count
 =cut
 
 
-use constant cbef_guards => {
+$cbef_guards = {
 
   event_type_is => sub {
     my ($cbef,$event_type) = @_;
@@ -603,7 +606,7 @@ Add jurisdiction using [table] with key: {to.e164, ...}
 
 =cut
 
-use constant cbef_actions => {
+$cbef_actions = {
 
   is_billable => sub {
     my ($cbef) = @_;
