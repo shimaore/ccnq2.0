@@ -228,10 +228,12 @@ sub add_duration_rate_apply {
   }
 
   if($cbef->{billable_duration} > $initial) {
-    my $increments = ($cbef->duration-$initial)/$cbef->increment_duration;
+    my $increment = ($cbef->duration-$initial)/$cbef->increment_duration;
     my $seconds = $increment->bceil() * $cbef->increment_duration;
     $billed_seconds += $seconds;
   }
+
+  my $cost;
 
   my $continuation_2 = sub {
     $cbef->{duration_cost} += $cost;
@@ -242,7 +244,7 @@ sub add_duration_rate_apply {
   my $continuation_1 = sub {
     my $duration_cost = $billed_seconds * ($rate/seconds_per_minute);
 
-    my $cost = $cbef->rounding( $duration_cost );
+    $cost = $cbef->rounding( $duration_cost );
 
     if($cbef->cost_bucket) {
       $cbef->cost_bucket->use($cbef,$cost)->cb(sub{
@@ -284,7 +286,7 @@ sub add_duration_rate_estimate {
 
   my $continuation_2 = sub {
     if($initial < $remaining_duration) {
-      my $increments = ($remaining_duration-$initial)/$cbef->increment_duration;
+      my $increment = ($remaining_duration-$initial)/$cbef->increment_duration;
       my $seconds = $increment->bceil() * $cbef->increment_duration;
       $cbef->{estimated_duration} = $initial + $seconds;
     }
