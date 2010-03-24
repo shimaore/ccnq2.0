@@ -60,7 +60,7 @@ Loads the metadata from the billing database.
 sub load {
   my ($self) = @_;
   my $rcv = AE::cv;
-  CCNQ::Billing::retrieve(join('/','bucket',$name)->cb(sub{
+  CCNQ::Billing::retrieve(join('/','bucket',$name))->cb(sub{
     my $rec = CCNQ::AE::receive(@_);
     if($rec) {
       for (qw(currency increment decimals cap)) {
