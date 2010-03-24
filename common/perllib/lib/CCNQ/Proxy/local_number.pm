@@ -80,9 +80,9 @@ sub insert
 
     return ()
       unless defined $number   and $number ne ''
-      and    defined $domain   and $domain ne ''
-      and    defined $username and $username ne ''
-      and    defined $username_domain and $username_domain ne '';
+      and    defined $domain   and $domain ne '';
+    # Can't filter uniquely on username and username_domain, since e.g.
+    # a number could only have a cfa, or an outbound_route (on outbound-proxy).
 
     my @result = ();
     if(defined $outbound_route) {
