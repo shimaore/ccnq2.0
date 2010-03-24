@@ -34,6 +34,7 @@ sub guards {
 
 sub actions {
   # Returns a list of [ $action_name, @action_params ]
+  my $self = shift;
   return $self->{actions};
 }
 
