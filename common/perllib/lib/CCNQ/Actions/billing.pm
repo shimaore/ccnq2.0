@@ -37,4 +37,7 @@ sub billing_entry {
   });
 }
 
+# XXX : other "billing" manipulation methods: create plan, bucket,
+#        prefix table, etc.
+
 'CCNQ::Actions::billing';
