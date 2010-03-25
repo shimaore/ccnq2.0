@@ -57,13 +57,13 @@ sub install {
 
       info("Open old document $id");
       $db->open_doc($id)->cb(sub{
-        my $old_doc = receive(@_);
+        my $old_doc = CCNQ::AE::receive(@_);
         if($old_doc) {
           $design_content->{_rev} = $old_doc->{_rev};
         }
         info("Create new document $id");
         $db->save_doc($design_content)->cb(sub{
-          if(receive(@_)) {
+          if(CCNQ::AE::receive(@_)) {
             $rcv->end();
           } else {
             error("Could not save design $id");
@@ -77,9 +77,9 @@ sub install {
   my $cv = $db->info();
   $cv->cb(sub{
     info("Info for CouchDB '${db_name}' database");
-    if(!receive(@_)) {
+    if(!CCNQ::AE::receive(@_)) {
       $db->create()->cb(sub{
-        if(receive(@_)) {
+        if(CCNQ::AE::receive(@_)) {
           $install_designs->();
         } else {
           error("Could not create database $db_name");
@@ -118,7 +118,7 @@ sub update_cv {
   my $couch_db = couchdb($db_name);
 
   $couch_db->open_doc($params->{_id})->cb(sub{
-    my $doc = receive(@_);
+    my $doc = CCNQ::AE::receive(@_);
     if($doc) {
       # If the record exists, only updates the specified fields.
       for my $key (grep { !/^(_id|_rev)$/ } keys %{$params}) {
@@ -147,7 +147,7 @@ sub delete_cv {
   my $couch_db = couchdb($db_name);
 
   $couch_db->open_doc($params->{_id})->cb(sub{
-    my $doc = receive(@_);
+    my $doc = CCNQ::AE::receive(@_);
     $couch_db->remove_doc($doc)->cb($rcv);
   });
   return $rcv;
@@ -165,7 +165,7 @@ sub retrieve_cv {
   # Return a CouchDB record, or a set of records
   my $couch_db = couchdb($db_name);
   $couch_db->open_doc($params->{_id})->cb(sub{
-    my $doc = receive(@_);
+    my $doc = CCNQ::AE::receive(@_);
     if(!$doc) {
       $rcv->send;
       return;
@@ -206,7 +206,7 @@ sub view_cv {
       include_docs => "true",
     }
   )->cb(sub{
-    my $view = receive(@_);
+    my $view = CCNQ::AE::receive(@_);
     if(!$view) {
       debug("Document ".join(',',@key_prefix)." not found.");
       $rcv->send;
