@@ -66,7 +66,7 @@ sub receive {
   my $result;
   eval { $result = $_[0]->recv };
   if($@) {
-    error("Callback failed: ".pp($@).", with result ".pp($result));
+    debug("Callback failed: ".pp($@).", with result ".pp($result));
     return undef;
   }
 
