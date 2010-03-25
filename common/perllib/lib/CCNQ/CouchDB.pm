@@ -36,13 +36,13 @@ sub receive_ok {
 }
 
 sub install {
-  my ($db_name,$designs) = @_;
+  my ($uri,$db_name,$designs) = @_;
   $designs ||= {};
 
   my $rcv = AE::cv;
 
   info("Creating CouchDB '${db_name}' database");
-  my $couch = couch;
+  my $couch = couch($uri);
   my $db = $couch->db($db_name);
 
   my $install_designs = sub {
@@ -106,7 +106,7 @@ semantics, do a delete() then an update().
 =cut
 
 sub update_cv {
-  my ($db_name,$params) = @_;
+  my ($uri,$db_name,$params) = @_;
 
   my $rcv = AE::cv;
 
@@ -115,7 +115,8 @@ sub update_cv {
   }
 
   # Insert / Update a CouchDB record
-  my $couch_db = couchdb($db_name);
+  my $couch = couch($uri);
+  my $couch_db = $couch->db($db_name);
 
   $couch_db->open_doc($params->{_id})->cb(sub{
     my $doc = CCNQ::AE::receive(@_);
@@ -135,7 +136,7 @@ sub update_cv {
 
 
 sub delete_cv {
-  my ($db_name,$params) = @_;
+  my ($uri,$db_name,$params) = @_;
 
   my $rcv = AE::cv;
 
@@ -144,7 +145,8 @@ sub delete_cv {
   }
 
   # Delete a CouchDB record
-  my $couch_db = couchdb($db_name);
+  my $couch = couch($uri);
+  my $couch_db = $couch->db($db_name);
 
   $couch_db->open_doc($params->{_id})->cb(sub{
     my $doc = CCNQ::AE::receive(@_);
@@ -154,7 +156,7 @@ sub delete_cv {
 }
 
 sub retrieve_cv {
-  my ($db_name,$params) = @_;
+  my ($uri,$db_name,$params) = @_;
 
   my $rcv = AE::cv;
 
@@ -163,7 +165,8 @@ sub retrieve_cv {
   }
 
   # Return a CouchDB record, or a set of records
-  my $couch_db = couchdb($db_name);
+  my $couch = couch($uri);
+  my $couch_db = $couch->db($db_name);
   $couch_db->open_doc($params->{_id})->cb(sub{
     my $doc = CCNQ::AE::receive(@_);
     if(!$doc) {
@@ -184,7 +187,7 @@ so that we can return records that match a prefix.
 =cut
 
 sub view_cv {
-  my ($db_name,$params) = @_;
+  my ($uri,$db_name,$params) = @_;
 
   my $rcv = AE::cv;
 
@@ -197,7 +200,8 @@ sub view_cv {
   my @key_prefix = @{$params->{_id}};
 
   # Return a CouchDB record, or a set of records
-  my $couch_db = couchdb($db_name);
+  my $couch = couch($uri);
+  my $couch_db = $couch->db($db_name);
   $couch_db->view(
     $params->{view},
     {

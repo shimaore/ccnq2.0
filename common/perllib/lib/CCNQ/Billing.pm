@@ -18,6 +18,7 @@ use strict; use warnings;
 use CCNQ::CouchDB;
 use CCNQ::AE;
 
+use constant billing_uri => undef;
 use constant billing_db => 'cdr';
 
 use constant billing_designs => {
@@ -29,27 +30,27 @@ use constant billing_designs => {
 };
 
 sub install {
-  return CCNQ::CouchDB::install(billing_db,billing_designs);
+  return CCNQ::CouchDB::install(billing_uri,billing_db,billing_designs);
 }
 
 sub update {
   my ($params) = @_;
-  return CCNQ::CouchDB::update_cv(billing_db,$params);
+  return CCNQ::CouchDB::update_cv(billing_uri,billing_db,$params);
 }
 
 sub delete {
   my ($params) = @_;
-  return CCNQ::CouchDB::delete_cv(billing_db,$params);
+  return CCNQ::CouchDB::delete_cv(billing_uri,billing_db,$params);
 }
 
 sub retrieve {
   my ($params) = @_;
-  return CCNQ::CouchDB::retrieve_cv(billing_db,$params);
+  return CCNQ::CouchDB::retrieve_cv(billing_uri,billing_db,$params);
 }
 
 sub view {
   my ($params) = @_;
-  return CCNQ::CouchDB::view_cv(billing_db,$params);
+  return CCNQ::CouchDB::view_cv(billing_uri,billing_db,$params);
 }
 
 

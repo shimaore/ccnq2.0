@@ -20,7 +20,8 @@ use CCNQ::Install;
 use AnyEvent;
 use CCNQ::CouchDB;
 
-use constant bucket_db => 'http://'.CCNQ::Install::cluster_fqdn('bucket').'/bucket/';
+use constant bucket_server => 'http://'.CCNQ::Install::cluster_fqdn('bucket').'/';
+use constant bucket_db => 'bucket';
 
 use constant bucket_designs => {
   report => {
@@ -32,7 +33,7 @@ use constant bucket_designs => {
 
 sub install {
   my ($params,$context) = @_;
-  return CCNQ::CouchDB::install(bucket_db,bucket_designs);
+  return CCNQ::CouchDB::install(bucket_server,bucket_db,bucket_designs);
 }
 
 use constant BUCKET_NAME_PREFIX => 'bucket';
@@ -40,12 +41,12 @@ use constant BUCKET_NAME_PREFIX => 'bucket';
 sub retrieve_bucket_instance {
   my ($key) = @_;
   my $id = join('/',BUCKET_NAME_PREFIX,$key);
-  return CCNQ::CouchDB::retrieve_cv(bucket_db,$id);
+  return CCNQ::CouchDB::retrieve_cv(bucket_server,bucket_db,$id);
 }
 
 sub save_bucket_instance {
   my ($rec) = @_;
-  return CCNQ::CouchDB::update_cv(bucket_db,$rec);
+  return CCNQ::CouchDB::update_cv(bucket_server,bucket_db,$rec);
 }
 
 'CCNQ::Rating::Bucket::DB';

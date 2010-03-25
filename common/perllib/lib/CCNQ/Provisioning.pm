@@ -16,6 +16,7 @@ package CCNQ::Provisioning;
 
 use strict; use warnings;
 
+use constant provisioning_uri => undef;
 use constant provisioning_db => 'provisioning';
 
 use constant provisioning_designs => {
@@ -30,27 +31,27 @@ use AnyEvent;
 use CCNQ::CouchDB;
 
 sub install {
-  return CCNQ::CouchDB::install(CCNQ::Provisioning::provisioning_db,provisioning_designs);
+  return CCNQ::CouchDB::install(provisioning_uri, provisioning_db, provisioning_designs);
 }
 
 sub update {
   my ($params) = @_;
-  return CCNQ::CouchDB::update_cv(provisioning_db,$params);
+  return CCNQ::CouchDB::update_cv(provisioning_uri,provisioning_db,$params);
 }
 
 sub delete {
   my ($params) = @_;
-  return CCNQ::CouchDB::delete_cv(provisioning_db,$params);
+  return CCNQ::CouchDB::delete_cv(provisioning_uri,provisioning_db,$params);
 }
 
 sub retrieve {
   my ($params) = @_;
-  return CCNQ::CouchDB::retrieve_cv(provisioning_db,$params);
+  return CCNQ::CouchDB::retrieve_cv(provisioning_uri,provisioning_db,$params);
 }
 
 sub view {
   my ($params) = @_;
-  return CCNQ::CouchDB::view_cv(provisioning_db,$params);
+  return CCNQ::CouchDB::view_cv(provisioning_uri,provisioning_db,$params);
 }
 
 1;

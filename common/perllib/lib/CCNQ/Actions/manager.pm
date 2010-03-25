@@ -23,39 +23,8 @@ use AnyEvent::CouchDB;
 use Logger::Syslog;
 use CCNQ::AE;
 
-use constant js_report_requests => <<'JAVASCRIPT';
-  function(doc) {
-    if(doc.parent_request && doc.activity_responder) {
-      emit([doc.parent_request,doc.activity_rank,doc.activity_responder],null);
-      return;
-    }
-    if(doc.parent_request) {
-      emit([doc.parent_request,doc.activity_rank],null);
-      return;
-    }
-    if(doc.request) {
-      emit([doc.request],null);
-    }
-  }
-JAVASCRIPT
-
-use constant manager_designs => {
-  report => {
-    language => 'javascript',
-    views    => {
-      requests => {
-        map => js_report_requests,
-        # no reduce function
-      },
-      # Other views for _design/report here
-    },
-  },
-  # Other designs here
-};
-
 sub _install {
-  my ($params,$context) = @_;
-  return CCNQ::CouchDB::install(CCNQ::Manager::manager_db,manager_designs);
+  return CCNQ::Manager::install(@_);
 }
 
 sub _session_ready {
@@ -76,7 +45,7 @@ sub new_request {
 
   debug("Manager handling new request");
 
-  my $db = couchdb(CCNQ::Manager::manager_db);
+  my $db = couch(CCNQ::Manager::manager_server)->db(CCNQ::Manager::manager_db);
 
   # Log the request.
   $request->{_id} = $request->{request} if $request->{request};
@@ -149,7 +118,7 @@ sub _response {
 
   my $rcv = AE::cv;
 
-  my $db = couchdb(CCNQ::Manager::manager_db);
+  my $db = couch(CCNQ::Manager::manager_server)->db(CCNQ::Manager::manager_db);
 
   my $cv = $db->open_doc($response->{activity});
   $cv->cb(sub{
@@ -218,10 +187,7 @@ sub _response {
 # API "request status" query
 sub get_request_status {
   my ($params,$context) = @_;
-  return CCNQ::CouchDB::view_cv(CCNQ::Manager::manager_db,{
-    view => 'report/requests',
-    _id  => [$params->{params}->{request_id}],
-  });
+  return CCNQ::Manager::get_request_status($params->{params}->{request_id});
 }
 
 'CCNQ::Actions::manager';

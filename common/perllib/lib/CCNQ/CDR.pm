@@ -20,7 +20,8 @@ use CCNQ::Install;
 use AnyEvent;
 use CCNQ::CouchDB;
 
-use constant cdr_db => 'http://'.CCNQ::Install::cluster_fqdn('cdr').'/cdr/';
+use constant cdr_server => 'http://'.CCNQ::Install::cluster_fqdn('cdr').'/';
+use constant cdr_db => 'cdr';
 
 use constant cdr_designs => {
   report => {
@@ -33,14 +34,14 @@ use constant cdr_designs => {
 
 sub install {
   my ($params,$context) = @_;
-  return CCNQ::CouchDB::install(cdr_db,cdr_designs);
+  return CCNQ::CouchDB::install(cdr_server,cdr_db,cdr_designs);
 }
 
 sub insert {
   my ($rated_cbef) = @_;
   $rated_cbef->cleanup;
   my $rcv = AE::cv;
-  couchdb(cdr_db)->save_doc($rated_cbef)->cb(sub{
+  couch(cdr_server)->db(cdr_db)->save_doc($rated_cbef)->cb(sub{
     CCNQ::CouchDB::receive_ok(shift,$rcv);
   });
   return $rcv;
@@ -48,12 +49,12 @@ sub insert {
 
 sub retrieve {
   my ($params) = @_;
-  return CCNQ::CouchDB::retrieve_cv(cdr_db,$params);
+  return CCNQ::CouchDB::retrieve_cv(cdr_server,cdr_db,$params);
 }
 
 sub view {
   my ($params) = @_;
-  return CCNQ::CouchDB::view_cv(cdr_db,$params);
+  return CCNQ::CouchDB::view_cv(cdr_server,cdr_db,$params);
 }
 
 'CCNQ::CDR';
