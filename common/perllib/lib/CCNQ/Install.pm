@@ -152,12 +152,12 @@ use constant roles_to_functions => {
   'complete-transparent-proxy' => [qw( proxy/complete_transparent proxy/base mediaproxy/dispatcher mediaproxy monit node )],
   'router-no-registrar' => [qw( proxy/router_no_registrar proxy/base monit node )],
   # ...
-  'portal'          => [qw( portal/base node/api monit node )],
   'api'             => [qw( node/api )],
   'provisioning'    => [qw( node/provisioning )],
   'realtime_estimator' => [qw( billing realtime_estimator)],
-  'billing'         => [qw( billing cdr )],
+  'billing'         => [qw( billing )],
   'bucket_db'       => [qw( bucket_db )],
+  'cdr'             => [qw( cdr )],
   'manager'         => [qw( manager monit node )],
   'aggregator'      => [qw( billing/aggregator node/api monit node )],
   # ...
