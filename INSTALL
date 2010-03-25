@@ -66,21 +66,9 @@ EOT
 # * On all servers, install the program:
 #
   sudo aptitude update
-  sudo aptitude -y install monit psmisc libjson-perl libnet-libidn-perl libauthen-sasl-perl libxml-writer-perl libwww-perl libyaml-perl libexpat-dev liblogger-syslog-perl libio-stringy-perl git-core libnet-ssleay-perl build-essential libmodule-install-perl libuniversal-require-perl
-  # Required for AnyEvent::DBI
-  sudo aptitude -y install libdbi-perl
-  # Required for AnyEvent::CouchDB
-  sudo aptitude -y install liburi-perl libjson-xs-perl libdata-dump-streamer-perl libio-all-perl libdata-dump-perl libtest-deep-perl
+  sudo aptitude -y install ntp monit psmisc libjson-perl libnet-libidn-perl libauthen-sasl-perl libxml-writer-perl libwww-perl libyaml-perl libexpat-dev liblogger-syslog-perl libio-stringy-perl git-core libnet-ssleay-perl build-essential libmodule-install-perl libuniversal-require-perl libdbi-perl liburi-perl libjson-xs-perl libdata-dump-streamer-perl libio-all-perl libdata-dump-perl libtest-deep-perl
   # Now add non-Debian Perl modules.
-
   # Manual instructions moved to doc/INSTALL.perl
-
-  # -- You need to install:
-  #  File::ShareDir # Obsolete version in Debian Lenny or testing
-  #  EV AnyEvent::XMPP AnyEvent::Watchdog constant::defer Test::More
-  #  AnyEvent::DBI AnyEvent::HTTP CouchDB::View AnyEvent::CouchDB
-  #  Async::Interrupt Guard JSON JSON::XS Net::SSLeay
-
   # ------ Equivalent (from our servers): ------------
   ARCH=amd64
   # ARCH=i386
@@ -109,33 +97,19 @@ EOT
   # The manager server is the one that takes generic Requests and splices them into per-server Activities.
   # It uses CouchDB to store the Requests & Activities.
 
-  # CouchDB 0.9.x or above is required, but is not present in Debian/Lenny.
+  # CouchDB 0.10.1. is now in Debian/testing
+  sudo aptitude install couchdb/testing
 
-  # First compile the latest release of Erlang (R13B02 or above)
-  aptitude install erlang/testing
-
-  # Then install CouchDB itself
-  sudo aptitude install build-essential spidermonkey-bin libmozjs-dev libicu-dev libcurl4-openssl-dev
-  COUCHDB=0.10.1
-  cd ~/src && wget http://www.apache.org/dist/couchdb/$COUCHDB/apache-couchdb-$COUCHDB.tar.gz
-  tar xzf apache-couchdb-$COUCHDB.tar.gz
-  cd apache-couchdb-$COUCHDB
-  ./configure
-  make && sudo make install
-  # In /usr/local/etc/couchdb/local.ini, replace the line that reads:
+  # In /etc/couchdb/local.ini, replace the line that reads:
   #    ;loglevel = warn
   # with
   #    loglevel = error
   # to avoid filling the disk with log messages.
-  sed -i -e 's/^;loglevel = warn.*$/loglevel = error/' /usr/local/etc/couchdb/local.ini
-
-  sudo adduser --gecos '' --disabled-password couchdb
-  sudo chown couchdb /usr/local/var/*/couchdb
+  sudo sed -i -e 's/^;level = .*$/level = error/' /etc/couchdb/local.ini
 
 # * On the Portal server(s):
 
   sudo aptitude install memcached
-  cpan Cache::Memcached
 
   # On the web portal server, you should also do:
   # (cd ~/src/ccnq2.0/portal/perllib && perl Makefile.PL && make && make test && sudo make install)
@@ -143,7 +117,7 @@ EOT
 
 # * On the proxy servers:
 
-  # Install OpenSIPS (note: we provide "amd64"-type Debian packages only)
+  # Install OpenSIPS (note: we provide "amd64" and "i386"-type Debian packages only)
   cd ~/src
   sudo aptitude install libmysqlclient15off mysql-client
   wget http://opensource.sotelips.net/~stephane/osip-1.5.3-tls/opensips_1.5.3-0_amd64.deb
@@ -173,7 +147,7 @@ EOT
   # The following command adds the current user to group "opensips":
   sudo adduser `whoami` opensips
 
-# * On the mediaproxy servers (the ones doing RTP/UDPTL redirection):
+# * On the mediaproxy relay servers (the ones doing RTP/UDPTL redirection):
 
   # Install MediaProxy relay
   sudo aptitude install python python-support libnetfilter-conntrack1 python-cjson python-twisted-core python-twisted-names python-zopeinterface
@@ -258,7 +232,7 @@ SQL
   git pull
 
   # Install the updated modules
-  (cd ~/src/ccnq2.0/common/perllib && perl Makefile.PL && make && make test && sudo make install)
+  (cd common/perllib && perl Makefile.PL && make && make test && sudo make install)
 
   # Upgrade the configuration(s) as needed
   sudo ccnq2_upgrade

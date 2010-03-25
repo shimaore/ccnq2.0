@@ -68,4 +68,9 @@ dh AnyEvent::CouchDB
 dh Async::Interrupt
 dh Guard
 
+# For the portal
+dh String::CRC32
+sudo dpkg -i libstring-crc32-perl_*.deb
+dh Cache::Memcached
+
 # We provide pre-built archives for AMD64 architecture, see INSTALL.
