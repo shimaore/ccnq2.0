@@ -40,7 +40,7 @@ sub insert {
   my ($rated_cbef) = @_;
   $rated_cbef->cleanup;
   my $rcv = AE::cv;
-  couchdb(cdr_db)->save_doc($doc)->cb(sub{
+  couchdb(cdr_db)->save_doc($rated_cbef)->cb(sub{
     CCNQ::CouchDB::receive_ok(shift,$rcv);
   });
   return $rcv;
