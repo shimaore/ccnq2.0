@@ -232,7 +232,7 @@ SQL
   git pull
 
   # Install the updated modules
-  (cd common/perllib && perl Makefile.PL && make && make test && sudo make install)
+  git pull && (cd common/perllib && perl Makefile.PL && make && make test && sudo make install)
 
   # Upgrade the configuration(s) as needed
   sudo ccnq2_upgrade
