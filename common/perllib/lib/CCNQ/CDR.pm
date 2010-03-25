@@ -20,7 +20,7 @@ use CCNQ::Install;
 use AnyEvent;
 use CCNQ::CouchDB;
 
-use constant cdr_db => 'http://'.CCNQ::Install::fdqn('cdr').'/cdr';
+use constant cdr_db => 'http://'.CCNQ::Install::cluster_fdqn('cdr').'/cdr';
 
 use constant cdr_designs => {
   report => {

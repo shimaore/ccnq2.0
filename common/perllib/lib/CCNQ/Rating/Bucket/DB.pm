@@ -20,7 +20,7 @@ use CCNQ::Install;
 use AnyEvent;
 use CCNQ::CouchDB;
 
-use constant bucket_db => 'http://'.CCNQ::Install::fdqn('bucket').'/bucket';
+use constant bucket_db => 'http://'.CCNQ::Install::cluster_fdqn('bucket').'/bucket';
 
 use constant cdr_designs => {
   report => {
