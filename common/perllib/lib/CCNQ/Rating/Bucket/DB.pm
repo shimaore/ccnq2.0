@@ -22,7 +22,7 @@ use CCNQ::CouchDB;
 
 use constant bucket_db => 'http://'.CCNQ::Install::cluster_fqdn('bucket').'/bucket';
 
-use constant cdr_designs => {
+use constant bucket_designs => {
   report => {
     language => 'javascript',
     views    => {
@@ -32,7 +32,7 @@ use constant cdr_designs => {
 
 sub install {
   my ($params,$context) = @_;
-  return CCNQ::CouchDB::install(cdr_db,cdr_designs);
+  return CCNQ::CouchDB::install(bucket_db,bucket_designs);
 }
 
 use constant BUCKET_NAME_PREFIX => 'bucket';
