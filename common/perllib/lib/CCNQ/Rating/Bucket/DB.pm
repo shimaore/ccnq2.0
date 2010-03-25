@@ -40,12 +40,12 @@ use constant BUCKET_NAME_PREFIX => 'bucket';
 sub retrieve_bucket_instance {
   my ($key) = @_;
   my $id = join('/',BUCKET_NAME_PREFIX,$key);
-  return CCNQ::CouchDB::retrieve_cv(cdr_db,$id);
+  return CCNQ::CouchDB::retrieve_cv(bucket_db,$id);
 }
 
 sub save_bucket_instance {
   my ($rec) = @_;
-  return CCNQ::CouchDB::update_cv(cdr_db,$rec);
+  return CCNQ::CouchDB::update_cv(bucket_db,$rec);
 }
 
 'CCNQ::Rating::Bucket::DB';
