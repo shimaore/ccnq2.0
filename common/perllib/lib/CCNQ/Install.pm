@@ -227,7 +227,7 @@ use constant::defer couchdb_local_server => sub {
 };
 
 sub make_couchdb_uri_from_server {
-  return 'http://'.$_[0].':5284/';
+  return 'http://'.$_[0].':5984/';
 }
 
 use constant::defer couchdb_local_uri => sub { make_couchdb_uri_from_server(couchdb_local_server) };
