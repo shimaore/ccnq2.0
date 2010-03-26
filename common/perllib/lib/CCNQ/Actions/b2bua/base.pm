@@ -17,6 +17,7 @@ use strict; use warnings;
 
 use CCNQ::B2BUA;
 use CCNQ::Util;
+use Logger::Syslog;
 
 use constant vars_xml => 'vars.xml';
 
