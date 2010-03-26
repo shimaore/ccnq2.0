@@ -35,6 +35,9 @@ sub insert
       unless defined $id && $id ne ''
            && defined $address && $address ne '';
 
+    $description = 'No description provided'
+      unless defined $description;
+
     my @res;
     push @res,
         <<'SQL',[$id,'0',$address,$strip,$pri_prefix,'',$description];
