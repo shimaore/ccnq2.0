@@ -21,11 +21,11 @@
 # * Update apt's sources.list to import the "testing" distribution
 #   (needed for some packages on the API and MediaProxy servers):
 
-  cat <<'EOT' | sudo tee -a /etc/apt/sources.list > /dev/null
+  grep 'testing' /etc/apt/sources.list || cat <<'EOT' | sudo tee -a /etc/apt/sources.list > /dev/null
 # Testing packages required by CCNQ2.0 for Erlang/CouchDB, MediaProxy
 deb     http://ftp.us.debian.org/debian/   testing main contrib
 EOT
-  cat <<'EOT' | sudo tee /etc/apt/preferences > /dev/null
+  grep 'testing' /etc/apt/preferences || cat <<'EOT' | sudo tee /etc/apt/preferences > /dev/null
 # Install Debian/Lenny packages by default
 Package: *
 Pin: release a=lenny
@@ -61,7 +61,7 @@ EOT
 # * Note: for high performance, the directory /opt/freeswitch/db must be
 # in memory.
    grep '/opt/freeswitch/db' /etc/fstab || \
-   echo 'tmpfs /opt/freeswitch/db tmpfs defaults 0 0' | sudo tee -a /etc/fstab >/dev/null
+   (echo 'tmpfs /opt/freeswitch/db tmpfs defaults 0 0' | sudo tee -a /etc/fstab >/dev/null)
 
 # * On all servers, install the program:
 #
@@ -226,8 +226,6 @@ SQL
   # b2bua/client-sbc-config/freeswitch/conf/autoload_configs/acl.client-sbc-config.conf.xml
   # to add your proxies' IP addresses.
 
-# * On upgrades:
-
   cd ~/src/ccnq2.0
   git pull
 
@@ -264,9 +262,9 @@ SQL
 # * If you intent to use the "sip-traces" API:
 
   sudo aptitude install -t testing tshark
-  (cd ~/src/ccnq2.0/contrib && sudo cp sip-traces/usr/sbin/sip-traces /usr/sbin && sudo chmod +x /usr/sbin/sip-traces)
-
+  sudo groupadd -r wireshark
   sudo adduser `whoami` wireshark
+  sudo ccnq2_sip_traces eth0
 
   # (I'm working on a proper installer and /etc/init.d script.)
 
