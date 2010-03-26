@@ -38,7 +38,7 @@ sub insert
     my @res;
     push @res,
         <<'SQL',[$id,'0',$address,$strip,$pri_prefix,'',$description];
-        INSERT INTO dr_gateways(id,type,address,strip,pri_prefix,attrs,description) VALUES (?,?,?,?,?,?,?)
+        INSERT INTO dr_gateways(gwid,type,address,strip,pri_prefix,attrs,description) VALUES (?,?,?,?,?,?,?)
 SQL
 
     # XXX move the UAC data into the "attrs" field.
@@ -63,7 +63,7 @@ sub delete
     my @res;
     push @res,
         <<'SQL',[$id,$address];
-        DELETE FROM dr_gateways WHERE id = ? AND address = ?
+        DELETE FROM dr_gateways WHERE gwid = ? AND address = ?
 SQL
 
     return (
