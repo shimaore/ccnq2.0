@@ -220,6 +220,13 @@ use constant api_rendezvous_port => 9090;
 use constant realtime_estimator_rendezvous_host => '127.0.0.1';
 use constant realtime_estimator_rendezvous_port => 7070;
 
+use constant couchdb_local_server_tag => 'couchdb_local_server';
+use constant couchdb_local_server_file => tag_to_file(couchdb_local_server_tag);
+use constant::defer couchdb_local_server => sub {
+  get_variable(couchdb_local_server_tag,couchdb_local_server_file,sub {'127.0.0.1'});
+};
+
+
 # Try to locate the "internal" and "external" IP addresses, if any are specified.
 
 use constant internal_ip_tag => 'internal';
