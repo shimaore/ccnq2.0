@@ -45,7 +45,7 @@ sub new_request {
 
   debug("Manager handling new request");
 
-  my $db = couch(CCNQ::Manager::manager_server)->db(CCNQ::Manager::manager_db);
+  my $db = couch(CCNQ::Manager::manager_uri)->db(CCNQ::Manager::manager_db);
 
   # Log the request.
   $request->{_id} = $request->{request} if $request->{request};
@@ -118,7 +118,7 @@ sub _response {
 
   my $rcv = AE::cv;
 
-  my $db = couch(CCNQ::Manager::manager_server)->db(CCNQ::Manager::manager_db);
+  my $db = couch(CCNQ::Manager::manager_uri)->db(CCNQ::Manager::manager_db);
 
   my $cv = $db->open_doc($response->{activity});
   $cv->cb(sub{
