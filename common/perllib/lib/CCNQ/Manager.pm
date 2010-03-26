@@ -19,7 +19,7 @@ use File::Spec;
 use JSON;
 use Logger::Syslog;
 
-use constant manager_uri => sub {
+use constant::defer manager_uri => sub {
   CCNQ::Install::couchdb_local_uri;
 };
 use constant manager_db => 'manager';
