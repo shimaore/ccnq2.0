@@ -34,7 +34,7 @@
 <!-- to: french number -->
 <extension name="cleanup-called-1">
   <condition field="destination_number" expression="^33([1-9][0-9]+)$">
-    <action application="transfer" data="call-$1"/>
+    <action application="transfer" data="call-0$1"/>
   </condition>
 </extension>
 
