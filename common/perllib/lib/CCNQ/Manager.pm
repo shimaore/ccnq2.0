@@ -19,7 +19,9 @@ use File::Spec;
 use JSON;
 use Logger::Syslog;
 
-use constant manager_server => undef;
+use constant manager_server => sub {
+  CCNQ::Install::couchdb_local_uri;
+};
 use constant manager_db => 'manager';
 
 use constant js_report_requests => <<'JAVASCRIPT';

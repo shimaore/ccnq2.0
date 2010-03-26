@@ -17,9 +17,12 @@ use strict; use warnings;
 
 use CCNQ::CouchDB;
 use CCNQ::AE;
+use CCNQ::Install;
 
-use constant billing_uri => undef;
-use constant billing_db => 'cdr';
+use constant::defer billing_uri => sub {
+  CCNQ::Install::couchdb_local_uri;
+};
+use constant billing_db => 'billing';
 
 use constant billing_designs => {
   report => {

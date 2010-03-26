@@ -16,7 +16,10 @@ package CCNQ::Provisioning;
 
 use strict; use warnings;
 
-use constant provisioning_uri => undef;
+use CCNQ::Install;
+use constant::defer provisioning_uri => sub {
+  CCNQ::Install::couchdb_local_uri;
+};
 use constant provisioning_db => 'provisioning';
 
 use constant provisioning_designs => {

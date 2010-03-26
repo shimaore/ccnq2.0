@@ -20,7 +20,9 @@ use CCNQ::Install;
 use AnyEvent;
 use CCNQ::CouchDB;
 
-use constant cdr_server => 'http://'.CCNQ::Install::cluster_fqdn('cdr').'/';
+use constant::defer cdr_server => sub {
+  CCNQ::Install::make_couchdb_uri_from_server(CCNQ::Install::cluster_fqdn('cdr'))
+};
 use constant cdr_db => 'cdr';
 
 use constant cdr_designs => {

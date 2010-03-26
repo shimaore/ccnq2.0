@@ -226,6 +226,12 @@ use constant::defer couchdb_local_server => sub {
   get_variable(couchdb_local_server_tag,couchdb_local_server_file,sub {'127.0.0.1'});
 };
 
+sub make_couchdb_uri_from_server {
+  return 'http://'.$_[0].':5284/';
+}
+
+use constant::defer couchdb_local_uri => sub { make_couchdb_uri_from_server(couchdb_local_server) };
+
 
 # Try to locate the "internal" and "external" IP addresses, if any are specified.
 
