@@ -41,7 +41,7 @@ sub install {
 
   my $rcv = AE::cv;
 
-  info("Creating CouchDB '${db_name}' database");
+  info("Creating CouchDB '${db_name}' database on server $uri");
   my $couch = couch($uri);
   my $db = $couch->db($db_name);
 
@@ -82,7 +82,7 @@ sub install {
         if(CCNQ::AE::receive(@_)) {
           $install_designs->();
         } else {
-          error("Could not create database $db_name");
+          error("Could not create database $db_name on server $uri");
           $rcv->send();
         }
       });

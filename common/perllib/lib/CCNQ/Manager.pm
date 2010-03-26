@@ -19,7 +19,7 @@ use File::Spec;
 use JSON;
 use Logger::Syslog;
 
-use constant manager_server => sub {
+use constant manager_uri => sub {
   CCNQ::Install::couchdb_local_uri;
 };
 use constant manager_db => 'manager';
@@ -55,12 +55,12 @@ use constant manager_designs => {
 };
 
 sub install {
-  return CCNQ::CouchDB::install(CCNQ::Manager::manager_db,manager_designs);
+  return CCNQ::CouchDB::install(manager_uri,manager_db,manager_designs);
 }
 
 sub get_request_status {
   my ($request_id) = @_;
-  return CCNQ::CouchDB::view_cv(manager_server,manager_db,{
+  return CCNQ::CouchDB::view_cv(manager_uri,manager_db,{
     view => 'report/requests',
     _id  => [$request_id],
   });
