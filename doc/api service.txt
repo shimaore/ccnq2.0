@@ -1,4 +1,6 @@
-This is the sepcification for the API service which allows an external
+[This document was last updated 2010-03-20 and is considered current.]
+
+This is the specification for the API service which allows an external
 process (e.g. portal) to query or update data inside the system.
 
 The code for the API service is located in ${SRC}/node/api/actions .
@@ -44,6 +46,56 @@ The following API service provides information about the status of
 requests.
 
   /request/${request_id}      (GET)
+
+The response is a CouchDB view response which describes the original request,
+the (eventually empty) series of activities submitted to the different clusters
+(numbered from 0 upward), and the (eventually empty) series of responses
+received from the different hosts in each cluster. Note that the rows are
+sorted in the proper order to ease reporting:
+
+  Request
+   +-> Activity
+       +-> Response
+
+The outline of the API JSON reply is therefor:
+
+  {
+    rows => [
+      { doc => $request_hash, id => "${request_id}" },
+      { doc => $activity_hash, id=> "${request_id}.0" },
+      { doc => $response_hash, id=> "${request_id}.0.${host_name_1}" },
+      { doc => $response_hash, id=> "${request_id}.0.${host_name_2}" },
+      { doc => $activity_hash, id=> "${request_id}.1" },
+      { doc => $response_hash, id=> "${request_id}.1.${host_name_3}" },
+      { doc => $activity_hash, id=> "${request_id}.2" },
+      ....
+    ]
+  }
+
+Where:
+
+  $request_hash contains at a minimum the parameters of the original request.
+
+  $activity_hash contains at a minimum:
+    {
+      activity      => "${request_id}.${sequential_index}",
+      activity_rank => ${sequential_index},
+      cluster_name  => $cluster_name,
+      submitted     => $timestamp,
+      params        => $params_hash,
+    }
+  Content of the $params_hash is provided by the request business logic code (e.g.
+  as found in CCNQ::Manager::Requests::*).
+
+  $response_hash contains at a minimum the content of the $activity_hash, plus
+  either
+  - a field called "error" if an error occurred during the processing of
+    the activity, or
+  - an optional field called "result" if the activity was successful and
+    returned a result.
+  Note that success of the submittal is indicated by the absence of the "error"
+  field. Additionally a field called "status" is provided that contains either
+  "completed" or "failed", but is only provided as a textual hint.
 
 -- Querying the provisioning database --
 

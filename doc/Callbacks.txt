@@ -1,35 +1,72 @@
-Requests files are modules which contain method (called "actions"),
-where each "action" can be any of:
+[This document was last updated 2010-03-20 and is considered current.]
 
-  _install: used by the installer script
+This is the specification for the callbacks provided by the 
+actions-handling modules (found under CCNQ::Actions::*).
 
-  _session_ready: called when the connection with the XMPP server is established
-  _response: called when a response is received from another node
-  _dispatch: called (if present) when no specific callback is available
+These modules contain named sub()s (called "actions"). These "actions" are
+expected to follow the API described in the present document.
 
-or any "action" defined by the specific application.
+These "actions" are available to the request processing logic (found on
+the manager cluster) which splits a single request into multiple
+activities. Each activity calls a single action (with parameters) on
+all the servers belonging to a given cluster.
 
-These methods MUST either die() or return a valid AE::cv which will then
-be called to obtain the result of the operation.
+Each "action" may be any of:
 
-More specifically, the method (and the AE::cv, except for "die") may:
+  _install          used by the installer script
+  _session_ready    called when the connection with the XMPP server is established
+                    (called once for each cluster the local server belongs to)
+  _response         called when a response is received from another node
+  _dispatch         called (if present) when no specific callback is available
+
+or any "action" name defined by the specific application.
+
+Of these, only "_install" is called synchronously. All other actions are
+called asynchronously (from within the XMPP Agent).
+
+These sub()s must either die(), return undef, or return a valid AE::cv which
+will then be called to obtain the result of the operation.
+
+Since an AE::cv may not die(), provisions are made to allow the AE::cv to
+return errors when it is called (via ->recv).
+
+More specifically, the "action" method must do one of:
 
   # Cancel the response without further error processing:
-  die 'cancel'
-  return undef    # method: No condvar means no response (aka Cancel)
+  return undef; # Preferred form
+  die 'cancel'; # Alternative form
+
+  # Fail with Locale::Maketext-style formatting for the error message:
+  die [$error_template,$param1,$param2,..];
+
+  # Return a valid AE::cv which needs to be called back for further
+  # (asynchronous) processing.
+  my $rcv = AE::cv;
+  my $cv = ... # Async operation condvar.
+  $cv->cb(sub { # Async callback
+    ...
+    $rcv->send(..); # see below for possible return values
+  };
+  return $rcv;
+
+  # Note: if all processing in the "action" is synchronous and needs to
+  # return a proper value, create a valid AE::cv value and use the
+  # $rcv->send({ name => value }) call inside the method.
+
+The AE::cv must return the following values (via ->send):
+
+  # Cancel the response without further error processing:
   $rcv->send('cancel')
 
   # Send a "successful" response with or without a result:
-  $rcv->send
-  $rcv->send('completed')
+  $rcv->send                     # No result is provided in the response
+  $rcv->send('completed')        # Same as above, more explicit.
   $rcv->send({ name => value })  # Successful, with result (must be a hashref)
 
   # Send a "failure" response with an error message:
-  die [$error_template,$param1,$param2,..]  # Cannot be used inside callbacks
   $rcv->send([$error_template,$param1,$param2,..])
 
-(The last case follows the templates in Locale::Maketext, i.e. should use
-[_1], [_2], .. for parameters. This allows for I18N of results.)
+Error messages follow the templates in Locale::Maketext, i.e. should use
+[_1], [_2], .. for parameters. This allows for I18N of error messages when
+they are eventually presented on the portal.
 
-Here, $rcv is an AE::cv that is created inside the "action" sub if any
-further processing is needed.
