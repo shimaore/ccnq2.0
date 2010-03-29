@@ -1,5 +1,5 @@
-package CCNQ::Provisioning;
-# Copyright (C) 2009  Stephane Alnet
+package CCNQ::CDR;
+# Copyright (C) 2010  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -13,16 +13,19 @@ package CCNQ::Provisioning;
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 use strict; use warnings;
 
 use CCNQ::Install;
-use constant::defer provisioning_uri => sub {
-  CCNQ::Install::couchdb_local_uri;
-};
-use constant provisioning_db => 'provisioning';
 
-use constant provisioning_designs => {
+use AnyEvent;
+use CCNQ::CouchDB;
+
+use constant::defer cdr_uri => sub {
+  CCNQ::Install::make_couchdb_uri_from_server(CCNQ::Install::cluster_fqdn('cdr'))
+};
+use constant cdr_db => 'cdr';
+
+use constant cdr_designs => {
   report => {
     language => 'javascript',
     views    => {
@@ -30,31 +33,30 @@ use constant provisioning_designs => {
   },
 };
 
-use AnyEvent;
-use CCNQ::CouchDB;
 
 sub install {
-  return CCNQ::CouchDB::install(provisioning_uri, provisioning_db, provisioning_designs);
+  my ($params,$context) = @_;
+  return CCNQ::CouchDB::install(cdr_uri,cdr_db,cdr_designs);
 }
 
-sub update {
-  my ($params) = @_;
-  return CCNQ::CouchDB::update_cv(provisioning_uri,provisioning_db,$params);
-}
-
-sub delete {
-  my ($params) = @_;
-  return CCNQ::CouchDB::delete_cv(provisioning_uri,provisioning_db,$params);
+sub insert {
+  my ($rated_cbef) = @_;
+  $rated_cbef->cleanup;
+  my $rcv = AE::cv;
+  couch(cdr_uri)->db(cdr_db)->save_doc($rated_cbef)->cb(sub{
+    CCNQ::CouchDB::receive_ok(shift,$rcv);
+  });
+  return $rcv;
 }
 
 sub retrieve {
   my ($params) = @_;
-  return CCNQ::CouchDB::retrieve_cv(provisioning_uri,provisioning_db,$params);
+  return CCNQ::CouchDB::retrieve_cv(cdr_uri,cdr_db,$params);
 }
 
 sub view {
   my ($params) = @_;
-  return CCNQ::CouchDB::view_cv(provisioning_uri,provisioning_db,$params);
+  return CCNQ::CouchDB::view_cv(cdr_uri,cdr_db,$params);
 }
 
-1;
+'CCNQ::CDR';

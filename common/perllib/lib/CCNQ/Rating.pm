@@ -16,6 +16,8 @@ package CCNQ::Rating;
 
 use Math::BigFloat;
 
+use AnyEvent;
+use CCNQ::AE;
 use CCNQ::Rating::Rate;
 use CCNQ::Rating::Event;
 use CCNQ::Rating::Event::Rated;
@@ -23,8 +25,12 @@ use CCNQ::Rating::Event::Rated;
 sub rate_cbef {
   my ($flat_cbef,$plan) = @_;
   my $cbef = new CCNQ::Rating::Event($flat_cbef);
-  my $rated_cbef = CCNQ::Rating::Rate::rate_cbef($cbef,$plan);
-  return CCNQ::Rating::Event::Rated->new($rated_cbef);
+  my $rcv = AE::cv;
+  CCNQ::Rating::Rate::rate_cbef($cbef,$plan)->cb(sub{
+    my $rated_cbef = CCNQ::AE::receive(@_);
+    $rcv->send($rated_cbef && CCNQ::Rating::Event::Rated->new($rated_cbef));
+  });
+  return $rcv;
 }
 
 'CCNQ::Rating';

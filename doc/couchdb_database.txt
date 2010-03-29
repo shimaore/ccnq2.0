@@ -1,0 +1,20 @@
+This document describes the different databases used by the platform.
+This includes the databases used on the SIP platform up to the API, but
+not the database(s) used by the portal.
+
+This document is up-to-date as of 2010-03-24.
+
+
+provisioning
+
+billing
+  - used to store billing-related meta-data
+  - distributed / replicatable
+
+cdr
+  - used to store call details
+  - can be distributed
+
+bucket
+  - must be unique
+  - store values (but not meta-data) for buckets

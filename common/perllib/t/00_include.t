@@ -65,6 +65,7 @@ require_ok( 'CCNQ::SQL::Base' );
 
 require_ok( 'CCNQ::Rating');
 require_ok( 'CCNQ::Rating::Bucket');
+require_ok( 'CCNQ::Rating::Bucket::DB');
 require_ok( 'CCNQ::Rating::Event');
 require_ok( 'CCNQ::Rating::Event::Rated');
 require_ok( 'CCNQ::Rating::Plan');
@@ -78,6 +79,7 @@ require_ok( 'CCNQ::Actions::b2bua::client_ocs_sbc' );
 require_ok( 'CCNQ::Actions::b2bua::client_sbc_config' );
 require_ok( 'CCNQ::Actions::b2bua::signaling_server' );
 require_ok( 'CCNQ::Actions::billing' );
+require_ok( 'CCNQ::Actions::cdr' );
 require_ok( 'CCNQ::Actions::manager' );
 require_ok( 'CCNQ::Actions::mediaproxy' );
 require_ok( 'CCNQ::Actions::mediaproxy::dispatcher' );

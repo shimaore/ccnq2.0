@@ -152,9 +152,12 @@ use constant roles_to_functions => {
   'complete-transparent-proxy' => [qw( proxy/complete_transparent proxy/base mediaproxy/dispatcher mediaproxy monit node )],
   'router-no-registrar' => [qw( proxy/router_no_registrar proxy/base monit node )],
   # ...
-  'portal'          => [qw( portal/base node/api monit node )],
   'api'             => [qw( node/api )],
   'provisioning'    => [qw( node/provisioning )],
+  'realtime_estimator' => [qw( billing realtime_estimator)],
+  'billing'         => [qw( billing )],
+  'bucket_db'       => [qw( bucket_db )],
+  'cdr'             => [qw( cdr )],
   'manager'         => [qw( manager monit node )],
   'aggregator'      => [qw( billing/aggregator node/api monit node )],
   # ...
@@ -213,6 +216,22 @@ sub resolve_roles_and_functions {
 
 use constant api_rendezvous_host => '127.0.0.1';
 use constant api_rendezvous_port => 9090;
+
+use constant realtime_estimator_rendezvous_host => '127.0.0.1';
+use constant realtime_estimator_rendezvous_port => 7070;
+
+use constant couchdb_local_server_tag => 'couchdb_local_server';
+use constant couchdb_local_server_file => tag_to_file(couchdb_local_server_tag);
+use constant::defer couchdb_local_server => sub {
+  get_variable(couchdb_local_server_tag,couchdb_local_server_file,sub {'127.0.0.1'});
+};
+
+sub make_couchdb_uri_from_server {
+  return 'http://'.$_[0].':5984/';
+}
+
+use constant::defer couchdb_local_uri => sub { make_couchdb_uri_from_server(couchdb_local_server) };
+
 
 # Try to locate the "internal" and "external" IP addresses, if any are specified.
 

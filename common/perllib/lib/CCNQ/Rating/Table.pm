@@ -13,53 +13,61 @@ package CCNQ::Rating::Table;
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 use strict; use warnings;
 
-# The rating table is a generic tool to store information related to a given prefix.
+# The rating table is a generic tool to store and retrieve information
+# related to a given prefix.
 
+use AnyEvent;
 use AnyEvent::CouchDB;
-use CCNQ::CouchDB;
+use CCNQ::AE;
 
-# Alternatively to using a Trie, the data could be simply stored in CouchDB
-# and retrieved using the following algorithm:
-# - query for /$table/_all_docs with parameters:
-#      include_docs=true       # to get the data at the same time
-#      descending=true
-#      startkey=$query_string
-#      limit=1
-#   (meaning: "find the prefix immediately before or equal to this query_string".)
-# - if the id returned is a prefix of the query_string
-#   (i.e. $id = substr($query_string,0,length($id)))
-#   then we found the longest prefix, and the data is available.
-# - otherwise, no match found.
+use CCNQ::Trie;
 
-sub new {
-  my $this = shift;
-  my $name = shift;
-  my $self = {
-    name => $name,
-    db => couchdb($name),
-  };
-  return bless $self;
-}
+use CCNQ::Billing;
 
-sub _db {
-  return $_[0]->{db};
-}
+=head1 new($name)
 
-=head1 $table->insert(\%data)
-
-The parameters must at least contain one field named "prefix" which
-is used as the key for the record.
+Create a new prefix-lookup table based on the content of a CouchDB table.
 
 =cut
 
-sub insert {
-  my ($self,$data) = @_;
-  $data->{_id} = $data->{prefix};
-  my $update = $self->_db->save_doc($data);
-  CCNQ::CouchDB::receive($update);
+sub new {
+  my $this = shift; $this = ref($this) || $this;
+  my $name = shift;
+  my $self = {
+    name => $name,
+  };
+  return bless $self, $this;
+}
+
+sub db {
+  return couchdb($_[0]->{name});
+}
+
+=head1 $table->load()
+
+Loads or reloads the internal Trie structure from the underlying CouchDB table.
+If the operation fails the Trie is left untouched.
+
+=cut
+
+sub load {
+  my ($self) = @_;
+
+  my $rcv = AE::cv;
+
+  $self->db->all_docs()->cb(sub{
+    my $all_docs = CCNQ::AE::receive(@_);
+    if($all_docs) {
+      $self->{trie} = CCNQ::Trie->new(
+        map { $_->{key} } @{$all_docs->{rows}}
+      );
+    }
+    $rcv->send;
+  });
+
+  return $rcv;
 }
 
 =head1 lookup($key)
@@ -70,28 +78,25 @@ Returns a hashref of values associated with the longest match for the prefix.
 
 sub lookup {
   my ($self,$key) = @_;
-  # - query for /$table/_all_docs with parameters:
-  #      include_docs=true       # to get the data at the same time
-  #      descending=true
-  #      startkey=$query_string
-  #      limit=1
 
-  my $query = $self->_db->all_docs({
-    include_docs => 'true',
-    descending   => 'true',
-    startkey     => $key,
-    limit        => 1,
+  my $rcv = AE::cv;
+
+  my $match = $self->{trie}->lookup($key);
+
+  if(!defined($match)) {
+    $rcv->send(undef);
+    return $rcv;
+  }
+
+  $self->db->open_doc($match)->cb(sub{
+    my $doc = CCNQ::AE::receive(@_);
+    $rcv->send($doc && $doc->{result});
   });
-  my $result = CCNQ::CouchDB::receive($query);
-  return undef unless $result && $result->{rows} && $result->{rows}->[0]
-    && defined $result->{rows}->[0]->{id};
 
-  my $id = $result->{rows}->[0]->{id};
-  return undef unless substr($key,0,length($id)) eq $id;
-  return $result->{rows}->[0]->{doc};
+  return $rcv;
 }
 
-1;
+'CCNQ::Rating::Table';
 
 __END__
 

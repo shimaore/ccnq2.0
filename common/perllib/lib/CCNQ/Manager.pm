@@ -19,7 +19,53 @@ use File::Spec;
 use JSON;
 use Logger::Syslog;
 
+use constant::defer manager_uri => sub {
+  CCNQ::Install::couchdb_local_uri;
+};
 use constant manager_db => 'manager';
+
+use constant js_report_requests => <<'JAVASCRIPT';
+  function(doc) {
+    if(doc.parent_request && doc.activity_responder) {
+      emit([doc.parent_request,doc.activity_rank,doc.activity_responder],null);
+      return;
+    }
+    if(doc.parent_request) {
+      emit([doc.parent_request,doc.activity_rank],null);
+      return;
+    }
+    if(doc.request) {
+      emit([doc.request],null);
+    }
+  }
+JAVASCRIPT
+
+use constant manager_designs => {
+  report => {
+    language => 'javascript',
+    views    => {
+      requests => {
+        map => js_report_requests,
+        # no reduce function
+      },
+      # Other views for _design/report here
+    },
+  },
+  # Other designs here
+};
+
+sub install {
+  return CCNQ::CouchDB::install(manager_uri,manager_db,manager_designs);
+}
+
+sub get_request_status {
+  my ($request_id) = @_;
+  return CCNQ::CouchDB::view_cv(manager_uri,manager_db,{
+    view => 'report/requests',
+    _id  => [$request_id],
+  });
+}
+
 use constant::defer manager_requests_dir =>
   sub { File::Spec->catfile(CCNQ::Install::SRC,qw( manager requests )) };
 

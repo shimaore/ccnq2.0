@@ -21,38 +21,28 @@ sub id_required { die ['ID is required'] }
 use Logger::Syslog;
 use AnyEvent;
 use AnyEvent::CouchDB;
-use Encode;
+use CCNQ::AE;
 
-sub pp {
-  my $v = shift;
-  return qq(nil)  if !defined($v);
-  return encode_utf8(qq("$v")) if !ref($v);
-  return '[ '.join(', ', map { pp($_) } @{$v}).' ]' if ref($v) eq 'ARRAY' ;
-  return '{ '.join(', ', map { pp($_).q(: ).pp($v->{$_}) } sort keys %{$v}).' }'
-    if ref($v) eq 'HASH';
-  return encode_utf8(qq("$v"));
-}
-
-sub receive {
-  my $result;
-  eval { $result = $_[0]->recv };
-  if($@) {
-    error("CouchDB failed: ".pp($@).", with result ".pp($result));
-    return undef;
+sub receive_ok {
+  my ($cv,$rcv) = @_;
+  my $result = CCNQ::AE::receive($cv);
+  if($result && $result->{ok} eq 'true') {
+    $rcv->send;
+    return 1;
+  } else {
+    $rcv->send(['Operation failed']);
+    return 0;
   }
-
-  debug("CouchDB: received ".pp($result));
-  return $result;
 }
 
 sub install {
-  my ($db_name,$designs) = @_;
+  my ($uri,$db_name,$designs) = @_;
   $designs ||= {};
 
   my $rcv = AE::cv;
 
-  info("Creating CouchDB '${db_name}' database");
-  my $couch = couch;
+  info("Creating CouchDB '${db_name}' database on server $uri");
+  my $couch = couch($uri);
   my $db = $couch->db($db_name);
 
   my $install_designs = sub {
@@ -67,13 +57,13 @@ sub install {
 
       info("Open old document $id");
       $db->open_doc($id)->cb(sub{
-        my $old_doc = receive(@_);
+        my $old_doc = CCNQ::AE::receive(@_);
         if($old_doc) {
           $design_content->{_rev} = $old_doc->{_rev};
         }
         info("Create new document $id");
         $db->save_doc($design_content)->cb(sub{
-          if(receive(@_)) {
+          if(CCNQ::AE::receive(@_)) {
             $rcv->end();
           } else {
             error("Could not save design $id");
@@ -87,12 +77,12 @@ sub install {
   my $cv = $db->info();
   $cv->cb(sub{
     info("Info for CouchDB '${db_name}' database");
-    if(!receive(@_)) {
+    if(!CCNQ::AE::receive(@_)) {
       $db->create()->cb(sub{
-        if(receive(@_)) {
+        if(CCNQ::AE::receive(@_)) {
           $install_designs->();
         } else {
-          error("Could not create database $db_name");
+          error("Could not create database $db_name on server $uri");
           $rcv->send();
         }
       });
@@ -116,7 +106,7 @@ semantics, do a delete() then an update().
 =cut
 
 sub update_cv {
-  my ($db_name,$params) = @_;
+  my ($uri,$db_name,$params) = @_;
 
   my $rcv = AE::cv;
 
@@ -125,10 +115,11 @@ sub update_cv {
   }
 
   # Insert / Update a CouchDB record
-  my $couch_db = couchdb($db_name);
+  my $couch = couch($uri);
+  my $couch_db = $couch->db($db_name);
 
   $couch_db->open_doc($params->{_id})->cb(sub{
-    my $doc = receive(@_);
+    my $doc = CCNQ::AE::receive(@_);
     if($doc) {
       # If the record exists, only updates the specified fields.
       for my $key (grep { !/^(_id|_rev)$/ } keys %{$params}) {
@@ -145,7 +136,7 @@ sub update_cv {
 
 
 sub delete_cv {
-  my ($db_name,$params) = @_;
+  my ($uri,$db_name,$params) = @_;
 
   my $rcv = AE::cv;
 
@@ -154,17 +145,18 @@ sub delete_cv {
   }
 
   # Delete a CouchDB record
-  my $couch_db = couchdb($db_name);
+  my $couch = couch($uri);
+  my $couch_db = $couch->db($db_name);
 
   $couch_db->open_doc($params->{_id})->cb(sub{
-    my $doc = receive(@_);
+    my $doc = CCNQ::AE::receive(@_);
     $couch_db->remove_doc($doc)->cb($rcv);
   });
   return $rcv;
 }
 
 sub retrieve_cv {
-  my ($db_name,$params) = @_;
+  my ($uri,$db_name,$params) = @_;
 
   my $rcv = AE::cv;
 
@@ -173,9 +165,10 @@ sub retrieve_cv {
   }
 
   # Return a CouchDB record, or a set of records
-  my $couch_db = couchdb($db_name);
+  my $couch = couch($uri);
+  my $couch_db = $couch->db($db_name);
   $couch_db->open_doc($params->{_id})->cb(sub{
-    my $doc = receive(@_);
+    my $doc = CCNQ::AE::receive(@_);
     if(!$doc) {
       $rcv->send;
       return;
@@ -194,7 +187,7 @@ so that we can return records that match a prefix.
 =cut
 
 sub view_cv {
-  my ($db_name,$params) = @_;
+  my ($uri,$db_name,$params) = @_;
 
   my $rcv = AE::cv;
 
@@ -207,7 +200,8 @@ sub view_cv {
   my @key_prefix = @{$params->{_id}};
 
   # Return a CouchDB record, or a set of records
-  my $couch_db = couchdb($db_name);
+  my $couch = couch($uri);
+  my $couch_db = $couch->db($db_name);
   $couch_db->view(
     $params->{view},
     {
@@ -216,7 +210,7 @@ sub view_cv {
       include_docs => "true",
     }
   )->cb(sub{
-    my $view = receive(@_);
+    my $view = CCNQ::AE::receive(@_);
     if(!$view) {
       debug("Document ".join(',',@key_prefix)." not found.");
       $rcv->send;

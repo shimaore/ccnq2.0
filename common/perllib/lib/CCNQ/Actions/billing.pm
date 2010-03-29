@@ -15,7 +15,7 @@ package CCNQ::Actions::billing;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
 
-use CCNQ::Install;
+use CCNQ::Install; # for host_name
 
 use Logger::Syslog;
 
@@ -23,7 +23,7 @@ use CCNQ::Billing;
 
 sub _install {
   my ($params,$context) = @_;
-  return;
+  return CCNQ::Billing::install(@_);
 }
 
 sub billing_entry {
@@ -36,5 +36,8 @@ sub billing_entry {
     request_uuid    => $params->{activity},
   });
 }
+
+# XXX : other "billing" manipulation methods: create plan, bucket,
+#        prefix table, etc.
 
 'CCNQ::Actions::billing';

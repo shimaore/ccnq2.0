@@ -66,6 +66,7 @@ sub run {
     # 4. Route the DID back into the system (onnet-onnet) using the loop on the outbound-proxy
     CCNQ::Activities::Proxy::dr_gateway_update( {
       cluster_name => $request->{outbound_proxy_name},
+      id => '1000',
       target => CCNQ::Install::cluster_fqdn($request->{inbound_proxy_name})
     } ),
     CCNQ::Activities::Proxy::dr_rule_update( {
@@ -74,7 +75,7 @@ sub run {
       description => "Loop for $request->{number}",
       prefix => $request->{number},
       priority => 1,
-      target => CCNQ::Install::cluster_fqdn($request->{inbound_proxy_name}),
+      target => '1000',
     } ),
 
     # 6. Add billing entry for the day of creation

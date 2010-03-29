@@ -302,8 +302,10 @@ sub handle_message {
     }
 
     # Cleanup CouchDB extraneous data
-    delete $result->{_id};
-    delete $result->{_rev};
+    if(ref($result)) {
+      delete $result->{_id};
+      delete $result->{_rev};
+    }
 
     debug("SUCCESS for function=$function, action=$action");
     my $response = {

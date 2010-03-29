@@ -13,6 +13,49 @@ package CCNQ::Billing;
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+use strict; use warnings;
+
+use CCNQ::CouchDB;
+use CCNQ::AE;
+use CCNQ::Install;
+
+use constant::defer billing_uri => sub {
+  CCNQ::Install::couchdb_local_uri;
+};
+use constant billing_db => 'billing';
+
+use constant billing_designs => {
+  report => {
+    language => 'javascript',
+    views    => {
+    },
+  },
+};
+
+sub install {
+  return CCNQ::CouchDB::install(billing_uri,billing_db,billing_designs);
+}
+
+sub update {
+  my ($params) = @_;
+  return CCNQ::CouchDB::update_cv(billing_uri,billing_db,$params);
+}
+
+sub delete {
+  my ($params) = @_;
+  return CCNQ::CouchDB::delete_cv(billing_uri,billing_db,$params);
+}
+
+sub retrieve {
+  my ($params) = @_;
+  return CCNQ::CouchDB::retrieve_cv(billing_uri,billing_db,$params);
+}
+
+sub view {
+  my ($params) = @_;
+  return CCNQ::CouchDB::view_cv(billing_uri,billing_db,$params);
+}
+
 
 =head1 rate_and_save_cbef
 
@@ -24,14 +67,18 @@ This is used for example to create billable events off the provisioning system.
 
 use AnyEvent;
 use CCNQ::Rating;
-use CCNQ::Provisioning;
+use CCNQ::Rating::Event;
 
 sub rate_cbef {
   my ($cbef) = @_;
   my $rcv = AE::cv;
-  CCNQ::Provisioning::lookup_plan($cbef->account,$cbef->account_sub)->cb(sub{
-    my $plan = eval { shift->recv };
-    $rcv->send($plan && CCNQ::Rating::rate_cbef($cbef,$plan));
+  lookup_plan($cbef->account,$cbef->account_sub)->cb(sub{
+    my $plan = CCNQ::AE::receive(@_);
+    if($plan) {
+      CCNQ::Rating::rate_cbef($cbef,$plan)->cb($rcv);
+    } else {
+      $rcv->send;
+    }
   });
   return $rcv;
 }
@@ -40,31 +87,46 @@ sub rate_and_save_cbef {
   my ($cbef) = @_;
   my $rcv = AE::cv;
   rate_cbef($cbef)->cb(sub{
-    my $rated_cbef = eval { shift->recv };
+    my $rated_cbef = CCNQ::AE::receive(@_);
+    $rcv->send('Rating failed') if !$rated_cbef;
+
     $rated_cbef->compute_taxes();
 
     # Save the new (rated) CBEF...
-    CCNQ::Rating::Event::save_rated_cbef($rated_cbef)->cb(sub{
-      eval { shift->recv };
-      # ...and update per account/sub-account summaries.
-      # (TBD)
-      update_counters($cbef->account,$cbef->account_sub,$cbef);
-    });
+    CCNQ::CDR::insert($rated_cbef)->cb($rcv);
   });
   return $rcv;
 }
 
-=head2 save_rated_cbef
+use AnyEvent::CouchDB;
+use CCNQ::CouchDB;
 
-Save a rated CBEF (as JSON).
-
-=cut
-
-sub save_rated_cbef {
-  my ($rated_cbef) = @_;
-  my $json = $rated_cbef->as_json;
-  # I guess this should go into the billing database or something.
+sub lookup_plan {
+  my ($account,$sub_account) = @_;
+  my $id = join('/','sub_account',$account,$sub_account);
+  my $rcv = AE::cv;
+  couchdb(billing_db)->open_doc($id)->cb(sub{
+    my $rec = CCNQ::AE::receive(@_);
+    if($rec && $rec->{plan}) {
+      load_plan($rec->{plan})->cb(sub{
+        $rcv->send(eval {shift->recv});
+      })
+    } else {
+      $rcv->send;
+    }
+  });
+  return $rcv;
 }
 
+sub load_plan {
+  my ($plan) = @_;
+  my $id = join('/','plan',$plan);
+  my $rcv = AE::cv;
+  couchdb(billing_db)->open_doc($id)->cb(sub{
+    my $rec = CCNQ::AE::receive(@_);
+    $rcv->send(CCNQ::Rating::Plan->new($rec)) if $rec;
+  });
+  return $rcv;
+}
 
 'CCNQ::Billing';

@@ -19,44 +19,29 @@ use strict; use warnings;
 
 use base qw(CCNQ::Proxy::Base);
 
-=pod
-
-sub form
-{
-    my $self = shift;
-    return (
-        'Target'      => 'text',
-        'Strip_Digit' => [''=>'None', (map { $_ => "Strip $_ digits" } (1..9)) ],
-        'Prefix'      => 'text'
-        'Realm'       => 'text',
-        'Login'       => 'text',
-        'Password'    => 'text',
-    );
-}
-
-XXX This interface is broken. Updates will change the ID for the gateway,
-which in turn will break the rules in dr_rule.
-
-=cut
-
-
 sub insert
 {
     my ($self,$params) = @_;
+    my $id          = $params->{id};
     my $address     = $params->{target};
     my $strip       = $params->{strip_digit} || 0;
     my $pri_prefix  = $params->{prefix} || '';
     my $uac_realm   = $params->{realm};
     my $uac_user    = $params->{login};
     my $uac_pass    = $params->{password};
+    my $description = $params->{description};
 
     return ()
-      unless defined $address && $address ne '';
+      unless defined $id && $id ne ''
+           && defined $address && $address ne '';
+
+    $description = 'No description provided'
+      unless defined $description;
 
     my @res;
     push @res,
-        <<'SQL',['0',$address,$strip,$pri_prefix,'',''];
-        INSERT INTO dr_gateways(type,address,strip,pri_prefix,attrs,description) VALUES (?,?,?,?,?,?)
+        <<'SQL',[$id,'0',$address,$strip,$pri_prefix,'',$description];
+        INSERT INTO dr_gateways(gwid,type,address,strip,pri_prefix,attrs,description) VALUES (?,?,?,?,?,?,?)
 SQL
 
     # XXX move the UAC data into the "attrs" field.
@@ -71,15 +56,17 @@ SQL
 sub delete
 {
     my ($self,$params) = @_;
+    my $id = $params->{id};
     my $address = $params->{target};
 
     return ()
-    unless defined $address && $address ne '';
+    unless defined($id) && $id ne ''
+         && defined $address && $address ne '';
 
     my @res;
     push @res,
-        <<'SQL',[$address];
-        DELETE FROM dr_gateways WHERE address = ?
+        <<'SQL',[$id,$address];
+        DELETE FROM dr_gateways WHERE gwid = ? AND address = ?
 SQL
 
     return (

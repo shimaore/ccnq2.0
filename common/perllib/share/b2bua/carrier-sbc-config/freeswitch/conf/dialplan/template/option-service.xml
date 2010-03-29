@@ -1,6 +1,69 @@
-<!--
-  La decision pour le routage des numeros non-internationaux est d'utiliser
-  le carré (#) comme séparateur.
-  
-  Par exemple (+)33#112 route un numero d'urgence, (+)33#3615, etc.
--->
+<?xml version="1.0" encoding="utf-8"?>
+<include>
+
+  <!-- egress towards carrier -->
+  <context name="egress-$${profile_name}">
+
+    <extension name="unloop">
+      <condition field="${unroll_loops}" expression="^true$"/>
+      <condition field="${sip_looped_call}" expression="^true$">
+        <action application="deflect" data="${destination_number}"/>
+      </condition>
+    </extension>
+
+    <extension name="cleanup-caller-id" continue="true">
+      <condition field="caller_id_number" expression="^33([12345689].{8})$">
+        <action application="set" data="effective_caller_id_number=0$1"/>
+      </condition>
+    </extension>
+
+    <extension name="egress-112">
+      <condition field="destination_number" expression="^(112)$">
+        <action application="set" data="progress_timeout=12"/>
+        <action application="bridge" data="sofia/sbc-$${profile_name}/$1@$${egress_target}"/>
+      </condition>
+    </extension>
+
+    <extension name="egress-france">
+      <condition field="destination_number" expression="^33(.*)$">
+        <action application="set" data="progress_timeout=12"/>
+        <action application="bridge" data="sofia/sbc-$${profile_name}/0$1@$${egress_target}"/>
+      </condition>
+    </extension>
+
+    <extension name="egress-international">
+      <condition field="destination_number" expression="^(.*)$">
+        <action application="set" data="ccnq_direction=egress"/>
+        <action application="set" data="progress_timeout=12"/>
+        <action application="bridge" data="sofia/sbc-$${profile_name}/00$1@$${egress_target}"/>
+      </condition>
+    </extension>
+
+  </context>
+
+  <!-- ingress from carrier -->
+  <context name="ingress-$${profile_name}">
+
+    <extension name="unloop">
+      <condition field="${unroll_loops}" expression="^true$"/>
+      <condition field="${sip_looped_call}" expression="^true$">
+        <action application="deflect" data="${destination_number}"/>
+      </condition>
+    </extension>
+
+    <extension name="cleanup-caller-id" continue="true">
+      <condition field="caller_id_number" expression="^0([12345689].{8})$">
+        <action application="set" data="effective_caller_id_number=33$1"/>
+      </condition>
+    </extension>
+
+    <extension name="default-ingress">
+      <condition field="destination_number" expression="^0(.*)$">
+        <action application="set" data="progress_timeout=12"/>
+        <action application="bridge" data="sofia/internal-$${profile_name}/33$1@$${ingress_target}"/>
+      </condition>
+    </extension>
+
+
+  </context>
+</include>
