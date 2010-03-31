@@ -27,6 +27,8 @@ Optionally, the cache may also be flushed.
 
 =cut
 
+use constant CODESTORE_CACHE_DELAY => 60; # seconds
+
 use AnyEvent;
 use AnyEvent::CouchDB;
 use CCNQ::AE;
@@ -35,7 +37,8 @@ sub new {
   my ($class,$db_uri,$db_name) = @_;
   $class = ref($class) || $class;
   my $self = {
-    db => couch($db_uri)->db($db_name),
+    db    => couch($db_uri)->db($db_name),
+    cache => {},
   };
   return bless $self, $class;
 }
@@ -43,21 +46,39 @@ sub new {
 sub load_entry {
   my ($self,$key) = @_;
   my $cv = AE::cv;
+
+  if( $self->{cache}->{$key} &&
+      $self->{cache}->{$key}->{timestamp} + CODESTORE_CACHE_DELAY < time() )
+  {
+    $cv->send( $self->{cache}->{$key}->{code} );
+    return $cv;
+  }
+
   $self->{db}->open_doc($key)->cb(sub{
     my $doc = CCNQ::AE::receive(@_);
-    if(!$doc) {
-      $cv->send(['No such code: [_1]',$key]);
+
+    unless( $doc && $doc->{_rev} && $doc->{code} ) {
+      $self->{cache}->{$key} = {
+        timestamp    => time(),
+      };
+      $cv->send;
       return;
     }
-    if( !$self->{cache}->{$key} || 
-        $self->{cache}->{$key}->{rev} ne $doc->{_rev} ) {
-      $self->{cache}->{$key}->{code} = eval { $doc->{code} };
+
+    if( !$self->{cache}->{$key} ||
+        $self->{cache}->{$key}->{rev} ne $doc->{_rev} )
+    {
+      $self->{cache}->{$key} = {
+        rev          => $doc->{_rev},
+        timestamp    => time(),
+        code         => eval { $doc->{code} },
+      };
       if($@) {
-        $cv->send(['Code failure: [_1]',$@]);
+        $cv->send;
         return;
-      } 
+      }
     }
-    $cv->send($self->{cache}->{$key}->{code});
+    $cv->send( $self->{cache}->{$key}->{code} );
   });
   return $cv;
 }
