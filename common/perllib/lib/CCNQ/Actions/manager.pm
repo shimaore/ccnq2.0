@@ -54,51 +54,55 @@ sub new_request {
 
   my $cv = $db->save_doc($request);
 
+  my $run_activities = sub {
+    my @activities = $_[0]->recv;
+    for my $activity_rank (0..$#activities) {
+      my $activity = $activities[$activity_rank];
+
+      debug("Creating new activity");
+      $activity->{_id} = $request->{request}.'.'.$activity_rank;
+      $activity->{parent_request} = $request->{request};
+      $activity->{activity_rank} = $activity_rank;
+      $activity->{activity} = $activity->{_id};
+      $activity->{next_activity} = $request->{request}.'.'.($activity_rank+1)
+        unless $activity_rank == $#activities;
+
+      $rcv->begin;
+      $db->save_doc($activity)->cb(sub{ $_[0]->recv;
+
+        debug("New activity ID=$activity->{activity} was created.");
+
+        # Submit the activity to the proper recipient.
+        # Should only be done for the first activity in the request.
+        # The other ones will be processed when a positive response is received.
+        if($activity_rank == 0) {
+          my $res = CCNQ::XMPPAgent::submit_activity($context,$activity);
+          if($res->[0] eq 'ok') {
+            debug("New activity ID=$activity->{activity} was submitted.");
+          } else {
+            error("Submission failed (in request): $res->[1] for activity ID=$activity->{activity}");
+          }
+        }
+
+        $db->save_doc($activity)->cb(sub{$_[0]->recv;
+          $rcv->end;
+          debug("New activity ID=$activity->{activity} was saved.");
+        });
+      });
+    } # for @activities
+
+    debug("Request ID=$request->{request} submitted");
+    # Send the Request ID back to the API.
+    $rcv->send($request);
+  };
+
   $cv->cb( sub{ $_[0]->recv;
     $request->{request} ||= $request->{_id};
     debug("Saving new request with ID=$request->{request}.");
 
     $db->save_doc($request)->cb(sub{ $_[0]->recv;
       # Now split the request into independent activities
-      my @activities = CCNQ::Manager::activities_for_request($request);
-      for my $activity_rank (0..$#activities) {
-        my $activity = $activities[$activity_rank];
-
-        debug("Creating new activity");
-        $activity->{_id} = $request->{request}.'.'.$activity_rank;
-        $activity->{parent_request} = $request->{request};
-        $activity->{activity_rank} = $activity_rank;
-        $activity->{activity} = $activity->{_id};
-        $activity->{next_activity} = $request->{request}.'.'.($activity_rank+1)
-          unless $activity_rank == $#activities;
-
-        $rcv->begin;
-        $db->save_doc($activity)->cb(sub{ $_[0]->recv;
-
-          debug("New activity ID=$activity->{activity} was created.");
-
-          # Submit the activity to the proper recipient.
-          # Should only be done for the first activity in the request.
-          # The other ones will be processed when a positive response is received.
-          if($activity_rank == 0) {
-            my $res = CCNQ::XMPPAgent::submit_activity($context,$activity);
-            if($res->[0] eq 'ok') {
-              debug("New activity ID=$activity->{activity} was submitted.");
-            } else {
-              error("Submission failed (in request): $res->[1] for activity ID=$activity->{activity}");
-            }
-          }
-
-          $db->save_doc($activity)->cb(sub{$_[0]->recv;
-            $rcv->end;
-            debug("New activity ID=$activity->{activity} was saved.");
-          });
-        });
-      }
-
-      debug("Request ID=$request->{request} submitted");
-      # Send the Request ID back to the API.
-      $rcv->send($request);
+      CCNQ::Manager::activities_for_request($request)->cb($run_activities);
     });
 
   });

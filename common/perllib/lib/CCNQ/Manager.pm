@@ -72,24 +72,32 @@ use constant::defer manager_requests_dir =>
 =pod
 
   request_to_activity($request_type)
-    If the request_type can be handled, returns a sub() to be used to handle the request.
-    Otherwise return undef.
+    Returns a condvar.
 
-    Note: The sub() MUST return an array of activities (or an empty array).
+    If the request_type can be handled, the condvar returns a sub() to be used to handle the request.
+    Otherwise the condvar returns undef.
+
+    Note: The sub() will return an array of activities (or an empty array).
 
 =cut
 
 sub request_to_activity {
   my ($request_type) = @_;
 
+  my $cv = AE::cv;
+
   use UNIVERSAL::require;
   my $module = "CCNQ::Manager::Requests::${request_type}";
   if($module->require) {
-    return $module->can('run');
-  } else {
-    error("Request ${request_type} does not exist");
-    return undef;
+    $cv->send($module->can('run'));
+    return $cv;
   }
+
+  use CCNQ::CouchDB::CodeStore;
+  my $store = CCNQ::CouchDB::CodeStore->new(manager_uri,manager_db);
+  $store->load_entry->cb($cv);
+
+  return $cv;
 }
 
 =pod
@@ -102,20 +110,45 @@ sub request_to_activity {
 
 sub activities_for_request {
   my ($request) = @_;
-  if($request->{action}) {
-    my $sub = request_to_activity($request->{action});
-    if($sub) {
-      # XXX This will probably need an eval {} protection at some point.
-      return $sub->($request);
-    } else {
-      $request->{status} = STATUS_FAILED;
-      $request->{error} = 'Unknown request';
-    }
-  } else {
+
+  my $cv = AE::cv;
+
+  if(!$request->{action}) {
     $request->{status} = STATUS_FAILED;
     $request->{error} = 'No action specified';
+    $cv->send;
+    return;
   }
-  return ();
+
+  request_to_activity($request->{action})->cb(sub{
+    my $sub = shift->recv;
+
+    if(!$sub) {
+      $request->{status} = STATUS_FAILED;
+      $request->{error} = 'Unknown request';
+      $cv->send;
+      return;
+    }
+
+    if(ref($sub) ne 'CODE') {
+      $request->{status} = STATUS_FAILED;
+      $request->{error} = $sub; # should be an ARRAY describing the error.
+      $cv->send;
+      return;
+    }
+
+    my @activities = eval { $sub->($request) };
+    if($@) {
+      $request->{status} = STATUS_FAILED;
+      $request->{error} = ['Request generation failed: [_1]',$@];
+      $cv->send;
+      return;
+    }
+
+    $cv->send(@activities);
+  });
+
+  return $cv;
 }
 
 1;

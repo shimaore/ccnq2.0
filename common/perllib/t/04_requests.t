@@ -18,11 +18,11 @@ use strict; use warnings;
 use Test::More;
 
 require_ok( "CCNQ::Manager" );
-ok(CCNQ::Manager::request_to_activity('aliases_delete'));
-ok(CCNQ::Manager::request_to_activity('aliases_update'));
-ok(CCNQ::Manager::request_to_activity('endpoint_delete'));
-ok(CCNQ::Manager::request_to_activity('trace_query'));
-ok(!CCNQ::Manager::request_to_activity('testing_with_an_unknown_weird_spooky_request'));
+ok(CCNQ::Manager::request_to_activity('aliases_delete')->recv);
+ok(CCNQ::Manager::request_to_activity('aliases_update')->recv);
+ok(CCNQ::Manager::request_to_activity('endpoint_delete')->recv);
+ok(CCNQ::Manager::request_to_activity('trace_query')->recv);
+ok(!CCNQ::Manager::request_to_activity('testing_with_an_unknown_weird_spooky_request')->recv);
 
 done_testing();
 1;
