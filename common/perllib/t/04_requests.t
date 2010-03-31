@@ -17,6 +17,8 @@
 use strict; use warnings;
 use Test::More;
 
+$ENV{'CCNQ_couchdb_local_server'} = '127.0.0.1';
+
 require_ok( "CCNQ::Manager" );
 ok(CCNQ::Manager::request_to_activity('aliases_delete')->recv);
 ok(CCNQ::Manager::request_to_activity('aliases_update')->recv);
