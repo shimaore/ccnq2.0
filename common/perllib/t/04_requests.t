@@ -24,7 +24,7 @@ is(ref(CCNQ::Manager::request_to_activity('aliases_delete')->recv),'CODE');
 is(ref(CCNQ::Manager::request_to_activity('aliases_update')->recv),'CODE');
 is(ref(CCNQ::Manager::request_to_activity('endpoint_delete')->recv),'CODE');
 is(ref(CCNQ::Manager::request_to_activity('trace_query')->recv),'CODE');
-is(ref(CCNQ::Manager::request_to_activity('testing_with_an_unknown_weird_spooky_request')->recv),'ARRAY');
+ok(!defined(CCNQ::Manager::request_to_activity('testing_with_an_unknown_weird_spooky_request')->recv));
 
 done_testing();
 1;
