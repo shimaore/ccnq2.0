@@ -130,13 +130,6 @@ sub activities_for_request {
       return;
     }
 
-    if(ref($sub) ne 'CODE') {
-      $request->{status} = STATUS_FAILED;
-      $request->{error} = $sub; # should be an ARRAY describing the error.
-      $cv->send;
-      return;
-    }
-
     my @activities = eval { $sub->($request) };
     if($@) {
       $request->{status} = STATUS_FAILED;
