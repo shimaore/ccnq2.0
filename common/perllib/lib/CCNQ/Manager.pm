@@ -81,6 +81,11 @@ use constant::defer manager_requests_dir =>
 
 =cut
 
+use CCNQ::CouchDB::CodeStore;
+
+use constant::defer manager_code_store =>
+  sub { CCNQ::CouchDB::CodeStore->new(manager_uri,manager_db) };
+
 sub request_to_activity {
   my ($request_type) = @_;
 
@@ -93,9 +98,9 @@ sub request_to_activity {
     return $cv;
   }
 
-  use CCNQ::CouchDB::CodeStore;
-  my $store = CCNQ::CouchDB::CodeStore->new(manager_uri,manager_db);
-  $store->load_entry($request_type)->cb($cv);
+  manager_code_store->load_entry($request_type)->cb(sub{
+    $cv->send(shift->recv);
+  });
 
   return $cv;
 }

@@ -48,7 +48,7 @@ sub load_entry {
   my $cv = AE::cv;
 
   if( $self->{cache}->{$key} &&
-      $self->{cache}->{$key}->{timestamp} + CODESTORE_CACHE_DELAY < time() )
+      time() < $self->{cache}->{$key}->{timestamp} + CODESTORE_CACHE_DELAY )
   {
     $cv->send( $self->{cache}->{$key}->{code} );
     return $cv;
@@ -71,7 +71,7 @@ sub load_entry {
       $self->{cache}->{$key} = {
         rev          => $doc->{_rev},
         timestamp    => time(),
-        code         => eval { $doc->{code} },
+        code         => eval($doc->{code}),
       };
       if($@) {
         $cv->send;
