@@ -46,7 +46,7 @@ sub load_entry {
   $self->{db}->open_doc($key)->cb(sub{
     my $doc = CCNQ::AE::receive(@_);
     if(!$doc) {
-      $cv->send;
+      $cv->send(['No such code: [_1]',$key]);
       return;
     }
     if( !$self->{cache}->{$key} || 
