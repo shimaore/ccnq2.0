@@ -95,7 +95,7 @@ sub request_to_activity {
 
   use CCNQ::CouchDB::CodeStore;
   my $store = CCNQ::CouchDB::CodeStore->new(manager_uri,manager_db);
-  $store->load_entry->cb($cv);
+  $store->load_entry($request_type)->cb($cv);
 
   return $cv;
 }
