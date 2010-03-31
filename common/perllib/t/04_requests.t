@@ -24,7 +24,7 @@ ok(CCNQ::Manager::request_to_activity('aliases_delete')->recv);
 ok(CCNQ::Manager::request_to_activity('aliases_update')->recv);
 ok(CCNQ::Manager::request_to_activity('endpoint_delete')->recv);
 ok(CCNQ::Manager::request_to_activity('trace_query')->recv);
-ok(!CCNQ::Manager::request_to_activity('testing_with_an_unknown_weird_spooky_request')->recv);
+is(ref(CCNQ::Manager::request_to_activity('testing_with_an_unknown_weird_spooky_request')->recv),'ARRAY');
 
 done_testing();
 1;
