@@ -17,10 +17,13 @@ use strict; use warnings;
 use Logger::Syslog;
 use Carp qw(croak);
 
-=pod
-  $text = first_line_of($filename)
-    Returns the first line of the file $filename,
-    or undef if an error occurred.
+=head1 DESCRIPTION
+
+=head2 first_line_of($filename)
+
+Returns the first line of the file $filename,
+or undef if an error occurred.
+
 =cut
 
 sub first_line_of {
@@ -31,10 +34,11 @@ sub first_line_of {
   return $result;
 }
 
-=pod
-  $content = content_of($filename)
+=head2 content_of($filename)
+
     Returns the content of file $filename,
     or undef if an error occurred.
+
 =cut
 
 sub content_of {
@@ -45,10 +49,11 @@ sub content_of {
   return $result;
 }
 
-=pod
-  print_to($filename,$content)
-    Saves the $content to the specified $filename.
-    croak()s on errors.
+=head2 print_to($filename,$content)
+
+Saves the $content to the specified $filename.
+croak()s on errors.
+
 =cut
 
 sub print_to {
@@ -57,7 +62,15 @@ sub print_to {
   close($fh) or croak "$_[0]: $!";
 }
 
-# Blocking version (used in "install" blocks)
+=head2 execute($command,@parameters)
+
+A fancy version of system() with error handling and logging.
+
+This version of execute() is synchronous / blocking, and suitable
+only for use in install blocks.
+
+=cut
+
 sub execute {
   my $command = join(' ',@_);
 
@@ -75,5 +88,11 @@ sub execute {
   }
   return 0;
 }
+
+=head1 SEE ALSO
+
+CCNQ::AE for an asynchronous version of execute().
+
+=cut
 
 1;

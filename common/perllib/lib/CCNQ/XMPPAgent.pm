@@ -37,7 +37,7 @@ use constant MESSAGE_FRAGMENT_SIZE => 32*1024;
 use constant STATUS_COMPLETED => 'completed';
 use constant STATUS_FAILED    => 'failed';
 
-=pod
+=head1 XMPP MESSAGE BODY FORMAT
 
   Body format:
 

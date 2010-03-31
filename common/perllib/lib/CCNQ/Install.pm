@@ -14,6 +14,13 @@ package CCNQ::Install;
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
+
+=head1 NAME
+
+CCNQ::Install;
+
+=cut
+
 use Carp;
 use File::Spec;
 use Digest::SHA1 qw(sha1_hex);
@@ -27,14 +34,29 @@ use Logger::Syslog;
 use File::ShareDir;
 use CCNQ;
 
-# Where the local configuration information is kept.
+=head1 DESCRIPTION
+
+=head2 CCN
+
+Returns the directory where the local configuration information is kept.
+
+=cut
+
 use constant CCN => q(/etc/ccn);
 
-=pod
-  $text = get_variable($name,$file,$guess_tool)
-    Loads variable $name from the environment, or from $file if it exists.
-    Otherwise creates $file with the value guessed by $guess_tool,
-    and exits.
+=head2 get_variable($name,$file,$guess_tool)
+
+Returns the value of a configuration variable.
+
+Loads variable $name from the environment, or from $file if it exists.
+Otherwise the $guess_tool callback is used to obtain a value, which is
+saved in $file before it is returned.
+
+=head2 ENV_Prefix
+
+Returns the prefix that is prepended to $name in get_variable to map
+a variable name to its name in %ENV.
+
 =cut
 
 use constant ENV_Prefix => 'CCNQ_';
@@ -62,12 +84,14 @@ sub get_variable {
   return $guess;
 }
 
-=pod
-  $filename = tag_to_file($tag)
-    Returns the filename (under CCNQ::Install::CCN) where the $tag is
-    stored.
-    Generally used in conjunction with get_variables() to retrieve
-    a configuration value for a specific tag.
+=head2 tag_to_file($tag)
+
+Returns the filename (under CCNQ::Install::CCN) where the $tag is
+stored.
+
+Generally used in conjunction with get_variables() to retrieve
+a configuration value for a specific tag.
+
 =cut
 
 sub tag_to_file {
@@ -75,6 +99,13 @@ sub tag_to_file {
 }
 
 # cookie resolution
+
+=head2 cookie
+
+Returns the local cookie (used e.g. to build authentication
+tokens).
+
+=cut
 
 use constant cookie_tag => 'cookie';
 use constant cookie_file => tag_to_file(cookie_tag);
@@ -89,12 +120,31 @@ use constant::defer cookie => sub {
 
 # Source path resolution
 
-# Try to guess the source location from the value of $0.
+=head2 SRC
+
+Returns the path of the shared directory as it is installed on the local machine.
+
+=cut
 
 use constant CCNQ_MAKEFILE_MODULE_NAME => 'CCNQ';
 use constant SRC => File::ShareDir::dist_dir(CCNQ_MAKEFILE_MODULE_NAME);
 
 # host_name and domain_name resolution
+
+=head2 host_name
+
+Returns the local portion of the name of the local machine.
+
+By default it is stored in /etc/ccn/host_name
+
+=head2 domain_name
+
+Returns the FQDN of the local machine (stored as a local variable).
+
+By default it is stored in /etc/ccn/domain_name
+
+=cut
+
 use Net::Domain;
 
 use constant host_name_tag => 'host_name';
@@ -110,14 +160,22 @@ use constant::defer domain_name => sub {
   get_variable(domain_name_tag,domain_name_file,sub {Net::Domain::hostdomain()});
 };
 
-=pod
-  $dns_name = catdns(@dns_fragments)
-    Like File::Spec->catfile, but for DNS names.
+=head2 catdns(@dns_fragments)
+
+Like File::Spec->catfile, but for DNS names.
+
 =cut
 
 sub catdns {
   return join('.',@_);
 }
+
+=head2 fqdn
+
+Returns the Fully Qualified Domain Name of the local machine (host_name
+and domain_name).
+
+=cut
 
 use constant::defer fqdn => sub { catdns(host_name,domain_name) };
 sub cluster_fqdn {
