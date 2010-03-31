@@ -28,6 +28,7 @@ Optionally, the cache may also be flushed.
 =cut
 
 use AnyEvent;
+use AnyEvent::CouchDB;
 
 sub new {
   my ($class,$db_uri,$db_name) = @_;
