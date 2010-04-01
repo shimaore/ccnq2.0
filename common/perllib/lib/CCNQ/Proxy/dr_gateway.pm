@@ -29,6 +29,7 @@ sub insert
     my $uac_realm   = $params->{realm};
     my $uac_user    = $params->{login};
     my $uac_pass    = $params->{password};
+    my $force_mp    = $params->{force_mp};
     my $description = $params->{description};
 
     return ()
@@ -38,19 +39,21 @@ sub insert
     $description = 'No description provided'
       unless defined $description;
 
+    my @attrs = ();
+    push @attrs, realm    => $uac_realm if defined($uac_realm) && $uac_realm ne '';
+    push @attrs, user     => $uac_user  if defined($uac_user ) && $uac_user  ne '';
+    push @attrs, pass     => $uac_pass  if defined($uac_pass ) && $uac_pass  ne '';
+    push @attrs, force_mp => $force_mp  if defined($force_mp ) && $force_mp  ne '';
+
+    my $attrs = join(';',@attrs);
+
     my @res;
     push @res,
-        <<'SQL',[$id,'0',$address,$strip,$pri_prefix,'',$description];
+        <<'SQL',[$id,'0',$address,$strip,$pri_prefix,$attrs,$description];
         INSERT INTO dr_gateways(gwid,type,address,strip,pri_prefix,attrs,description) VALUES (?,?,?,?,?,?,?)
 SQL
 
-    # XXX move the UAC data into the "attrs" field.
-    return (
-        @res,
-        $self->_avp_set('uac',$address,'uac_realm',$uac_realm),
-        $self->_avp_set('uac',$address,'uac_user',$uac_user),
-        $self->_avp_set('uac',$address,'uac_pass',$uac_pass),
-    );
+    return (@res);
 }
 
 sub delete
@@ -69,12 +72,7 @@ sub delete
         DELETE FROM dr_gateways WHERE gwid = ? AND address = ?
 SQL
 
-    return (
-        @res,
-        $self->_avp_set('uac',$address,'uac_realm',undef),
-        $self->_avp_set('uac',$address,'uac_user',undef),
-        $self->_avp_set('uac',$address,'uac_pass',undef),
-    );
+    return (@res);
 }
 
 1;
