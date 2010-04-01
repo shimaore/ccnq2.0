@@ -39,13 +39,13 @@ sub insert
     $description = 'No description provided'
       unless defined $description;
 
-    my @attrs = ();
-    push @attrs, realm    => $uac_realm if defined($uac_realm) && $uac_realm ne '';
-    push @attrs, user     => $uac_user  if defined($uac_user ) && $uac_user  ne '';
-    push @attrs, pass     => $uac_pass  if defined($uac_pass ) && $uac_pass  ne '';
-    push @attrs, force_mp => $force_mp  if defined($force_mp ) && $force_mp  ne '';
+    my %attrs = ();
+    $attrs{realm}    = $uac_realm if defined($uac_realm) && $uac_realm ne '';
+    $attrs{user}     = $uac_user  if defined($uac_user ) && $uac_user  ne '';
+    $attrs{pass}     = $uac_pass  if defined($uac_pass ) && $uac_pass  ne '';
+    $attrs{force_mp} = $force_mp  if defined($force_mp ) && $force_mp  ne '';
 
-    my $attrs = join(';',@attrs);
+    my $attrs = join(';', map { "$_=$attrs{$_}" } keys(%attrs) );
 
     my @res;
     push @res,
