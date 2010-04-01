@@ -28,6 +28,20 @@ use Logger::Syslog;
 sub _install {
   my ($params,$context) = @_;
 
+  my $dns_txt = sub {
+    my $dn = CCNQ::Install::catdns(@_);
+    my $cv = AE::cv;
+    AnyEvent::DNS::txt( $dn, $cv );
+    return ($cv->recv);
+  };
+
+  my $dns_a = sub {
+    my $dn = CCNQ::Install::catdns(@_);
+    my $cv = AE::cv;
+    AnyEvent::DNS::a( $dn, $cv );
+    return ($cv->recv);
+  };
+
   my $b2bua_name = 'carrier-sbc-config';
   my $cluster_fqdn = CCNQ::Install::cluster_fqdn($params->{cluster_name});
 
@@ -56,11 +70,8 @@ sub _install {
   </list>
 EOT
 
-  my $sbc_names_dn = CCNQ::Install::catdns('sbc-names',CCNQ::Install::fqdn);
-  my $sbc_names_cv = AE::cv;
-  AnyEvent::DNS::txt( $sbc_names_dn, $sbc_names_cv );
-  my @sbc_names = $sbc_names_cv->recv;
-  debug("Query TXT $sbc_names_dn -> ".join(',',@sbc_names));
+  my @sbc_names = $dns_txt->( 'sbc-names',CCNQ::Install::fqdn );
+  debug("Query TXT sbc-names -> ".join(',',@sbc_names));
 
   my $external_ip = CCNQ::Install::external_ip;
   my $internal_ip = CCNQ::Install::internal_ip;
@@ -76,14 +87,12 @@ EOT
     # and zero or more of:
     #   ingress    -- A records with the IP address of the carrier's potential origination SBC
     #   egress     -- A record(s) with the IP address of the carrier's termination SBC
+    #   ingress-target -- TXT record with the name of our inbound-proxy (defaults to inbound-proxy.${cluster_fqdn})
 
-    my $profile_dn = CCNQ::Install::catdns('profile',$name,CCNQ::Install::fqdn);
-    my $profile_cv = AE::cv;
-    AnyEvent::DNS::txt( $profile_dn, $profile_cv );
-    my ($profile) = $profile_cv->recv;
-    debug("Query TXT $profile_dn -> $profile") if defined $profile;
+    my ($profile) = $dns_txt->( 'profile',$name,CCNQ::Install::fqdn );
+    debug("Query TXT profile -> $profile") if defined $profile;
 
-    error("Name $name has no profile recorded in DNS (TXT $profile_dn), skipping"),
+    error("Name $name has no profile recorded in DNS, skipping"),
     next if !defined($profile);
 
     my $extra = '';
@@ -97,11 +106,8 @@ EOT
 
     debug("b2bua/$b2bua_name: Creating configuration for name $name / profile $profile.");
 
-    my $port_dn = CCNQ::Install::catdns('port',$name,CCNQ::Install::fqdn);
-    my $port_cv = AE::cv;
-    AnyEvent::DNS::txt( $port_dn, $port_cv );
-    my ($external_port) = $port_cv->recv;
-    debug("Query TXT $port_dn -> $external_port") if defined $external_port;
+    my ($external_port) = $dns_txt->( 'port',$name,CCNQ::Install::fqdn );
+    debug("Query TXT port -> $external_port") if defined $external_port;
 
     next unless defined($external_port) && defined($external_ip) && defined($internal_ip);
 
@@ -121,23 +127,25 @@ EOT
 EOT
 
     # Generate ACLs
-    my $ingress_cv = AE::cv;
-    AnyEvent::DNS::a( CCNQ::Install::catdns('ingress',$name,CCNQ::Install::fqdn), $ingress_cv );
-    my @ingress = $ingress_cv->recv;
-    debug("b2bua/$b2bua_name: Found ingress IPs ".join(',',@ingress));
+    my @ingress_ips = $dns_a->( 'ingress',$name,CCNQ::Install::fqdn );
+    debug("b2bua/$b2bua_name: Found ingress IPs ".join(',',@ingress_ips));
 
     $acl_text .= qq(<list name="sbc-${name}" default="deny">);
-    $acl_text .= join('',map { qq(<node type="allow" cidr="$_/32"/>) } @ingress);
+    $acl_text .= join('',map { qq(<node type="allow" cidr="$_/32"/>) } @ingress_ips);
     $acl_text .= qq(</list>);
 
     # Generate dialplan entries
-    my $egress_cv = AE::cv;
-    AnyEvent::DNS::a( CCNQ::Install::catdns('egress',$name,CCNQ::Install::fqdn), $egress_cv );
-    my @egress = $egress_cv->recv;
-    debug("b2bua/$b2bua_name: Found egress IPs ".join(',',@egress));
+    my @egress_ips = $dns_a->( 'egress',$name,CCNQ::Install::fqdn );
+    debug("b2bua/$b2bua_name: Found egress IPs ".join(',',@egress_ips));
 
-    # XXX Only one IP supported at this time.
-    my $egress = shift @egress;
+    my @ingress_target = $dns_txt->( 'ingress-target',$name,CCNQ::Install::fqdn );
+    debug("b2bua/$b2bua_name: Found ingress target names ".join(',',@ingress_target));
+
+    my $ingress_target = "inbound-proxy.${cluster_fqdn}";
+    $ingress_target = shift(@ingress_target) if $#ingress_target >= 0;
+
+    # XXX Only one egress IP supported at this time.
+    my $egress_ip = shift @egress_ips;
     $dialplan_text .= <<"EOT";
       <X-PRE-PROCESS cmd="set" data="profile_name=${name}"/>
       <X-PRE-PROCESS cmd="set" data="internal_sip_port=${internal_port}"/>
@@ -145,8 +153,8 @@ EOT
       <X-PRE-PROCESS cmd="set" data="internal_sip_ip=${internal_ip}"/>
       <X-PRE-PROCESS cmd="set" data="external_sip_ip=${external_ip}"/>
 
-      <X-PRE-PROCESS cmd="set" data="ingress_target=inbound-proxy.${cluster_fqdn}"/>
-      <X-PRE-PROCESS cmd="set" data="egress_target=${egress}"/>
+      <X-PRE-PROCESS cmd="set" data="ingress_target=${ingress_target}"/>
+      <X-PRE-PROCESS cmd="set" data="egress_target=${egress_ip}"/>
       <X-PRE-PROCESS cmd="include" data="template/${dialplan_template}.xml"/>
 EOT
   } # for $name
