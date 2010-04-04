@@ -232,8 +232,6 @@ use constant roles_to_functions => {
 use constant clusters_tag => 'clusters';
 use constant roles_tag    => 'roles';
 
-use constant _install_file => q(install.pm);
-
 # Resolve cluster_name(s)
 
 sub resolve_cluster_names {
