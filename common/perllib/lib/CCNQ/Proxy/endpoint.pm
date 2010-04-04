@@ -39,16 +39,6 @@ use base qw(CCNQ::Proxy::Base);
     If an endpoint cannot accept all digits in calls sent to them (for example 10 instead of 11 digits US), then
     use the Strip Digit field to specify how many digits should be stripped when sending calls to that
     endpoint.
-    <p>
-    Finally, you must indicate what type of calls this endpoint is
-    authorized to place:
-    <ul>
-    <li>Local calls (on-net calls, or calls to NPANXX identified as "local");
-    <li>Premium calls (calls to an NPA or an NXX identified as "premium");
-    <li>Long Distance (LD) calls (non-local calls to a North-American number);
-    <li>International calls (outside NANPA.com).
-    </ul>
-    All endpoints can place calls to N11 or *XX numbers.
 
     <p>
     For calls that must terminate at an endpoint, the following are tried in order:
