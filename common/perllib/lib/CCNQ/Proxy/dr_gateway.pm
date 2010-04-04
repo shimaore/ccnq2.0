@@ -67,7 +67,7 @@ sub delete
 
     my @res;
     push @res,
-        <<'SQL',[$id,$address];
+        <<'SQL',[$id];
         DELETE FROM dr_gateways WHERE gwid = ?
 SQL
 
