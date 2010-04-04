@@ -16,6 +16,7 @@ package CCNQ::Actions::b2bua::client_sbc_config;
 use strict; use warnings;
 
 use CCNQ::B2BUA;
+use Logger::Syslog;
 
 sub _install {
   my ($params,$context) = @_;
