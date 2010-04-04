@@ -63,13 +63,12 @@ sub delete
     my $address = $params->{target};
 
     return ()
-    unless defined($id) && $id ne ''
-         && defined $address && $address ne '';
+    unless defined($id) && $id ne '';
 
     my @res;
     push @res,
         <<'SQL',[$id,$address];
-        DELETE FROM dr_gateways WHERE gwid = ? AND address = ?
+        DELETE FROM dr_gateways WHERE gwid = ?
 SQL
 
     return (@res);
