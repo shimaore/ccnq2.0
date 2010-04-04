@@ -117,6 +117,16 @@ sub insert
     $user_outbound_route = undef
       unless $user_outbound_route =~ /^\d+$/;
 
+    # forwarding_sbc can have two values:
+    #   1 indicates the endpoint will forward the originator's IP address as part of Sock-Info data
+    #     All data will then be loaded based on the originator's endpoint, on the endpoint that forwarded
+    #     the information (e.g. account and accout_sub will be looked up by the proxy using that IP address).
+    #   2 indicates the endpoint will forward the account and account_sub as part of the RURI.
+    #     All data is still loaded using the forwarding endpoint's data; only the account and account_sub are
+    #     substituted.
+    $forwarding_sbc = undef
+      unless $forwarding_sbc =~ /^\d$/;
+
     my @res;
     if( defined $password and $password ne '' )
     {
@@ -137,7 +147,7 @@ SQL
     if(defined $ip)
     {
         push @res, $self->_avp_set($ip,$domain,'src_subs',$username);
-        push @res, $self->_avp_set($ip,$domain,'forwarding_sbc',$forwarding_sbc?1:undef),
+        push @res, $self->_avp_set($ip,$domain,'forwarding_sbc',$forwarding_sbc);
     }
 
     return (
@@ -187,7 +197,6 @@ SQL
         $self->_avp_set($username,$domain,'strip_digit',undef),
         $self->_avp_set($username,$domain,'allow_onnet',undef),
         $self->_avp_set($username,$domain,'user_force_mp',undef),
-        $self->_avp_set($username,$domain,'forwarding_sbc',undef),
         $self->_avp_set($username,$domain,'user_outbound_route',undef),
         $self->_avp_set($username,$domain,'ignore_caller_outbound_route',undef),
         $self->_avp_set($username,$domain,'ignore_default_outbound_route',undef),
