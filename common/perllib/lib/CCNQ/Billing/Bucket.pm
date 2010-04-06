@@ -33,7 +33,7 @@ update_bucket {
 sub update {
   my ($params) = @_;
   return CCNQ::Billing::update({
-    %params,
+    %$params,
     _id => join('/','bucket',$params->{name}),
   });
 }
