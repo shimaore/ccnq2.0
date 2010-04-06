@@ -5,7 +5,7 @@ use Encode;
 
 use CCNQ;
 set views => [
-  path(CCNQ::CCN), 'views'),
+  path(CCNQ::CCN, 'views'),
   path(CCNQ::Portal::SRC, 'views'),
 ];
 
