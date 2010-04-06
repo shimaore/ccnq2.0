@@ -15,8 +15,6 @@ package CCNQ::Billing;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
 
-use CCNQ::CouchDB;
-use CCNQ::AE;
 use CCNQ::Install;
 
 use constant::defer billing_uri => sub {
@@ -31,6 +29,8 @@ use constant billing_designs => {
     },
   },
 };
+
+use CCNQ::CouchDB;
 
 sub install {
   return CCNQ::CouchDB::install(billing_uri,billing_db,billing_designs);
@@ -54,79 +54,6 @@ sub retrieve {
 sub view {
   my ($params) = @_;
   return CCNQ::CouchDB::view_cv(billing_uri,billing_db,$params);
-}
-
-
-=head1 rate_and_save_cbef
-
-Save a flat (non-rated) CBEF.
-
-This is used for example to create billable events off the provisioning system.
-
-=cut
-
-use AnyEvent;
-use CCNQ::Rating;
-use CCNQ::Rating::Event;
-
-sub rate_cbef {
-  my ($cbef) = @_;
-  my $rcv = AE::cv;
-  lookup_plan($cbef->account,$cbef->account_sub)->cb(sub{
-    my $plan = CCNQ::AE::receive(@_);
-    if($plan) {
-      CCNQ::Rating::rate_cbef($cbef,$plan)->cb($rcv);
-    } else {
-      $rcv->send;
-    }
-  });
-  return $rcv;
-}
-
-sub rate_and_save_cbef {
-  my ($cbef) = @_;
-  my $rcv = AE::cv;
-  rate_cbef($cbef)->cb(sub{
-    my $rated_cbef = CCNQ::AE::receive(@_);
-    $rcv->send('Rating failed') if !$rated_cbef;
-
-    $rated_cbef->compute_taxes();
-
-    # Save the new (rated) CBEF...
-    CCNQ::CDR::insert($rated_cbef)->cb($rcv);
-  });
-  return $rcv;
-}
-
-use AnyEvent::CouchDB;
-use CCNQ::CouchDB;
-
-sub lookup_plan {
-  my ($account,$sub_account) = @_;
-  my $id = join('/','sub_account',$account,$sub_account);
-  my $rcv = AE::cv;
-  couchdb(billing_db)->open_doc($id)->cb(sub{
-    my $rec = CCNQ::AE::receive(@_);
-    if($rec && $rec->{plan}) {
-      load_plan($rec->{plan})->cb(sub{
-        $rcv->send(eval {shift->recv});
-      })
-    } else {
-      $rcv->send;
-    }
-  });
-  return $rcv;
-}
-
-sub load_plan {
-  my ($plan) = @_;
-  my $id = join('/','plan',$plan);
-  my $rcv = AE::cv;
-  couchdb(billing_db)->open_doc($id)->cb(sub{
-    my $rec = CCNQ::AE::receive(@_);
-    $rcv->send(CCNQ::Rating::Plan->new($rec)) if $rec;
-  });
-  return $rcv;
 }
 
 'CCNQ::Billing';

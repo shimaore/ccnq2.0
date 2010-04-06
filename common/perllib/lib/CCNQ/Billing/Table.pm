@@ -1,5 +1,5 @@
-package CCNQ::Billing::Bucket;
-# Copyright (C) 2009  Stephane Alnet
+package CCNQ::Billing::Table;
+# Copyright (C) 2010  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -15,58 +15,30 @@ package CCNQ::Billing::Bucket;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
 
-sub _bucket_id {
-  return join('/','bucket',@_);
-}
+use CCNQ::Rating::Table;
 
-use CCNQ::Billing;
-use CCNQ::Rating::Bucket;
-
-=pod
-
-update_bucket {
-  name
-  currency
-  increment
-  decimals
-  cap
-}
-
-=cut
-
-sub update {
+sub create {
   my ($params) = @_;
-  return CCNQ::Billing::update({
-    %$params,
-    _id => _bucket_id($params->{name}),
+  my $rcv = AE::cv;
+  my $db = CCNQ::Rating::Table->new($params->{name});
+  $db->create()->cb(sub{
+    CCNQ::CouchDB::receive_ok(@_,$rcv);
   });
+  return $rcv;
 }
 
-sub retrieve {
+sub update_prefix {
   my ($params) = @_;
-  return CCNQ::Billing::retrieve({
-    _id => _bucket_id($params->{name})
-  });
+  my $name       = delete $params->{name};
+  $params->{_id} = delete $params->{prefix};
+  return CCNQ::CouchDB::update_cv(billing_uri,$name,$params);
 }
 
-=pod
-
-replenish_bucket {
-  name
-  currency
-  value
-  account
-  account_sub
-}
-
-=cut
-
-sub replenish {
+sub delete_prefix {
   my ($params) = @_;
-  my $bucket = CCNQ::Rating::Bucket->new($params->{name});
-  return $bucket->replenish($params);
+  my $name       = delete $params->{name};
+  $params->{_id} = delete $params->{prefix};
+  return CCNQ::CouchDB::delete_cv(billing_uri,$name,$params);
 }
 
-
-
-'CCNQ::Billing::Bucket';
+'CCNQ::Billing::Table';

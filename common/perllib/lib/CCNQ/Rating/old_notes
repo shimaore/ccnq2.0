@@ -35,15 +35,6 @@ In CCNQ::Rating:
 
 
 
-  Then the account+account_sub is used to locate a specific Plan; the Plan is then used to run the rating.
-
-
-    my $plan = lookup_plan_for($cbef->{account},$cbef->{account_sub});
-    CCNQ::Rating::Rate($cbef,$plan);
-    return $cbef; # A Rated CBEF
-
-
-
 
 
 

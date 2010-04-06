@@ -23,9 +23,18 @@ sub _install {
 
 =pod
 
-Bucket instances are never accessed directly by actions; the realtime-rating
-and -billing engines access bucket instances as needed.
+replenish_bucket {
+  name
+  currency
+  value
+  account
+  account_sub
+}
 
 =cut
+
+sub replenish_bucket {
+  return CCNQ::Billing::Bucket::replenish(@_);
+}
 
 'CCNQ::Actions::bucket_db';

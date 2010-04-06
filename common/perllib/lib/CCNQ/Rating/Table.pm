@@ -23,6 +23,8 @@ use CCNQ::AE;
 
 use CCNQ::Trie;
 
+use Carp;
+
 =head1 new($name)
 
 Create a new prefix-lookup table based on the content of a CouchDB table.
@@ -38,8 +40,13 @@ sub new {
   return bless $self, $this;
 }
 
+use CCNQ::Billing;
+
 sub db {
-  return couchdb($_[0]->{name});
+  my ($self) = @_;
+  my $couch = couch(CCNQ::Billing::billing_uri);
+  my $couch_db = $couch->db($self->{name});
+  return $couch_db;
 }
 
 =head1 $table->load()
@@ -73,7 +80,7 @@ Returns a hashref of values associated with the longest match for the prefix.
 
 =cut
 
-sub lookup {
+sub _lookup {
   my ($self,$key) = @_;
 
   my $rcv = AE::cv;
@@ -91,6 +98,22 @@ sub lookup {
   });
 
   return $rcv;
+}
+
+sub lookup {
+  my ($self,$key) = @_;
+
+  if($self->{trie}) {
+    return $self->_lookup($key);
+  } else {
+    my $rcv = AE::cv;
+    $self->load()->cb(sub{
+      $self->_lookup($key)->cb(sub{
+        $rcv->send(shift->recv)
+      });
+    });
+    return $rcv;
+  }
 }
 
 =pod

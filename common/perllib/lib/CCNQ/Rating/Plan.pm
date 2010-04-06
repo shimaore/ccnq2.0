@@ -85,7 +85,7 @@ sub decimals {
 sub rating_steps {
   my $self = shift;
   # returns a list of CCNQ::Rating::Plan::RatingStep instances.
-  return map { CCNQ::Rating::Plan::RatingStep->new($_) } $self->{rating_steps};
+  return map { CCNQ::Rating::Plan::RatingStep->new($_) } @{$self->{rating_steps}};
 }
 
 1;

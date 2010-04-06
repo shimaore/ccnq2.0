@@ -14,11 +14,9 @@ package CCNQ::Actions::billing;
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
-
-use CCNQ::Install; # for host_name
-
 use Logger::Syslog;
 
+use CCNQ::Install; # for host_name
 use CCNQ::Billing;
 
 sub _install {
@@ -26,19 +24,18 @@ sub _install {
   return CCNQ::Billing::install(@_);
 }
 
+use CCNQ::Billing::Rating;
+
 sub billing_entry {
   my ($params,$context) = @_;
 
   # Create a new CBEF entry
-  return CCNQ::Billing::rate_and_save_cbef({
-    %{$params},
+  return CCNQ::Billing::Rating::rate_and_save_cbef({
+    %$params,
     collecting_node => CCNQ::Install::host_name,
     request_uuid    => $params->{activity},
   });
 }
-
-# XXX : other "billing" manipulation methods: create plan, bucket,
-#        prefix table, etc.
 
 use CCNQ::Billing::Bucket;
 
@@ -58,22 +55,50 @@ sub update_bucket {
   return CCNQ::Billing::Bucket::update(@_);
 }
 
-=pod
-
-replenish_bucket {
-  name
-  currency
-  value
-  account
-  account_sub
+sub retrieve_bucket {
+  return CCNQ::Billing::Bucket::retrieve(@_);
 }
 
-=cut
+use CCNQ::Billing::Plan;
 
-sub replenish_bucket {
-  return CCNQ::Billing::Bucket::replenish(@_);
+sub update_plan {
+  return CCNQ::Billing::Plan::update(@_);
 }
 
+sub retrieve_plan {
+  return CCNQ::Billing::Plan::retrieve(@_);
+}
 
+use CCNQ::Billing::Account;
+
+sub update_account {
+  return CCNQ::Billing::Account::update_account(@_);
+}
+
+sub retrieve_account {
+  return CCNQ::Billing::Account::retrieve_account(@_);
+}
+
+sub update_account_sub {
+  return CCNQ::Billing::Account::update_account_sub(@_);
+}
+
+sub retrieve_account_sub {
+  return CCNQ::Billing::Account::retrieve_account_sub(@_);
+}
+
+use CCNQ::Billing::Table;
+
+sub create_table {
+  return CCNQ::Billing::Table::create(@_);
+}
+
+sub update_table_prefix {
+  return CCNQ::Billing::Table::update_prefix(@_);
+}
+
+sub delete_table_prefix {
+  return CCNQ::Billing::Table::delete_prefix(@_);
+}
 
 'CCNQ::Actions::billing';
