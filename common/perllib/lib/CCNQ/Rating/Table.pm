@@ -19,12 +19,9 @@ use strict; use warnings;
 # related to a given prefix.
 
 use AnyEvent;
-use AnyEvent::CouchDB;
 use CCNQ::AE;
 
 use CCNQ::Trie;
-
-use CCNQ::Billing;
 
 =head1 new($name)
 
@@ -96,9 +93,7 @@ sub lookup {
   return $rcv;
 }
 
-'CCNQ::Rating::Table';
-
-__END__
+=pod
 
 Example of fields in results (see CCNQ::Rating::Rate for more details):
 
@@ -110,3 +105,7 @@ Example of fields in results (see CCNQ::Rating::Rate for more details):
 
   initial_duration
   increment_duration
+
+=cut
+
+'CCNQ::Rating::Table';

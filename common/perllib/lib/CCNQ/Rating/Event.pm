@@ -18,7 +18,7 @@ package CCNQ::Rating::Event::Number;
 
 use CCNQ::Rating::Table;
 use constant e164_to_location_table => 'e164_to_location';
-use constant e164_to_location => new CCNQ::Rating::Table(e164_to_location_table);
+use constant e164_to_location => CCNQ::Rating::Table->new(e164_to_location_table);
 
 sub new {
   my $this = shift;
