@@ -60,7 +60,6 @@ sub delete
 {
     my ($self,$params) = @_;
     my $id = $params->{id};
-    my $address = $params->{target};
 
     return ()
     unless defined($id) && $id ne '';

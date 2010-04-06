@@ -91,6 +91,7 @@ sub dr_gateway_update {
           realm
           login
           password
+          force_mp
           description
       )}
     },
@@ -110,7 +111,6 @@ sub dr_gateway_delete {
       cluster_name => $request->{cluster_name},
       params => { map { $_ => $request->{$_} } qw(
           id
-          target
       )}
     },
     {
