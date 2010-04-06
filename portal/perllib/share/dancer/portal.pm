@@ -4,6 +4,8 @@ use Template;
 use Encode;
 
 use CCNQ;
+use CCNQ::Portal;
+
 set views => [
   path(CCNQ::CCN, 'views'),
   path(CCNQ::Portal::SRC, 'views'),
@@ -41,7 +43,6 @@ my $site = CCNQ::Portal::Site->new(
   },
 );
 
-use CCNQ::Portal;
 CCNQ::Portal->import($site);
 
 use CCNQ::Portal::Outer::UserAuthentication;
