@@ -15,6 +15,8 @@ set public => path(CCNQ::Portal::SRC, 'public');
 
 use CCNQ::Portal::Site;
 use CCNQ::Portal::Auth::CouchDB;
+use CCNQ::Portal::Outer::AccountSelection;
+
 my $site = CCNQ::Portal::Site->new(
   default_locale => 'en-US',
   security => CCNQ::Portal::Auth::CouchDB->new(),
@@ -36,9 +38,9 @@ my $site = CCNQ::Portal::Site->new(
 
     encode_utf8 template $template_name => {
       %{$vars},
-      lh => CCNQ::Portal->current_session->locale,
+      lh       => CCNQ::Portal->current_session->locale,
       accounts => CCNQ::Portal::Outer::AccountSelection->available_accounts,
-      account => CCNQ::Portal::Outer::AccountSelection->account,
+      account  => CCNQ::Portal::Outer::AccountSelection->account,
     };
   },
 );
@@ -47,7 +49,6 @@ CCNQ::Portal->import($site);
 
 use CCNQ::Portal::Outer::UserAuthentication;
 use CCNQ::Portal::Outer::UserUpdate;
-use CCNQ::Portal::Outer::AccountSelection;
 use CCNQ::Portal::Outer::LocaleSelection;
 
 use CCNQ::Portal::Inner::billing_plan;
