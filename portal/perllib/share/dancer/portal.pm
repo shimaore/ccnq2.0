@@ -6,16 +6,63 @@ use Encode;
 use CCNQ;
 use CCNQ::Portal;
 
-set views => [
-  path(CCNQ::CCN, 'views'),
-  path(CCNQ::Portal::SRC, 'views'),
-];
-
+set views  => path(CCNQ::CCN, 'views');
 set public => path(CCNQ::Portal::SRC, 'public');
 
 use CCNQ::Portal::Site;
 use CCNQ::Portal::Auth::CouchDB;
+
+# Content made available:
+
 use CCNQ::Portal::Outer::AccountSelection;
+use CCNQ::Portal::Outer::UserAuthentication;
+use CCNQ::Portal::Outer::UserUpdate;
+use CCNQ::Portal::Outer::LocaleSelection;
+
+use CCNQ::Portal::Inner::billing_plan;
+
+# Create the site instance used by the server.
+
+sub ccnq_template {
+    my ($view, $tokens, $options) = @_;
+    $options ||= {layout => 1};
+    my $layout = setting('layout');
+    undef $layout unless $options->{layout};
+
+    $view .= ".tt" if $view !~ /\.tt$/;
+
+    my $view_1 = path(setting('views'), $view);
+    my $view_2 = path(CCNQ::Portal::SRC, 'views', $view);
+
+    $view = -r($view_1) ? $view_1 : $view_2;
+
+    if (! -r $view) {
+        my $error = Dancer::Error->new(
+            code    => 404,
+            message => "Page not found",
+        );
+        return Dancer::Response::set($error->render);
+    }
+
+    $tokens ||= {};
+    $tokens->{request} = Dancer::SharedData->request;
+    $tokens->{params}  = Dancer::SharedData->request->params;
+    if (setting('session')) {
+        $tokens->{session} = Dancer::Session->get;
+    }
+
+    my $content = Dancer::Template->engine->render($view, $tokens);
+    return $content if not defined $layout;
+
+    $layout .= '.tt' if $layout !~ /\.tt/;
+    $layout = path(setting('views'), 'layouts', $layout);
+    my $full_content =
+      Dancer::Template->engine->render($layout,
+        {%$tokens, content => $content});
+
+    return $full_content;
+}
+
 
 my $site = CCNQ::Portal::Site->new(
   default_locale => 'en-US',
@@ -36,22 +83,20 @@ my $site = CCNQ::Portal::Site->new(
         CCNQ::Portal->current_session->user->profile->{is_sysadmin} || 0;
     }
 
-    encode_utf8 template $template_name => {
+    my $template_params = {
       %{$vars},
       lh       => CCNQ::Portal->current_session->locale,
       accounts => CCNQ::Portal::Outer::AccountSelection->available_accounts,
       account  => CCNQ::Portal::Outer::AccountSelection->account,
     };
+
+
+    my $r = ccnq_template( $template_name => $template_params );
+    return ref($r) ? $r : encode_utf8($r);
   },
 );
 
 CCNQ::Portal->import($site);
-
-use CCNQ::Portal::Outer::UserAuthentication;
-use CCNQ::Portal::Outer::UserUpdate;
-use CCNQ::Portal::Outer::LocaleSelection;
-
-use CCNQ::Portal::Inner::billing_plan;
 
 any '/' => sub {
   $site->default_content->();
