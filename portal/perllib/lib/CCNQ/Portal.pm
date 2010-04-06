@@ -29,6 +29,10 @@ our $VERSION = '0.02';
 
 use strict; use warnings;
 
+use File::ShareDir;
+use constant CCNQ_PORTAL_MAKEFILE_MODULE_NAME => 'CCNQ-Portal';
+use constant SRC => File::ShareDir::dist_dir(CCNQ_PORTAL_MAKEFILE_MODULE_NAME);
+
 # XXX Need db install
 use constant portal_db => 'portal';
 

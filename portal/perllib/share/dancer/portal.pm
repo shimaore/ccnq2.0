@@ -3,6 +3,14 @@ use Dancer;
 use Template;
 use Encode;
 
+use CCNQ;
+set views => [
+  path(CCNQ::CCN), 'views'),
+  path(CCNQ::Portal::SRC, 'views'),
+];
+
+set public => path(CCNQ::Portal::SRC, 'public');
+
 use CCNQ::Portal::Site;
 use CCNQ::Portal::Auth::CouchDB;
 my $site = CCNQ::Portal::Site->new(
