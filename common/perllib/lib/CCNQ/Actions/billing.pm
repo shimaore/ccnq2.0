@@ -40,4 +40,40 @@ sub billing_entry {
 # XXX : other "billing" manipulation methods: create plan, bucket,
 #        prefix table, etc.
 
+use CCNQ::Billing::Bucket;
+
+=pod
+
+update_bucket {
+  name
+  currency
+  increment
+  decimals
+  cap
+}
+
+=cut
+
+sub update_bucket {
+  return CCNQ::Billing::Bucket::update(@_);
+}
+
+=pod
+
+replenish_bucket {
+  name
+  currency
+  value
+  account
+  account_sub
+}
+
+=cut
+
+sub replenish_bucket {
+  return CCNQ::Billing::Bucket::replenish(@_);
+}
+
+
+
 'CCNQ::Actions::billing';

@@ -36,6 +36,10 @@ Note:
   For per-minute buckets
     decimals = 0 (the default), increment = 60
 
+Bucket-related data is stored in two different locations:
+  - metadata (bucket-level data) is stored in the billing database;
+  - bucket instances are stored in a separate bucket database.
+
 =cut
 
 use AnyEvent;
@@ -177,6 +181,39 @@ sub use {
         }
       });
     }
+  });
+  return $rcv;
+}
+
+sub replenish {
+  my $self = shift;
+  my ($params) = @_;
+
+  my $rcv = AE::cv;
+
+  my $cv_failed = sub {
+    $rcv->send(Math::BigFloat->bzero);
+    return $rcv;
+  };
+
+  if($params->{value} <= 0) {
+    return $cv_failed;
+  }
+
+  # If the bucket stores money, make sure the currency is the proper one.
+  if($self->currency && $params->{currency} ne $self->currency) {
+    error("Invalid currency");
+    return $cv_failed;
+  };
+
+  $self->get_instance($params)->cb(sub{
+    my $bucket_instance = CCNQ::AE::receive(@_);
+    return $cv_failed->() unless $bucket_instance;
+
+    my $current_bucket_value = $bucket_instance->{value};
+    $current_bucket_value += $params->{value};
+
+    $self->set_instance_value($bucket_instance,$value)->cb($rcv);
   });
   return $rcv;
 }

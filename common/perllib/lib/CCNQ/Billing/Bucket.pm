@@ -1,4 +1,4 @@
-package CCNQ::Actions::bucked_db;
+package CCNQ::Billing::Bucket;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -15,17 +15,47 @@ package CCNQ::Actions::bucked_db;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
 
-use CCNQ::Rating::Bucket::DB;
+use CCNQ::Billing;
+use CCNQ::Rating::Bucket;
 
-sub _install {
-  return CCNQ::Rating::Bucket::DB::install(@_);
+=pod
+
+update_bucket {
+  name
+  currency
+  increment
+  decimals
+  cap
+}
+
+=cut
+
+sub update {
+  my ($params) = @_;
+  return CCNQ::Billing::update({
+    %params,
+    _id => join('/','bucket',$params->{name}),
+  });
 }
 
 =pod
 
-Bucket instances are never accessed directly by actions; the realtime-rating
-and -billing engines access bucket instances as needed.
+replenish_bucket {
+  name
+  currency
+  value
+  account
+  account_sub
+}
 
 =cut
 
-'CCNQ::Actions::bucket_db';
+sub replenish {
+  my ($params) = @_;
+  my $bucket = CCNQ::Rating::Bucket->new($params->{name});
+  return $bucket->replenish($params);
+}
+
+
+
+'CCNQ::Billing::Bucket';
