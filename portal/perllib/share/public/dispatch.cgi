@@ -1,4 +1,4 @@
-#!/opt/local/bin/perl
+#!/usr/bin/env perl
 use Plack::Runner;
-# XXX This should be a static path.
-Plack::Runner->run('../app.psgi');
+use CCNQ::Portal;
+Plack::Runner->run(CCNQ::Portal::SRC.'dancer/app.psgi');
