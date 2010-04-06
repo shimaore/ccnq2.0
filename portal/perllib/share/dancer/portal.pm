@@ -24,12 +24,12 @@ my $site = CCNQ::Portal::Site->new(
     my $vars = vars;
 
     if(CCNQ::Portal->current_session->user) {
-      $vars->{user_name}
-        = CCNQ::Portal->current_session->user->profile->name;
-      $vars->{is_admin}
-        = CCNQ::Portal->current_session->user->profile->{is_admin} || 0;
-      $vars->{is_sysadmin}
-        = CCNQ::Portal->current_session->user->profile->{is_sysadmin} || 0;
+      $vars->{user_name} =
+        CCNQ::Portal->current_session->user->profile->name;
+      $vars->{is_admin} =
+        CCNQ::Portal->current_session->user->profile->{is_admin} || 0;
+      $vars->{is_sysadmin} =
+        CCNQ::Portal->current_session->user->profile->{is_sysadmin} || 0;
     }
 
     encode_utf8 template $template_name => {
