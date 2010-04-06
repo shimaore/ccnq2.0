@@ -155,7 +155,7 @@ sub use {
 
   $self->get_instance($cbef)->cb(sub{
     my $bucket_instance = CCNQ::AE::receive(@_);
-    return $cv_failed unless $bucket_instance;
+    return $cv_failed->() unless $bucket_instance;
 
     my $current_bucket_value = $bucket_instance->{value};
 
@@ -164,7 +164,7 @@ sub use {
         if(CCNQ::CouchDB::receive_ok(@_,$rcv)) {
           $rcv->send($current_bucket_value);
         } else {
-          return $cv_failed;
+          $cv_failed->();
         }
       });
     } else {
@@ -173,7 +173,7 @@ sub use {
         if(CCNQ::CouchDB::receive_ok(@_,$rcv)) {
           $rcv->send($value);
         } else {
-          return $cv_failed;
+          $cv_failed->();
         }
       });
     }
