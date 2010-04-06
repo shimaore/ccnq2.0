@@ -6,7 +6,7 @@ use Encode;
 use CCNQ;
 use CCNQ::Portal;
 
-set views  => path(CCNQ::CCN, 'views');
+set views  => path(CCNQ::Portal::SRC, 'views');
 set public => path(CCNQ::Portal::SRC, 'public');
 
 use CCNQ::Portal::Site;
@@ -32,8 +32,8 @@ sub ccnq_template {
 
     $view .= ".tt" if $view !~ /\.tt$/;
 
-    my $view_1 = path(setting('views'), $view);
-    my $view_2 = path(CCNQ::Portal::SRC, 'views', $view);
+    my $view_1 = path(CCNQ::CCN, 'views', $view);
+    my $view_2 = path(setting('views'), $view);
 
     $view = -r($view_1) ? $view_1 : $view_2;
 
