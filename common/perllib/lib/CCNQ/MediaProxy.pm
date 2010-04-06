@@ -14,11 +14,11 @@ package CCNQ::MediaProxy;
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use CCNQ::Install;
+use CCNQ;
 use File::Spec;
 
 use constant::defer mediaproxy_directory =>
-  sub { File::Spec->catfile(CCNQ::Install::SRC,qw( mediaproxy )) };
+  sub { File::Spec->catfile(CCNQ::SRC,qw( mediaproxy )) };
 use constant mediaproxy_install_conf => '/etc/mediaproxy'; # Debian
 use constant mediaproxy_config => File::Spec->catfile(mediaproxy_install_conf,'config.ini');
 

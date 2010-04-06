@@ -17,7 +17,7 @@
 use strict; use warnings;
 use Test::More;
 
-use_ok ("CCNQ::Install");
+use_ok ("CCNQ");
 use_ok ("File::Spec");
 
 # find . -name '*.pl'  --- with some restrictions
@@ -27,7 +27,7 @@ for my $name qw(
 ) {
   # require_ok ("$path/$name")  does not work.
   # I need the equivalent of "perl -wc".
-  my $file_name = File::Spec->catfile(CCNQ::Install::SRC(),$name);
+  my $file_name = File::Spec->catfile(CCNQ::SRC(),$name);
   system(qq(perl -wc "${file_name}" > /dev/null 2>/dev/null)) == 0 || die "$name failed";
 }
 

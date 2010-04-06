@@ -16,11 +16,11 @@ package CCNQ::Monit;
 
 use strict; use warnings;
 
-use CCNQ::Install;
+use CCNQ;
 use File::Spec;
 
 use constant::defer monit_directory =>
-  sub { File::Spec->catfile(CCNQ::Install::SRC,qw( monit )) };
+  sub { File::Spec->catfile(CCNQ::SRC,qw( monit )) };
 use constant monit_target => '/etc/monit';
 
 1;

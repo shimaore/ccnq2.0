@@ -13,7 +13,7 @@ package CCNQ::B2BUA;
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-use CCNQ::Install;
+use CCNQ;
 use CCNQ::Util;
 use File::Spec;
 use File::Path;
@@ -21,7 +21,7 @@ use File::Path;
 use Logger::Syslog;
 
 use constant::defer b2bua_directory =>
-  sub { File::Spec->catfile(CCNQ::Install::SRC,qw( b2bua )) };
+  sub { File::Spec->catfile(CCNQ::SRC,qw( b2bua )) };
 
 use constant freeswitch_install_conf => '/opt/freeswitch/conf'; # Debian
 

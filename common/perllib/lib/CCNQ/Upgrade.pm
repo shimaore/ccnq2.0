@@ -19,14 +19,15 @@ use strict; use warnings;
 use File::Path qw(mkpath);
 use AnyEvent;
 
+use CCNQ;
 use CCNQ::Install;
 use CCNQ::AE::Run;
 
 sub run {
   # Create the configuration directory.
-  die "No ".CCNQ::Install::CCN()
-    unless -d CCNQ::Install::CCN()
-        or mkpath(CCNQ::Install::CCN());
+  die "No ".CCNQ::CCN()
+    unless -d CCNQ::CCN()
+        or mkpath(CCNQ::CCN());
 
   # Keep the host and domain names, but re-resolve the list of clusters.
   unlink CCNQ::Install::clusters_file;

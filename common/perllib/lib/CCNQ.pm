@@ -37,4 +37,28 @@ use vars qw{$VERSION};
 
 our $VERSION = '0.02';
 
+=head1 DESCRIPTION
+
+=head2 CCN
+
+Returns the directory where the local configuration information is kept.
+
+=cut
+
+use constant CCN => q(/etc/ccn);
+
+# Source path resolution
+
+=head2 SRC
+
+Returns the path of the shared directory as it is installed on the local machine.
+
+=cut
+
+use File::ShareDir;
+
+use constant CCNQ_MAKEFILE_MODULE_NAME => 'CCNQ';
+use constant SRC => File::ShareDir::dist_dir(CCNQ_MAKEFILE_MODULE_NAME);
+
+
 'CCNQ';

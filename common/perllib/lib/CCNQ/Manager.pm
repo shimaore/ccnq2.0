@@ -13,6 +13,7 @@ package CCNQ::Manager;
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+use CCNQ;
 use CCNQ::Install;
 use CCNQ::Util;
 use File::Spec;
@@ -67,7 +68,7 @@ sub get_request_status {
 }
 
 use constant::defer manager_requests_dir =>
-  sub { File::Spec->catfile(CCNQ::Install::SRC,qw( manager requests )) };
+  sub { File::Spec->catfile(CCNQ::SRC,qw( manager requests )) };
 
 =pod
 

@@ -17,7 +17,7 @@ use strict; use warnings;
 
 use Logger::Syslog;
 
-use CCNQ::Install;
+use CCNQ;
 use CCNQ::Util;
 use CCNQ::Proxy;
 use CCNQ::Proxy::Config;
@@ -37,10 +37,10 @@ sub _install {
 
   my $model = CCNQ::Util::first_line_of(CCNQ::Proxy::proxy_mode_file);
   die 'No proxy model found in '.CCNQ::Proxy::proxy_mode_file if !defined $model;
-  my $template_dir = CCNQ::Install::CCN;
+  my $template_dir = CCNQ::CCN;
 
   # We install opensips.cfg and opensips.sql into /etc/ccn/
-  my $SRC = CCNQ::Install::SRC;
+  my $SRC = CCNQ::SRC;
 
   # Reconfigure the local system (includes installing the new opensips.cfg file in /etc/opensips)
   info("Reconfiguring the local system");

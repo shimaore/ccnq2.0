@@ -31,18 +31,7 @@ use AnyEvent::DNS;
 use CCNQ::Util;
 use Logger::Syslog;
 
-use File::ShareDir;
 use CCNQ;
-
-=head1 DESCRIPTION
-
-=head2 CCN
-
-Returns the directory where the local configuration information is kept.
-
-=cut
-
-use constant CCN => q(/etc/ccn);
 
 =head2 get_variable($name,$file,$guess_tool)
 
@@ -86,7 +75,7 @@ sub get_variable {
 
 =head2 tag_to_file($tag)
 
-Returns the filename (under CCNQ::Install::CCN) where the $tag is
+Returns the filename (under CCNQ::CCN) where the $tag is
 stored.
 
 Generally used in conjunction with get_variables() to retrieve
@@ -95,7 +84,7 @@ a configuration value for a specific tag.
 =cut
 
 sub tag_to_file {
-  return File::Spec->catfile(CCN,shift);
+  return File::Spec->catfile(CCNQ::CCN,shift);
 }
 
 # cookie resolution
@@ -117,17 +106,6 @@ use constant cookie_file => tag_to_file(cookie_tag);
 use constant::defer cookie => sub {
   get_variable(cookie_tag,cookie_file,sub{croak "No cookie file ".cookie_file." found"});
 };
-
-# Source path resolution
-
-=head2 SRC
-
-Returns the path of the shared directory as it is installed on the local machine.
-
-=cut
-
-use constant CCNQ_MAKEFILE_MODULE_NAME => 'CCNQ';
-use constant SRC => File::ShareDir::dist_dir(CCNQ_MAKEFILE_MODULE_NAME);
 
 # host_name and domain_name resolution
 
