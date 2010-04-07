@@ -214,11 +214,9 @@ SQL
   # b2bua/client-sbc-config/freeswitch/conf/autoload_configs/acl.client-sbc-config.conf.xml
   # to add your proxies' IP addresses.
 
-  cd ~/src/ccnq2.0
-  git pull
-
   # Install the updated modules
-  git pull && (cd common/perllib && perl Makefile.PL && make && make test && sudo make install)
+  (cd ~/src/ccnq2.0 && git pull)
+  (cd ~/src/ccnq2.0/common/perllib && perl Makefile.PL && make && make test && sudo make install)
 
   # Upgrade the configuration(s) as needed
   sudo ccnq2_upgrade
