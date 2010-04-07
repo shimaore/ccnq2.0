@@ -19,8 +19,7 @@ use CCNQ::Portal;
 use CCNQ::AE;
 
 sub db {
-  use AnyEvent::CouchDB;
-  return couchdb(CCNQ::Portal::portal_db);
+  return CCNQ::Portal::db;
 }
 
 # Class method: load an existing user from the database.

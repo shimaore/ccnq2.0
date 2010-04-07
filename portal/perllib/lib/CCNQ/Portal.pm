@@ -54,6 +54,11 @@ sub install {
   return CCNQ::CouchDB::install(portal_uri,portal_db,portal_designs);
 }
 
+sub db {
+  use AnyEvent::CouchDB;
+  return couch(portal_uri)->db(portal_db);
+}
+
 # Must be set by the startup code.
 our $site;
 
