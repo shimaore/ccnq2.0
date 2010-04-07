@@ -61,7 +61,10 @@ sub update {
   if( $user_id eq CCNQ::Portal->current_session->user->id ||
       CCNQ::Portal->current_session->user->profile->is_admin ) {
     # Name
-    $params->{name} = $untainter->extract(-as_printable=>'name');
+    $params->{name} = params->{name};
+    $params->{name} =~ s/^\s+//g;
+    $params->{name} =~ s/\s+$//g;
+    $params->{name} =~ s/\s+/ /g;
 
     # Email address
     my $email = $untainter->extract(-as_email=>'email');
