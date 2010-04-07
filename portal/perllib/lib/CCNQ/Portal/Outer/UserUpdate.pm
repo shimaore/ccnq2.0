@@ -28,11 +28,13 @@ sub retrieve {
   return unless $user->profile;
 
   var field => {
+    id                => $user->id,
     name              => $user->profile->name,
     email             => $user->profile->email,
     default_locale    => $user->profile->default_locale,
     portal_accounts   => join(' ',@{$user->profile->portal_accounts}),
-    is_admin          => $user->profile->portal_accounts,
+    is_admin          => $user->profile->is_admin,
+    is_sysadmin       => $user->profile->is_sysadmin,
     # XXX billing_accounts (via API)
     # XXX other billing/provisioning -side data
   };
@@ -42,7 +44,10 @@ sub update {
   my ($user_id) = @_;
 
   my $user = CCNQ::Portal::User->new($user_id);
-  return unless $user->profile;
+  unless($user->profile) {
+    var error => _('Unknown user')_;
+    return;
+  }
 
   my $untainter = CGI::Untaint->new(params);
 
@@ -55,7 +60,8 @@ sub update {
     return;
   }
 
-  if(CCNQ::Portal->current_session->user->profile->is_admin) {
+  if( $user_id eq CCNQ::Portal->current_session->user->id ||
+      CCNQ::Portal->current_session->user->profile->is_admin ) {
     # Name
     $params->{name} = $untainter->extract(-as_printable=>params->{name});
 
@@ -67,7 +73,9 @@ sub update {
       var error => _('Invalid email address')_;
       return;
     }
+  }
 
+  if( CCNQ::Portal->current_session->user->profile->is_admin ) {
     # Portal accounts
     my @portal_accounts = split(' ',params->{portal_accounts});
     # XX Check the accounts are valid accounts. (Requires API access.)
@@ -76,11 +84,15 @@ sub update {
     # XXX Billing accounts
   }
 
-  if(CCNQ::Portal->current_session->user->profile->is_sysadmin) {
+  if( CCNQ::Portal->current_session->user->profile->is_sysadmin ) {
     $params->{is_admin} = params->{is_admin};
   }
 
   $user->profile->update($params);
+
+  # Reset the session's locale to (potentially) use the new one.
+  CCNQ::Portal->current_session->force_locale()
+    if $user_id eq CCNQ::Portal->current_session->user->id;
 }
 
 get '/user_profile' => sub {

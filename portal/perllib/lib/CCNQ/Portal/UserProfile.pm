@@ -55,6 +55,8 @@ Valid fields are:
 * email - the user's email address
 * default_locale - the user's preferred locale
 * portal_accounts - list of accounts the user has access to
+* is_admin - whether the user is an administrator (tier-1)
+* is_sysadmin - whether the user is an administrator (tier-2/superuser)
 =cut
 
 sub update {
@@ -68,8 +70,6 @@ sub update {
   }
   my $cv = $self->db->save_doc($doc);
   CCNQ::AE::receive($cv);
-  # Reset the session's locale to (potentially) use the new one.
-  CCNQ::Portal->current_session->force_locale();
 }
 
 =pod
