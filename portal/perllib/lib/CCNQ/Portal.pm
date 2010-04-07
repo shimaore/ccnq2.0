@@ -33,8 +33,28 @@ use File::ShareDir;
 use constant CCNQ_PORTAL_MAKEFILE_MODULE_NAME => 'CCNQ-Portal';
 use constant SRC => File::ShareDir::dist_dir(CCNQ_PORTAL_MAKEFILE_MODULE_NAME);
 
-# XXX Need db install
+# CouchDB database
+# Note: the database is local, so only one server can be installed at this time.
+# XXX   (I need to figure out what's the best way to do this: one database, or replication.)
+use constant::defer portal_uri => sub {
+  use CCNQ::Install;
+  CCNQ::Install::couchdb_local_uri;
+};
+
 use constant portal_db => 'portal';
+
+use constant portal_designs => {
+  report => {
+    language => 'javascript',
+    views    => {
+    },
+  },
+};
+
+sub install {
+  use CCNQ::CouchDB;
+  return CCNQ::CouchDB::install(portal_uri,portal_db,portal_designs);
+}
 
 # Must be set by the startup code.
 our $site;

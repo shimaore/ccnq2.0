@@ -198,6 +198,7 @@ use constant roles_to_functions => {
   'aggregator'      => [qw( billing/aggregator node/api monit node )],
   # ...
   'mediaproxy-relay' => [qw( mediaproxy/relay mediaproxy monit node )],
+  'portal'          => [qw( node/api portal )],
 };
 
 # Service discovery
