@@ -7,7 +7,11 @@
     </p>
   </div>
 <% END %>
+<% IF session.user_id == field.id %>
+<form action="/user_profile" method="POST" class="ui-widget">
+<% ELSE %>
 <form action="/user_profile/<% field.id | uri %>" method="POST" class="ui-widget">
+<% END %>
   <p class="ui-helper-clearfix">
   <label for="name"><% | loc %>Name<% END %></label>
   <input type="text" name="name" value="<% field.name | html %>"  <% IF not is_admin %>readonly<% END %> />
