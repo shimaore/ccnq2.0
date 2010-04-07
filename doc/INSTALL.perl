@@ -87,6 +87,8 @@ sudo dpkg -i libmime-types-perl_*.deb
 
 # Use Dancer from git
 git clone git://github.com/sukria/Dancer.git && (cd Dancer && dh-make-perl --build)
+# Use Dancer::Session::Memcached from git
+git clone git://github.com/sukria/Dancer-Session-Memcached.git && (cd Dancer-Session-Memcached && dh-make-perl --build)
 
 dp Locale::Maketext::Lexicon
 dp CGI::Untaint

@@ -12,6 +12,7 @@ requires      'File::ShareDir'            => '1.01';
 requires      'File::Spec'                => 0; # '3.2501'
 
 requires      'Dancer'                    => '1.155'; # pre-1.160 github
+requires      'Dancer::Session::Memcached' => 0;
 requires      'Template'                  => 0;
 
 requires      'CGI::Untaint'              => 0;
