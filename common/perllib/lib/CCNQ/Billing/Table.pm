@@ -27,18 +27,20 @@ sub create {
   return $rcv;
 }
 
+use CCNQ::Billing;
+
 sub update_prefix {
   my ($params) = @_;
   my $name       = delete $params->{name};
   $params->{_id} = delete $params->{prefix};
-  return CCNQ::CouchDB::update_cv(billing_uri,$name,$params);
+  return CCNQ::CouchDB::update_cv(CCNQ::Billing::billing_uri,$name,$params);
 }
 
 sub delete_prefix {
   my ($params) = @_;
   my $name       = delete $params->{name};
   $params->{_id} = delete $params->{prefix};
-  return CCNQ::CouchDB::delete_cv(billing_uri,$name,$params);
+  return CCNQ::CouchDB::delete_cv(CCNQ::Billing::billing_uri,$name,$params);
 }
 
 'CCNQ::Billing::Table';
