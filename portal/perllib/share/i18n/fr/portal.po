@@ -79,3 +79,6 @@ msgstr "Compte(s) de facturation"
 
 msgid "Save"
 msgstr "Enregistrer"
+
+msgid "No account available"
+msgstr "Indisponible"
