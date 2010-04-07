@@ -68,8 +68,10 @@ sub update {
     if($email) {
       $params->{email} = $email->format;
     } else {
-      var error => _('Invalid email address')_;
-      return;
+      if(params->{email}) {
+        var error => _('Invalid email address')_;
+        return;
+      }
     }
   }
 
