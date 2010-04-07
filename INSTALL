@@ -84,10 +84,6 @@ EOT
   # Build the Perl modules and install them
   (cd ~/src/ccnq2.0/common/perllib && perl Makefile.PL && make && make test && sudo make install)
 
-  # On the web portal server, you should also do:
-  # (cd ~/src/ccnq2.0/portal/perllib && perl Makefile.PL && make && make test && sudo make install)
-  # .. but I haven't built the dependencies yet, so you should wait on that.
-
 # * On the API server:
 #
   # The API server is the one that pushes HTTP request into the XMPP bus.
@@ -106,14 +102,6 @@ EOT
   #    loglevel = error
   # to avoid filling the disk with log messages.
   sudo sed -i -e 's/^;level = .*$/level = error/' /etc/couchdb/local.ini
-
-# * On the Portal server(s):
-
-  sudo aptitude install memcached
-
-  # On the web portal server, you should also do:
-  # (cd ~/src/ccnq2.0/portal/perllib && perl Makefile.PL && make && make test && sudo make install)
-  # .. but I haven't built the dependencies yet, so you should wait on that.
 
 # * On the proxy servers:
 
@@ -258,6 +246,14 @@ SQL
   #
 
   vi /etc/group
+
+# * On the Portal server(s):
+
+  # On the web portal server, you should also do:
+  sudo aptitude install libtemplate-perl
+  (cd ~/src/ccnq2.0/portal/perllib && perl Makefile.PL && make && make test && sudo make install)
+
+  sudo aptitude install memcached
 
 # * If you intent to use the "sip-traces" API:
 

@@ -20,6 +20,7 @@ requires      'CGI::Untaint::email'       => 0;
 ## Portal requirements
 requires      'Locale::Maketext::Lexicon'     => 0;
 requires      'Lingua::EN::Numbers::Ordinate' => 0;
+requires      'Lingua::FR::Numbers'           => 0;
 requires      'Lingua::FR::Numbers::Ordinate' => 0;
 ## Proxy requirements
 # requires      'DBI' => 0;

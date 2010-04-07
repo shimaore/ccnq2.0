@@ -15,62 +15,97 @@ sudo cpan AnyEvent::HTTP CouchDB::View AnyEvent::CouchDB
 sudo cpan Async::Interrupt EV Guard JSON JSON::XS Net::SSLeay
 
 # ------ Equivalent (on your build server): ------------
-alias dh='dh-make-perl --build --cpan '
+alias dp='dh-make-perl --build --cpan '
 
-dh common-sense
+dp common-sense
 sudo dpkg -i libcommon-sense-perl_*.deb
-dh EV
+dp EV
 
-dh Params::Util
+dp Params::Util
 sudo dpkg -i libparams-util-perl_*.deb
-dh Class::Inspector
+dp Class::Inspector
 sudo dpkg -i libclass-inspector-perl_*.deb
-dh File::ShareDir
+dp File::ShareDir
+sudo dpkg -i libfile-sharedir-perl_*.deb # Needed to compile Plack later
 
-dh XML::Parser::Expat
+dp XML::Parser::Expat
 sudo dpkg -i libxml-parser-perl_*.deb
-dh AnyEvent
+dp AnyEvent
 sudo dpkg -i libanyevent-perl_*.deb
-dh Digest::SHA1
+dp Digest::SHA1
 sudo dpkg -i libdigest-sha1-perl_*.deb
-dh Object::Event
+dp Object::Event
 sudo dpkg -i libobject-event-perl_*.deb
-dh Authen::SASL
+dp Authen::SASL
 sudo dpkg -i libauthen-sasl-perl_*.deb
-dh Net::LibIDN
+dp Net::LibIDN
 # (fails)
 (cd Net-LibIDN-* && dpkg-buildpackage)
 sudo dpkg -i libnet-libidn-perl_*.deb
-dh XML::Writer
+dp XML::Writer
 sudo dpkg -i libxml-writer-perl_*.deb
-dh AnyEvent::XMPP
+dp AnyEvent::XMPP
 
-dh AnyEvent::WatchDog
-dh constant::defer
+dp AnyEvent::WatchDog
+dp constant::defer
 
 # Note: this is not good. I should write better test plans.
-dh-make-perl --build --core-ok --cpan Test::More
+dp-make-perl --build --core-ok --cpan Test::More
 
-dh AnyEvent::DBI
+dp AnyEvent::DBI
 
-dh AnyEvent::HTTP
+dp AnyEvent::HTTP
 sudo dpkg -i libanyevent-http-perl_*.deb
 
-dh PadWalker
+dp PadWalker
 sudo dpkg -i libpadwalker-perl_*.deb
-dh CouchDB::View
+dp CouchDB::View
 sudo dpkg -i libcouchdb-view-perl_*.deb
-dh IO::String
+dp IO::String
 sudo dpkg -i libio-string-perl_*.deb
-dh IO::All
+dp IO::All
 sudo dpkg -i libio-all-perl_*.deb
-dh AnyEvent::CouchDB
-dh Async::Interrupt
-dh Guard
+dp AnyEvent::CouchDB
+dp Async::Interrupt
+dp Guard
 
 # For the portal
-dh String::CRC32
+dp String::CRC32
 sudo dpkg -i libstring-crc32-perl_*.deb
-dh Cache::Memcached
+dp Cache::Memcached
+
+dp HTTP::Server::Simple
+sudo dpkg -i libhttp-server-simple-perl_*.deb
+dp HTTP::Server::Simple::PSGI
+sudo dpkg -i libhttp-server-simple-psgi-perl_*.deb
+dp URI
+sudo dpkg -i liburi-perl_*.deb
+dp HTTP::Body
+sudo dpkg -i libhttp-body-perl_*.deb
+dp MIME::Types
+sudo dpkg -i libmime-types-perl_*.deb
+
+# Use Dancer from git
+git clone git://github.com/sukria/Dancer.git && (cd Dancer && dh-make-perl --build)
+
+dp Locale::Maketext::Lexicon
+dp CGI::Untaint
+sudo dpkg -i libcgi-untaint-perl_*.deb
+dp Digest::HMAC_MD5
+sudo dpkg -i libdigest-hmac-perl_*.deb
+dp Net::IP
+sudo dpkg -i libnet-ip-perl*.deb
+dp Net::DNS
+sudo dpkg -i libnet-dns-perl_*.deb
+dp Email::Valid
+sudo dpkg -i libemail-valid-perl_*.deb
+dp Mail::Address
+sudo dpkg -i libmailtools-perl_*.deb
+dp CGI::Untaint::email
+dp Crypt::CBC
+dp Crypt::Rijndael
+dp Lingua::EN::Numbers::Ordinate
+dp Lingua::FR::Numbers
+# dp Lingua::FR::Numbers::Ordinate
 
 # We provide pre-built archives for AMD64 architecture, see INSTALL.

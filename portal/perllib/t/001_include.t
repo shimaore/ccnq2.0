@@ -38,12 +38,12 @@ require_ok( 'CCNQ::Portal::Auth::CouchDB' );
 
 require_ok( 'CCNQ::Portal::Outer::AccountSelection' );
 require_ok( 'CCNQ::Portal::Outer::LocaleSelection' );
-require_ok( 'CCNQ::Portal::Outer::MenuGenerator' );
-require_ok( 'CCNQ::Portal::Outer::Menus' );
 require_ok( 'CCNQ::Portal::Outer::UserAuthentication' );
 require_ok( 'CCNQ::Portal::Outer::UserRegistration' );
 require_ok( 'CCNQ::Portal::Outer::UserUpdate' );
 require_ok( 'CCNQ::Portal::Outer::Widget' );
+
+require_ok( 'CCNQ::Portal::Inner::billing_plan' );
 
 require_ok( 'CCNQ::Portal::Template::Plugin::loc' );
 
