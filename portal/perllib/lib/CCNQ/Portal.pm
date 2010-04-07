@@ -34,7 +34,7 @@ use constant CCNQ_PORTAL_MAKEFILE_MODULE_NAME => 'CCNQ-Portal';
 use constant SRC => File::ShareDir::dist_dir(CCNQ_PORTAL_MAKEFILE_MODULE_NAME);
 
 # CouchDB database
-use constant::defer cdr_uri => sub {
+use constant::defer portal_uri => sub {
   use CCNQ::Install;
   CCNQ::Install::make_couchdb_uri_from_server(CCNQ::Install::cluster_fqdn('portal-db'))
 };
