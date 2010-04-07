@@ -25,7 +25,6 @@ sub retrieve {
   my ($user_id) = @_;
 
   my $user = CCNQ::Portal::User->new($user_id);
-  return unless $user->profile;
 
   var field => {
     id                => $user->id,
@@ -44,20 +43,19 @@ sub update {
   my ($user_id) = @_;
 
   my $user = CCNQ::Portal::User->new($user_id);
-  unless($user->profile) {
-    var error => _('Unknown user')_;
-    return;
-  }
 
   my $untainter = CGI::Untaint->new(params);
 
   my $params = {
     default_locale => params->{default_locale} || '',
   };
-  # XXX Replace with a global list of supported languages.
-  unless(grep { $params->{default_locale} eq $_} qw( en fr )) {
-    var error => _('Invalid language')_;
-    return;
+
+  if(defined(params->{default_locale}) && params->{default_locale} ne '') {
+    # XXX Replace with a global list of supported languages.
+    unless( grep { $params->{default_locale} eq $_} qw( en fr ) ) {
+      var error => _('Invalid language')_;
+      return;
+    }
   }
 
   if( $user_id eq CCNQ::Portal->current_session->user->id ||

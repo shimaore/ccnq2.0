@@ -1,4 +1,12 @@
 <% USE loc %>
+<% IF error %>
+  <div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;">
+    <p>
+    <span style="float: left; margin-right: 0.3em;" class="ui-icon ui-icon-alert"></span>
+    <% error | loc %>
+    </p>
+  </div>
+<% END %>
 <form action="/user_profile/<% field.id | uri %>" method="POST" class="ui-widget">
   <p class="ui-helper-clearfix">
   <label for="name"><% | loc %>Name<% END %></label>
