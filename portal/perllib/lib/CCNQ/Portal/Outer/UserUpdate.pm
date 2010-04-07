@@ -21,6 +21,8 @@ use CCNQ::Portal::I18N;
 
 use CGI::Untaint;
 
+use Encode;
+
 sub retrieve {
   my ($user_id) = @_;
 
@@ -61,7 +63,7 @@ sub update {
   if( $user_id eq CCNQ::Portal->current_session->user->id ||
       CCNQ::Portal->current_session->user->profile->is_admin ) {
     # Name
-    $params->{name} = params->{name};
+    $params->{name} = Encode::decode_utf8(params->{name});
     $params->{name} =~ s/^\s+//g;
     $params->{name} =~ s/\s+$//g;
     $params->{name} =~ s/\s+/ /g;
@@ -88,7 +90,7 @@ sub update {
   }
 
   if( CCNQ::Portal->current_session->user->profile->is_sysadmin ) {
-    $params->{is_admin} = params->{is_admin};
+    $params->{is_admin} = params->{is_admin} ? 1 : 0;
   }
 
   $user->profile->update($params);
