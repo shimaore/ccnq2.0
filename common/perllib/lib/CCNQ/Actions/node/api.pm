@@ -32,6 +32,8 @@ use CCNQ::HTTPD;
 use JSON;
 use Logger::Syslog;
 use Carp;
+use CCNQ::Install;
+use CCNQ::API;
 
 use CCNQ::XMPPAgent;
 
@@ -77,8 +79,8 @@ sub _session_ready {
   my $manager_muc_room = CCNQ::Install::manager_cluster_jid;
   CCNQ::XMPPAgent::_join_room($context,$manager_muc_room);
 
-  my $host = CCNQ::Install::api_rendezvous_host;
-  my $port = CCNQ::Install::api_rendezvous_port;
+  my $host = CCNQ::API::api_rendezvous_host;
+  my $port = CCNQ::API::api_rendezvous_port;
   info("node/api: Starting web API on ${host}:${port}");
   $context->{httpd} = CCNQ::HTTPD->new (
     host => $host,

@@ -7,8 +7,8 @@ The code for the API service is located in ${SRC}/node/api/actions .
 
 The API service is located at a "well-known" contact point specified as
 
-  CCNQ::Install::api_rendezvous_host      '127.0.0.1'
-  CCNQ::Install::api_rendezvous_port      9090
+  CCNQ::API::api_rendezvous_host      '127.0.0.1'
+  CCNQ::API::api_rendezvous_port      9090
 
 Note that the API service is therefor normally not reachable from
 outside an "api"-type node, which is why "api" and "portal" types

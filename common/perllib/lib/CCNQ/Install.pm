@@ -249,9 +249,6 @@ sub resolve_roles_and_functions {
   }
 }
 
-use constant api_rendezvous_host => '127.0.0.1';
-use constant api_rendezvous_port => 9090;
-
 use constant realtime_estimator_rendezvous_host => '127.0.0.1';
 use constant realtime_estimator_rendezvous_port => 7070;
 
