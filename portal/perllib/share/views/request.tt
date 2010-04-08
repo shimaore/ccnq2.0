@@ -1,0 +1,36 @@
+<% USE loc %>
+<div class="request">
+<% FOREACH row IN result.rows %>
+  <% SET r = row.doc %>
+  <% IF r.status %>
+  <div class="status <% r.status %>">Node <% r.response.from %>: <% r.status %> [<% r.response.error.join(", ") %>]</div>
+    <% IF r.action == "trace" && r.response.result.rows %>
+      <% FOREACH s IN r.response.result.rows %>
+        <div class="sniffer">
+          <span class="sniffer timestamp"><% s('frame.time') | html %></span>
+          <span class="sniffer callid"><a href="...">Call-ID: <% s('sip.Call-ID') | html %></a></span><br/>
+          <span class="sniffer ip"><% s('ip.src') | html %> &rarr; <% s('ip.dst') %></span>
+          <span class="sniffer method"><% s('sip.Method') | html %></span>).
+          <span class="sniffer status"><% s('sip.Status-Code') |html %></span><br/>
+          <span class="sniffer from_addr">From: <% s('sip.From') | html %></span>
+          <span class="sniffer to_addr">To: <% s('sip.To') | html %></span>
+        </div>
+      <% END %>
+    <% ELSE %>
+      <% FOREACH s IN r.response.result.rows %>
+      <table class="entries">
+        <% FOREACH u IN s %>
+          <tr><th class="entries"><% u.key | loc %></th><td><% u.value | html %></td></tr>
+        <% END %>
+      <% END %>
+    <% END %>
+  <% ELSE %>
+    <div class="activity rank<% r.activity_rank %>">Activity <% r.activity_rank %>: <% r.action | loc %></div>
+    <% IF r.request %>
+      <div class="request">Request ID <% r.request | html %></div>
+    <% ELSE %>
+      <div class="request">Request pending</div>
+    <% END %>
+  <% END %>
+<% END %>
+</div>
