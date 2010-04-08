@@ -20,6 +20,8 @@ use CCNQ::Portal::Outer::UserUpdate;
 use CCNQ::Portal::Outer::LocaleSelection;
 
 use CCNQ::Portal::Inner::billing_plan;
+use CCNQ::Portal::Inner::provisioning;
+use CCNQ::Portal::Inner::request;
 
 # Create the site instance used by the server.
 
