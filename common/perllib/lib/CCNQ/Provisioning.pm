@@ -22,15 +22,25 @@ use constant::defer provisioning_uri => sub {
 };
 use constant provisioning_db => 'provisioning';
 
+use constant js_report_by_account => <<'JAVASCRIPT';
+  function(doc) {
+    emit([doc.account,doc.account_sub,doc.type,doc._id],null);
+  }
+JAVASCRIPT
+
 use constant provisioning_designs => {
   report => {
     language => 'javascript',
     views    => {
+      account => {
+        map => js_report_by_account,
+        # no reduce function
+      },
     },
   },
 };
 
-use AnyEvent;
+use CCNQ::AE;
 use CCNQ::CouchDB;
 
 sub install {
@@ -39,6 +49,7 @@ sub install {
 
 sub update {
   my ($params) = @_;
+  return CCNQ::AE::croak_cv("No type specified") unless exists $params->{type};
   return CCNQ::CouchDB::update_cv(provisioning_uri,provisioning_db,$params);
 }
 

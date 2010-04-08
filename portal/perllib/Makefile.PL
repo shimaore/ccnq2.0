@@ -15,6 +15,8 @@ requires      'Dancer'                    => '1.155'; # pre-1.160 github
 requires      'Dancer::Session::Memcached' => 0;
 requires      'Template'                  => 0;
 
+requires      'MIME::Base64'              => 0;
+
 requires      'CGI::Untaint'              => 0;
 requires      'CGI::Untaint::email'       => 0;
 
