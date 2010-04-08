@@ -20,8 +20,12 @@ use CCNQ::Portal;
 use CCNQ::Portal::I18N;
 
 get '/api/billing_plan' => sub {
+  return unless CCNQ::Portal->current_session->user;
+  return unless CCNQ::Portal->current_session->user->profile->is_admin;
   var template_name => 'api/billing_plan';
   return CCNQ::Portal->site->default_content->();
 };
+
+# XXX post ...
 
 'CCNQ::Portal::Inner::billing_plan';
