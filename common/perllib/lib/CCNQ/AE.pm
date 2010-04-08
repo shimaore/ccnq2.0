@@ -74,4 +74,10 @@ sub receive {
   return $result;
 }
 
+sub croak_cv {
+  my $cv = AE::cv;
+  $cv->croak(@_);
+  return $cv;
+}
+
 'CCNQ::AE';
