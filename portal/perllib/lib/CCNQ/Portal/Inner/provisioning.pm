@@ -55,7 +55,7 @@ get '/provisioning/:view/*' => sub {
   my $id = splat;
 
   my $cv = AE::cv;
-  CCNQ::API::provisioning_query($view,@$path,$cv);
+  CCNQ::API::provisioning_query($view,$id,$cv);
   var result => $cv->recv;
   return CCNQ::Portal->site->default_content->();
 };
