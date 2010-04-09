@@ -49,4 +49,4 @@ get '/request/:request_id' => sub {
   }
 };
 
-'CCNQ::Portal::Inner::billing_plan';
+'CCNQ::Portal::Inner::request';
