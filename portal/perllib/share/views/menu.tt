@@ -9,4 +9,7 @@
   <% IF session.user_id %>
   <li><a href="/user_profile"><% | loc %>User Profile<% END %></a></li>
   <% END %>
+  <% IF session.account %>
+  <li><a href="/provisioning/account"><% | loc %>Provisioning<% END %></a></li>
+  <% END %>
 </ul>
