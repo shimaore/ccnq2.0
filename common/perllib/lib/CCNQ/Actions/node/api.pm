@@ -112,7 +112,8 @@ sub _session_ready {
       my $path = $url->path;
 
       if($path =~ m{^/api/(\w+)/([\w-]+)$}) {
-        $body->{params}->{action} = $1;
+        $body->{params}->{type} = $1;   # request type
+        $body->{params}->{action} = $1; # actual request action (completed below)
         $body->{params}->{cluster_name} = $2;
       } else {
         $req->respond([404,'Invalid request']);

@@ -17,14 +17,18 @@ use strict; use warnings;
 
 use constant PROVISIONING_CLUSTER_NAME => 'provisioning';
 
+use Carp;
+
 sub update {
   my $request = shift;
 
   # XXX Proper failure mode inside Manager::Request..?
-  return unless
-    defined $request->{account} &&
-    defined $request->{account_sub} &&
-    defined $request->{type};
+  croak "No account" unless
+    defined $request->{account};
+  croak "No account_sub" unless
+    defined $request->{account_sub};
+  croak "No request type" unless
+    defined $request->{type}; # normally auto-populated by node/api
 
   # Return list of activities required to complete this request.
   return (
