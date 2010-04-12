@@ -244,7 +244,7 @@ sub _session_ready {
           $body->{action} = 'retrieve';
         } elsif ($req->method eq 'PUT') {
           $body->{action} = 'update';
-          $body->{code} = $req->vars->{code};
+          $body->{code} = $req->parm('code');
         } elsif ($req->method eq 'DELETE') {
           $body->{action} = 'delete';
         }
