@@ -13,6 +13,7 @@ package CCNQ::Manager::Requests::route_did_update;
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+use strict; use warnings;
 
 use CCNQ::Activities::Proxy;
 use CCNQ::Activities::Provisioning;
@@ -25,9 +26,9 @@ sub run {
   return (
 
     # Parameters:
-    #   number
     #   account
     #   account_sub
+    #   number
     #   endpoint
 
     # treatment_type      (e.g.  'usa-cnam')
@@ -37,14 +38,25 @@ sub run {
     # customer_proxy_name (e.g. 'wholesale-proxy')
 
     # 1. Save the entire request in the provisioning database
-    CCNQ::Activities::Provisioning::update( {
-      _id => 'number/'.$request->{number},
-      type => 'route_did',
-      description => 'Direct customer number routing',
-      %{$request}
+    CCNQ::Activities::Provisioning::update_number($request),
+
+    # 2. Route the DID back into the system (onnet-onnet) using the loop on the outbound-proxy
+    # (do this one early so that we bill for the first day as soon as service is available).
+    CCNQ::Activities::Proxy::dr_gateway_update( {
+      cluster_name => $request->{outbound_proxy_name},
+      id => '1000',
+      target => CCNQ::Install::cluster_fqdn($request->{inbound_proxy_name})
+    } ),
+    CCNQ::Activities::Proxy::dr_rule_update( {
+      cluster_name => $request->{outbound_proxy_name},
+      outbound_route => 0,
+      description => ["Loop for [_1]",$request->{number}],
+      prefix => $request->{number},
+      priority => 1,
+      target => '1000',
     } ),
 
-    # 2. Route the inbound DID through the inbound-proxy
+    # 3. Route the inbound DID through the inbound-proxy
     CCNQ::Activities::Proxy::local_number_update( {
         %{$request},
         cluster_name => $request->{inbound_proxy_name},
@@ -53,7 +65,7 @@ sub run {
         username_domain => CCNQ::Install::cluster_fqdn($request->{inbound_proxy_name}),
     } ),
 
-    # 3. Route the inbound DID through the customer-side proxy
+    # 4. Route the inbound DID through the customer-side proxy
     CCNQ::Activities::Proxy::local_number_update ( {
       %{$request},
       cluster_name => $request->{customer_proxy_name},
@@ -63,35 +75,8 @@ sub run {
       username_domain => CCNQ::Install::cluster_fqdn('ingress-proxy',$request->{customer_sbc_name}),
     } ),
 
-    # 4. Route the DID back into the system (onnet-onnet) using the loop on the outbound-proxy
-    CCNQ::Activities::Proxy::dr_gateway_update( {
-      cluster_name => $request->{outbound_proxy_name},
-      id => '1000',
-      target => CCNQ::Install::cluster_fqdn($request->{inbound_proxy_name})
-    } ),
-    CCNQ::Activities::Proxy::dr_rule_update( {
-      cluster_name => $request->{outbound_proxy_name},
-      outbound_route => 0,
-      description => "Loop for $request->{number}",
-      prefix => $request->{number},
-      priority => 1,
-      target => '1000',
-    } ),
-
-    # 6. Add billing entry for the day of creation
-    {
-      action => 'billing_entry',
-      cluster_name => 'billing',
-      params => {
-        start_date => today_YYMMDD,
-        start_time => today_HHMMSS,
-        timestamp  => today_utctime,
-        account => $request->{account},
-        account_sub => $request->{account_sub},
-        event_type => CCNQ::Rating::Event::EVENT_TYPE_ROUTE_DID,
-        event_description => "Usage $request->{number}",
-      }
-    },
+    # 5. Add billing entry for the day of creation
+    CCNQ::Activities::Billing::partial_day($request,'route_did'),
 
   );
 }
