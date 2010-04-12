@@ -28,6 +28,18 @@ Display the request.
 
 use MIME::Base64;
 
+get '/manager' => sub {
+  return unless CCNQ::Portal->current_session->user;
+  var template_name => 'manager_request_list';
+
+  my $cv = AE::cv;
+  CCNQ::API::manager_query(undef,$cv);
+  my $res = $cv->recv;
+
+  var result => $res;
+  return CCNQ::Portal->site->default_content->();
+};
+
 get '/manager/:request_type' => sub {
   return unless CCNQ::Portal->current_session->user;
   var template_name => 'manager_request';

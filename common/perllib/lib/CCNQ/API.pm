@@ -93,7 +93,11 @@ sub _manager {
   my $cb = pop;
   my ($method,$request_type,$code) = @_;
   my $uri = api_uri();
-  $uri->path_segments('manager',$request_type);
+  if(defined($request_type)) {
+    $uri->path_segments('manager',$request_type);
+  } else {
+    $uri->path_segments('manager');  # view
+  }
   $uri->query_form({code => $code});
   http_request $method => $uri->as_string, _api_cb($cb);
 }

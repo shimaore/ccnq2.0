@@ -234,34 +234,43 @@ sub _session_ready {
     '/manager' => sub {
       my ($httpd, $req) = @_;
 
-      debug("node/api: Processing web manager mapping request");
+      debug("node/api: Processing manager mapping request");
       my $body = {
         activity => 'manager/'.rand(),
-        action => 'manager', # ran by the 'manager'
-        params => {
-          $req->vars
-        },
+        params => {},
       };
+
+      if($req->method eq 'GET') {
+        $body->{params}->{action} = 'retrieve';
+      } elsif ($req->method eq 'PUT') {
+        $body->{params}->{action} = 'update';
+      } elsif ($req->method eq 'DELETE') {
+        $body->{params}->{action} = 'delete';
+      }
 
       use URI;
       my $url = URI->new($req->url);
       my $path = $url->path;
 
       if($path =~ m{^/manager/([\w-]+)$}) {
+        # Retrieve / update / delete one
         $body->{params}->{_id} = $1;   # request type
+      } else
+      if($path =~ m{^/manager$}) {
+        # List all
+        $body->{params}->{action} = 'view';
+        $body->{params}->{_id}    = [];
+        $body->{params}->{view}   = '_all_docs';
+        if($req->method eq 'GET') {
+          $body->{params}->{action} = 'retrieve';
+        }
       } else {
         $req->respond([404,'Invalid request']);
         $httpd->stop_request;
         return;
       }
 
-      if($req->method eq 'GET') {
-        $body->{params}->{action} .= '_query';
-      } elsif ($req->method eq 'PUT') {
-        $body->{params}->{action} .= '_update';
-      } elsif ($req->method eq 'DELETE') {
-        $body->{params}->{action} .= '_delete';
-      } else {
+      if(! defined($body->{params}->{action})) {
         $req->respond([501,'Invalid method']);
         $httpd->stop_request;
         return;

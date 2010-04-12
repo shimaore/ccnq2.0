@@ -64,4 +64,13 @@ sub retrieve {
   );
 }
 
+sub view {
+  my ($params) = @_;
+  return CCNQ::CouchDB::view_cv(
+    CCNQ::Manager::manager_uri,
+    CCNQ::Manager::manager_codestore_db,
+    $params
+  );
+}
+
 'CCNQ::Manager::CodeStore';

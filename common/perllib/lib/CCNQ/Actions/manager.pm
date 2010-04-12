@@ -211,4 +211,9 @@ sub retrieve {
   return CCNQ::Manager::CodeStore::retrieve($params);
 }
 
+sub view {
+  my ($params,$context) = @_;
+  return CCNQ::Manager::CodeStore::view($params);
+}
+
 'CCNQ::Actions::manager';
