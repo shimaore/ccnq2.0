@@ -111,4 +111,55 @@ sub view {
   return CCNQ::CouchDB::view_cv(provisioning_uri,provisioning_db,$params);
 }
 
+=pod
+
+This document specifies minimum record layout for data stored in the
+provisioning database.
+
+Generally speaking, records in the provisioning database should contain
+full requests as received by the application's business logic.
+
+Note: The manager/request associated with base CCNQ::Proxy::$action will eventually disappear since they are redundant.
+
+** Records
+
+The following fields are common (so that we can build views):
+
+  _id: $profile/$$profile
+  account: $account_id
+  account_sub: $account_sub_id
+  type: $request_type
+    indicates that this record can be re-submitted via manager-request "$type".
+    (auto-populated by node/api)
+  profile: $profile
+    one of "number", "endpoint", "location"
+  $profile: $id
+    for $profile "number", $id should be a full qualified phone number (E.164 without "+" sign)
+    for $profile "endpoint", $id should be a unique endpoint identifier
+    for $profile "location", $id should be a unique location identifier (e.g. main number)
+
+* "number" profile:
+
+  Allows to re-create the complete routing (in & out) for a given number.
+  Includes mapping the number to a customer endpoint.
+
+* "endpoint" profile:
+
+  Allows to re-create a customer endpoint.
+  Including mapping it to location information.
+
+* "location" profile:
+
+  Provides information about a customer location, used especially for emergency location.
+
+** Views
+
+The node/api interface (for access to provisioning views) prepends the $account_id to
+the list of parameters for the view. Therefor most views (and all views used by the node/api
+"/provisioning" interface) will return keys that start with the $account_id.
+(This is done so that the portal behavior, which asks to select an account for most operations,
+is consistent.)
+
+=cut
+
 1;
