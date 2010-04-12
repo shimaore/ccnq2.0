@@ -45,16 +45,17 @@ sub _api_cb {
   return sub {
     my ($body, $hdr) = @_;
     if($hdr->{Status} =~ /^2/) {
-      my $json = eval { decode_json($body) };
-      if($@) {
-        error("decode_json($body): $@");
-        $cb->();
-      } else {
-        $cb->($json);
+      if($body) {
+        my $json = eval { decode_json($body) };
+        if($@) {
+          error("decode_json($body): $@");
+        } else {
+          $cb->($json);
+          return;
+        }
       }
-    } else {
-      $cb->();
     }
+    $cb->();
   };
 }
 
