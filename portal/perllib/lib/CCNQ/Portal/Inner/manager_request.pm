@@ -40,7 +40,7 @@ get '/manager' => sub {
   return CCNQ::Portal->site->default_content->();
 };
 
-put '/manager' => sub {
+post '/manager' => sub {
   return unless CCNQ::Portal->current_session->user;
   var template_name => 'manager_request';
   return CCNQ::Portal->site->default_content->();
@@ -59,7 +59,7 @@ get '/manager/:request_type' => sub {
   return CCNQ::Portal->site->default_content->();
 };
 
-put '/manager/:request_type' => sub {
+post '/manager/:request_type' => sub {
   return unless CCNQ::Portal->current_session->user;
   var template_name => 'manager_request';
   my $request_type = params->{request_type};
