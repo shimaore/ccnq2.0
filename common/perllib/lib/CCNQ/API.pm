@@ -89,4 +89,17 @@ sub provisioning_query {
   http_request GET => $uri->as_string, _api_cb($cb);  
 }
 
+sub _manager {
+  my $cb = pop;
+  my ($method,$request_type,$code) = @_;
+  my $uri = api_uri();
+  $uri->path_segments('manager',$request_type);
+  $uri->query_form({code => $code});
+  http_request $method => $uri->as_string, _api_cb($cb);
+}
+
+sub manager_query  { _manager('GET',@_) }
+sub manager_update { _manager('PUT',@_) }
+sub manager_delete { _manager('DELETE',@_) }
+
 'CCNQ::API';

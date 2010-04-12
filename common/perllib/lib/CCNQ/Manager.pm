@@ -55,8 +55,20 @@ use constant manager_designs => {
   # Other designs here
 };
 
-sub install {
+use AnyEvent;
+
+sub _install {
   return CCNQ::CouchDB::install(manager_uri,manager_db,manager_designs);
+}
+
+sub install {
+  my $rcv = AE::cv;
+  _install()->cb(sub{shift->recv;
+    CCNQ::Manager::CodeStore::install()->cb(sub{shift->recv;
+      $rcv->send;
+    });
+  });
+  return $rcv;
 }
 
 sub get_request_status {
@@ -66,9 +78,6 @@ sub get_request_status {
     _id  => [$request_id],
   });
 }
-
-use constant::defer manager_requests_dir =>
-  sub { File::Spec->catfile(CCNQ::SRC,qw( manager requests )) };
 
 =pod
 
@@ -84,8 +93,9 @@ use constant::defer manager_requests_dir =>
 
 use CCNQ::CouchDB::CodeStore;
 
+use constant manager_codestore_db => 'manager-codestore';
 use constant::defer manager_code_store =>
-  sub { CCNQ::CouchDB::CodeStore->new(manager_uri,manager_db) };
+  sub { CCNQ::CouchDB::CodeStore->new(manager_uri,manager_codestore_db) };
 
 sub request_to_activity {
   my ($request_type) = @_;

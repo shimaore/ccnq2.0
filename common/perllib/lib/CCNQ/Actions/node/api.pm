@@ -231,6 +231,53 @@ sub _session_ready {
       $httpd->stop_request;
     },
 
+    '/manager' => sub {
+      my ($httpd, $req) = @_;
+
+      debug("node/api: Processing web manager mapping request");
+      my $body = {
+        activity => 'manager/'.rand(),
+        action => 'manager', # ran by the 'manager'
+        params => {
+          $req->vars
+        },
+      };
+
+      use URI;
+      my $url = URI->new($req->url);
+      my $path = $url->path;
+
+      if($path =~ m{^/manager/([\w-]+)$}) {
+        $body->{params}->{_id} = $1;   # request type
+      } else {
+        $req->respond([404,'Invalid request']);
+        $httpd->stop_request;
+        return;
+      }
+
+      if($req->method eq 'GET') {
+        $body->{params}->{action} .= '_query';
+      } elsif ($req->method eq 'PUT') {
+        $body->{params}->{action} .= '_update';
+      } elsif ($req->method eq 'DELETE') {
+        $body->{params}->{action} .= '_delete';
+      } else {
+        $req->respond([501,'Invalid method']);
+        $httpd->stop_request;
+        return;
+      }
+
+      debug("node/api: Contacting $manager_muc_room");
+      my $r = CCNQ::XMPPAgent::send_muc_message($context,$manager_muc_room,$body);
+      if($r->[0] ne 'ok') {
+        $req->respond([500,$r->[1]]);
+      } else {
+        # Callback is used inside the _response handler.
+        $context->{api_callback}->{$body->{activity}} = _build_response_handler($req);
+      }
+      $httpd->stop_request;
+    },
+
   );
   return;
 }

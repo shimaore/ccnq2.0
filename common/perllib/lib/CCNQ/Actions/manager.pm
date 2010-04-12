@@ -194,4 +194,21 @@ sub get_request_status {
   return CCNQ::Manager::get_request_status($params->{params}->{request_id});
 }
 
+use CCNQ::Manager::CodeStore;
+
+sub update {
+  my ($params,$context) = @_;
+  return CCNQ::Manager::CodeStore::update($params);
+}
+
+sub delete {
+  my ($params,$context) = @_;
+  return CCNQ::Manager::CodeStore::delete($params);
+}
+
+sub retrieve {
+  my ($params,$context) = @_;
+  return CCNQ::Manager::CodeStore::retrieve($params);
+}
+
 'CCNQ::Actions::manager';
