@@ -100,6 +100,12 @@ sub retrieve {
   return CCNQ::CouchDB::retrieve_cv(provisioning_uri,provisioning_db,$params);
 }
 
+=pod
+Note: in CCNQ::Portal::Inner::Provisioning we prepend the account ID,
+      so most provisioning views will need to return the account ID as
+      their first key.
+=cut
+
 sub view {
   my ($params) = @_;
   return CCNQ::CouchDB::view_cv(provisioning_uri,provisioning_db,$params);

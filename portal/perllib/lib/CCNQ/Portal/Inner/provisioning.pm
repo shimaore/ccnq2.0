@@ -53,6 +53,7 @@ get '/provisioning/:view/*' => sub {
   var template_name => 'provisioning';
   my $view = params->{view};
   my $id = splat;
+  unshift @$id, session('account');
 
   my $cv = AE::cv;
   CCNQ::API::provisioning_query($view,$id,$cv);

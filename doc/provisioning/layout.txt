@@ -33,5 +33,8 @@ The following fields are common (so that we can build views):
 
 ** Views
 
-  type: $type    --- indicates that this record can be re-submitted via manager-request "$type".
-  description: $description  -- plain text description of the type of routing entry
+The node/api interface (for access to provisioning views) prepends the $account_id to
+the list of parameters for the view. Therefor most views (and all views used by the node/api
+"/provisioning" interface) will return keys that start with the $account_id.
+(This is done so that the portal behavior, which asks to select an account for most operations,
+is consistent.)
