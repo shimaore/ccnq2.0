@@ -19,5 +19,5 @@ cdr
   - can be distributed
 
 bucket
-  - must be unique
   - store values (but not meta-data) for buckets
+  - must be unique
