@@ -202,14 +202,17 @@ sub view_cv {
   # Return a CouchDB record, or a set of records
   my $couch = couch($uri);
   my $couch_db = $couch->db($db_name);
-  $couch_db->view(
-    $params->{view},
-    {
-      startkey => [@key_prefix],
-      endkey   => [@key_prefix,{}],
-      include_docs => "true",
-    }
-  )->cb(sub{
+  my $options = {
+    startkey     => [@key_prefix],
+    endkey       => [@key_prefix,{}],
+    include_docs => "true",
+  };
+
+  my $view = $params->{view} eq '_all_docs' ?
+      $couch_db->all_docs($options) :
+      $couch_db->view($params->{view},$options);
+
+  $view->cb(sub{
     my $view = CCNQ::AE::receive(@_);
     if(!$view) {
       debug("Document ".join(',',@key_prefix)." not found.");
