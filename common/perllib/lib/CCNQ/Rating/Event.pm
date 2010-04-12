@@ -72,7 +72,7 @@ Common Billing Element Format (CBEF)
 * account               (opaque account number)
 * account_sub           (opaque sub account, e.g. SIP trunk ID)
 * event_type            (opaque event type; the "element rates and conditions" DB will provide information on how to handle it)
-  event_description     (plain-text description of the event that caused the Element to be created)
+  event_description     (plain-text description of the event that caused the Element to be created) [deprecated]
   request_uuid          (uuid of the Request that created the Element)
 
     For all events we collect an event count:
