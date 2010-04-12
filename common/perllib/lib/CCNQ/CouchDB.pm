@@ -46,6 +46,12 @@ sub install {
   my $db = $couch->db($db_name);
 
   my $install_designs = sub {
+    # No designs
+    if(! %$designs) {
+      $rcv->send();
+      return;
+    }
+    # Some designs
     while( my ($design_name,$design_content) = each %{$designs} ) {
       my $id = "_design/${design_name}";
 
