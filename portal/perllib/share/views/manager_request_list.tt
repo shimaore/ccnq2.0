@@ -1,12 +1,13 @@
 <% USE loc %>
 <div class="manager">
   <fieldset><legend><% | loc %>Review or modify existing request<% END %></legend>
-  <ul>
-  <% FOREACH row IN result.rows %>
-    <% SET r = row.doc %>
-    <li><a href="/manager/<% r.key %>"><% r.key %></a><li>
-  <% END %>
-  </ul>
+    <ul>
+    <% FOREACH row IN result.rows %>
+      <% SET r = row.doc %>
+      <li><a href="/manager/<% r.key %>"><% r.key %></a><li>
+    <% END %>
+    </ul>
+  </fieldset>
 
   <fieldset><legend><% | loc %>Create new request<% END %></legend>
     <form action="/manager" method="PUT">
