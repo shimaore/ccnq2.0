@@ -233,14 +233,6 @@ sub _session_ready {
         activity => 'manager/'.rand(),
       };
 
-      if($req->method eq 'GET') {
-        $body->{action} = 'retrieve';
-      } elsif ($req->method eq 'PUT') {
-        $body->{action} = 'update';
-      } elsif ($req->method eq 'DELETE') {
-        $body->{action} = 'delete';
-      }
-
       use URI;
       my $url = URI->new($req->url);
       my $path = $url->path;
@@ -248,6 +240,14 @@ sub _session_ready {
       if($path =~ m{^/manager/([\w-]+)$}) {
         # Retrieve / update / delete one
         $body->{_id} = $1;   # request type
+        if($req->method eq 'GET') {
+          $body->{action} = 'retrieve';
+        } elsif ($req->method eq 'PUT') {
+          $body->{action} = 'update';
+          $body->{code} = $req->vars->{code};
+        } elsif ($req->method eq 'DELETE') {
+          $body->{action} = 'delete';
+        }
       } elsif($path =~ m{^/manager$}) {
         # List all
         $body->{_id}    = [];
