@@ -3,7 +3,7 @@
 <% FOREACH row IN result.rows %>
   <% SET r = row.doc %>
   <% IF r.status %>
-  <div class="status <% r.status %>">Node <% r.response.from %>: <% r.status %> [<% r.response.error.join(", ") %>]</div>
+    <div class="status <% r.status %>">Node <% r.response.from %>: <% r.status %> [<% r.response.error.join(", ") %>]</div>
     <% IF r.action == "trace" && r.response.result.rows %>
       <% FOREACH s IN r.response.result.rows %>
         <div class="sniffer">
@@ -25,11 +25,14 @@
       <% END %>
     <% END %>
   <% ELSE %>
-    <div class="activity rank<% r.activity_rank %>">Activity <% r.activity_rank %>: <% r.action | loc %></div>
-    <% IF r.request %>
-      <div class="request">Request ID <% r.request | html %></div>
+    <% IF r.activity %>
+      <div class="activity rank<% r.activity_rank %>">Activity <% r.activity_rank %>: <% r.action | loc %></div>
     <% ELSE %>
-      <div class="request">Request pending</div>
+      <% IF r.request %>
+        <div class="request">Request ID <% r.request | html %></div>
+      <% ELSE %>
+        <div class="request">Request pending</div>
+      <% END %>
     <% END %>
   <% END %>
 <% END %>
