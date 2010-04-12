@@ -215,7 +215,7 @@ sub view_cv {
   };
 
   my $view = $params->{view} eq '_all_docs' ?
-      $couch_db->all_docs($options) :
+      $couch_db->all_docs() :
       $couch_db->view($params->{view},$options);
 
   $view->cb(sub{
