@@ -151,9 +151,6 @@ sub _session_ready {
       my $body = {
         activity => 'node/request/'.rand(),
         action => 'get_request_status',
-        params => {
-          $req->vars
-        },
       };
 
       use URI;
@@ -161,7 +158,7 @@ sub _session_ready {
       my $path = $url->path;
 
       if($path =~ m{^/request/(\w+)$}) {
-        $body->{params}->{request_id} = $1;
+        $body->{request_id} = $1;
       } else {
         $req->respond([404,'Invalid request']);
         $httpd->stop_request;
@@ -194,9 +191,6 @@ sub _session_ready {
       my $body = {
         activity => 'node/provisioning/'.rand(),
         action => 'retrieve',
-        params => {
-          $req->vars
-        },
       };
 
       use URI;
@@ -204,8 +198,8 @@ sub _session_ready {
       my $path = $url->path;
 
       if($path =~ m{^/provisioning/(\w+)/(\w+)/(.*)$}) {
-        $body->{params}->{view} = $1.'/'.$2;
-        $body->{params}->{_id}  = [split(qr|/|,$3)];
+        $body->{view} = $1.'/'.$2;
+        $body->{_id}  = [split(qr|/|,$3)];
       } else {
         $req->respond([404,'Invalid request']);
         $httpd->stop_request;
@@ -237,15 +231,14 @@ sub _session_ready {
       debug("node/api: Processing manager mapping request");
       my $body = {
         activity => 'manager/'.rand(),
-        params => {},
       };
 
       if($req->method eq 'GET') {
-        $body->{params}->{action} = 'retrieve';
+        $body->{action} = 'retrieve';
       } elsif ($req->method eq 'PUT') {
-        $body->{params}->{action} = 'update';
+        $body->{action} = 'update';
       } elsif ($req->method eq 'DELETE') {
-        $body->{params}->{action} = 'delete';
+        $body->{action} = 'delete';
       }
 
       use URI;
@@ -254,15 +247,14 @@ sub _session_ready {
 
       if($path =~ m{^/manager/([\w-]+)$}) {
         # Retrieve / update / delete one
-        $body->{params}->{_id} = $1;   # request type
+        $body->{_id} = $1;   # request type
       } elsif($path =~ m{^/manager$}) {
         # List all
-        $body->{params}->{action} = 'view';
-        $body->{params}->{_id}    = [];
-        $body->{params}->{view}   = '_all_docs';
-        delete $body->{params}->{action};
+        $body->{_id}    = [];
+        $body->{view}   = '_all_docs';
+        delete $body->{action};
         if($req->method eq 'GET') {
-          $body->{params}->{action} = 'retrieve';
+          $body->{action} = 'view';
         }
       } else {
         $req->respond([404,'Invalid request']);
@@ -270,7 +262,7 @@ sub _session_ready {
         return;
       }
 
-      if(! defined($body->{params}->{action})) {
+      if(! defined($body->{action})) {
         $req->respond([501,'Invalid method']);
         $httpd->stop_request;
         return;

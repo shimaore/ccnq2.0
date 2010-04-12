@@ -191,7 +191,7 @@ sub _response {
 # API "request status" query
 sub get_request_status {
   my ($params,$context) = @_;
-  return CCNQ::Manager::get_request_status($params->{params}->{request_id});
+  return CCNQ::Manager::get_request_status($params->{request_id});
 }
 
 use CCNQ::Manager::CodeStore;
