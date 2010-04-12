@@ -131,10 +131,10 @@ sub update_cv {
       for my $key (grep { !/^(_id|_rev)$/ } keys %{$params}) {
         $doc->{$key} = $params->{$key};
       }
-      $couch_db->save_doc($doc)->cb($rcv);
+      $couch_db->save_doc($doc)->cb(sub{ shift->recv; $rcv->send() });
     } else {
       # Assume missing document
-      $couch_db->save_doc($params)->cb($rcv);
+      $couch_db->save_doc($params)->cb(sub{ shift->recv; $rcv->send() });
     }
   });
   return $rcv;
@@ -156,7 +156,7 @@ sub delete_cv {
 
   $couch_db->open_doc($params->{_id})->cb(sub{
     my $doc = CCNQ::AE::receive(@_);
-    $couch_db->remove_doc($doc)->cb($rcv);
+    $couch_db->remove_doc($doc)->cb(sub{ shift->recv; $rcv->send() });
   });
   return $rcv;
 }
