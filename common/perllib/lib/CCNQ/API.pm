@@ -47,7 +47,7 @@ sub _api_cb {
     if($hdr->{Status} =~ /^2/) {
       my $json = eval { decode_json($body) };
       if($@) {
-        error("decode_json: $@");
+        error("decode_json($body): $@");
         $cb->();
       } else {
         $cb->($json);
