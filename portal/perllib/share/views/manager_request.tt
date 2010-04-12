@@ -1,0 +1,8 @@
+<% USE loc %>
+<div class="manager">
+  <fieldset><legend><% | loc %>Code for request <% params.request_type | html %><% END %></legend>
+    <form action="/manager/<% params.request_type | uri %>" method="PUT">
+      <textarea name="code"><% result.code | html %></textarea>
+    </form>
+  </fieldset>
+</div>

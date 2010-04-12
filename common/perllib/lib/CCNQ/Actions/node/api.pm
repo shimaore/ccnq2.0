@@ -255,12 +255,12 @@ sub _session_ready {
       if($path =~ m{^/manager/([\w-]+)$}) {
         # Retrieve / update / delete one
         $body->{params}->{_id} = $1;   # request type
-      } else
-      if($path =~ m{^/manager$}) {
+      } elsif($path =~ m{^/manager$}) {
         # List all
         $body->{params}->{action} = 'view';
         $body->{params}->{_id}    = [];
         $body->{params}->{view}   = '_all_docs';
+        delete $body->{params}->{action};
         if($req->method eq 'GET') {
           $body->{params}->{action} = 'retrieve';
         }
