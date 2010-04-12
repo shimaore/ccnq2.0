@@ -47,6 +47,7 @@ require_ok( 'CCNQ::Portal::Outer::Widget' );
 require_ok( 'CCNQ::Portal::Inner::billing_plan' );
 require_ok( 'CCNQ::Portal::Inner::provisioning' );
 require_ok( 'CCNQ::Portal::Inner::request' );
+require_ok( 'CCNQ::Portal::Inner::default' );
 
 require_ok( 'CCNQ::Portal::Template::Plugin::loc' );
 
