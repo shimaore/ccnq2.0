@@ -19,14 +19,13 @@ use Dancer ':syntax';
 use CCNQ::Portal;
 use CCNQ::Portal::I18N;
 use CCNQ::API;
+use AnyEvent;
 
 =head1 /request/:request
 
 Display the request.
 
 =cut
-
-use MIME::Base64;
 
 get '/manager' => sub {
   return unless CCNQ::Portal->current_session->user;
@@ -40,13 +39,7 @@ get '/manager' => sub {
   return CCNQ::Portal->site->default_content->();
 };
 
-post '/manager' => sub {
-  return unless CCNQ::Portal->current_session->user;
-  var template_name => 'manager_request';
-  return CCNQ::Portal->site->default_content->();
-};
-
-get '/manager/:request_type' => sub {
+my $get_query_type = sub {
   return unless CCNQ::Portal->current_session->user;
   var template_name => 'manager_request';
   my $request_type = params->{request_type};
@@ -58,6 +51,9 @@ get '/manager/:request_type' => sub {
   var result => $res;
   return CCNQ::Portal->site->default_content->();
 };
+
+post '/manager'              => $get_query_type;
+get '/manager/:request_type' => $get_query_type;
 
 post '/manager/:request_type' => sub {
   return unless CCNQ::Portal->current_session->user;

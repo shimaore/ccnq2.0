@@ -3,8 +3,7 @@
   <fieldset><legend><% | loc %>Review or modify existing request<% END %></legend>
     <ul>
     <% FOREACH row IN result.rows %>
-      <% SET r = row.doc %>
-      <li><a href="/manager/<% r.key %>"><% r.key %></a><li>
+      <li><a href="/manager/<% row.key %>"><% row.key %></a></li>
     <% END %>
     </ul>
   </fieldset>
