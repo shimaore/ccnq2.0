@@ -52,4 +52,34 @@ sub delete {
   );
 }
 
+=head1 Provisioning content-specific tools
+
+These functions are used to unify the naming conventions inside the
+provisioning database.
+
+The following "record" profiles are defined:
+- number   -- a manager request for a specific number
+- endpoint -- a manager request for a specific endpoint
+- location -- a manager request for a specific location (esp. emergency location)
+
+=cut
+
+sub _update {
+  my ($request,$key_type) = @_;
+  croak "No $key_type" unless
+    defined $request->{$key_type};
+  return update({
+    _id => join('/',$key_type,$request->{$key_type}),
+    %$request
+  });
+}
+
+sub update_number   { return _update(@_,'number'  ); }
+sub update_endpoint { return _update(@_,'endpoint'); }
+sub update_location { return _update(@_,'location'); }
+
+sub delete_number   { return _update(@_,'number'  ); }
+sub delete_endpoint { return _update(@_,'endpoint'); }
+sub delete_location { return _update(@_,'location'); }
+
 'CCNQ::Activities::Provisioning';

@@ -23,10 +23,35 @@ use constant::defer provisioning_uri => sub {
 use constant provisioning_db => 'provisioning';
 
 use constant js_report_by_account => <<'JAVASCRIPT';
-  function(doc) {
+  function (doc) {
     emit([doc.account,doc.account_sub,doc.type,doc._id],null);
   }
 JAVASCRIPT
+
+use constant js_report_numbers => <<'JAVASCRIPT';
+  function (doc){
+    if(doc.type == 'number') {
+      emit([doc.account,doc.number])
+    }
+  }
+JAVASCRIPT
+
+use constant js_report_endpoints => <<'JAVASCRIPT';
+  function (doc){
+    if(doc.type == 'endpoint') {
+      emit([doc.account,doc.endpoint])
+    }
+  }
+JAVASCRIPT
+
+use constant js_report_locations => <<'JAVASCRIPT';
+  function (doc){
+    if(doc.type == 'location') {
+      emit([doc.account,doc.location])
+    }
+  }
+JAVASCRIPT
+
 
 use constant provisioning_designs => {
   report => {
@@ -34,6 +59,18 @@ use constant provisioning_designs => {
     views    => {
       account => {
         map => js_report_by_account,
+        # no reduce function
+      },
+      numbers => {
+        map => js_report_numbers,
+        # no reduce function
+      },
+      endpoints => {
+        map => js_report_endpoints,
+        # no reduce function
+      },
+      locations => {
+        map => js_report_locations,
         # no reduce function
       },
     },
