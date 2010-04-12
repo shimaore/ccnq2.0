@@ -42,6 +42,7 @@ require_ok( 'CCNQ::CDR' );
 require_ok( 'CCNQ::CouchDB' );
 require_ok( 'CCNQ::CouchDB::CodeStore' );
 require_ok( 'CCNQ::Manager' );
+require_ok( 'CCNQ::Manager::CodeStore' );
 require_ok( 'CCNQ::MediaProxy' );
 require_ok( 'CCNQ::Monit' );
 require_ok( 'CCNQ::Provisioning' );
