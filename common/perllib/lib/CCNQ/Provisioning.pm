@@ -24,13 +24,13 @@ use constant provisioning_db => 'provisioning';
 
 use constant js_report_by_account => <<'JAVASCRIPT';
   function (doc) {
-    emit([doc.account,doc.account_sub,doc.type,doc._id],null);
+    emit([doc.account,doc.account_sub,doc.profile,doc.type,doc._id],null);
   }
 JAVASCRIPT
 
 use constant js_report_numbers => <<'JAVASCRIPT';
   function (doc){
-    if(doc.type == 'number') {
+    if(doc.profile == 'number') {
       emit([doc.account,doc.number])
     }
   }
@@ -38,7 +38,7 @@ JAVASCRIPT
 
 use constant js_report_endpoints => <<'JAVASCRIPT';
   function (doc){
-    if(doc.type == 'endpoint') {
+    if(doc.profile == 'endpoint') {
       emit([doc.account,doc.endpoint])
     }
   }
@@ -46,7 +46,7 @@ JAVASCRIPT
 
 use constant js_report_locations => <<'JAVASCRIPT';
   function (doc){
-    if(doc.type == 'location') {
+    if(doc.profile == 'location') {
       emit([doc.account,doc.location])
     }
   }

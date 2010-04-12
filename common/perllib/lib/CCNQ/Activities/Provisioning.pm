@@ -65,11 +65,12 @@ The following "record" profiles are defined:
 =cut
 
 sub _update {
-  my ($request,$key_type) = @_;
-  croak "No $key_type" unless
-    defined $request->{$key_type};
+  my ($request,$profile) = @_;
+  croak "No $profile" unless
+    defined $request->{$profile};
   return update({
-    _id => join('/',$key_type,$request->{$key_type}),
+    _id => join('/',$profile,$request->{$profile}),
+    profile => $profile,
     %$request
   });
 }
