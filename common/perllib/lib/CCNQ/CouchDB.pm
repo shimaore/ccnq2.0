@@ -111,6 +111,12 @@ semantics, do a delete() then an update().
 
 =cut
 
+=head2 update_cv($server_uri,$db_name,\%params)
+
+Returns a condvar which will return the values saved.
+
+=cut
+
 sub update_cv {
   my ($uri,$db_name,$params) = @_;
 
@@ -131,15 +137,20 @@ sub update_cv {
       for my $key (grep { !/^(_id|_rev)$/ } keys %{$params}) {
         $doc->{$key} = $params->{$key};
       }
-      $couch_db->save_doc($doc)->cb(sub{ shift->recv; $rcv->send() });
+      $couch_db->save_doc($doc)->cb(sub{ shift->recv; $rcv->send($doc) });
     } else {
       # Assume missing document
-      $couch_db->save_doc($params)->cb(sub{ shift->recv; $rcv->send() });
+      $couch_db->save_doc($params)->cb(sub{ shift->recv; $rcv->send($params) });
     }
   });
   return $rcv;
 }
 
+=head2 delete_cv($server_uri,$db_name,\%params)
+
+Returns a condvar which will return the content of the deleted record.
+
+=cut
 
 sub delete_cv {
   my ($uri,$db_name,$params) = @_;
@@ -156,7 +167,7 @@ sub delete_cv {
 
   $couch_db->open_doc($params->{_id})->cb(sub{
     my $doc = CCNQ::AE::receive(@_);
-    $couch_db->remove_doc($doc)->cb(sub{ shift->recv; $rcv->send() });
+    $couch_db->remove_doc($doc)->cb(sub{ shift->recv; $rcv->send($doc) });
   });
   return $rcv;
 }
