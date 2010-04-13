@@ -20,8 +20,15 @@ use CCNQ::Install; # for host_name
 use CCNQ::Billing;
 
 sub _install {
-  my ($params,$context) = @_;
   return CCNQ::Billing::install(@_);
+}
+
+sub _session_ready {
+  my ($params,$context) = @_;
+  debug("Billing _session_ready");
+  use CCNQ::XMPPAgent;
+  CCNQ::XMPPAgent::join_cluster_room($context);
+  return;
 }
 
 use CCNQ::Billing::Rating;
