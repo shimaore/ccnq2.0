@@ -33,7 +33,7 @@ sub update {
   # Return list of activities required to complete this request.
   return (
     {
-      action => 'node/provisioning/update',
+      action => 'update',
       cluster_name => PROVISIONING_CLUSTER_NAME,
       params => $request, # at least _id is required
     },
@@ -45,7 +45,7 @@ sub delete {
   # Return list of activities required to complete this request.
   return (
     {
-      action => 'node/provisioning/delete',
+      action => 'delete',
       cluster_name => PROVISIONING_CLUSTER_NAME,
       params => $request, # at least _id is required
     },
