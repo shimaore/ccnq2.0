@@ -115,6 +115,9 @@ sub _session_ready {
         $body->{params}->{type} = $1;   # request type
         $body->{params}->{action} = $1; # actual request action (completed below)
         $body->{params}->{cluster_name} = $2;
+      } elsif($path =~ m{^/api/(\w+)$}) {
+        $body->{params}->{type} = $1;   # request type
+        $body->{params}->{action} = $1; # actual request action (completed below)
       } else {
         $req->respond([404,'Invalid request']);
         $httpd->stop_request;
