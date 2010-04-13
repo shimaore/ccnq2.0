@@ -22,7 +22,7 @@ sub _install {
   return CCNQ::CDR::install(@_);
 }
 
-sub insert {
+sub insert_cdr {
   my ($params,$context) = @_;
   my $rated_cbef = CCNQ::Rating::Event::Rated->new($params);
   return CCNQ::CDR::insert($rated_cbef);
