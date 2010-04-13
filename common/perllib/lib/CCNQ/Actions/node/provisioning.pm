@@ -24,7 +24,6 @@ sub _install {
 
 sub _session_ready {
   my ($params,$context) = @_;
-  debug("Provisioning _session_ready");
   use CCNQ::XMPPAgent;
   CCNQ::XMPPAgent::join_cluster_room($context);
   return;
