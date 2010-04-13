@@ -24,13 +24,13 @@ sub _plan_id {
 
 use CCNQ::Billing;
 
-=head1 retrieve_plan($plan_name)
+=head1 retrieve_plan_by_name($plan_name)
 
 Returns a condvar that will return either undef or a valid CCNQ::Rating::Plan object.
 
 =cut
 
-sub retrieve_plan {
+sub retrieve_plan_by_name {
   my ($plan_name) = @_;
   my $rcv = AE::cv;
   CCNQ::Billing::billing_retrieve(_plan_id($plan_name))->cb(sub{

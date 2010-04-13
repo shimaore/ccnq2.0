@@ -111,7 +111,7 @@ sub plan_of {
   retrieve_account_sub($params)->cb(sub{
     my $rec = CCNQ::AE::receive(@_);
     if($rec && $rec->{plan}) {
-      CCNQ::Billing::Plan::retrieve_plan($rec->{plan})->cb(sub{
+      CCNQ::Billing::Plan::retrieve_plan_by_name($rec->{plan})->cb(sub{
         $rcv->send(eval {shift->recv});
       })
     } else {
