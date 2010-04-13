@@ -86,7 +86,8 @@ sub install {
 
 sub update {
   my ($params) = @_;
-  return CCNQ::AE::croak_cv("No type specified") unless exists $params->{type};
+  exists($params->{type}) or
+    return CCNQ::AE::croak_cv("No type specified in ".CCNQ::AE::pp($params));
   return CCNQ::CouchDB::update_cv(provisioning_uri,provisioning_db,$params);
 }
 
