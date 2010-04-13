@@ -69,9 +69,9 @@ sub _update {
   croak "No $profile" unless
     defined $request->{$profile};
   return __update({
+    %$request
     _id => join('/',$profile,$request->{$profile}),
     profile => $profile,
-    %$request
   });
 }
 
