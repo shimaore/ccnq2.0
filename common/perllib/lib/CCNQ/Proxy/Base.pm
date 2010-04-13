@@ -53,6 +53,7 @@ sub avp
         user_ip         => 174, # IP to use if not registered and no CFNR
         user_port       => 175, # port to use if not registered and no CFNR
         user_srv        => 178, # used instead of IP if present
+        user_location   => 177, # emergency location data
         strip_digit     => 179,
         # by username, force media-proxy
         user_force_mp   => 140,
@@ -76,6 +77,7 @@ sub avp
         cfb             => 183,
         cfda            => 184,
         dst_domain      => 186, # DID to domain
+        number_location => 187, # emergency location data
         inv_timer       => 43,
 
         # cdr info
