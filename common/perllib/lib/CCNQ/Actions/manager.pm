@@ -196,22 +196,22 @@ sub get_request_status {
 
 use CCNQ::Manager::CodeStore;
 
-sub update {
+sub manager_update {
   my ($params,$context) = @_;
   return CCNQ::Manager::CodeStore::update($params);
 }
 
-sub delete {
+sub manager_delete {
   my ($params,$context) = @_;
   return CCNQ::Manager::CodeStore::delete($params);
 }
 
-sub retrieve {
+sub manager_retrieve {
   my ($params,$context) = @_;
   return CCNQ::Manager::CodeStore::retrieve($params);
 }
 
-sub view {
+sub manager_view {
   my ($params,$context) = @_;
   return CCNQ::Manager::CodeStore::view($params);
 }

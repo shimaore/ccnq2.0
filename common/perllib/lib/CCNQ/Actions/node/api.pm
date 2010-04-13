@@ -193,7 +193,7 @@ sub _session_ready {
       debug("node/api: Processing web provisioning retrieve");
       my $body = {
         activity => 'node/provisioning/'.rand(),
-        action => 'retrieve',
+        action => 'provisioning_retrieve',
       };
 
       use URI;
@@ -244,12 +244,12 @@ sub _session_ready {
         # Retrieve / update / delete one
         $body->{_id} = $1;   # request type
         if($req->method eq 'GET') {
-          $body->{action} = 'retrieve';
+          $body->{action} = 'manager_retrieve';
         } elsif ($req->method eq 'PUT') {
-          $body->{action} = 'update';
+          $body->{action} = 'manager_update';
           $body->{code} = $req->parm('code');
         } elsif ($req->method eq 'DELETE') {
-          $body->{action} = 'delete';
+          $body->{action} = 'manager_delete';
         }
       } elsif($path =~ m{^/manager$}) {
         # List all
@@ -257,7 +257,7 @@ sub _session_ready {
         $body->{view}   = '_all_docs';
         delete $body->{action};
         if($req->method eq 'GET') {
-          $body->{action} = 'view';
+          $body->{action} = 'manager_view';
         }
       } else {
         $req->respond([404,'Invalid request']);

@@ -22,22 +22,22 @@ sub _install {
   return CCNQ::Provisioning::install();
 }
 
-sub update {
+sub provisioning_update {
   my ($params,$context) = @_;
   return CCNQ::Provisioning::update($params);
 }
 
-sub delete {
+sub provisioning_delete {
   my ($params,$context) = @_;
   return CCNQ::Provisioning::delete($params);
 }
 
-sub retrieve {
+sub provisioning_retrieve {
   my ($params,$context) = @_;
   return CCNQ::Provisioning::retrieve($params);
 }
 
-sub view {
+sub provisioning_view {
   my ($params,$context) = @_;
   return CCNQ::Provisioning::view($params);
 }
