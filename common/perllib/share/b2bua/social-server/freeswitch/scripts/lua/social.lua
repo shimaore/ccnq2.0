@@ -165,7 +165,7 @@ place_call(to);
  -- See   transfer_after_bridge       http://wiki.freeswitch.org/wiki/Variable_transfer_after_bridge
  -- See   transfer_fallback_extension
 
-
+-------- Following code is the original code -----
 
 session:answer()
 session:setHangupHook("myHangupHook")
