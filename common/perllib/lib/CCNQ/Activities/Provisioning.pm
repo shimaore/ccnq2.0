@@ -19,7 +19,7 @@ use constant PROVISIONING_CLUSTER_NAME => 'provisioning';
 
 use Carp;
 
-sub update {
+sub __update {
   my $request = shift;
 
   # XXX Proper failure mode inside Manager::Request..?
@@ -35,19 +35,19 @@ sub update {
     {
       action => 'provisioning_update',
       cluster_name => PROVISIONING_CLUSTER_NAME,
-      params => $request, # at least _id is required
+      provisioning_data => $request, # at least _id is required
     },
   );
 }
 
-sub delete {
+sub __delete {
   my $request = shift;
   # Return list of activities required to complete this request.
   return (
     {
       action => 'provisioning_delete',
       cluster_name => PROVISIONING_CLUSTER_NAME,
-      params => $request, # at least _id is required
+      _id => $request->{_id}, # at least _id is required
     },
   );
 }
@@ -68,10 +68,19 @@ sub _update {
   my ($request,$profile) = @_;
   croak "No $profile" unless
     defined $request->{$profile};
-  return update({
+  return __update({
     _id => join('/',$profile,$request->{$profile}),
     profile => $profile,
     %$request
+  });
+}
+
+sub _delete {
+  my ($request,$profile) = @_;
+  croak "No $profile" unless
+    defined $request->{$profile};
+  return __delete({
+    _id => join('/',$profile,$request->{$profile}),
   });
 }
 
@@ -79,8 +88,8 @@ sub update_number   { return _update(@_,'number'  ); }
 sub update_endpoint { return _update(@_,'endpoint'); }
 sub update_location { return _update(@_,'location'); }
 
-sub delete_number   { return _update(@_,'number'  ); }
-sub delete_endpoint { return _update(@_,'endpoint'); }
-sub delete_location { return _update(@_,'location'); }
+sub delete_number   { return _delete(@_,'number'  ); }
+sub delete_endpoint { return _delete(@_,'endpoint'); }
+sub delete_location { return _delete(@_,'location'); }
 
 'CCNQ::Activities::Provisioning';
