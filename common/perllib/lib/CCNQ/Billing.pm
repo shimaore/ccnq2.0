@@ -36,22 +36,22 @@ sub install {
   return CCNQ::CouchDB::install(billing_uri,billing_db,billing_designs);
 }
 
-sub update {
+sub billing_update {
   my ($params) = @_;
   return CCNQ::CouchDB::update_cv(billing_uri,billing_db,$params);
 }
 
-sub delete {
+sub billing_delete {
   my ($params) = @_;
   return CCNQ::CouchDB::delete_cv(billing_uri,billing_db,$params);
 }
 
-sub retrieve {
+sub billing_retrieve {
   my ($params) = @_;
   return CCNQ::CouchDB::retrieve_cv(billing_uri,billing_db,$params);
 }
 
-sub view {
+sub billing_view {
   my ($params) = @_;
   return CCNQ::CouchDB::view_cv(billing_uri,billing_db,$params);
 }

@@ -42,7 +42,7 @@ Returns a condvar.
 
 sub update_account {
   my ($params) = @_;
-  return CCNQ::Billing::update({
+  return CCNQ::Billing::billing_update({
     %$params,
     _id => _account_id($params->{account}),
   });
@@ -56,7 +56,7 @@ Returns a condvar which will return undef or a hashref describing an account.
 
 sub retrieve_account {
   my ($params) = @_;
-  return CCNQ::Billing::retrieve({
+  return CCNQ::Billing::billing_retrieve({
     _id => _account_id($params->{account})
   });
 }
@@ -80,7 +80,7 @@ Returns a condvar.
 
 sub update_account_sub {
   my ($params) = @_;
-  return CCNQ::Billing::update({
+  return CCNQ::Billing::billing_update({
     %$params,
     _id => _account_sub_id($params->{account},$params->{account_sub}),
   });
@@ -94,7 +94,7 @@ Returns a condvar which will return undef or a hashref describing an account_sub
 
 sub retrieve_account_sub {
   my ($params) = @_;
-  return CCNQ::Billing::retrieve({
+  return CCNQ::Billing::billing_retrieve({
     _id => _account_sub_id($params->{account},$params->{account_sub})
   });
 }

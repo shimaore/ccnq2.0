@@ -84,19 +84,19 @@ sub install {
   return CCNQ::CouchDB::install(provisioning_uri, provisioning_db, provisioning_designs);
 }
 
-sub update {
+sub provisioning_update {
   my ($params) = @_;
   exists($params->{type}) or
     return CCNQ::AE::croak_cv("No type specified in ".CCNQ::AE::pp($params));
   return CCNQ::CouchDB::update_cv(provisioning_uri,provisioning_db,$params);
 }
 
-sub delete {
+sub provisioning_delete {
   my ($params) = @_;
   return CCNQ::CouchDB::delete_cv(provisioning_uri,provisioning_db,$params);
 }
 
-sub retrieve {
+sub provisioning_retrieve {
   my ($params) = @_;
   return CCNQ::CouchDB::retrieve_cv(provisioning_uri,provisioning_db,$params);
 }
@@ -107,7 +107,7 @@ Note: in CCNQ::Portal::Inner::Provisioning we prepend the account ID,
       their first key.
 =cut
 
-sub view {
+sub provisioning_view {
   my ($params) = @_;
   return CCNQ::CouchDB::view_cv(provisioning_uri,provisioning_db,$params);
 }

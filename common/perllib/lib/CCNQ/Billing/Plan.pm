@@ -33,7 +33,7 @@ Returns a condvar that will return either undef or a valid CCNQ::Rating::Plan ob
 sub retrieve_plan {
   my ($plan_name) = @_;
   my $rcv = AE::cv;
-  CCNQ::Billing::retrieve(_plan_id($plan_name))->cb(sub{
+  CCNQ::Billing::billing_retrieve(_plan_id($plan_name))->cb(sub{
     my $rec = CCNQ::AE::receive(@_);
     $rcv->send($rec && CCNQ::Rating::Plan->new($rec));
   });
@@ -63,17 +63,17 @@ A plan record must contain:
 
 =cut
 
-sub update {
+sub update_plan {
   my ($params) = @_;
-  return CCNQ::Billing::update({
+  return CCNQ::Billing::billing_update({
     %$params,
     _id => _plan_id($params->{name}),
   });
 }
 
-sub retrieve {
+sub retrieve_plan {
   my ($params) = @_;
-  return CCNQ::Billing::retrieve({
+  return CCNQ::Billing::billing_retrieve({
     _id => _plan_id($params->{name})
   });
 }

@@ -34,17 +34,17 @@ update_bucket {
 
 =cut
 
-sub update {
+sub update_bucket {
   my ($params) = @_;
-  return CCNQ::Billing::update({
+  return CCNQ::Billing::billing_update({
     %$params,
     _id => _bucket_id($params->{name}),
   });
 }
 
-sub retrieve {
+sub retrieve_bucket {
   my ($params) = @_;
-  return CCNQ::Billing::retrieve({
+  return CCNQ::Billing::billing_retrieve({
     _id => _bucket_id($params->{name})
   });
 }

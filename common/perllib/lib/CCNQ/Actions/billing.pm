@@ -58,21 +58,21 @@ update_bucket {
 =cut
 
 sub update_bucket {
-  return CCNQ::Billing::Bucket::update(@_);
+  return CCNQ::Billing::Bucket::update_bucket(@_);
 }
 
 sub retrieve_bucket {
-  return CCNQ::Billing::Bucket::retrieve(@_);
+  return CCNQ::Billing::Bucket::retrieve_bucket(@_);
 }
 
 use CCNQ::Billing::Plan;
 
 sub update_plan {
-  return CCNQ::Billing::Plan::update(@_);
+  return CCNQ::Billing::Plan::update_plan(@_);
 }
 
 sub retrieve_plan {
-  return CCNQ::Billing::Plan::retrieve(@_);
+  return CCNQ::Billing::Plan::retrieve_plan(@_);
 }
 
 use CCNQ::Billing::Account;

@@ -31,22 +31,22 @@ sub _session_ready {
 
 sub provisioning_update {
   my ($params,$context) = @_;
-  return CCNQ::Provisioning::update($params);
+  return CCNQ::Provisioning::provisioning_update($params->{provisioning_data});
 }
 
 sub provisioning_delete {
   my ($params,$context) = @_;
-  return CCNQ::Provisioning::delete($params);
+  return CCNQ::Provisioning::provisioning_delete($params);
 }
 
 sub provisioning_retrieve {
   my ($params,$context) = @_;
-  return CCNQ::Provisioning::retrieve($params);
+  return CCNQ::Provisioning::provisioning_retrieve($params);
 }
 
 sub provisioning_view {
   my ($params,$context) = @_;
-  return CCNQ::Provisioning::view($params);
+  return CCNQ::Provisioning::provisioning_view($params);
 }
 
 'CCNQ::Actions::node::provisioning';
