@@ -35,6 +35,7 @@ use CCNQ::Portal::Outer::UserUpdate;
 use CCNQ::Portal::Outer::LocaleSelection;
 
 use CCNQ::Portal::Inner::default;
+use CCNQ::Portal::Inner::Account;
 use CCNQ::Portal::Inner::billing_plan;
 use CCNQ::Portal::Inner::provisioning;
 use CCNQ::Portal::Inner::request;
