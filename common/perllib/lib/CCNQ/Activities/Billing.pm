@@ -24,7 +24,7 @@ sub partial_day {
   return (
     {
       action       => 'billing_entry',
-      cluster_name => 'billing',
+      cluster_name => 'cdr',
       params => {
         start_date  => $date,
         start_time  => $time,
