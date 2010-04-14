@@ -19,18 +19,20 @@ use Dancer ':syntax';
 use CCNQ::Portal;
 use CCNQ::Portal::I18N;
 
+use CCNQ::AE;
+
 get '/api/account' => sub {
   return unless CCNQ::Portal->current_session->user;
   return unless session('account');
-  
+
   # Get the information from the portal.
   # e.g. print a list of users who have portal access to this account
   my $cv1 = CCNQ::Portal::db->view('report/portal_users_by_account', {
     startkey => [session('account')],
     endkey   => [session('account'),{}],
   });
-  my $portal_users = $cv1->recv;
-  my @portal_users = map { $_->{id} } @{$portal_users->{rows}};
+  my $portal_users = CCNQ::AE::receive($cv1);
+  my @portal_users = map { $_->{id} } @{$portal_users->{rows} || []};
 
   # Get the information from the API.
   my $cv2 = AE::cv;
@@ -40,7 +42,7 @@ get '/api/account' => sub {
     account        => session('account'),
   };
   CCNQ::API::api_query($params2,$cv2);
-  my $account_billing_data = $cv2->recv;
+  my $account_billing_data = CCNQ::AE::receive($cv2);
 
   # e.g. print a list of users who receive bills for this account
   # .. that'd be the keys of the 'email_recipients' hash.
@@ -54,8 +56,8 @@ get '/api/account' => sub {
     _id            => [session('account')],
   };
   CCNQ::API::api_query($params3,$cv3);
-  my $account_subs = $cv3->recv;
-  my @account_subs = map { $_->{doc} } @{$account_subs->{rows}};
+  my $account_subs = CCNQ::AE::receive($cv3);
+  my @account_subs = map { $_->{doc} } @{$account_subs->{rows} || []};
 
   # e.g. print account details.
   var field => {
@@ -63,7 +65,7 @@ get '/api/account' => sub {
     portal_users => [@portal_users],
     account_subs => [@account_subs],
   };
-  
+
   var template_name => 'api/account';
   return CCNQ::Portal->site->default_content->();
 };
@@ -73,9 +75,9 @@ post '/api/account' => sub {
   return unless session('account');
 
   # Update the information in the portal.
-  
-  # Update the information in the API.  
-  
+
+  # Update the information in the API.
+
   var template_name => 'api/account';
   return CCNQ::Portal->site->default_content->();
 };
