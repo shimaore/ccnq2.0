@@ -29,12 +29,6 @@ sub _session_ready {
   return;
 }
 
-sub billing_view {
-  my ($params,$context) = @_;
-  return CCNQ::Billing::billing_view($params);
-}
-
-
 use CCNQ::Billing::Bucket;
 
 =pod
