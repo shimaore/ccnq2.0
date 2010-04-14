@@ -36,7 +36,7 @@ get '/api/account' => sub {
 
   # Get the information from the API.
   my $cv2 = AE::cv;
-  CCNQ::API::billing_query('account',session('account'),$cv2);
+  CCNQ::API::billing_view('account',session('account'),$cv2);
   my $account_billing_data = CCNQ::AE::receive($cv2);
 
   # e.g. print a list of users who receive bills for this account
@@ -44,7 +44,7 @@ get '/api/account' => sub {
 
   # e.g. print a list of account_subs for this account
   my $cv3 = AE::cv;
-  CCNQ::API::billing_view('account_subs',session('account'),$cv3);
+  CCNQ::API::billing_view('account_sub',session('account'),$cv3);
   my $account_subs = CCNQ::AE::receive($cv3);
   my @account_subs = map { $_->{doc} } @{$account_subs->{rows} || []};
 

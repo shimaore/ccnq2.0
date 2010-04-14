@@ -34,7 +34,7 @@ get '/provisioning/account' => sub {
   return unless defined $account;
 
   my $cv = AE::cv;
-  CCNQ::API::provisioning_query($view,$account,$cv);
+  CCNQ::API::provisioning_view($view,$account,$cv);
   var result => $cv->recv;
   return CCNQ::Portal->site->default_content->();
 };
@@ -56,7 +56,7 @@ get '/provisioning/:view/*' => sub {
   unshift @$id, session('account');
 
   my $cv = AE::cv;
-  CCNQ::API::provisioning_query($view,$id,$cv);
+  CCNQ::API::provisioning_view($view,$id,$cv);
   var result => $cv->recv;
   return CCNQ::Portal->site->default_content->();
 };
