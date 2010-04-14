@@ -28,6 +28,5 @@
 <% ELSE %>
   <% | loc %>No account available<% END %>
 <% END %>
-<% END %>
 </fieldset>
 <% END %>
