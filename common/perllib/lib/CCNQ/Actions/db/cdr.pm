@@ -28,4 +28,18 @@ sub insert_cdr {
   return CCNQ::CDR::insert($rated_cbef);
 }
 
+use CCNQ::Billing::Rating;
+use CCNQ::Install; # for host_name
+
+sub billing_entry {
+  my ($params,$context) = @_;
+
+  # Create a new CBEF entry
+  return CCNQ::Billing::Rating::rate_and_save_cbef({
+    %$params,
+    collecting_node => CCNQ::Install::host_name,
+    request_uuid    => $params->{activity},
+  });
+}
+
 'CCNQ::Actions::cdr';

@@ -188,18 +188,13 @@ use constant roles_to_functions => {
   'outbound-proxy'  => [qw( proxy/outbound_proxy proxy/base monit node )],
   'complete-transparent-proxy' => [qw( proxy/complete_transparent proxy/base mediaproxy/dispatcher mediaproxy monit node )],
   'router-no-registrar' => [qw( proxy/router_no_registrar proxy/base monit node )],
-  # ...
-  'api'             => [qw( node/api )],
-  'provisioning'    => [qw( node/provisioning )],
-  'realtime_estimator' => [qw( billing realtime_estimator)],
-  'billing'         => [qw( billing )],
-  'bucket_db'       => [qw( bucket_db )],
-  'cdr'             => [qw( cdr )],
-  'manager'         => [qw( manager monit node )],
-  'aggregator'      => [qw( billing/aggregator node/api monit node )],
-  # ...
+  'realtime_estimator' => [qw( db/billing realtime_estimator )],
   'mediaproxy-relay' => [qw( mediaproxy/relay mediaproxy monit node )],
-  'portal'          => [qw( node/api portal )],
+  'bucket-db'       => [qw( db/bucket )],
+  'cdr-db'          => [qw( db/cdr )],
+  'manager'         => [qw( manager monit node )],
+  'api'             => [qw( node/api db/provisioning db/billing )],
+  'portal'          => [qw( node/api db/provisioning db/billing portal )],
 };
 
 # Service discovery

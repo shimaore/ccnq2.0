@@ -1,4 +1,4 @@
-package CCNQ::Actions::billing;
+package CCNQ::Actions::db::billing;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -34,20 +34,6 @@ sub billing_view {
   return CCNQ::Billing::billing_view($params);
 }
 
-
-use CCNQ::Billing::Rating;
-use CCNQ::Install; # for host_name
-
-sub billing_entry {
-  my ($params,$context) = @_;
-
-  # Create a new CBEF entry
-  return CCNQ::Billing::Rating::rate_and_save_cbef({
-    %$params,
-    collecting_node => CCNQ::Install::host_name,
-    request_uuid    => $params->{activity},
-  });
-}
 
 use CCNQ::Billing::Bucket;
 
@@ -122,4 +108,4 @@ sub delete_table_prefix {
   return CCNQ::Billing::Table::delete_prefix(@_);
 }
 
-'CCNQ::Actions::billing';
+'CCNQ::Actions::db::billing';

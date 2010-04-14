@@ -1,4 +1,4 @@
-package CCNQ::Actions::node::provisioning;
+package CCNQ::Actions::db::provisioning;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -49,4 +49,4 @@ sub provisioning_view {
   return CCNQ::Provisioning::provisioning_view($params);
 }
 
-'CCNQ::Actions::node::provisioning';
+'CCNQ::Actions::db::provisioning';

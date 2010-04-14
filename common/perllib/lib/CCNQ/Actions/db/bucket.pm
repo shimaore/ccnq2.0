@@ -1,4 +1,4 @@
-package CCNQ::Actions::bucked_db;
+package CCNQ::Actions::db::bucked;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -44,4 +44,4 @@ sub replenish_bucket {
   return CCNQ::Billing::Bucket::replenish(@_);
 }
 
-'CCNQ::Actions::bucket_db';
+'CCNQ::Actions::db::bucket';
