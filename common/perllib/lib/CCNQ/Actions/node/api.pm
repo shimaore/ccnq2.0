@@ -28,6 +28,7 @@ use strict; use warnings;
 use JSON;
 use AnyEvent;
 use AnyEvent::CouchDB;
+use CCNQ::AE;
 use CCNQ::HTTPD;
 use JSON;
 use Logger::Syslog;
@@ -78,10 +79,6 @@ sub _session_ready {
 
   my $manager_muc_room = CCNQ::Install::manager_cluster_jid;
   CCNQ::XMPPAgent::_join_room($context,$manager_muc_room);
-  my $provisioning_muc_room = CCNQ::Install::provisioning_cluster_jid;
-  CCNQ::XMPPAgent::_join_room($context,$provisioning_muc_room);
-  my $billing_muc_room = CCNQ::Install::billing_cluster_jid;
-  CCNQ::XMPPAgent::_join_room($context,$billing_muc_room);
 
   my $host = CCNQ::API::api_rendezvous_host;
   my $port = CCNQ::API::api_rendezvous_port;
@@ -191,22 +188,19 @@ sub _session_ready {
       $httpd->stop_request;
     },
 
+    # For provisioning we use our local copy of the database.
     '/provisioning' => sub {
       my ($httpd, $req) = @_;
 
-      debug("node/api: Processing web provisioning retrieve");
-      my $body = {
-        activity => 'provisioning/'.rand(),
-        action => 'provisioning_retrieve',
-      };
+      debug("node/api: Processing provisioning view");
 
       use URI;
       my $url = URI->new($req->url);
       my $path = $url->path;
 
       if($path =~ m{^/provisioning/(\w+)/(\w+)/(.*)$}) {
-        $body->{view} = $1.'/'.$2;
-        $body->{_id}  = [split(qr|/|,$3)];
+        my $view = $1.'/'.$2;
+        my $id   = [split(qr|/|,$3)];
       } else {
         $req->respond([404,'Invalid request']);
         $httpd->stop_request;
@@ -219,43 +213,34 @@ sub _session_ready {
         return;
       }
 
-      debug("node/api: Contacting $provisioning_muc_room");
-      my $r = CCNQ::XMPPAgent::send_muc_message($context,$provisioning_muc_room,$body);
-      if($r->[0] ne 'ok') {
-        $req->respond([500,$r->[1]]);
-      } else {
-        # Callback is used inside the _response handler.
-        $context->{api_callback}->{$body->{activity}} = _build_response_handler($req);
-      }
+      CCNQ::Provisioning::provisioning_view({
+        view => $view,
+        _id  => $id,
+      })->cb(sub{
+        my $response = CCNQ::AE::receive(shift);
+        if($response) {
+          $req->respond([200,encode_json($reponse)]);
+        } else {
+          $req->respond([500,'No results']);
+        }
+      });
+
       $httpd->stop_request;
     },
 
+    # For billing we use our local copy of the database.
     '/billing' => sub {
       my ($httpd, $req) = @_;
 
-      debug("node/api: Processing web billing retrieve");
-      my $body = {
-        activity => 'billing/'.rand(),
-      };
+      debug("node/api: Processing billing view");
 
       use URI;
       my $url = URI->new($req->url);
       my $path = $url->path;
 
-      if($path =~ m{^/billing/(bucket|plan)/(.+)$}) {
-        $body->{action}       = "retrieve_$1";
-        $body->{name}         = $2;
-      } elsif($path =~ m{^/billing/(account)/([\w-]+)$}) {
-        $body->{action}       = "retrieve_$1";
-        $body->{account}      = $2;
-      } elsif($path =~ m{^/billing/(account_sub)/([\w-]+)/([\w-]+)$}) {
-        $body->{action}       = "retrieve_$1";
-        $body->{account}      = $2;
-        $body->{account_sub}  = $3;
-      } elsif($path =~ m{^/billing/view/([\w-]+)/([\w-]+)$}) {
-        $body->{action}       = "billing_view";
-        $body->{account}      = $2;
-        $body->{account_sub}  = $3;
+      if($path =~ m{^/billing/(\w+)/(\w+)/(.*)$}) {
+        my $view = $1.'/'.$2;
+        my $id   = [split(qr|/|,$3)];
       } else {
         $req->respond([404,'Invalid request']);
         $httpd->stop_request;
@@ -268,14 +253,18 @@ sub _session_ready {
         return;
       }
 
-      debug("node/api: Contacting $billing_muc_room");
-      my $r = CCNQ::XMPPAgent::send_muc_message($context,$billing_muc_room,$body);
-      if($r->[0] ne 'ok') {
-        $req->respond([500,$r->[1]]);
-      } else {
-        # Callback is used inside the _response handler.
-        $context->{api_callback}->{$body->{activity}} = _build_response_handler($req);
-      }
+      CCNQ::Billing::billing_view({
+        view => $view,
+        _id  => [ @params ],
+      })->cb(sub{
+        my $response = CCNQ::AE::receive(shift);
+        if($response) {
+          $req->respond([200,encode_json($reponse)]);
+        } else {
+          $req->respond([500,'No results']);
+        }
+      });
+
       $httpd->stop_request;
     },
 
