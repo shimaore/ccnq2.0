@@ -146,6 +146,49 @@ sub update_cv {
   return $rcv;
 }
 
+=head2 update_key_cv($server_uri,$db_name,\%params)
+
+Returns a condvar which will return the values saved.
+
+=cut
+
+sub update_key_cv {
+  my ($uri,$db_name,$params) = @_;
+
+  my $rcv = AE::cv;
+
+  unless($params->{_id}) {
+    id_required();
+  }
+  unless($params->{field}) {
+    die 'field required';
+  }
+  unless($params->{key}) {
+    die 'key required';
+  }
+
+  # Insert / Update a CouchDB record
+  my $couch = couch($uri);
+  my $couch_db = $couch->db($db_name);
+
+  $couch_db->open_doc($params->{_id})->cb(sub{
+    my $doc = CCNQ::AE::receive(@_);
+
+    if(!$doc) {
+      $doc = {};
+    }
+
+    if(defined $params->{value}) {
+      $doc->{$params->{field}}->{$params->{key}} = $params->{value};
+    } else {
+      delete $doc->{$params->{field}}->{$params->{key}};
+    }
+
+    $couch_db->save_doc($doc)->cb(sub{ shift->recv; $rcv->send($doc) });
+  });
+  return $rcv;
+}
+
 =head2 delete_cv($server_uri,$db_name,\%params)
 
 Returns a condvar which will return the content of the deleted record.

@@ -29,6 +29,12 @@ sub _session_ready {
   return;
 }
 
+sub billing_view {
+  my ($params,$context) = @_;
+  return CCNQ::Billing::billing_view($params);
+}
+
+
 use CCNQ::Billing::Rating;
 use CCNQ::Install; # for host_name
 
@@ -84,6 +90,15 @@ sub update_account {
 sub retrieve_account {
   return CCNQ::Billing::Account::retrieve_account(@_);
 }
+
+sub update_bill_recipient {
+  return CCNQ::Billing::Account::update_bill_recipient(@_);
+}
+
+sub delete_bill_recipient {
+  return CCNQ::Billing::Account::update_bill_recipient(@_);
+}
+
 
 sub update_account_sub {
   return CCNQ::Billing::Account::update_account_sub(@_);

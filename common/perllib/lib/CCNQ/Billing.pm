@@ -41,6 +41,11 @@ sub billing_update {
   return CCNQ::CouchDB::update_cv(billing_uri,billing_db,$params);
 }
 
+sub billing_update_key {
+  my ($params) = @_;
+  return CCNQ::CouchDB::update_key_cv(billing_uri,billing_db,$params);
+}
+
 sub billing_delete {
   my ($params) = @_;
   return CCNQ::CouchDB::delete_cv(billing_uri,billing_db,$params);
