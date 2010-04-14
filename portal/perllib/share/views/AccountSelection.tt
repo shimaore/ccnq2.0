@@ -1,10 +1,15 @@
 <% IF session.user_id %>
 <% USE loc %>
 <fieldset id="AccountSelection"><legend><% | loc %>Account selection<% END %></legend>
+<% IF is_admin %>
+  <form action="/account" method="POST">
+    <input type="text" name ="account" value="<% session.account | html %>">
+    <input type="submit" value="<% | loc %>Select<% END %>">
+  </form>
+<% END %>
 <% IF accounts.size %>
   <% IF accounts.size > 1 %>
   <form action="/account" method="POST">
-    <div class="account-select">
     <select name="account">
       <option value=""></option>
       <% FOREACH this IN accounts %>
@@ -22,6 +27,7 @@
   <% END %>
 <% ELSE %>
   <% | loc %>No account available<% END %>
+<% END %>
 <% END %>
 </fieldset>
 <% END %>
