@@ -34,12 +34,12 @@ get '/api/account' => sub {
 
   # Get the information from the API.
   my $cv2 = AE::cv;
-  my $params = {
+  my $params2 = {
     action         => 'retrieve_account',
     cluster_name   => 'billing',
     account        => session('account'),
   };
-  CCNQ::API::api_query($params,$cv2);
+  CCNQ::API::api_query($params2,$cv2);
   my $account_billing_data = $cv2->recv;
 
   # e.g. print a list of users who receive bills for this account
@@ -47,13 +47,13 @@ get '/api/account' => sub {
 
   # e.g. print a list of account_subs for this account
   my $cv3 = AE::cv;
-  my $params = {
+  my $params3 = {
     action         => 'billing_view',
     cluster_name   => 'billing',
     view           => 'account_subs',
     _id            => [session('account')],
   };
-  CCNQ::API::api_query($params,$cv3);
+  CCNQ::API::api_query($params3,$cv3);
   my $account_subs = $cv3->recv;
   my @account_subs = map { $_->{doc} } @{$account_subs->{rows}};
 
@@ -78,7 +78,7 @@ post '/api/account' => sub {
   
   var template_name => 'api/account';
   return CCNQ::Portal->site->default_content->();
-}
+};
 
 # XXX post ...
 
