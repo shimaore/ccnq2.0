@@ -16,7 +16,6 @@ package CCNQ::Actions::billing;
 use strict; use warnings;
 use Logger::Syslog;
 
-use CCNQ::Install; # for host_name
 use CCNQ::Billing;
 
 sub _install {
@@ -31,6 +30,7 @@ sub _session_ready {
 }
 
 use CCNQ::Billing::Rating;
+use CCNQ::Install; # for host_name
 
 sub billing_entry {
   my ($params,$context) = @_;
