@@ -49,7 +49,7 @@ sub rate_and_save_cbef {
   my $rcv = AE::cv;
   rate_cbef($cbef)->cb(sub{
     my $rated_cbef = CCNQ::AE::receive(@_);
-    $rcv->send('Rating failed') if !$rated_cbef;
+    $rcv->send(['Rating failed']) if !$rated_cbef;
 
     $rated_cbef->compute_taxes();
 
