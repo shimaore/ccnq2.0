@@ -78,6 +78,8 @@ sub _session_ready {
 
   my $manager_muc_room = CCNQ::Install::manager_cluster_jid;
   CCNQ::XMPPAgent::_join_room($context,$manager_muc_room);
+  my $provisioning_muc_room = CCNQ::Install::provisioning_cluster_jid;
+  CCNQ::XMPPAgent::_join_room($context,$provisioning_muc_room);
 
   my $host = CCNQ::API::api_rendezvous_host;
   my $port = CCNQ::API::api_rendezvous_port;
@@ -217,8 +219,8 @@ sub _session_ready {
         return;
       }
 
-      debug("node/api: Contacting $manager_muc_room");
-      my $r = CCNQ::XMPPAgent::send_muc_message($context,$manager_muc_room,$body);
+      debug("node/api: Contacting $provisioning_muc_room");
+      my $r = CCNQ::XMPPAgent::send_muc_message($context,$provisioning_muc_room,$body);
       if($r->[0] ne 'ok') {
         $req->respond([500,$r->[1]]);
       } else {
