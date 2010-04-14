@@ -22,10 +22,21 @@ use constant::defer billing_uri => sub {
 };
 use constant billing_db => 'billing';
 
+use constant js_account_subs => <<'JAVASCRIPT';
+  function (doc) {
+    if(doc.account_sub) {
+      emit([doc.account,doc.account_sub],null);
+    }
+  }
+JAVASCRIPT
+
 use constant billing_designs => {
   report => {
     language => 'javascript',
     views    => {
+      account_subs => {
+        map => js_account_subs
+      },
     },
   },
 };
