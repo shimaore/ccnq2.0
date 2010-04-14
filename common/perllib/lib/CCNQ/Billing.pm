@@ -22,7 +22,26 @@ use constant::defer billing_uri => sub {
 };
 use constant billing_db => 'billing';
 
-use constant js_account_subs => <<'JAVASCRIPT';
+# All records related to a given account.
+use constant js_report_account_all => <<'JAVASCRIPT';
+  function (doc) {
+    if(doc.account) {
+      emit([doc.account],null);
+    }
+  }
+JAVASCRIPT
+
+# All "account"-class documents.
+use constant js_report_accounts => <<'JAVASCRIPT';
+  function (doc) {
+    if(doc.profile == 'account') {
+      emit([doc.account],null);
+    }
+  }
+JAVASCRIPT
+
+# All records related to a given account_sub.
+use constant js_report_account_sub_all => <<'JAVASCRIPT';
   function (doc) {
     if(doc.account_sub) {
       emit([doc.account,doc.account_sub],null);
@@ -30,12 +49,31 @@ use constant js_account_subs => <<'JAVASCRIPT';
   }
 JAVASCRIPT
 
+# All "account_sub"-class documents.
+use constant js_report_account_subs => <<'JAVASCRIPT';
+function (doc) {
+  if(doc.profile == 'account_sub') {
+    emit([doc.account,doc.account_sub],null);
+  }
+}
+JAVASCRIPT
+
+
 use constant billing_designs => {
   report => {
     language => 'javascript',
     views    => {
+      account_all => {
+        map => js_report_account_all,
+      },
+      accounts => {
+        map => js_report_accounts,
+      },
+      account_sub_all => {
+        map => js_report_account_sub_all,
+      },
       account_subs => {
-        map => js_account_subs
+        map => js_report_account_subs,
       },
     },
   },
