@@ -198,9 +198,10 @@ sub _session_ready {
       my $url = URI->new($req->url);
       my $path = $url->path;
 
+      my ($view,$id);
       if($path =~ m{^/provisioning/(\w+)/(\w+)/(.*)$}) {
-        my $view = $1.'/'.$2;
-        my $id   = [split(qr|/|,$3)];
+        $view = $1.'/'.$2;
+        $id   = [split(qr|/|,$3)];
       } else {
         $req->respond([404,'Invalid request']);
         $httpd->stop_request;
@@ -219,7 +220,7 @@ sub _session_ready {
       })->cb(sub{
         my $response = CCNQ::AE::receive(shift);
         if($response) {
-          $req->respond([200,encode_json($reponse)]);
+          $req->respond([200,encode_json($response)]);
         } else {
           $req->respond([500,'No results']);
         }
@@ -238,9 +239,10 @@ sub _session_ready {
       my $url = URI->new($req->url);
       my $path = $url->path;
 
+      my ($view,$id);
       if($path =~ m{^/billing/(\w+)/(\w+)/(.*)$}) {
-        my $view = $1.'/'.$2;
-        my $id   = [split(qr|/|,$3)];
+        $view = $1.'/'.$2;
+        $id   = [split(qr|/|,$3)];
       } else {
         $req->respond([404,'Invalid request']);
         $httpd->stop_request;
@@ -255,11 +257,11 @@ sub _session_ready {
 
       CCNQ::Billing::billing_view({
         view => $view,
-        _id  => [ @params ],
+        _id  => $id,
       })->cb(sub{
         my $response = CCNQ::AE::receive(shift);
         if($response) {
-          $req->respond([200,encode_json($reponse)]);
+          $req->respond([200,encode_json($response)]);
         } else {
           $req->respond([500,'No results']);
         }
