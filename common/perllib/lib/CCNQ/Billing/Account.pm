@@ -46,7 +46,8 @@ sub update_account {
   my ($params) = @_;
   return CCNQ::Billing::billing_update({
     %$params,
-    _id => _account_id($params->{account}),
+    profile => 'account',
+    _id     => _account_id($params->{account}),
   });
 }
 
@@ -116,7 +117,8 @@ sub update_account_sub {
   my ($params) = @_;
   return CCNQ::Billing::billing_update({
     %$params,
-    _id => _account_sub_id($params->{account},$params->{account_sub}),
+    profile => 'account_sub',
+    _id     => _account_sub_id($params->{account},$params->{account_sub}),
   });
 }
 
