@@ -47,28 +47,16 @@ sub update_bucket {
   return CCNQ::Billing::Bucket::update_bucket(@_);
 }
 
-sub retrieve_bucket {
-  return CCNQ::Billing::Bucket::retrieve_bucket(@_);
-}
-
 use CCNQ::Billing::Plan;
 
 sub update_plan {
   return CCNQ::Billing::Plan::update_plan(@_);
 }
 
-sub retrieve_plan {
-  return CCNQ::Billing::Plan::retrieve_plan(@_);
-}
-
 use CCNQ::Billing::Account;
 
 sub update_account {
   return CCNQ::Billing::Account::update_account(@_);
-}
-
-sub retrieve_account {
-  return CCNQ::Billing::Account::retrieve_account(@_);
 }
 
 sub update_bill_recipient {
@@ -79,13 +67,8 @@ sub delete_bill_recipient {
   return CCNQ::Billing::Account::update_bill_recipient(@_);
 }
 
-
 sub update_account_sub {
   return CCNQ::Billing::Account::update_account_sub(@_);
-}
-
-sub retrieve_account_sub {
-  return CCNQ::Billing::Account::retrieve_account_sub(@_);
 }
 
 use CCNQ::Billing::Table;
