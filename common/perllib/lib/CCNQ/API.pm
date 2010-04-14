@@ -87,7 +87,23 @@ sub provisioning_query {
   my ($view,@id) = @_;
   my $uri = api_uri();
   $uri->path_segments('provisioning',$view,@id);
-  http_request GET => $uri->as_string, _api_cb($cb);  
+  http_request GET => $uri->as_string, _api_cb($cb);
+}
+
+sub billing_query {
+  my $cb = pop;
+  my ($what,@id) = @_;
+  my $uri = api_uri();
+  $uri->path_segments('billing',$what,@id);
+  http_request GET => $uri->as_string, _api_cb($cb);
+}
+
+sub billing_view {
+  my $cb = pop;
+  my ($view_name,@id) = @_;
+  my $uri = api_uri();
+  $uri->path_segments('billing','view',$view_name,@id);
+  http_request GET => $uri->as_string, _api_cb($cb);
 }
 
 sub _manager {

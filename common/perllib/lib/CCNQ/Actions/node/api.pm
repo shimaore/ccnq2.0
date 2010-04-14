@@ -80,6 +80,8 @@ sub _session_ready {
   CCNQ::XMPPAgent::_join_room($context,$manager_muc_room);
   my $provisioning_muc_room = CCNQ::Install::provisioning_cluster_jid;
   CCNQ::XMPPAgent::_join_room($context,$provisioning_muc_room);
+  my $billing_muc_room = CCNQ::Install::billing_cluster_jid;
+  CCNQ::XMPPAgent::_join_room($context,$billing_muc_room);
 
   my $host = CCNQ::API::api_rendezvous_host;
   my $port = CCNQ::API::api_rendezvous_port;
@@ -194,7 +196,7 @@ sub _session_ready {
 
       debug("node/api: Processing web provisioning retrieve");
       my $body = {
-        activity => 'node/provisioning/'.rand(),
+        activity => 'provisioning/'.rand(),
         action => 'provisioning_retrieve',
       };
 
@@ -211,9 +213,7 @@ sub _session_ready {
         return;
       }
 
-      if($req->method eq 'GET') {
-        # OK
-      } else {
+      if($req->method ne 'GET') {
         $req->respond([501,'Invalid method']);
         $httpd->stop_request;
         return;
@@ -221,6 +221,55 @@ sub _session_ready {
 
       debug("node/api: Contacting $provisioning_muc_room");
       my $r = CCNQ::XMPPAgent::send_muc_message($context,$provisioning_muc_room,$body);
+      if($r->[0] ne 'ok') {
+        $req->respond([500,$r->[1]]);
+      } else {
+        # Callback is used inside the _response handler.
+        $context->{api_callback}->{$body->{activity}} = _build_response_handler($req);
+      }
+      $httpd->stop_request;
+    },
+
+    '/billing' => sub {
+      my ($httpd, $req) = @_;
+
+      debug("node/api: Processing web billing retrieve");
+      my $body = {
+        activity => 'billing/'.rand(),
+      };
+
+      use URI;
+      my $url = URI->new($req->url);
+      my $path = $url->path;
+
+      if($path =~ m{^/billing/(bucket|plan)/(.+)$}) {
+        $body->{action}       = "retrieve_$1";
+        $body->{name}         = $2;
+      } elsif($path =~ m{^/billing/(account)/([\w-]+)$}) {
+        $body->{action}       = "retrieve_$1";
+        $body->{account}      = $2;
+      } elsif($path =~ m{^/billing/(account_sub)/([\w-]+)/([\w-]+)$}) {
+        $body->{action}       = "retrieve_$1";
+        $body->{account}      = $2;
+        $body->{account_sub}  = $3;
+      } elsif($path =~ m{^/billing/view/([\w-]+)/([\w-]+)$}) {
+        $body->{action}       = "billing_view";
+        $body->{account}      = $2;
+        $body->{account_sub}  = $3;
+      } else {
+        $req->respond([404,'Invalid request']);
+        $httpd->stop_request;
+        return;
+      }
+
+      if($req->method ne 'GET') {
+        $req->respond([501,'Invalid method']);
+        $httpd->stop_request;
+        return;
+      }
+
+      debug("node/api: Contacting $billing_muc_room");
+      my $r = CCNQ::XMPPAgent::send_muc_message($context,$billing_muc_room,$body);
       if($r->[0] ne 'ok') {
         $req->respond([500,$r->[1]]);
       } else {
