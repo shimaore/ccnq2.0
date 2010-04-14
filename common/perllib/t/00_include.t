@@ -128,5 +128,15 @@ require_ok( 'CCNQ::Manager::Requests::node_status_query' );
 require_ok( 'CCNQ::Manager::Requests::route_did_update' );
 require_ok( 'CCNQ::Manager::Requests::trace_query' );
 
+require_ok( 'CCNQ::Manager::Requests::account_update' );
+require_ok( 'CCNQ::Manager::Requests::account_sub_update' );
+require_ok( 'CCNQ::Manager::Requests::bill_recipient_update' );
+require_ok( 'CCNQ::Manager::Requests::bill_recipient_delete' );
+require_ok( 'CCNQ::Manager::Requests::bucket_update' );
+require_ok( 'CCNQ::Manager::Requests::plan_update' );
+require_ok( 'CCNQ::Manager::Requests::table_prefix_update' );
+require_ok( 'CCNQ::Manager::Requests::table_prefix_delete' );
+require_ok( 'CCNQ::Manager::Requests::table_update' );
+
 done_testing();
 1;
