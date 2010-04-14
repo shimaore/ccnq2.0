@@ -41,10 +41,23 @@ use constant::defer portal_uri => sub {
 
 use constant portal_db => 'portal';
 
+use constant js_report_portal_users_by_account => <<'JAVASCRIPT';
+  function(doc) {
+    if(doc.portal_accounts) {
+      for (var account in doc.portal_accounts) {
+        emit([doc.portal_accounts[account]],null);
+      }
+    }
+  }
+JAVASCRIPT
+
 use constant portal_designs => {
   report => {
     language => 'javascript',
     views    => {
+      portal_users_by_account => {
+        map => js_report_portal_users_by_account,
+      },
     },
   },
 };
