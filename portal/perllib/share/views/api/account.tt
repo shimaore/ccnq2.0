@@ -1,0 +1,40 @@
+<!-- so here, field contains:
+     - all the fields of the account as they are stored on the backend
+     - portal_users, an array of portal user_ids which have access to the account
+     - account_subs, an array of account_sub backend records which are under this account
+-->
+<% IF session.account %>
+  <fieldset>
+    <legend><% | loc %>Account details<% END %></legend>
+    <label for="account_id"><% | loc %>Account number:<% END %></label>
+      <input type="text" name="id" value="<% field._id %>" readonly />
+    <label for="name"><% | loc %>Account name:<% END %></label>
+      <input type="text" name="name" value="<% field.name %>" />
+    <fieldset>
+      <legend><% | loc %>Billing email recipients<% END %></legend>
+      <ul>
+        <% FOREACH recipient IN field.email_recipients %>
+        <li><% recipient.key | html %><!-- XXX button to remove this recipient --></li>
+        <% END %>
+      </ul>
+    </fieldset>
+    <fieldset>
+      <legend><% | loc %>Portal users<% END %></legend>
+      <ul>
+        <% FOREACH user IN field.portal_users %>
+        <li><% user | html %><!-- XXX button to remove this recipient --></li>
+        <% END %>
+      </ul>
+    </fieldset>
+    <fieldset>
+      <legend><% | loc %>Line items<% END %></legend>
+      <ul>
+        <% FOREACH account_sub IN field.account_subs %>
+        <li><% account_sub._id | html %> <% account_sub.name %><!-- XXX button to access this account_sub --></li>
+        <% END %>
+      </ul>
+    </fieldset>
+  </fieldset>
+<% ELSE %>
+  <% | loc %>Please select an account.<% END %>
+<% END %>
