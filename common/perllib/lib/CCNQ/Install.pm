@@ -180,20 +180,20 @@ sub make_password {
 # Service definitions
 
 use constant roles_to_functions => {
-  'carrier-sbc'     => [qw( b2bua/cdr b2bua/carrier_sbc_config b2bua/base monit node )],
-  'client-sbc'      => [qw( b2bua/cdr b2bua/client_sbc_config  b2bua/base monit node )],
-  'client-ocs-sbc'  => [qw( b2bua/cdr b2bua/client_ocs_sbc b2bua/base monit node )],
-  'inbound-proxy'   => [qw( proxy/inbound_proxy proxy/base monit node )],
-  'outbound-proxy'  => [qw( proxy/outbound_proxy proxy/base monit node )],
-  'complete-transparent-proxy' => [qw( proxy/complete_transparent proxy/base mediaproxy/dispatcher mediaproxy monit node )],
-  'router-no-registrar' => [qw( proxy/router_no_registrar proxy/base monit node )],
-  'realtime_estimator' => [qw( db/billing realtime_estimator )],
-  'mediaproxy-relay' => [qw( mediaproxy/relay mediaproxy monit node )],
-  'bucket-db'       => [qw( db/bucket )],
-  'cdr-db'          => [qw( db/cdr )],
-  'manager'         => [qw( manager monit node )],
-  'api'             => [qw( node/api db/provisioning db/billing )],
-  'portal'          => [qw( node/api db/provisioning db/billing portal )],
+  'carrier-sbc'                 => [qw( b2bua/cdr b2bua/carrier_sbc_config b2bua/base monit node )],
+  'client-sbc'                  => [qw( b2bua/cdr b2bua/client_sbc_config  b2bua/base monit node )],
+  'client-ocs-sbc'              => [qw( b2bua/cdr b2bua/client_ocs_sbc b2bua/base monit node )],
+  'inbound-proxy'               => [qw( proxy/inbound_proxy proxy/base monit node )],
+  'outbound-proxy'              => [qw( proxy/outbound_proxy proxy/base monit node )],
+  'complete-transparent-proxy'  => [qw( proxy/complete_transparent proxy/base mediaproxy/dispatcher mediaproxy monit node )],
+  'router-no-registrar'         => [qw( proxy/router_no_registrar proxy/base monit node )],
+  'realtime_estimator'          => [qw( db/billing realtime_estimator )],
+  'mediaproxy-relay'            => [qw( mediaproxy/relay mediaproxy monit node )],
+  'bucket-db'                   => [qw( db/bucket )],
+  'cdr-db'                      => [qw( db/cdr )],
+  'manager'                     => [qw( manager monit node )],
+  'api'                         => [qw( node/api db/provisioning db/billing )],
+  'portal'                      => [qw( node/api db/provisioning db/billing portal )],
 };
 
 # Service discovery
