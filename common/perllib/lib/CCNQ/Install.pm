@@ -228,7 +228,7 @@ sub resolve_roles {
   my $cv = AE::cv;
   AnyEvent::DNS::txt catdns($cluster_name,domain_name), $cv;
   my @roles = $cv->recv;
-  return join(' ',@roles);
+  return @roles;
 }
 
 sub resolve_roles_and_functions {
