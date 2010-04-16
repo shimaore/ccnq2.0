@@ -10,11 +10,11 @@
     <form action="/api/account" method="post" accept-charset="utf-8">
       <p class="ui-helper-clearfix">
         <label for="account_id"><% | loc %>Account number:<% END %></label>
-        <input type="text" name="account" value="<% field.account %>" readonly />
+        <input type="text" name="account" value="<% field.account | html %>" readonly />
       </p>
       <p class="ui-helper-clearfix">
         <label for="name"><% | loc %>Account name:<% END %></label>
-        <input type="text" name="name" value="<% field.name %>" />
+        <input type="text" name="name" value="<% field.name | html %>" />
       </p>
       <p class="ui-helper-clearfix submit">
       <input type="submit" value="<% | loc %>Save<% END %>" />
@@ -50,11 +50,11 @@
         </p>
         <p class="ui-helper-clearfix">
           <label for="account_id"><% | loc %>Account sub number:<% END %></label>
-          <input type="text" name="account_sub" value="" readonly />
+          <input type="text" name="account_sub" value="" />
         </p>
         <p class="ui-helper-clearfix">
           <label for="name"><% | loc %>Account sub name:<% END %></label>
-          <input type="text" name="name" value="<% field.name %>" />
+          <input type="text" name="name" value="" />
         </p>
         <p class="ui-helper-clearfix submit">
         <input type="submit" value="<% | loc %>Create<% END %>" />
