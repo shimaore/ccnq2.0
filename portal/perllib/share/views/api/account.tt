@@ -43,7 +43,7 @@
         <li><% account_sub._id | html %> <% account_sub.name %><!-- XXX button to access this account_sub --></li>
         <% END %>
       </ul>
-      <form action="/api/account_sub" method="put" accept-charset="utf-8">
+      <form action="/api/account_sub" method="post" accept-charset="utf-8">
         <p class="ui-helper-clearfix">
           <label for="account_id"><% | loc %>Account number:<% END %></label>
           <input type="text" name="account" value="<% field.account %>" readonly />
