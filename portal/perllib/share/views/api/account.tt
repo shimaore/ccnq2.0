@@ -32,7 +32,7 @@
       <legend><% | loc %>Portal users<% END %></legend>
       <ul>
         <% FOREACH user IN field.portal_users %>
-        <li><% user._id | html %><!-- XXX button to remove this recipient --></li>
+        <li><% user | html %><!-- XXX button to remove this recipient --></li>
         <% END %>
       </ul>
     </fieldset>
