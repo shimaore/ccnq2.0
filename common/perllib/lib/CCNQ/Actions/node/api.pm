@@ -220,7 +220,7 @@ sub _session_ready {
       })->cb(sub{
         my $response = CCNQ::AE::receive(shift);
         if($response) {
-          $req->respond([200,encode_json($response)]);
+          $req->respond([200,'OK',{ 'Content-Type' => 'text/json' }, encode_json($response)]);
         } else {
           $req->respond([500,'No results']);
         }
@@ -261,7 +261,7 @@ sub _session_ready {
       })->cb(sub{
         my $response = CCNQ::AE::receive(shift);
         if($response) {
-          $req->respond([200,encode_json($response)]);
+          $req->respond([200,'OK',{ 'Content-Type' => 'text/json' }, encode_json($response)]);
         } else {
           $req->respond([500,'No results']);
         }
