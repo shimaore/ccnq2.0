@@ -32,7 +32,7 @@
       <legend><% | loc %>Portal users<% END %></legend>
       <ul>
         <% FOREACH user IN field.portal_users %>
-        <li><% user | html %><!-- XXX button to remove this recipient --></li>
+        <li><% user._id | html %><!-- XXX button to remove this recipient --></li>
         <% END %>
       </ul>
     </fieldset>
@@ -40,7 +40,7 @@
       <legend><% | loc %>Account subs<% END %></legend>
       <ul>
         <% FOREACH account_sub IN field.account_subs %>
-        <li><a href="/api/<% account_sub.id | uri %>"><% account_sub.name %></a></li>
+        <li><a href="/api/<% account_sub._id | uri %>"><% account_sub.name %></a></li>
         <% END %>
       </ul>
       <form action="/api/account_sub" method="post" accept-charset="utf-8">
@@ -61,10 +61,10 @@
           <select name="plan">
             <option value=""></option>
             <% FOREACH plan IN field.plans %>
-              <% IF plan == field.plan %>
-                <option value="<% plan | html %>" selected><% plan | html %></option>
+              <% IF plan.name == field.plan %>
+                <option value="<% plan.name | html %>" selected><% plan.name | html %></option>
               <% ELSE %>
-                <option value="<% plan | html %>"><% plan | html %></option>
+                <option value="<% plan.name | html %>"><% plan.name | html %></option>
               <% END %>
             <% END %>
           </select>

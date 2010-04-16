@@ -20,10 +20,10 @@
         <select name="plan">
           <option value=""></option>
           <% FOREACH plan IN field.plans %>
-            <% IF plan == field.plan %>
-              <option value="<% plan | html %>" selected><% plan | html %></option>
+            <% IF plan.name == field.plan %>
+              <option value="<% plan.name | html %>" selected><% plan.name | html %></option>
             <% ELSE %>
-              <option value="<% plan | html %>"><% plan | html %></option>
+              <option value="<% plan.name | html %>"><% plan.name | html %></option>
             <% END %>
           <% END %>
         </select>

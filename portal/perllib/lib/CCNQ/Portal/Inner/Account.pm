@@ -27,7 +27,7 @@ sub gather_plans {
   my $cv = AE::cv;
   CCNQ::API::billing_view('report','plans',$cv);
   my $r = CCNQ::AE::receive($cv) || { rows => [] };
-  return map { $_->{doc}->{name} } @{$r->{rows}};
+  return map { $_->{doc} } @{$r->{rows}};
 }
 
 sub gather_field {
@@ -40,7 +40,7 @@ sub gather_field {
     endkey   => [$account,{}],
   });
   my $portal_users = CCNQ::AE::receive($cv1);
-  my @portal_users = map { $_->{id} } @{$portal_users->{rows} || []};
+  my @portal_users = map { $_->{doc} } @{$portal_users->{rows} || []};
 
   # Get the information from the API.
   my $cv2 = AE::cv;
