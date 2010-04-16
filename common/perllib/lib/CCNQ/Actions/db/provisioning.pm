@@ -25,7 +25,7 @@ sub _install {
 sub _session_ready {
   my ($params,$context) = @_;
   use CCNQ::XMPPAgent;
-  CCNQ::XMPPAgent::_join_room($context,CCNQ::Provisioning::provisioning_muc_jid);
+  CCNQ::XMPPAgent::_join_room($context,CCNQ::Provisioning::provisioning_cluster_jid);
   return;
 }
 

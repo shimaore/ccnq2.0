@@ -23,7 +23,7 @@ sub run {
   return (
     {
       action => 'update_plan',
-      cluster_name => CCNQ::Billing::billing_cluster_name,
+      cluster_name => CCNQ::Billing::BILLING_CLUSTER_NAME,
       params => {
         map { $_ => $request->{$_} } qw( name currency decimals rating_steps )
       }

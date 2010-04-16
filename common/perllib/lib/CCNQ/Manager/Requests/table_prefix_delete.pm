@@ -23,7 +23,7 @@ sub run {
   return (
     {
       action => 'delete_table_prefix',
-      cluster_name => CCNQ::Billing::billing_cluster_name,
+      cluster_name => CCNQ::Billing::BILLING_CLUSTER_NAME,
       params => {
         map { $_ => $request->{$_} } qw( name prefix )
       }
