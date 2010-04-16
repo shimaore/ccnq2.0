@@ -65,6 +65,7 @@ sub _api {
   $uri->path_segments('api',delete($params->{action}),delete($params->{cluster_name}));
   $uri->query_form($params);
   http_request $method => $uri->as_string, _api_cb($cb);
+  return;
 }
 
 =head1 api_query(\%params,\&cb)
@@ -79,7 +80,8 @@ sub request_query {
   my ($request_id,$cb) = @_;
   my $uri = api_uri();
   $uri->path_segments('request',$request_id);
-  http_request GET => $uri->as_string, _api_cb($cb);
+  http_get $uri->as_string, _api_cb($cb);
+  return;
 }
 
 sub provisioning_view {
@@ -87,7 +89,8 @@ sub provisioning_view {
   my ($view,@id) = @_;
   my $uri = api_uri();
   $uri->path_segments('provisioning',$view,@id);
-  http_request GET => $uri->as_string, _api_cb($cb);
+  http_get $uri->as_string, _api_cb($cb);
+  return;
 }
 
 sub billing_view {
@@ -95,7 +98,8 @@ sub billing_view {
   my ($view,@id) = @_;
   my $uri = api_uri();
   $uri->path_segments('billing',$view,@id);
-  http_request GET => $uri->as_string, _api_cb($cb);
+  http_get $uri->as_string, _api_cb($cb);
+  return;
 }
 
 sub _manager {
@@ -109,6 +113,7 @@ sub _manager {
   }
   $uri->query_form({code => $code});
   http_request $method => $uri->as_string, _api_cb($cb);
+  return;
 }
 
 sub manager_query  { _manager('GET',@_) }
