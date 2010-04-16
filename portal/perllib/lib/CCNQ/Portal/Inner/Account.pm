@@ -20,6 +20,7 @@ use CCNQ::Portal;
 use CCNQ::Portal::I18N;
 
 use CCNQ::AE;
+use CCNQ::API;
 
 sub gather_field {
   my $account = session('account');
@@ -56,6 +57,25 @@ sub gather_field {
   };
 }
 
+sub gather_field_sub {
+  my $account = session('account');
+  my $account_sub = session('account_sub');
+
+  # Get the information from the portal.
+
+  # Get the information from the API.
+  my $cv2 = AE::cv;
+  CCNQ::API::billing_view('account_sub',$account,$account_sub,$cv2);
+  my $account_sub_billing_data = CCNQ::AE::receive($cv2) || {};
+
+  var field => {
+    name    => $account_sub_billing_data->{name},
+    plan    => $account_sub_billing_data->{plan},
+    account => $account,
+    account_sub => $account_sub,
+  };
+}
+
 get '/api/account' => sub {
   return unless CCNQ::Portal->current_session->user;
   return unless session('account');
@@ -74,16 +94,23 @@ post '/api/account' => sub {
 
   my $account = session('account');
 
+  my $name = params->{name};
+  $name =~ s/^\s+//; $name =~ s/^\s+$//; $name =~ s/\s+/ /g;
+
   # Update the information in the portal.
+  # N/A -- no native account-related information is stored in the portal.
+  # ("portal_accounts" is a property of the portal user.)
 
   # Update the information in the API.
   my $cv1 = AE::cv;
   CCNQ::API::api_update({
     action        => 'account',
-    cluster_name  => CCNQ::Billing::BILLING_CLUSTER_NAME,
+    cluster_name  => CCNQ::Billing::BILLING_CLUSTER_NAME(),
     account       => $account,
-    name          => param('name'),
+    name          => $name,
   },$cv1);
+  my $r = $cv1->recv;
+  debug($r);
 
   gather_field();
 
@@ -91,6 +118,49 @@ post '/api/account' => sub {
   return CCNQ::Portal->site->default_content->();
 };
 
-# XXX post ...
+get '/api/account_sub/:account_sub' => sub {
+  return unless CCNQ::Portal->current_session->user;
+  return unless session('account');
+  return unless params->{account_sub};
+
+  session account_sub => params->{account_sub};
+
+  gather_field_sub();
+
+  var template_name => 'api/account_sub';
+  return CCNQ::Portal->site->default_content->();
+};
+
+post '/api/account_sub' => sub {
+  return unless CCNQ::Portal->current_session->user;
+  return unless session('account');
+  return unless params->{account_sub};
+
+  session account_sub => params->{account_sub};
+
+  my $name = params->{name};
+  $name =~ s/^\s+//; $name =~ s/^\s+$//; $name =~ s/\s+/ /g;
+
+  my $plan = params->{plan};
+
+  # Update the information in the API.
+  my $cv1 = AE::cv;
+  CCNQ::API::api_update({
+    action        => 'account',
+    cluster_name  => CCNQ::Billing::BILLING_CLUSTER_NAME(),
+
+    account     => session('account'),
+    account_sub => session('account_sub'),
+    name => $name,
+    plan => $plan,
+  },$cv1);
+  my $r = $cv1->recv;
+  debug($r);
+
+  gather_field_sub();
+
+  var template_name => 'api/account_sub';
+  return CCNQ::Portal->site->default_content->();
+};
 
 'CCNQ::Portal::Inner::Account';
