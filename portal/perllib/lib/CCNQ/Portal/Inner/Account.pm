@@ -76,7 +76,8 @@ sub gather_field_sub {
   # Get the information from the API.
   my $cv2 = AE::cv;
   CCNQ::API::billing_view('report','account_subs',$account,$account_sub,$cv2);
-  my $account_sub_billing_data = CCNQ::AE::receive($cv2) || {};
+  my $r2 = CCNQ::AE::receive($cv2) || { rows => [] };
+  my $account_sub_billing_data = $r2->{rows}->[0]->{doc} || {};
 
   var field => {
     name    => $account_sub_billing_data->{name},

@@ -9,7 +9,7 @@
       </p>
       <p class="ui-helper-clearfix">
         <label for="account_id"><% | loc %>Account sub number:<% END %></label>
-        <input type="text" name="account_sub" value="<% field.account_sub | html %>" />
+        <input type="text" name="account_sub" value="<% field.account_sub | html %>" readonly/>
       </p>
       <p class="ui-helper-clearfix">
         <label for="name"><% | loc %>Account sub name:<% END %></label>
