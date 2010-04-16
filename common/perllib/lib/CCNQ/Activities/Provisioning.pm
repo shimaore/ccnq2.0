@@ -34,7 +34,7 @@ sub __update {
     {
       action => 'provisioning_update',
       cluster_name => CCNQ::Provisioning::PROVISIONING_CLUSTER_NAME,
-      provisioning_data => $request, # at least _id is required
+      params => $request, # at least _id is required
     },
   );
 }
@@ -46,7 +46,9 @@ sub __delete {
     {
       action => 'provisioning_delete',
       cluster_name => CCNQ::Provisioning::PROVISIONING_CLUSTER_NAME,
-      _id => $request->{_id}, # at least _id is required
+      params => {
+        _id => $request->{_id}, # at least _id is required
+      }
     },
   );
 }

@@ -30,23 +30,19 @@ sub _session_ready {
 }
 
 sub provisioning_update {
-  my ($params,$context) = @_;
-  return CCNQ::Provisioning::provisioning_update($params->{provisioning_data});
+  return CCNQ::Provisioning::provisioning_update(shift->{params});
 }
 
 sub provisioning_delete {
-  my ($params,$context) = @_;
-  return CCNQ::Provisioning::provisioning_delete($params);
+  return CCNQ::Provisioning::provisioning_delete(shift->{params});
 }
 
 sub provisioning_retrieve {
-  my ($params,$context) = @_;
-  return CCNQ::Provisioning::provisioning_retrieve($params);
+  return CCNQ::Provisioning::provisioning_retrieve(shift->{params});
 }
 
 sub provisioning_view {
-  my ($params,$context) = @_;
-  return CCNQ::Provisioning::provisioning_view($params);
+  return CCNQ::Provisioning::provisioning_view(shift->{params});
 }
 
 'CCNQ::Actions::db::provisioning';

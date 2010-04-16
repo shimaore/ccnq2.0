@@ -44,45 +44,45 @@ update_bucket {
 =cut
 
 sub update_bucket {
-  return CCNQ::Billing::Bucket::update_bucket(@_);
+  return CCNQ::Billing::Bucket::update_bucket(shift->{params});
 }
 
 use CCNQ::Billing::Plan;
 
 sub update_plan {
-  return CCNQ::Billing::Plan::update_plan(@_);
+  return CCNQ::Billing::Plan::update_plan(shift->{params});
 }
 
 use CCNQ::Billing::Account;
 
 sub update_account {
-  return CCNQ::Billing::Account::update_account(@_);
+  return CCNQ::Billing::Account::update_account(shift->{params});
 }
 
 sub update_bill_recipient {
-  return CCNQ::Billing::Account::update_bill_recipient(@_);
+  return CCNQ::Billing::Account::update_bill_recipient(shift->{params});
 }
 
 sub delete_bill_recipient {
-  return CCNQ::Billing::Account::update_bill_recipient(@_);
+  return CCNQ::Billing::Account::update_bill_recipient(shift->{params});
 }
 
 sub update_account_sub {
-  return CCNQ::Billing::Account::update_account_sub(@_);
+  return CCNQ::Billing::Account::update_account_sub(shift->{params});
 }
 
 use CCNQ::Billing::Table;
 
 sub create_table {
-  return CCNQ::Billing::Table::create(@_);
+  return CCNQ::Billing::Table::create(shift->{params});
 }
 
 sub update_table_prefix {
-  return CCNQ::Billing::Table::update_prefix(@_);
+  return CCNQ::Billing::Table::update_prefix(shift->{params});
 }
 
 sub delete_table_prefix {
-  return CCNQ::Billing::Table::delete_prefix(@_);
+  return CCNQ::Billing::Table::delete_prefix(shift->{params});
 }
 
 'CCNQ::Actions::db::billing';
