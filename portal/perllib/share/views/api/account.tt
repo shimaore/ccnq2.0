@@ -24,7 +24,7 @@
       <legend><% | loc %>Billing email recipients<% END %></legend>
       <ul>
         <% FOREACH recipient IN field.email_recipients %>
-        <li><% recipient._id | html %><!-- XXX button to remove this recipient --></li>
+        <li><% recipient.key | html %><!-- XXX button to remove this recipient --></li>
         <% END %>
       </ul>
     </fieldset>
