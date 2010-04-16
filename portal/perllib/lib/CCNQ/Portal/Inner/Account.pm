@@ -37,7 +37,7 @@ get '/api/account' => sub {
   # Get the information from the API.
   my $cv2 = AE::cv;
   CCNQ::API::billing_view('account',session('account'),$cv2);
-  my $account_billing_data = CCNQ::AE::receive($cv2);
+  my $account_billing_data = CCNQ::AE::receive($cv2) || {};
 
   # e.g. print a list of users who receive bills for this account
   # .. that'd be the keys of the 'email_recipients' hash.
