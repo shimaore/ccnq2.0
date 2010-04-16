@@ -109,7 +109,7 @@ post '/api/account' => sub {
     account       => $account,
     name          => $name,
   },$cv1);
-  my $r = $cv1->recv;
+  my $r = CCNQ::AE::receive($cv1);
   debug($r);
 
   # Redirect to the request
@@ -152,7 +152,7 @@ post '/api/account_sub' => sub {
     name => $name,
     plan => $plan,
   },$cv1);
-  my $r = $cv1->recv;
+  my $r = CCNQ::AE::receive($cv1);
 
   # Redirect to the request
   redirect '/request/'.$r->{request};
