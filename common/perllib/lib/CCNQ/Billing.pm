@@ -66,6 +66,14 @@ function (doc) {
 }
 JAVASCRIPT
 
+# All "plan"-class documents.
+use constant js_report_plans => <<'JAVASCRIPT';
+function (doc) {
+  if(doc.profile == 'plan') {
+    emit([doc.account,doc.name],null);
+  }
+}
+JAVASCRIPT
 
 use constant billing_designs => {
   report => {
@@ -82,6 +90,9 @@ use constant billing_designs => {
       },
       account_subs => {
         map => js_report_account_subs,
+      },
+      plans => {
+        map => js_report_plans,
       },
     },
   },

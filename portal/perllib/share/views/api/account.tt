@@ -56,6 +56,19 @@
           <label for="name"><% | loc %>Account sub name:<% END %></label>
           <input type="text" name="name" value="" />
         </p>
+        <p class="ui-helper-clearfix">
+          <label for="plan"><% | loc %>Plan:<% END %></label>
+          <select name="plan">
+            <option value=""></option>
+            <% FOREACH plan IN field.plans %>
+              <% IF plan == field.plan %>
+                <option value="<% plan | html %>" selected><% plan | html %></option>
+              <% ELSE %>
+                <option value="<% plan | html %>"><% plan | html %></option>
+              <% END %>
+            <% END %>
+          </select>
+        </p>
         <p class="ui-helper-clearfix submit">
         <input type="submit" value="<% | loc %>Create<% END %>" />
         </p>

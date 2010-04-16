@@ -67,6 +67,7 @@ sub update_plan {
   my ($params) = @_;
   return CCNQ::Billing::billing_update({
     %$params,
+    profile => 'plan',
     _id => _plan_id($params->{name}),
   });
 }
