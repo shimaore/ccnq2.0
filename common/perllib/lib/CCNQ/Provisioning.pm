@@ -17,6 +17,15 @@ package CCNQ::Provisioning;
 use strict; use warnings;
 
 use CCNQ::Install;
+
+# This is a "virtual cluster name" -- no such cluster is defined in
+# the (DNS) configuration, but the MUC room is used as a rendez-vous
+# point to propagate the data.
+use constant PROVISIONING_CLUSTER_NAME => 'provisioning';
+use constant::defer provisioning_cluster_jid => sub {
+  CCNQ::Install::make_muc_jid(PROVISIONING_CLUSTER_NAME)
+};
+
 use constant::defer provisioning_uri => sub {
   CCNQ::Install::couchdb_local_uri;
 };

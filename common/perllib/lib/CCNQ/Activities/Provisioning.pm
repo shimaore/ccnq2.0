@@ -15,9 +15,8 @@ package CCNQ::Activities::Provisioning;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
 
-use constant PROVISIONING_CLUSTER_NAME => 'provisioning';
-
 use Carp;
+use CCNQ::Provisioning;
 
 sub __update {
   my $request = shift;
@@ -34,7 +33,7 @@ sub __update {
   return (
     {
       action => 'provisioning_update',
-      cluster_name => PROVISIONING_CLUSTER_NAME,
+      cluster_name => CCNQ::Provisioning::PROVISIONING_CLUSTER_NAME,
       provisioning_data => $request, # at least _id is required
     },
   );
@@ -46,7 +45,7 @@ sub __delete {
   return (
     {
       action => 'provisioning_delete',
-      cluster_name => PROVISIONING_CLUSTER_NAME,
+      cluster_name => CCNQ::Provisioning::PROVISIONING_CLUSTER_NAME,
       _id => $request->{_id}, # at least _id is required
     },
   );
