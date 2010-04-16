@@ -7,10 +7,14 @@
 <% IF session.account %>
   <fieldset>
     <legend><% | loc %>Account details<% END %></legend>
-    <label for="account_id"><% | loc %>Account number:<% END %></label>
-      <input type="text" name="id" value="<% field._id %>" readonly />
-    <label for="name"><% | loc %>Account name:<% END %></label>
+    <p class="ui-helper-clearfix">
+      <label for="account_id"><% | loc %>Account number:<% END %></label>
+      <input type="text" name="account" value="<% field.account %>" readonly />
+    </p>
+    <p class="ui-helper-clearfix">
+      <label for="name"><% | loc %>Account name:<% END %></label>
       <input type="text" name="name" value="<% field.name %>" />
+    </p>
     <fieldset>
       <legend><% | loc %>Billing email recipients<% END %></legend>
       <ul>

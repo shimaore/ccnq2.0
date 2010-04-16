@@ -52,7 +52,8 @@ get '/api/account' => sub {
 
   # e.g. print account details.
   var field => {
-    %$account_billing_data,
+    name    => $account_billing_data->{name},
+    account => $account,
     portal_users => [@portal_users],
     account_subs => [@account_subs],
   };
