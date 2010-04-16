@@ -112,10 +112,8 @@ post '/api/account' => sub {
   my $r = $cv1->recv;
   debug($r);
 
-  gather_field();
-
-  var template_name => 'api/account';
-  return CCNQ::Portal->site->default_content->();
+  # Redirect to the request
+  redirect '/request/'.$r->{request};
 };
 
 get '/api/account_sub/:account_sub' => sub {
@@ -155,12 +153,9 @@ post '/api/account_sub' => sub {
     plan => $plan,
   },$cv1);
   my $r = $cv1->recv;
-  debug($r);
 
-  gather_field_sub();
-
-  var template_name => 'api/account_sub';
-  return CCNQ::Portal->site->default_content->();
+  # Redirect to the request
+  redirect '/request/'.$r->{request};
 };
 
 'CCNQ::Portal::Inner::Account';
