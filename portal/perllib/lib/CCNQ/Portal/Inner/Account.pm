@@ -21,10 +21,7 @@ use CCNQ::Portal::I18N;
 
 use CCNQ::AE;
 
-get '/api/account' => sub {
-  return unless CCNQ::Portal->current_session->user;
-  return unless session('account');
-
+sub gather_field {
   my $account = session('account');
 
   # Get the information from the portal.
@@ -57,18 +54,38 @@ get '/api/account' => sub {
     portal_users => [@portal_users],
     account_subs => [@account_subs],
   };
+}
+
+get '/api/account' => sub {
+  return unless CCNQ::Portal->current_session->user;
+  return unless session('account');
+
+  gather_field();
 
   var template_name => 'api/account';
   return CCNQ::Portal->site->default_content->();
 };
 
+use CCNQ::Billing;
+
 post '/api/account' => sub {
   return unless CCNQ::Portal->current_session->user;
   return unless session('account');
 
+  my $account = session('account');
+
   # Update the information in the portal.
 
   # Update the information in the API.
+  my $cv1 = AE::cv;
+  CCNQ::API::api_update({
+    action        => 'account',
+    cluster_name  => CCNQ::Billing::BILLING_CLUSTER_NAME,
+    account       => $account,
+    name          => param('name'),
+  },$cv1);
+
+  gather_field();
 
   var template_name => 'api/account';
   return CCNQ::Portal->site->default_content->();
