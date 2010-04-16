@@ -25,18 +25,20 @@ get '/api/account' => sub {
   return unless CCNQ::Portal->current_session->user;
   return unless session('account');
 
+  my $account = session('account');
+
   # Get the information from the portal.
   # e.g. print a list of users who have portal access to this account
   my $cv1 = CCNQ::Portal::db->view('report/portal_users_by_account', {
-    startkey => [session('account')],
-    endkey   => [session('account'),{}],
+    startkey => [$account],
+    endkey   => [$account,{}],
   });
   my $portal_users = CCNQ::AE::receive($cv1);
   my @portal_users = map { $_->{id} } @{$portal_users->{rows} || []};
 
   # Get the information from the API.
   my $cv2 = AE::cv;
-  CCNQ::API::billing_view('account',session('account'),$cv2);
+  CCNQ::API::billing_view('account',$account,$cv2);
   my $account_billing_data = CCNQ::AE::receive($cv2) || {};
 
   # e.g. print a list of users who receive bills for this account
@@ -44,7 +46,7 @@ get '/api/account' => sub {
 
   # e.g. print a list of account_subs for this account
   my $cv3 = AE::cv;
-  CCNQ::API::billing_view('account_sub',session('account'),$cv3);
+  CCNQ::API::billing_view('account_sub',$account,$cv3);
   my $account_subs = CCNQ::AE::receive($cv3);
   my @account_subs = map { $_->{doc} } @{$account_subs->{rows} || []};
 
