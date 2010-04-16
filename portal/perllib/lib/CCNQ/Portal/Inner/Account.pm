@@ -38,9 +38,10 @@ sub gather_field {
   my $cv1 = CCNQ::Portal::db->view('report/portal_users_by_account', {
     startkey => [$account],
     endkey   => [$account,{}],
+    include_docs => true,
   });
   my $portal_users = CCNQ::AE::receive($cv1);
-  my @portal_users = map { $_->{id} } @{$portal_users->{rows} || []};
+  my @portal_users = map { $_->{doc} } @{$portal_users->{rows} || []};
 
   # Get the information from the API.
   my $cv2 = AE::cv;
