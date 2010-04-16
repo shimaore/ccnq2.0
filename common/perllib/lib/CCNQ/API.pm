@@ -86,18 +86,18 @@ sub request_query {
 
 sub provisioning_view {
   my $cb = pop;
-  my ($view,@id) = @_;
+  my ($design,$view,@id) = @_;
   my $uri = api_uri();
-  $uri->path_segments('provisioning',$view,@id);
+  $uri->path_segments('provisioning',$design,$view,@id);
   http_get $uri->as_string, _api_cb($cb);
   return;
 }
 
 sub billing_view {
   my $cb = pop;
-  my ($view,@id) = @_;
+  my ($design,$view,@id) = @_;
   my $uri = api_uri();
-  $uri->path_segments('billing',$view,@id);
+  $uri->path_segments('billing',$design,$view,@id);
   http_get $uri->as_string, _api_cb($cb);
   return;
 }

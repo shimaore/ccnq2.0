@@ -36,7 +36,7 @@ sub gather_field {
 
   # Get the information from the API.
   my $cv2 = AE::cv;
-  CCNQ::API::billing_view('report/accounts',$account,$cv2);
+  CCNQ::API::billing_view('report','accounts',$account,$cv2);
   my $account_billing_data = CCNQ::AE::receive($cv2) || {};
 
   # e.g. print a list of users who receive bills for this account
@@ -44,7 +44,7 @@ sub gather_field {
 
   # e.g. print a list of account_subs for this account
   my $cv3 = AE::cv;
-  CCNQ::API::billing_view('report/account_subs',$account,$cv3);
+  CCNQ::API::billing_view('report','account_subs',$account,$cv3);
   my $account_subs = CCNQ::AE::receive($cv3);
   my @account_subs = map { $_->{doc} } @{$account_subs->{rows} || []};
 
@@ -65,7 +65,7 @@ sub gather_field_sub {
 
   # Get the information from the API.
   my $cv2 = AE::cv;
-  CCNQ::API::billing_view('report/account_subs',$account,$account_sub,$cv2);
+  CCNQ::API::billing_view('report','account_subs',$account,$account_sub,$cv2);
   my $account_sub_billing_data = CCNQ::AE::receive($cv2) || {};
 
   var field => {

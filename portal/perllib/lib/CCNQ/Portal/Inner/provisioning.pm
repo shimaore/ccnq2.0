@@ -29,12 +29,11 @@ Display the known provisioning information about a given account.
 get '/provisioning/account' => sub {
   return unless CCNQ::Portal->current_session->user;
   var template_name => 'provisioning';
-  my $view = 'report/account';
   my $account = session('account');
   return unless defined $account;
 
   my $cv = AE::cv;
-  CCNQ::API::provisioning_view($view,$account,$cv);
+  CCNQ::API::provisioning_view('report','account',$account,$cv);
   var result => $cv->recv;
   return CCNQ::Portal->site->default_content->();
 };
@@ -51,12 +50,11 @@ get '/provisioning/:view/*' => sub {
   return unless CCNQ::Portal->current_session->user->profile->is_admin;
 
   var template_name => 'provisioning';
-  my $view = 'report/'.params->{view};
   my $id = splat;
   unshift @$id, session('account');
 
   my $cv = AE::cv;
-  CCNQ::API::provisioning_view($view,$id,$cv);
+  CCNQ::API::provisioning_view('report',params->{view},@$id,$cv);
   var result => $cv->recv;
   return CCNQ::Portal->site->default_content->();
 };
