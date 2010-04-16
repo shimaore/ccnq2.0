@@ -37,12 +37,29 @@
       </ul>
     </fieldset>
     <fieldset>
-      <legend><% | loc %>Line items<% END %></legend>
+      <legend><% | loc %>Account subs<% END %></legend>
       <ul>
         <% FOREACH account_sub IN field.account_subs %>
         <li><% account_sub._id | html %> <% account_sub.name %><!-- XXX button to access this account_sub --></li>
         <% END %>
       </ul>
+      <form action="/api/account_sub" method="put" accept-charset="utf-8">
+        <p class="ui-helper-clearfix">
+          <label for="account_id"><% | loc %>Account number:<% END %></label>
+          <input type="text" name="account" value="<% field.account %>" readonly />
+        </p>
+        <p class="ui-helper-clearfix">
+          <label for="account_id"><% | loc %>Account sub number:<% END %></label>
+          <input type="text" name="account_sub" value="" readonly />
+        </p>
+        <p class="ui-helper-clearfix">
+          <label for="name"><% | loc %>Account sub name:<% END %></label>
+          <input type="text" name="name" value="<% field.name %>" />
+        </p>
+        <p class="ui-helper-clearfix submit">
+        <input type="submit" value="<% | loc %>Create<% END %>" />
+        </p>
+      </form>
     </fieldset>
   </fieldset>
 <% ELSE %>
