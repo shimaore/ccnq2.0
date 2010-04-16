@@ -15,6 +15,15 @@ package CCNQ::Billing::Bucket;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
 
+use CCNQ::Install;
+
+# Normally only one server should be part of this cluster (until we
+# implementing sharding of the CDR db).
+use constant BUCKET_CLUSTER_NAME => 'bucket';
+use constant::defer bucket_cluster_jid => sub {
+  CCNQ::Install::make_muc_jid(BUCKET_CLUSTER_NAME)
+};
+
 sub _bucket_id {
   return join('/','bucket',@_);
 }

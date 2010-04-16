@@ -16,6 +16,7 @@ package CCNQ::Actions::db::bucket;
 use strict; use warnings;
 
 use CCNQ::Rating::Bucket::DB;
+use CCNQ::Billing::Bucket;
 
 sub _install {
   return CCNQ::Rating::Bucket::DB::install(@_);
@@ -24,7 +25,7 @@ sub _install {
 sub _session_ready {
   my ($params,$context) = @_;
   use CCNQ::XMPPAgent;
-  CCNQ::XMPPAgent::join_cluster_room($context);
+  CCNQ::XMPPAgent::_join_room($context,CCNQ::Billing::Bucket::bucket_cluster_jid);
   return;
 }
 
