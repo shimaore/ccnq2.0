@@ -1,3 +1,4 @@
+<% USE loc %>
 <!-- so here, field contains:
      - all the fields of the account as they are stored on the backend
      - portal_users, an array of portal user_ids which have access to the account

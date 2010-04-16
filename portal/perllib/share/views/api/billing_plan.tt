@@ -1,3 +1,4 @@
+<% USE loc %>
 <div id="plan-manager">
 
 <!-- This is currently only a demo. Eventually this page should
