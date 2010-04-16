@@ -168,6 +168,7 @@ sub _response {
             if($res->[0] eq 'ok') {
               debug("Next activity ID=$next_activity_id was submitted.");
             } else {
+              # Actually not an error, most often times we get "Message queued for activity ..." as a reply.
               error("Submission failed (in response): $res->[1] for activity ID=$next_activity_id");
             }
             $db->save_doc($next_activity)->cb(sub{$_[0]->recv;
