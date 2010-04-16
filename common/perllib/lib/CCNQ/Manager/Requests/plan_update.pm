@@ -13,6 +13,9 @@ package CCNQ::Manager::Requests::plan_update;
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+use strict; use warnings;
+
+use CCNQ::Billing;
 
 sub run {
   my $request = shift;
@@ -20,7 +23,7 @@ sub run {
   return (
     {
       action => 'update_plan',
-      cluster_name => 'billing',
+      cluster_name => CCNQ::Billing::billing_cluster_name,
       params => {
         map { $_ => $request->{$_} } qw( name currency decimals rating_steps )
       }
