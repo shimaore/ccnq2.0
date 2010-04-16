@@ -9,7 +9,7 @@
   </fieldset>
 
   <fieldset><legend><% | loc %>Create new request<% END %></legend>
-    <form action="/manager" method="POST">
+    <form action="/manager" method="POST" accept-charset="utf-8">
       <label for="request_type"><% | loc %>Request name:<% END %></label>
       <input type="text" name="request_type" value="" />
       <input type="submit" />

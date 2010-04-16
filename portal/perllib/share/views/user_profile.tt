@@ -8,9 +8,9 @@
   </div>
 <% END %>
 <% IF session.user_id == field.id %>
-<form action="/user_profile" method="POST" class="ui-widget">
+<form action="/user_profile" method="POST" class="ui-widget" accept-charset="utf-8">
 <% ELSE %>
-<form action="/user_profile/<% field.id | uri %>" method="POST" class="ui-widget">
+<form action="/user_profile/<% field.id | uri %>" method="POST" class="ui-widget" accept-charset="utf-8">
 <% END %>
   <p class="ui-helper-clearfix">
   <label for="name"><% | loc %>Name<% END %></label>
