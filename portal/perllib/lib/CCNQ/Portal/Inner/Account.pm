@@ -91,6 +91,7 @@ sub gather_field_sub {
 get '/api/account' => sub {
   return unless CCNQ::Portal->current_session->user;
   return unless session('account');
+  return unless session('account') =~ /^[\w-]+$/;
 
   gather_field();
 
@@ -103,6 +104,7 @@ use CCNQ::Billing;
 post '/api/account' => sub {
   return unless CCNQ::Portal->current_session->user;
   return unless session('account');
+  return unless session('account') =~ /^[\w-]+$/;
 
   my $account = session('account');
 
@@ -131,7 +133,9 @@ post '/api/account' => sub {
 get '/api/account_sub/:account_sub' => sub {
   return unless CCNQ::Portal->current_session->user;
   return unless session('account');
+  return unless session('account') =~ /^[\w-]+$/;
   return unless params->{account_sub};
+  return unless params->{account_sub} =~ /^[\w-]+$/;
 
   session account_sub => params->{account_sub};
 
@@ -144,7 +148,9 @@ get '/api/account_sub/:account_sub' => sub {
 post '/api/account_sub' => sub {
   return unless CCNQ::Portal->current_session->user;
   return unless session('account');
+  return unless session('account') =~ /^[\w-]+$/;
   return unless params->{account_sub};
+  return unless params->{account_sub} =~ /^[\w-]+$/;
 
   session account_sub => params->{account_sub};
 
