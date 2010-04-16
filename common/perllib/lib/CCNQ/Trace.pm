@@ -110,11 +110,11 @@ sub run {
   my ($params) = @_;
 
   debug("trace: checking parameters");
-  my $dump_packets = $params->{params}->{dump_packets} || 0;
-  my $call_id      = $params->{params}->{call_id};
-  my $to_user      = $params->{params}->{to_user};
-  my $from_user    = $params->{params}->{from_user};
-  my $days_ago     = $params->{params}->{days_ago} || 0;
+  my $dump_packets = $params->{dump_packets} || 0;
+  my $call_id      = $params->{call_id};
+  my $to_user      = $params->{to_user};
+  my $from_user    = $params->{from_user};
+  my $days_ago     = $params->{days_ago} || 0;
 
   die ['Invalid to_user']
     if defined $to_user   && $to_user   !~ /^\d+$/;

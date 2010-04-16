@@ -42,7 +42,7 @@ replenish_bucket {
 =cut
 
 sub replenish_bucket {
-  return CCNQ::Billing::Bucket::replenish(@_);
+  return CCNQ::Billing::Bucket::replenish(shift->{params});
 }
 
 'CCNQ::Actions::db::bucket';

@@ -31,7 +31,7 @@ sub _session_ready {
 
 sub insert_cdr {
   my ($params,$context) = @_;
-  my $rated_cbef = CCNQ::Rating::Event::Rated->new($params);
+  my $rated_cbef = CCNQ::Rating::Event::Rated->new($params->{params});
   return CCNQ::CDR::insert($rated_cbef);
 }
 
@@ -43,7 +43,7 @@ sub billing_entry {
 
   # Create a new CBEF entry
   return CCNQ::Billing::Rating::rate_and_save_cbef({
-    %$params,
+    %{$params->{params}},
     collecting_node => CCNQ::Install::host_name,
     request_uuid    => $params->{activity},
   });

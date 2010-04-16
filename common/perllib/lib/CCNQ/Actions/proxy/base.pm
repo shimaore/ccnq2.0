@@ -98,9 +98,8 @@ sub trusted_reload {
 }
 
 sub trace {
-  my ($params,$context) = @_;
   use CCNQ::Trace;
-  CCNQ::Trace::run($params,$context);
+  CCNQ::Trace::run(shift->{params});
 }
 
 'CCNQ::Actions::proxy::base';

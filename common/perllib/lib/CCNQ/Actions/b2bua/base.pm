@@ -81,9 +81,8 @@ sub _session_ready {
 }
 
 sub trace {
-  my ($params,$context) = @_;
   use CCNQ::Trace;
-  return CCNQ::Trace::run($params);
+  return CCNQ::Trace::run(shift->{params});
 }
 
 'CCNQ::Actions::b2bua::base';
