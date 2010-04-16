@@ -1,4 +1,4 @@
-package CCNQ::Actions::cdr;
+package CCNQ::Actions::db::cdr;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -42,4 +42,4 @@ sub billing_entry {
   });
 }
 
-'CCNQ::Actions::cdr';
+'CCNQ::Actions::db::cdr';
