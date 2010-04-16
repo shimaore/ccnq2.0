@@ -40,7 +40,7 @@
       <legend><% | loc %>Account subs<% END %></legend>
       <ul>
         <% FOREACH account_sub IN field.account_subs %>
-        <li><a href="/api/account_sub/<% account_sub.name | uri %>"><% account_sub.name %></a></li>
+        <li><a href="/api/account_sub/<% account_sub.account_sub | uri %>"><% account_sub.name %></a></li>
         <% END %>
       </ul>
       <form action="/api/account_sub" method="post" accept-charset="utf-8">
