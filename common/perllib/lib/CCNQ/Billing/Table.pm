@@ -17,10 +17,12 @@ use strict; use warnings;
 
 use CCNQ::Rating::Table;
 
+sub _db_name { return "table_".$_[0] }
+
 sub create {
   my ($params) = @_;
   my $rcv = AE::cv;
-  my $db = CCNQ::Rating::Table->new($params->{name});
+  my $db = CCNQ::Rating::Table->new(_db_name($params->{name}));
   $db->create()->cb(sub{
     CCNQ::CouchDB::receive_ok(@_,$rcv);
   });
@@ -33,14 +35,14 @@ sub update_prefix {
   my ($params) = @_;
   my $name       = delete $params->{name};
   $params->{_id} = delete $params->{prefix};
-  return CCNQ::CouchDB::update_cv(CCNQ::Billing::billing_uri,$name,$params);
+  return CCNQ::CouchDB::update_cv(CCNQ::Billing::billing_uri,_db_name($name),$params);
 }
 
 sub delete_prefix {
   my ($params) = @_;
   my $name       = delete $params->{name};
   $params->{_id} = delete $params->{prefix};
-  return CCNQ::CouchDB::delete_cv(CCNQ::Billing::billing_uri,$name,$params);
+  return CCNQ::CouchDB::delete_cv(CCNQ::Billing::billing_uri,_db_name($name),$params);
 }
 
 'CCNQ::Billing::Table';

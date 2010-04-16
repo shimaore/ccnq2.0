@@ -47,6 +47,7 @@ sub update_bucket {
   my ($params) = @_;
   return CCNQ::Billing::billing_update({
     %$params,
+    profile => 'bucket',
     _id => _bucket_id($params->{name}),
   });
 }
