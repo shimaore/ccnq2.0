@@ -22,6 +22,13 @@ sub _install {
   return CCNQ::CDR::install(@_);
 }
 
+sub _session_ready {
+  my ($params,$context) = @_;
+  use CCNQ::XMPPAgent;
+  CCNQ::XMPPAgent::_join_room($context,CCNQ::CDR::cdr_cluster_jid);
+  return;
+}
+
 sub insert_cdr {
   my ($params,$context) = @_;
   my $rated_cbef = CCNQ::Rating::Event::Rated->new($params);

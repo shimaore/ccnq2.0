@@ -15,6 +15,8 @@ package CCNQ::Activities::Billing;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
 
+use CCNQ::CDR;
+
 sub partial_day {
   my ($request,$event_type) = @_;
   my $now = time();
@@ -24,7 +26,7 @@ sub partial_day {
   return (
     {
       action       => 'billing_entry',
-      cluster_name => 'cdr',
+      cluster_name => CCNQ::CDR::CDR_CLUSTER_NAME,
       params => {
         start_date  => $date,
         start_time  => $time,

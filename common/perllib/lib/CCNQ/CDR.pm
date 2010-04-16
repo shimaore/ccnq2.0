@@ -17,6 +17,13 @@ use strict; use warnings;
 
 use CCNQ::Install;
 
+# Normally only one server should be part of this cluster (until we
+# implementing sharding of the CDR db).
+use constant CDR_CLUSTER_NAME => 'cdr';
+use constant::defer cdr_cluster_jid => sub {
+  CCNQ::Install::make_muc_jid(CDR_CLUSTER_NAME)
+};
+
 use AnyEvent;
 use CCNQ::CouchDB;
 
