@@ -37,7 +37,8 @@ sub gather_field {
   # Get the information from the API.
   my $cv2 = AE::cv;
   CCNQ::API::billing_view('report','accounts',$account,$cv2);
-  my $account_billing_data = CCNQ::AE::receive($cv2) || {};
+  my $r2 = CCNQ::AE::receive($cv2) || { rows => [] };
+  my $account_billing_data = $r2->{rows}->[0]->{doc} || {};
 
   # e.g. print a list of users who receive bills for this account
   # .. that'd be the keys of the 'email_recipients' hash.
