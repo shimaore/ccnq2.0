@@ -1,9 +1,7 @@
 <% USE loc %>
-<!-- so here, field contains:
-     - all the fields of the account as they are stored on the backend
-     - portal_users, an array of portal user_ids which have access to the account
-     - account_subs, an array of account_sub backend records which are under this account
--->
+
+<script type="text/javascript" src="/js/forms.js"></script>
+
 <% IF session.account %>
   <fieldset>
     <legend><% | loc %>Account details<% END %></legend>
@@ -14,7 +12,7 @@
       </p>
       <p class="ui-helper-clearfix">
         <label for="name"><% | loc %>Account name:<% END %></label>
-        <input type="text" name="name" value="<% field.name | html %>" />
+        <input type="text" name="name" value="<% field.name | html %>" class="required"/>
       </p>
       <p class="ui-helper-clearfix submit">
       <input type="submit" value="<% | loc %>Save<% END %>" />
@@ -50,15 +48,15 @@
         </p>
         <p class="ui-helper-clearfix">
           <label for="account_id"><% | loc %>Account sub number:<% END %></label>
-          <input type="text" name="account_sub" value="" />
+          <input type="text" name="account_sub" value="" class="required" />
         </p>
         <p class="ui-helper-clearfix">
           <label for="name"><% | loc %>Account sub name:<% END %></label>
-          <input type="text" name="name" value="" />
+          <input type="text" name="name" value="" class="required" />
         </p>
         <p class="ui-helper-clearfix">
           <label for="plan"><% | loc %>Plan:<% END %></label>
-          <select name="plan">
+          <select name="plan" class="required" >
             <option value=""></option>
             <% FOREACH plan IN field.plans %>
               <% IF plan.name == field.plan %>
