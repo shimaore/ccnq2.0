@@ -1,7 +1,4 @@
 <% USE loc %>
-
-<script type="text/javascript" src="/js/forms.js"></script>
-
 <% IF session.account %>
   <fieldset>
     <legend><% | loc %>Account details<% END %></legend>
