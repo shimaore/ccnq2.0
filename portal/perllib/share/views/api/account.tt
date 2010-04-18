@@ -4,11 +4,11 @@
     <legend><% | loc %>Account details<% END %></legend>
     <form id="account_form" action="/api/account" method="post" accept-charset="utf-8" class="ui-widget validate">
       <p class="ui-helper-clearfix">
-        <label for="account_id"><% | loc %>Account number:<% END %></label>
+        <label for="account" class="left"><% | loc %>Account number:<% END %></label>
         <input type="text" name="account" value="<% field.account | html %>" readonly />
       </p>
       <p class="ui-helper-clearfix">
-        <label for="name"><% | loc %>Account name:<% END %></label>
+        <label for="name" class="left"><% | loc %>Account name:<% END %></label>
         <input type="text" name="name" value="<% field.name | html %>" class="required"/>
       </p>
       <p class="ui-helper-clearfix submit">
@@ -40,19 +40,19 @@
       </ul>
       <form action="/api/account_sub" method="post" accept-charset="utf-8" class="ui-widget validate">
         <p class="ui-helper-clearfix">
-          <label for="account_id"><% | loc %>Account number:<% END %></label>
+          <label for="account" class="left"><% | loc %>Account number:<% END %></label>
           <input type="text" name="account" value="<% field.account %>" readonly />
         </p>
         <p class="ui-helper-clearfix">
-          <label for="account_id"><% | loc %>Account sub number:<% END %></label>
+          <label for="account_sub" class="left"><% | loc %>Account sub number:<% END %></label>
           <input type="text" name="account_sub" value="" class="required" />
         </p>
         <p class="ui-helper-clearfix">
-          <label for="name"><% | loc %>Account sub name:<% END %></label>
+          <label for="name" class="left"><% | loc %>Account sub name:<% END %></label>
           <input type="text" name="name" value="" class="required" />
         </p>
         <p class="ui-helper-clearfix">
-          <label for="plan"><% | loc %>Plan:<% END %></label>
+          <label for="plan" class="left"><% | loc %>Plan:<% END %></label>
           <select name="plan" class="required" >
             <option value=""></option>
             <% FOREACH plan IN field.plans %>

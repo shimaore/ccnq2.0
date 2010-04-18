@@ -13,23 +13,23 @@
 <form action="/user_profile/<% field.id | uri %>" method="POST" class="ui-widget validate" accept-charset="utf-8">
 <% END %>
   <p class="ui-helper-clearfix">
-  <label for="name"><% | loc %>Name<% END %></label>
+  <label for="name" class="left"><% | loc %>Name<% END %></label>
   <input type="text" name="name" value="<% field.name | html %>"  <% IF not is_admin %>readonly<% END %> />
   </p>
   <p class="ui-helper-clearfix">
-  <label for="name"><% | loc %>Email<% END %></label>
+  <label for="email" class="left"><% | loc %>Email<% END %></label>
   <input type="text" name="email" value="<% field.email | html %>" <% IF not is_admin %>readonly<% END %> />
   </p>
   <p class="ui-helper-clearfix">
-  <label for="name"><% | loc %>Portal accounts<% END %></label>
+  <label for="portal_accounts" class="left"><% | loc %>Portal accounts<% END %></label>
   <input type="text" name="portal_accounts" value="<% field.portal_accounts | html %>" <% IF not is_admin %>readonly<% END %> />
   </p>
   <p class="ui-helper-clearfix">
-  <label for="name"><% | loc %>Billing accounts<% END %></label>
+  <label for="billing_accounts" class="left"><% | loc %>Billing accounts<% END %></label>
   <input type="text" name="billing_accounts" value="<% field.billing_accounts.join(' ') | html %>" <% IF not is_admin %>readonly<% END %> />
   </p>
   <p class="ui-helper-clearfix">
-  <label for="default_locale"><% | loc %>Language<% END %></label>
+  <label for="default_locale" class="left"><% | loc %>Language<% END %></label>
   <select name="default_locale">
     <option value=""></option>
     <% IF field.default_locale == "en" %><option value="en" selected>en</option><% ELSE %><option value="en">en</option><% END %>
