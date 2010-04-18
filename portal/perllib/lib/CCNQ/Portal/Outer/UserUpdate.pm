@@ -24,6 +24,8 @@ use CGI::Untaint;
 use Encode;
 
 use AnyEvent;
+use CCNQ::AE;
+use CCNQ::API;
 
 sub retrieve {
   my ($user_id) = @_;
