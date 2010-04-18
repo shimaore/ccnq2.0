@@ -9,8 +9,9 @@ process unrated CBEF (CDRs) and generate rated CBEFs.
 user_profile
 
   _id: "user/${user_id}"
-  type: "user_profile"
+  profile: "user"
 
+  user: $user_id
   name: $user_name
   email: $user_email
   billing_accounts: [ ${account_id}, .. ]
@@ -27,8 +28,9 @@ user_profile
 account_profile:
 
   _id: "account/${account_id}"
-  type: "account_profile"
+  profile: "account"
 
+  account: $account_id
   name: $account_name
   billing_address: { }
   billing_cycle: $billing_cycle
@@ -36,15 +38,16 @@ account_profile:
 account_sub_profile:
 
   _id: "account/${account_id}/${account_sub_id}"
-  type: "account_sub_profile"
+  profile: "account_sub"
 
+  account_sub: $account_sub_id
   name: $account_sub_name (as printed on bill)
   plan: ${plan_id}  (reference to "plan/${plan_id}" document)
 
 plan_profile:
 
   _id: "plan/${plan_id}"
-  type: "plan_profile"
+  profile: "plan"
 
   name: $plan_label (plan name printed on the bill)
   currency: $currency_name (e.g. "USD", "EUR")
@@ -59,9 +62,9 @@ plan_profile:
 
   $guard_name and $action_name are specified in CCNQ::Rating::Rate
 
-bucket:
+bucket_metadata:
   _id: "bucket/${name}"
-  type: "bucket_profile"
+  profile: "bucket"
 
   name: ${name}
   decimals: ${decimals}
@@ -70,6 +73,12 @@ bucket:
   currency: ${currency} | undef
 
   The bucket is duration (seconds) -based iff currency is not present/defined.
+
+**** Rating tables ****
+
+Rating tables are stored as individual CouchDB databases. The internal
+name of the rating table is prepended with "table_" to build the actual
+(CouchDB) database name.
 
 rating_table:
 

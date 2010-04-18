@@ -4,7 +4,6 @@ analyze what needs to get fixed (bug tracker)
 some things that need to be done:
 
 web portal:
-- XXX the "forms" API is dead. Remove doc/forms_api.txt.
 - write e.g. Mechanize::WWW tests for web interaction testing
 - write a proper request querying interface
   + design a proper way to indicate content-type in the JSON responses (e.g. so that sniffer traces are displayed properly without "magic")
