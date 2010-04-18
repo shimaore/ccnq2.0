@@ -86,4 +86,6 @@ input, select {
 label.error {
     color:  red;
     background-color: white;
+    width: auto;
+    float: none;
 }
