@@ -81,3 +81,9 @@ input, select {
 #content .submit input {
     margin-left: 37%;
 }
+
+/* Used by jquery.validate */
+label.error {
+    color:  red;
+    background-color: white;
+}

@@ -2,7 +2,7 @@
 <% IF session.account %>
   <fieldset>
     <legend><% | loc %>Account sub<% END %></legend>
-    <form action="/api/account_sub" method="post" accept-charset="utf-8">
+    <form action="/api/account_sub" method="post" accept-charset="utf-8" class="ui-widget validate">
       <p class="ui-helper-clearfix">
         <label for="account_id"><% | loc %>Account number:<% END %></label>
         <input type="text" name="account" value="<% field.account %>" readonly />
