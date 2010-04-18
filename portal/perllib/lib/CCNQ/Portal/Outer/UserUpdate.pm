@@ -116,7 +116,7 @@ sub update {
 
   # Update the billing-side data
   my $cv = AE::cv;
-  CCNQ::API::api_update('billing',$billing_params,$cv);
+  CCNQ::API::api_update($billing_params,$cv);
   my $r = CCNQ::AE::receive($cv);
 
   # Reset the session's locale to (potentially) use the new one.
