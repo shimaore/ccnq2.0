@@ -115,9 +115,12 @@ sub update {
   $user->profile->update($params);
 
   # Update the billing-side data
-  my $cv = AE::cv;
-  CCNQ::API::api_update($billing_params,$cv);
-  my $r = CCNQ::AE::receive($cv);
+  if(keys %$billing_params) {
+    my $cv = AE::cv;
+    CCNQ::API::api_update($billing_params,$cv);
+    my $r = CCNQ::AE::receive($cv);
+    return redirect '/request/'.$r->{request};
+  }
 
   # Reset the session's locale to (potentially) use the new one.
   CCNQ::Portal->current_session->force_locale()
