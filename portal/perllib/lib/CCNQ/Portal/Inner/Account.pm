@@ -99,8 +99,6 @@ get '/api/account' => sub {
   return CCNQ::Portal->site->default_content->();
 };
 
-use CCNQ::Billing;
-
 post '/api/account' => sub {
   return unless CCNQ::Portal->current_session->user;
   return unless session('account');
@@ -119,7 +117,7 @@ post '/api/account' => sub {
   my $cv1 = AE::cv;
   CCNQ::API::api_update({
     action        => 'account',
-    cluster_name  => CCNQ::Billing::BILLING_CLUSTER_NAME(),
+    cluster_name  => 'none',
     account       => $account,
     name          => $name,
   },$cv1);
@@ -163,7 +161,7 @@ post '/api/account_sub' => sub {
   my $cv1 = AE::cv;
   CCNQ::API::api_update({
     action        => 'account_sub',
-    cluster_name  => CCNQ::Billing::BILLING_CLUSTER_NAME(),
+    cluster_name  => 'none',
 
     account     => session('account'),
     account_sub => session('account_sub'),
