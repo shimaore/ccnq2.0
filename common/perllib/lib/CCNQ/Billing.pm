@@ -36,6 +36,11 @@ use constant js_report_account_all => <<'JAVASCRIPT';
     if(doc.account) {
       emit([doc.account],null);
     }
+    if(doc.billing_accounts) {
+      for(var account in doc.billing_accounts) {
+        emit([account],null);
+      }
+    }
   }
 JAVASCRIPT
 
@@ -75,6 +80,15 @@ function (doc) {
 }
 JAVASCRIPT
 
+# All "user"-class documents.
+use constant js_report_users => <<'JAVASCRIPT';
+  function (doc) {
+    if(doc.profile == 'user') {
+      emit([doc.user_id],null);
+    }
+  }
+JAVASCRIPT
+
 use constant billing_designs => {
   report => {
     language => 'javascript',
@@ -94,6 +108,9 @@ use constant billing_designs => {
       plans => {
         map => js_report_plans,
       },
+      users => {
+        map => js_report_users,
+      }
     },
   },
 };

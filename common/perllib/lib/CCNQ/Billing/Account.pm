@@ -32,8 +32,6 @@ An account record must contain at least:
   account: this account's ID
   name: this account's name
 
-  email_recipients: a hash which keys are email addresses (recipients of the electronic bill)
-
 =cut
 
 =head1 update_account({ account => $account, ... })
@@ -62,38 +60,6 @@ sub retrieve_account {
   return CCNQ::Billing::billing_retrieve({
     _id => _account_id($params->{account})
   });
-}
-
-=head1 update_bill_recipient({ account => $account, email => $email })
-
-Returns a condvar.
-
-=cut
-
-sub update_bill_recipient {
-  my ($params) = @_;
-  return CCNQ::Billing::update_key({
-    _id       => _account_id($params->{account}),
-    field     => 'email_recipients',
-    key       => $params->{email},
-    value     => 1,
-  })
-}
-
-=head1 delete_bill_recipient({ account => $account, user => {...} })
-
-Returns a condvar.
-
-=cut
-
-sub delete_bill_recipient {
-  my ($params) = @_;
-  return CCNQ::Billing::update_key({
-    _id       => _account_id($params->{account}),
-    field     => 'email_recipients',
-    key       => $params->{email},
-    value     => undef,
-  })
 }
 
 =head1 Content of an "account_sub" record

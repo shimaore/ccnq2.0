@@ -25,7 +25,7 @@ sub run {
       action => 'update_account',
       cluster_name => CCNQ::Billing::BILLING_CLUSTER_NAME,
       params => {
-        map { $_ => $request->{$_} } qw( account name email_recipients )
+        map { $_ => $request->{$_} } qw( account name billing_address billing_cycle )
       }
     },
   );

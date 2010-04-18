@@ -23,10 +23,17 @@ use CGI::Untaint;
 
 use Encode;
 
+use AnyEvent;
+
 sub retrieve {
   my ($user_id) = @_;
 
   my $user = CCNQ::Portal::User->new($user_id);
+
+  my $cv = AE::cv;
+  CCNQ::API::billing_view('report','users',$user_id,$cv);
+  my $r = CCNQ::AE::receive($cv);
+  my $billing_user_data = $r->{rows}->[0]->{doc} || {};
 
   var field => {
     id                => $user->id,
@@ -36,8 +43,9 @@ sub retrieve {
     portal_accounts   => join(' ',@{$user->profile->portal_accounts}),
     is_admin          => $user->profile->is_admin,
     is_sysadmin       => $user->profile->is_sysadmin,
-    # XXX billing_accounts (via API)
-    # XXX other billing/provisioning -side data
+    # billing_accounts (via API)
+    billing_accounts  => $billing_user_data->{billing_accounts},
+    # other billing/provisioning -side data
   };
 }
 
@@ -50,6 +58,11 @@ sub update {
 
   my $params = {
     default_locale => params->{default_locale} || '',
+  };
+  my $billing_params = {
+    action        => 'user',
+    cluster_name  => 'any',
+    user_id       => $user_id,
   };
 
   if(defined(params->{default_locale}) && params->{default_locale} ne '') {
@@ -68,10 +81,13 @@ sub update {
     $params->{name} =~ s/\s+$//g;
     $params->{name} =~ s/\s+/ /g;
 
+    $billing_params->{name} = $params->{name};
+
     # Email address
     my $email = $untainter->extract(-as_email=>'email');
     if($email) {
       $params->{email} = $email->format;
+      $billing_params->{email} = $params->{email};
     } else {
       if(params->{email}) {
         var error => _('Invalid email address')_;
@@ -86,14 +102,22 @@ sub update {
     # XX Check the accounts are valid accounts. (Requires API access.)
     $params->{portal_accounts} = [@portal_accounts];
 
-    # XXX Billing accounts
+    # Billing accounts
+    my @billing_accounts = split(' ',params->{billing_accounts});
+    $billing_params->{billing_accounts} = [@billing_accounts];
   }
 
   if( CCNQ::Portal->current_session->user->profile->is_sysadmin ) {
     $params->{is_admin} = params->{is_admin} ? 1 : 0;
   }
 
+  # Update the portal-side data
   $user->profile->update($params);
+
+  # Update the billing-side data
+  my $cv = AE::cv;
+  CCNQ::API::api_update('billing',$billing_params,$cv);
+  my $r = CCNQ::AE::receive($cv);
 
   # Reset the session's locale to (potentially) use the new one.
   CCNQ::Portal->current_session->force_locale()

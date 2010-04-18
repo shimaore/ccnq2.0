@@ -59,16 +59,14 @@ sub update_account {
   return CCNQ::Billing::Account::update_account(shift->{params});
 }
 
-sub update_bill_recipient {
-  return CCNQ::Billing::Account::update_bill_recipient(shift->{params});
-}
-
-sub delete_bill_recipient {
-  return CCNQ::Billing::Account::update_bill_recipient(shift->{params});
-}
-
 sub update_account_sub {
   return CCNQ::Billing::Account::update_account_sub(shift->{params});
+}
+
+use CCNQ::Billing::User;
+
+sub update_user {
+  return CCNQ::Billing::User::update_user(shift->{params});
 }
 
 use CCNQ::Billing::Table;
