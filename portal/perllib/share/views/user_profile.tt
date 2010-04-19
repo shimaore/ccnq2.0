@@ -18,7 +18,7 @@
   </p>
   <p class="ui-helper-clearfix">
   <label for="email" class="left"><% | loc %>Email<% END %></label>
-  <input type="text" name="email" value="<% field.email | html %>" <% IF not is_admin %>readonly<% END %> />
+  <input type="text" name="email" value="<% field.email | html %>" <% IF not is_admin %>readonly<% END %> class="required email"/>
   </p>
   <p class="ui-helper-clearfix">
   <label for="portal_accounts" class="left"><% | loc %>Portal accounts<% END %></label>
