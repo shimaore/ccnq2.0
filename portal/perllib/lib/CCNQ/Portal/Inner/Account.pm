@@ -69,7 +69,7 @@ sub gather_field {
 
 sub gather_field_sub {
   my $account = session('account');
-  my $account_sub = session('account_sub');
+  my $account_sub = shift;
 
   # Get the information from the portal.
 
@@ -88,7 +88,7 @@ sub gather_field_sub {
   };
 }
 
-get '/api/account' => sub {
+get '/billing/account' => sub {
   return unless CCNQ::Portal->current_session->user;
   return unless session('account');
   return unless session('account') =~ /^[\w-]+$/;
@@ -99,7 +99,7 @@ get '/api/account' => sub {
   return CCNQ::Portal->site->default_content->();
 };
 
-post '/api/account' => sub {
+post '/billing/account' => sub {
   return unless CCNQ::Portal->current_session->user;
   return unless session('account');
   return unless session('account') =~ /^[\w-]+$/;
@@ -128,29 +128,29 @@ post '/api/account' => sub {
   redirect '/request/'.$r->{request};
 };
 
-get '/api/account_sub/:account_sub' => sub {
+get '/billing/account_sub/:account_sub' => sub {
   return unless CCNQ::Portal->current_session->user;
   return unless session('account');
   return unless session('account') =~ /^[\w-]+$/;
   return unless params->{account_sub};
   return unless params->{account_sub} =~ /^[\w-]+$/;
 
-  session account_sub => params->{account_sub};
+  my $account_sub = params->{account_sub};
 
-  gather_field_sub();
+  gather_field_sub($account_sub);
 
   var template_name => 'api/account_sub';
   return CCNQ::Portal->site->default_content->();
 };
 
-post '/api/account_sub' => sub {
+sub handle_account_sub {
   return unless CCNQ::Portal->current_session->user;
   return unless session('account');
   return unless session('account') =~ /^[\w-]+$/;
   return unless params->{account_sub};
   return unless params->{account_sub} =~ /^[\w-]+$/;
 
-  session account_sub => params->{account_sub};
+  my $account_sub = params->{account_sub};
 
   my $name = params->{name};
   $name =~ s/^\s+//; $name =~ s/^\s+$//; $name =~ s/\s+/ /g;
@@ -164,7 +164,7 @@ post '/api/account_sub' => sub {
     cluster_name  => 'none',
 
     account     => session('account'),
-    account_sub => session('account_sub'),
+    account_sub => $account_sub,
     name => $name,
     plan => $plan,
   },$cv1);
@@ -172,6 +172,9 @@ post '/api/account_sub' => sub {
 
   # Redirect to the request
   redirect '/request/'.$r->{request};
-};
+}
+
+post '/billing/account_sub/:account_sub' => sub { handle_account_sub() };
+put  '/billing/account_sub'              => sub { handle_account_sub() };
 
 'CCNQ::Portal::Inner::Account';
