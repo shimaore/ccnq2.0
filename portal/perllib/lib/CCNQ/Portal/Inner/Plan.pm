@@ -45,17 +45,21 @@ sub gather_field {
   my $r2 = CCNQ::AE::receive($cv2) || { rows => [] };
   my $plan_data = $r2->{rows}->[0]->{doc} || { decimals => 2 };
 
-  # e.g. print account details.
-  var field => {
+  my $field = {
     plan          => $plan,
     name          => $plan_data->{name},
     currency      => $plan_data->{currency},
     decimals      => $plan_data->{decimals},
-    rating_steps  => encode_json($plan_data->{rating_steps}),
 
     plans         => [gather_plans()],
     currencies    => gather_currencies(),
   };
+
+  if($plan_data->{rating_steps}) {
+    $field->{rating_steps} = eval { encode_json($plan_data->{rating_steps}) };
+  }
+
+  var field => $field;
 }
 
 post '/billing/plan' => sub {
@@ -108,21 +112,29 @@ post '/billing/plan/:plan' => sub {
 
   my $decimals = params->{decimals};
 
-  my $rating_steps = decode_json(params->{rating_steps});
-
-  # Update the information in the API.
-  my $cv1 = AE::cv;
-  CCNQ::API::api_update({
+  my $params = {
     action        => 'plan',
     cluster_name  => 'none',
     plan          => $plan,
     name          => $name,
     currency      => $currency,
     decimals      => $decimals,
-    rating_steps  => $rating_steps,
 
     currencies    => gather_currencies(),
-  },$cv1);
+  };
+
+  if(params->{rating_steps}) {
+    $params->{rating_steps} = eval { decode_json(params->{rating_steps}) };
+    if($@) {
+      var error => ['Invalid JSON content'];
+      var template_name => 'api/plan';
+      return CCNQ::Portal->site->default_content->();
+    }
+  }
+
+  # Update the information in the API.
+  my $cv1 = AE::cv;
+  CCNQ::API::api_update($params,$cv1);
   my $r = CCNQ::AE::receive($cv1);
   debug($r);
 
