@@ -20,24 +20,6 @@ use CCNQ::Portal;
 use CCNQ::Portal::I18N;
 use CCNQ::API;
 
-=head1 /provisioning/account
-
-Display the known provisioning information about a given account.
-
-=cut
-
-get '/provisioning/account' => sub {
-  return unless CCNQ::Portal->current_session->user;
-  var template_name => 'provisioning';
-  my $account = session('account');
-  return unless defined $account;
-
-  my $cv = AE::cv;
-  CCNQ::API::provisioning_view('report','account',$account,$cv);
-  var result => $cv->recv;
-  return CCNQ::Portal->site->default_content->();
-};
-
 =head1 /provisioning/:view/@id
 
 Generic Provisioning API query, restricted to administrative accounts.
