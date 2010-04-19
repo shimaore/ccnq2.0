@@ -2,7 +2,7 @@
 <% IF session.account %>
   <fieldset>
     <legend><% | loc %>Account details<% END %></legend>
-    <form id="account_form" action="/api/account" method="post" accept-charset="utf-8" class="ui-widget validate">
+    <form id="account_form" action="/billing/account" method="post" accept-charset="utf-8" class="ui-widget validate">
       <p class="ui-helper-clearfix">
         <label for="account" class="left"><% | loc %>Account number:<% END %></label>
         <input type="text" name="account" value="<% field.account | html %>" readonly />
@@ -35,13 +35,13 @@
       <legend><% | loc %>Account subs<% END %></legend>
       <ul>
         <% FOREACH account_sub IN field.account_subs %>
-        <li><a href="/api/account_sub/<% account_sub.account_sub | uri %>"><% account_sub.name %></a></li>
+        <li><a href="/billing/account_sub/<% account_sub.account_sub | uri %>"><% account_sub.name %></a></li>
         <% END %>
       </ul>
-      <form action="/api/account_sub" method="post" accept-charset="utf-8" class="ui-widget validate">
+      <form action="/billing/account_sub" method="put" accept-charset="utf-8" class="ui-widget validate">
         <p class="ui-helper-clearfix">
           <label for="account" class="left"><% | loc %>Account number:<% END %></label>
-          <input type="text" name="account" value="<% field.account %>" readonly />
+          <span id="account"><% field.account | html %></span>
         </p>
         <p class="ui-helper-clearfix">
           <label for="account_sub" class="left"><% | loc %>Account sub number:<% END %></label>
