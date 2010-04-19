@@ -1,0 +1,58 @@
+<% USE loc %>
+<% IF field.plan %>
+  <fieldset>
+    <legend><% | loc %>Plan details<% END %></legend>
+    <form id="plan_form" action="/billing/account" method="post" accept-charset="utf-8" class="ui-widget validate">
+      <p class="ui-helper-clearfix">
+        <label for="plan" class="left"><% | loc %>Plan identifier:<% END %></label>
+        <span><% field.plan | html %></span>
+      </p>
+      <p class="ui-helper-clearfix">
+        <label for="name" class="left"><% | loc %>Plan name:<% END %></label>
+        <input type="text" name="name" value="<% field.name | html %>" class="required" />
+      </p>
+      <p class="ui-helper-clearfix">
+        <label for="currency" class="left"><% | loc %>Plan currency:<% END %></label>
+        <select name="currency" class="required">
+          <option value=""></option>
+          <% FOREACH this_currency IN field.currencies %>
+          <option value="<% this_currency.key | html %>" <% IF this_currency == field.currency %>selected<% END %> ><% this_currency.value | html %></option>
+          <% END %>
+        </select>
+      </p>
+      <p class="ui-helper-clearfix">
+        <label for="decimals" class="left"><% | loc %>Decimals:<% END %></label>
+        <input type="text" name="decimals" value="<% field.decimals | html %>" class="required digits" />
+      </p>
+      <p class="ui-helper-clearfix">
+        <label for="rating_steps" class="left"><% | loc %>Rating steps (JSON):<% END %></label>
+        <textarea name="rating_steps" class="required"><% field.rating_steps | html %></textarea>
+      </p>
+      <p class="ui-helper-clearfix submit">
+      <input type="submit" value="<% | loc %>Save<% END %>" />
+      </p>
+    </form>
+  </fieldset>
+<% END %>
+<% IF field.plans %>
+  <fieldset>
+    <legend><% | loc %>Plans<% END %></legend>
+    <ul>
+      <% FOREACH plan IN field.plans %>
+      <li><a href="/billing/plan/<% plan.plan | uri %>"><% plan.name | html %></a></li>
+      <% END %>
+    </ul>
+  </fieldset>
+<% END %>
+<fieldset>
+  <legend><% | loc %>Create plan<% END %></legend>
+  <form id="new_plan_form" action="/billing/plan" method="post" accept-charset="utf-8" class="ui-widget validate">
+    <p class="ui-helper-clearfix">
+      <label for="plan" class="left"><% | loc %>Plan identifier:<% END %></label>
+      <input type="text" name="plan" value="<% field.plan | html %>" readonly />
+    </p>
+    <p class="ui-helper-clearfix submit">
+    <input type="submit" value="<% | loc %>Create<% END %>" />
+    </p>
+  </form>
+</fieldset>

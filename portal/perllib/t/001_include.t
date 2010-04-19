@@ -45,6 +45,7 @@ require_ok( 'CCNQ::Portal::Outer::UserUpdate' );
 require_ok( 'CCNQ::Portal::Outer::Widget' );
 
 require_ok( 'CCNQ::Portal::Inner::Account' );
+require_ok( 'CCNQ::Portal::Inner::Plan' );
 require_ok( 'CCNQ::Portal::Inner::billing_plan' );
 require_ok( 'CCNQ::Portal::Inner::provisioning' );
 require_ok( 'CCNQ::Portal::Inner::request' );

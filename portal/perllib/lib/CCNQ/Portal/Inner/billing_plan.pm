@@ -19,7 +19,7 @@ use Dancer ':syntax';
 use CCNQ::Portal;
 use CCNQ::Portal::I18N;
 
-get '/api/billing_plan' => sub {
+get '/billing/billing_plan' => sub {
   return unless CCNQ::Portal->current_session->user;
   return unless CCNQ::Portal->current_session->user->profile->is_admin;
   var template_name => 'api/billing_plan';
