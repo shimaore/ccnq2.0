@@ -2,7 +2,7 @@
 <% IF field.plan %>
   <fieldset>
     <legend><% | loc %>Plan details<% END %></legend>
-    <form id="plan_form" action="/billing/account" method="post" accept-charset="utf-8" class="ui-widget validate">
+    <form id="plan_form" action="/billing/plan/<% field.plan | uri %>" method="post" accept-charset="utf-8" class="ui-widget validate">
       <p class="ui-helper-clearfix">
         <label for="plan" class="left"><% | loc %>Plan identifier:<% END %></label>
         <span><% field.plan | html %></span>
