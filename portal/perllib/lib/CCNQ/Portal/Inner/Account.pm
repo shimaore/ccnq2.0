@@ -22,13 +22,7 @@ use CCNQ::Portal::I18N;
 use CCNQ::AE;
 use CCNQ::API;
 
-sub gather_plans {
-  my $account = session('account');
-  my $cv = AE::cv;
-  CCNQ::API::billing_view('report','plans',$cv);
-  my $r = CCNQ::AE::receive($cv) || { rows => [] };
-  return map { $_->{doc} } @{$r->{rows}};
-}
+use CCNQ::Portal::Inner::Plan;
 
 sub gather_field {
   my $account = session('account');
@@ -63,7 +57,7 @@ sub gather_field {
     account => $account,
     portal_users => [@portal_users],
     account_subs => [@account_subs],
-    plans        => [gather_plans()],
+    plans        => [CCNQ::Portal::Inner::Plan::gather_plans()],
   };
 }
 
@@ -84,7 +78,7 @@ sub gather_field_sub {
     plan    => $account_sub_billing_data->{plan},
     account => $account,
     account_sub => $account_sub,
-    plans   => [gather_plans()],
+    plans   => [CCNQ::Portal::Inner::Plan::gather_plans()],
   };
 }
 
