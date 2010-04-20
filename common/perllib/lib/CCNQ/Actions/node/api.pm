@@ -99,16 +99,27 @@ sub _session_ready {
     '/api' => sub {
       my ($httpd, $req) = @_;
 
+      debug(join(', ',
+        'node/api',
+        'method=' => $req->method,
+        'URL='    => CCNQ::AE::pp($req->url),
+        'vars='   => CCNQ::AE::pp($req->vars),
+        'headers='=> CCNQ::AE::pp($req->headers),
+        'body='   => CCNQ::AE::pp($req->content),
+      ));
+
       # Accept a JSON body as parameters as well.
       my $content = {};
       if($req->content) {
         my $json = eval { decode_json($req->content) };
         if($@) {
+          debug('Invalid JSON content');
           $req->respond([501,'Invalid JSON content']);
           $httpd->stop_request;
           return;
         }
         if(ref($json) ne 'HASH') {
+          debug('JSON content is not a hash');
           $req->respond([501,'JSON content is not a hash']);
           $httpd->stop_request;
           return;
