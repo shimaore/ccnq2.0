@@ -13,3 +13,11 @@ documentation:
 - cleanup and aggregate all the little pieces of documentation scattered
   all over the place.
 
+Dynamic ENUM -- PowerDNS
+IPv6:
+  - IPv6 in OpenSIPS
+  - IPv6 in MediaProxy
+  - IPv6 in FreeSwitch
+Have per-trunk expiration dates -- e.g. to automatically implement "test until" dates
+Emergency calls monitoring -- alerts, etc.
+Allow portal user to change password?
