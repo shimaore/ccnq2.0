@@ -62,8 +62,6 @@ sub update {
     default_locale => params->{default_locale} || '',
   };
   my $billing_params = {
-    action        => 'user',
-    cluster_name  => 'any',
     user_id       => $user_id,
   };
 
@@ -119,7 +117,7 @@ sub update {
   # Update the billing-side data
   if(keys %$billing_params) {
     my $cv = AE::cv;
-    CCNQ::API::api_update($billing_params,$cv);
+    CCNQ::API::api_update('user',$billing_params,$cv);
     my $r = CCNQ::AE::receive($cv);
     return redirect '/request/'.$r->{request};
   }

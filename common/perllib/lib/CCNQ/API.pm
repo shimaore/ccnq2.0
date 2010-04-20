@@ -60,19 +60,19 @@ sub _api_cb {
 }
 
 sub _api {
-  my ($method,$params,$cb) = @_;
+  my ($method,$action,$params,$cb) = @_;
   my $uri = api_uri();
-  $uri->path_segments('api',delete($params->{action}),delete($params->{cluster_name}));
-  $uri->query_form($params);
-  http_request $method => $uri->as_string, _api_cb($cb);
+  $uri->path_segments('api',$action);
+  http_request $method => $uri->as_string, body => encode_json($params), _api_cb($cb);
   return;
 }
 
-=head1 api_query(\%params,\&cb)
+=head1 api_update($action,$params,$cb)
+
+=head1 api_delete($action,$params,$cb)
 
 =cut
 
-sub api_query  { _api('GET',@_) }
 sub api_update { _api('PUT',@_) }
 sub api_delete { _api('DELETE',@_) }
 

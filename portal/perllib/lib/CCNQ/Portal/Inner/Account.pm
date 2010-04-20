@@ -115,9 +115,7 @@ post '/billing/account' => sub {
 
   # Update the information in the API.
   my $cv1 = AE::cv;
-  CCNQ::API::api_update({
-    action        => 'account',
-    cluster_name  => 'none',
+  CCNQ::API::api_update('account',{
     account       => $account,
     name          => $name,
   },$cv1);
@@ -159,10 +157,7 @@ sub handle_account_sub {
 
   # Update the information in the API.
   my $cv1 = AE::cv;
-  CCNQ::API::api_update({
-    action        => 'account_sub',
-    cluster_name  => 'none',
-
+  CCNQ::API::api_update('account_sub',{
     account     => session('account'),
     account_sub => $account_sub,
     name => $name,

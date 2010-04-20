@@ -112,8 +112,6 @@ post '/billing/plan/:name' => sub {
   my $decimals = params->{decimals};
 
   my $params = {
-    action        => 'plan',
-    cluster_name  => 'none',
     name          => $name,
     currency      => $currency,
     decimals      => $decimals,
@@ -132,7 +130,7 @@ post '/billing/plan/:name' => sub {
 
   # Update the information in the API.
   my $cv1 = AE::cv;
-  CCNQ::API::api_update($params,$cv1);
+  CCNQ::API::api_update('plan',$params,$cv1);
   my $r = CCNQ::AE::receive($cv1);
   debug($r);
 

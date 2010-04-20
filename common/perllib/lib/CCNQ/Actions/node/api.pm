@@ -99,12 +99,30 @@ sub _session_ready {
     '/api' => sub {
       my ($httpd, $req) = @_;
 
+      # Accept a JSON body as parameters as well.
+      my $content = {};
+      if($req->content) {
+        my $json = eval { decode_json($req->content) };
+        if($@) {
+          $req->respond([501,'Invalid JSON content']);
+          $httpd->stop_request;
+          return;
+        }
+        if(ref($json) ne 'HASH') {
+          $req->respond([501,'JSON content is not a hash']);
+          $httpd->stop_request;
+          return;
+        }
+        $content = $json;
+      }
+
       debug("node/api: Processing web new_request");
       my $body = {
         activity => 'node/api/'.rand(),
         action => 'new_request', # ran by the 'manager'
         params => {
-          $req->vars
+          $req->vars,
+          %$content
         },
       };
 
