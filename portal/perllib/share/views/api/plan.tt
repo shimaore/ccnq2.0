@@ -7,17 +7,13 @@
     </p>
   </div>
 <% END %>
-<% IF field.plan %>
+<% IF field.name %>
   <fieldset>
     <legend><% | loc %>Plan details<% END %></legend>
-    <form id="plan_form" action="/billing/plan/<% field.plan | uri %>" method="post" accept-charset="utf-8" class="ui-widget validate">
-      <p class="ui-helper-clearfix">
-        <label for="plan" class="left"><% | loc %>Plan identifier:<% END %></label>
-        <span><% field.plan | html %></span>
-      </p>
+    <form id="plan_form" action="/billing/plan/<% field.name | uri %>" method="post" accept-charset="utf-8" class="ui-widget validate">
       <p class="ui-helper-clearfix">
         <label for="name" class="left"><% | loc %>Plan name:<% END %></label>
-        <input type="text" name="name" value="<% field.name | html %>" class="required" />
+        <span><% field.name | html %></span>
       </p>
       <p class="ui-helper-clearfix">
         <label for="currency" class="left"><% | loc %>Plan currency:<% END %></label>
@@ -47,7 +43,7 @@
     <legend><% | loc %>Plans<% END %></legend>
     <ul>
       <% FOREACH plan IN field.plans %>
-      <li><a href="/billing/plan/<% plan.plan | uri %>"><% plan.name | html %></a></li>
+      <li><a href="/billing/plan/<% plan.name | uri %>"><% plan.name | html %></a></li>
       <% END %>
     </ul>
   </fieldset>
@@ -56,8 +52,8 @@
   <legend><% | loc %>Create plan<% END %></legend>
   <form id="new_plan_form" action="/billing/plan" method="post" accept-charset="utf-8" class="ui-widget validate">
     <p class="ui-helper-clearfix">
-      <label for="plan" class="left"><% | loc %>Plan identifier:<% END %></label>
-      <input type="text" name="plan" value="<% field.plan | html %>" class="required" />
+      <label for="name" class="left"><% | loc %>Plan identifier:<% END %></label>
+      <input type="text" name="name" value="<% field.name | html %>" class="required" />
     </p>
     <p class="ui-helper-clearfix submit">
     <input type="submit" value="<% | loc %>Create<% END %>" />

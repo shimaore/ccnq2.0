@@ -38,17 +38,16 @@ sub gather_currencies {
 }
 
 sub gather_field {
-  my ($plan) = @_;
+  my ($plan_name) = @_;
 
   # Get the information from the API.
   my $cv2 = AE::cv;
-  CCNQ::API::billing_view('report','plans',$plan,$cv2);
+  CCNQ::API::billing_view('report','plans',$plan_name,$cv2);
   my $r2 = CCNQ::AE::receive($cv2) || { rows => [] };
   my $plan_data = $r2->{rows}->[0]->{doc} || { decimals => 2 };
 
   my $field = {
-    plan          => $plan,
-    name          => $plan_data->{name},
+    name          => $plan_name,
     currency      => $plan_data->{currency},
     decimals      => $plan_data->{decimals},
 
@@ -66,10 +65,11 @@ sub gather_field {
 post '/billing/plan' => sub {
   return unless CCNQ::Portal->current_session->user;
 
-  return unless params->{plan} =~ /^[\w-]+$/;
+  return unless params->{name} =~ /\S/;
 
-  my $plan = params->{plan};
-  gather_field($plan);
+  my $name = params->{name};
+  $name =~ s/^\s+//; $name =~ s/^\s+$//; $name =~ s/\s+/ /g;
+  gather_field($name);
 
   var template_name => 'api/plan';
   return CCNQ::Portal->site->default_content->();
@@ -86,24 +86,22 @@ get '/billing/plan' => sub {
   return CCNQ::Portal->site->default_content->();
 };
 
-get '/billing/plan/:plan' => sub {
+get '/billing/plan/:name' => sub {
   return unless CCNQ::Portal->current_session->user;
 
-  return unless params->{plan} =~ /^[\w-]+$/;
-
-  my $plan = params->{plan};
-  gather_field($plan);
+  return unless params->{name} =~ /\S/;
+  my $name = params->{name};
+  $name =~ s/^\s+//; $name =~ s/^\s+$//; $name =~ s/\s+/ /g;
+  gather_field($name);
 
   var template_name => 'api/plan';
   return CCNQ::Portal->site->default_content->();
 };
 
-post '/billing/plan/:plan' => sub {
+post '/billing/plan/:name' => sub {
   return unless CCNQ::Portal->current_session->user;
 
-  return unless params->{plan} =~ /^[\w-]+$/;
-
-  my $plan = params->{plan};
+  return unless params->{name} =~ /\S/;
 
   my $name = params->{name};
   $name =~ s/^\s+//; $name =~ s/^\s+$//; $name =~ s/\s+/ /g;
@@ -116,7 +114,6 @@ post '/billing/plan/:plan' => sub {
   my $params = {
     action        => 'plan',
     cluster_name  => 'none',
-    plan          => $plan,
     name          => $name,
     currency      => $currency,
     decimals      => $decimals,

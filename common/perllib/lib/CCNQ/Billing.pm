@@ -75,7 +75,7 @@ JAVASCRIPT
 use constant js_report_plans => <<'JAVASCRIPT';
 function (doc) {
   if(doc.profile == 'plan') {
-    emit([doc.account,doc.name],null);
+    emit([doc.name],null);
   }
 }
 JAVASCRIPT
