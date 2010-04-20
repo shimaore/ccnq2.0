@@ -28,7 +28,7 @@ use JSON;
 sub gather_plans {
   my $account = session('account');
   my $cv = AE::cv;
-  CCNQ::API::billing_view('report','plans',$cv);
+  CCNQ::API::billing_view('report','plans','',$cv);
   my $r = CCNQ::AE::receive($cv) || { rows => [] };
   return map { $_->{doc} } @{$r->{rows}};
 }
