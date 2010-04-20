@@ -17,12 +17,7 @@ sub init {
 sub filter {
     my ($self, $text, $args, $config) = @_;
 
-    if(ref($text) eq 'ARRAY') {
-      # Allows for example to do:  var error => [...];  with  <% error | loc %>
-      $text = CCNQ::Portal->current_session->locale->loc(@$text);
-    } else {
-      $text = CCNQ::Portal->current_session->locale->loc($text,@{$args});
-    }
+    $text = CCNQ::Portal->current_session->locale->loc($text,@{$args});
     for ($text) {
         s/&/&amp;/g;
         s/</&lt;/g;
