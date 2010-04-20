@@ -120,18 +120,17 @@ post '/billing/plan/:plan' => sub {
     name          => $name,
     currency      => $currency,
     decimals      => $decimals,
-
-    currencies    => gather_currencies(),
   };
 
   if(params->{rating_steps}) {
-    $params->{rating_steps} = eval { decode_json(params->{rating_steps}) };
+    my $rating_steps = eval { decode_json(params->{rating_steps}) };
     if($@) {
       var error => _('Invalid JSON content')_;
       var field => $params;
       var template_name => 'api/plan';
       return CCNQ::Portal->site->default_content->();
     }
+    $params->{rating_steps} = params->{rating_steps};
   }
 
   # Update the information in the API.
