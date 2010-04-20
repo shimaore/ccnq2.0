@@ -17,7 +17,7 @@
       </p>
       <p class="ui-helper-clearfix">
         <label for="plan" class="left"><% | loc %>Plan:<% END %></label>
-        <select name="plan"><!-- XXX only required if application uses it -->
+        <select name="plan" class="required">
           <option value=""></option>
           <% FOREACH plan IN field.plans %>
             <% IF plan.name == field.plan %>
