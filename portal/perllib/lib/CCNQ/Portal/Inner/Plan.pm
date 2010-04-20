@@ -37,7 +37,7 @@ sub gather_currencies {
 }
 
 sub gather_field {
-  my $plan = session('plan');
+  my ($plan) = @_;
 
   # Get the information from the API.
   my $cv2 = AE::cv;
