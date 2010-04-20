@@ -127,7 +127,7 @@ post '/billing/plan/:name' => sub {
       var template_name => 'api/plan';
       return CCNQ::Portal->site->default_content->();
     }
-    $params->{rating_steps} = params->{rating_steps};
+    $params->{rating_steps} = $rating_steps;
   }
 
   # Update the information in the API.
