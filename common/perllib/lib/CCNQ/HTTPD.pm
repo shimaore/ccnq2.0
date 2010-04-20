@@ -30,7 +30,7 @@ sub new {
 
                $url = URI->new ($url);
 
-               if ($meth eq 'GET' or $meth eq 'PUT' or $meth eq 'DELETE') {
+               if ($meth eq 'GET' or $meth eq 'DELETE') {
                   $cont =
                      CCNQ::HTTPD::HTTPConnection::_parse_urlencoded ($url->query);
                }
