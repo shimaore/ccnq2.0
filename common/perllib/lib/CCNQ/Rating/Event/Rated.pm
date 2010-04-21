@@ -45,6 +45,7 @@ sub compute_taxes {
 }
 
 sub as_json {
+  my ($self) = @_;
   return encode_json($self->cleanup);
 }
 
