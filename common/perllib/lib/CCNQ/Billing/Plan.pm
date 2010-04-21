@@ -38,7 +38,7 @@ sub retrieve_plan_by_name {
   my $rcv = AE::cv;
   debug("CCNQ::Billing::Plan::retrieve_plan_by_name($plan_name) started");
 
-  CCNQ::Billing::billing_retrieve(_plan_id($plan_name))->cb(sub{
+  CCNQ::Billing::billing_retrieve({ _id => _plan_id($plan_name) })->cb(sub{
     my $rec = CCNQ::AE::receive(@_);
     $rcv->send($rec && CCNQ::Rating::Plan->new($rec));
   });

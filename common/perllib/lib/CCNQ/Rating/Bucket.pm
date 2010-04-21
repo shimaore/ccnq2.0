@@ -42,6 +42,8 @@ Bucket-related data is stored in two different locations:
 
 =cut
 
+sub _bucket_id { return join('/','bucket',@_) }
+
 use AnyEvent;
 use Math::BigFloat;
 use CCNQ::CouchDB;
@@ -64,7 +66,7 @@ Loads the metadata from the billing database.
 sub load {
   my ($self) = @_;
   my $rcv = AE::cv;
-  CCNQ::Billing::billing_retrieve(join('/','bucket',$name))->cb(sub{
+  CCNQ::Billing::billing_retrieve({ _id => _bucket_id($name) })->cb(sub{
     my $rec = CCNQ::AE::receive(@_);
     if($rec) {
       for (qw(currency increment decimals cap)) {
