@@ -5,6 +5,8 @@ use URI;
 use AnyEvent::HTTPD::Request;
 use AnyEvent::HTTPD::Util;
 
+use CCNQ::HTTPD::HTTPConnection;
+
 use base qw/AnyEvent::HTTPD/;
 
 use Logger::Syslog;
