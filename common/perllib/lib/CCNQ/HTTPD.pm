@@ -7,11 +7,12 @@ use AnyEvent::HTTPD::Util;
 
 use base qw/AnyEvent::HTTPD/;
 
+use Logger::Syslog;
+
 sub new {
    my $this  = shift;
    my $class = ref($this) || $this;
    my $self  = $class->SUPER::new (
-      request_class => 'AnyEvent::HTTPD::Request',
       connection_class => 'CCNQ::HTTPD::HTTPConnection',
       @_
    );
@@ -19,7 +20,7 @@ sub new {
    $self->reg_cb (
       connect => sub {
          my ($self, $con) = @_;
-
+         debug("CCNQ::HTTPD: Connected");
          weaken $self;
 
          $self->{conns}->{$con} = $con->reg_cb (
@@ -27,6 +28,7 @@ sub new {
                my ($con, $meth, $url, $hdr, $cont) = @_;
                #d# warn "REQUEST: $meth, $url, [$cont] " . join (',', %$hdr) . "\n";
 
+               debug("CCNQ::HTTPD: Request");
                $url = URI->new ($url);
 
                if ($meth eq 'GET' or $meth eq 'DELETE') {
@@ -52,6 +54,7 @@ sub new {
       },
       disconnect => sub {
          my ($self, $con) = @_;
+         debug("CCNQ::HTTPD: Disconnected");
          $con->unreg_cb (delete $self->{conns}->{$con});
          $self->event (client_disconnected => $con->{host}, $con->{port});
       },
