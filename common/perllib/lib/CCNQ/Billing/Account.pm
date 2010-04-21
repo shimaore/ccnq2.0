@@ -107,6 +107,7 @@ Returns a condvar which will return either undef or a valid CCNQ::Rating::Plan o
 
 =cut
 
+use AnyEvent;
 use CCNQ::AE;
 
 sub plan_of {
