@@ -20,6 +20,11 @@ use File::Spec;
 use JSON;
 use Logger::Syslog;
 
+use constant MANAGER_CLUSTER_NAME => 'manager';
+use constant::defer manager_cluster_jid => sub {
+  CCNQ::Install::make_muc_jid(MANAGER_CLUSTER_NAME)
+};
+
 # Activity that should be used at the end of a normal request to mark the request "completed".
 sub request_completed {
   return (

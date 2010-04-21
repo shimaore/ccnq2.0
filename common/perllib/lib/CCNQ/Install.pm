@@ -167,9 +167,6 @@ sub make_muc_jid {
   return $cluster_name.'@conference.'.domain_name;
 }
 
-# XXX This assumes the "manager" cluster is called "manager", etc.
-use constant::defer manager_cluster_jid => sub { make_muc_jid('manager') };
-
 use constant xmpp_tag => 'xmpp-agent';
 
 

@@ -34,6 +34,7 @@ use JSON;
 use Logger::Syslog;
 use Carp;
 use CCNQ::Install;
+use CCNQ::Manager;
 use CCNQ::API;
 
 use CCNQ::XMPPAgent;
@@ -77,7 +78,7 @@ sub _request {
 sub _session_ready {
   my ($params,$context) = @_;
 
-  my $manager_muc_room = CCNQ::Install::manager_cluster_jid;
+  my $manager_muc_room = CCNQ::Manager::manager_cluster_jid;
   CCNQ::XMPPAgent::_join_room($context,$manager_muc_room);
 
   my $host = CCNQ::API::api_rendezvous_host;

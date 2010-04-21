@@ -17,6 +17,7 @@
 use strict; use warnings;
 use Test::More;
 require_ok( 'CCNQ::Install' );
+require_ok( 'CCNQ::Manager' );
 require_ok( 'CCNQ::AE::Run' );
 
 $ENV{'CCNQ_cookie'} = 'ABCD';
@@ -26,7 +27,7 @@ $ENV{'CCNQ_host_name'} = 'test-host';
 $ENV{'CCNQ_domain_name'} = 'private.example.net';
 is(CCNQ::Install::fqdn(),'test-host.private.example.net','fqdn');
 
-is(CCNQ::Install::manager_cluster_jid(),'manager@conference.private.example.net','manager cluster JID');
+is(CCNQ::Manager::manager_cluster_jid(),'manager@conference.private.example.net','manager cluster JID');
 
 # Tests that rely on SRC
 require_ok( 'AnyEvent' );
