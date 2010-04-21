@@ -121,7 +121,9 @@ post '/billing/plan/:name' => sub {
     my $rating_steps = eval { decode_json(params->{rating_steps}) };
     if($@) {
       var error => _('Invalid JSON content')_;
-      var field => $params;
+      my $fields = params;
+      $fields->{currencies} = gather_currencies();
+      var field => $fields;
       var template_name => 'api/plan';
       return CCNQ::Portal->site->default_content->();
     }
