@@ -150,6 +150,8 @@ our $AUTOLOAD;
 
 use Logger::Syslog;
 
+sub DESTROY { }
+
 sub AUTOLOAD {
   my ($self) = @_;
   my $name = $AUTOLOAD;
@@ -157,7 +159,7 @@ sub AUTOLOAD {
   # Return the value if any
   return $self->{$name} if exists($self->{$name});
   # Unknown field error
-  debug("Unknown field $name");
+  debug(ref($self).": Unknown field $name");
   return undef;
 }
 

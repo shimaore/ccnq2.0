@@ -56,12 +56,15 @@ sub rate_and_save_cbef {
   my ($cbef) = @_;
   my $rcv = AE::cv;
   rate_cbef($cbef)->cb(sub{
+    debug("CCNQ::Billing::Rating::rate_and_save_cbef() rating done");
     my $rated_cbef = CCNQ::AE::receive(@_);
     $rcv->send(['Rating failed']) if !$rated_cbef;
 
+    debug("CCNQ::Billing::Rating::rate_and_save_cbef() compute taxes");
     $rated_cbef->compute_taxes();
 
     # Save the new (rated) CBEF...
+    debug("CCNQ::Billing::Rating::rate_and_save_cbef() save the new (rated) CBEF");
     CCNQ::CDR::insert($rated_cbef)->cb(sub{$rcv->send(CCNQ::AE::receive(@_))});
   });
   return $rcv;

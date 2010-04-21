@@ -25,6 +25,7 @@ use constant::defer cdr_cluster_jid => sub {
 };
 
 use AnyEvent;
+use AnyEvent::CouchDB;
 use CCNQ::CouchDB;
 
 use constant::defer cdr_uri => sub {
