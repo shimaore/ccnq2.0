@@ -16,6 +16,7 @@ requires      'EV'                        => '3.9';
 requires      'AnyEvent'                  => '5.24';
 requires      'AnyEvent::DNS'             => 0; # should be the same as AnyEvent
 requires      'AnyEvent::XMPP'            => '0.51';
+requires      'AnyEvent::HTTPD'           => '0.84';
 requires      'AnyEvent::HTTP'            => 0;
 requires      'AnyEvent::Util'            => 0; # should be the same as AnyEvent
 requires      'AnyEvent::Watchdog::Util'  => '1.0';
