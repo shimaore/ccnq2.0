@@ -49,4 +49,10 @@ sub as_json {
   return encode_json($self->cleanup);
 }
 
+sub as_hashref {
+  my ($self) = @_;
+  $self->cleanup;
+  return { %$self };
+}
+
 'CCNQ::Rating::Event::Rated';

@@ -49,9 +49,8 @@ sub install {
 
 sub insert {
   my ($rated_cbef) = @_;
-  $rated_cbef->cleanup;
   my $rcv = AE::cv;
-  couch(cdr_uri)->db(cdr_db)->save_doc($rated_cbef)->cb(sub{
+  couch(cdr_uri)->db(cdr_db)->save_doc($rated_cbef->as_hashref)->cb(sub{
     CCNQ::CouchDB::receive_ok(shift,$rcv);
   });
   return $rcv;
