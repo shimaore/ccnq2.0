@@ -11,7 +11,7 @@ sub new {
    my $this  = shift;
    my $class = ref($this) || $this;
    my $self  = $class->SUPER::new (
-      request_class => "CCNQ::HTTPD::Request",
+      request_class => 'AnyEvent::HTTPD::Request',
       connection_class => 'CCNQ::HTTPD::HTTPConnection',
       @_
    );
