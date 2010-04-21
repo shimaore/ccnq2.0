@@ -23,6 +23,9 @@ sub _plan_id {
 }
 
 use CCNQ::Billing;
+use CCNQ::Rating::Plan;
+
+use Logger::Syslog;
 
 =head1 retrieve_plan_by_name($plan_name)
 
@@ -33,6 +36,8 @@ Returns a condvar that will return either undef or a valid CCNQ::Rating::Plan ob
 sub retrieve_plan_by_name {
   my ($plan_name) = @_;
   my $rcv = AE::cv;
+  debug("CCNQ::Billing::Plan::retrieve_plan_by_name($plan_name) started");
+
   CCNQ::Billing::billing_retrieve(_plan_id($plan_name))->cb(sub{
     my $rec = CCNQ::AE::receive(@_);
     $rcv->send($rec && CCNQ::Rating::Plan->new($rec));

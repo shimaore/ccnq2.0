@@ -24,6 +24,7 @@ sub _account_sub_id {
 
 
 use CCNQ::Billing;
+use CCNQ::Billing::Plan;
 
 =head1 Content of an "account" record
 
@@ -109,6 +110,7 @@ Returns a condvar which will return either undef or a valid CCNQ::Rating::Plan o
 
 use AnyEvent;
 use CCNQ::AE;
+use Logger::Syslog;
 
 sub plan_of {
   my ($params) = @_;
@@ -116,10 +118,12 @@ sub plan_of {
   retrieve_account_sub($params)->cb(sub{
     my $rec = CCNQ::AE::receive(@_);
     if($rec && $rec->{plan}) {
+      debug("CCNQ::Billing::Account received plan name $rec->{plan}");
       CCNQ::Billing::Plan::retrieve_plan_by_name($rec->{plan})->cb(sub{
         $rcv->send(CCNQ::AE::receive(@_));
       })
     } else {
+      debug("CCNQ::Billing::Account received no plan name");
       $rcv->send;
     }
   });
