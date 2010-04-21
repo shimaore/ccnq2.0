@@ -213,7 +213,7 @@ sub replenish {
     my $current_bucket_value = $bucket_instance->{value};
     $current_bucket_value += $params->{value};
 
-    $self->set_instance_value($bucket_instance,$value)->cb(sub{$rcv->send(shift->recv)});
+    $self->set_instance_value($bucket_instance,$value)->cb(sub{$rcv->send(CCNQ::AE::receive(@_))});
   });
   return $rcv;
 }

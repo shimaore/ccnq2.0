@@ -56,6 +56,7 @@ use constant manager_designs => {
 };
 
 use AnyEvent;
+use CCNQ::AE;
 
 sub _install {
   return CCNQ::CouchDB::install(manager_uri,manager_db,manager_designs);
@@ -63,8 +64,8 @@ sub _install {
 
 sub install {
   my $rcv = AE::cv;
-  _install()->cb(sub{shift->recv;
-    CCNQ::Manager::CodeStore::install()->cb(sub{shift->recv;
+  _install()->cb(sub{CCNQ::AE::receive(@_);
+    CCNQ::Manager::CodeStore::install()->cb(sub{CCNQ::AE::receive(@_);
       $rcv->send;
     });
   });
@@ -110,7 +111,7 @@ sub request_to_activity {
   }
 
   manager_code_store->load_entry($request_type)->cb(sub{
-    $cv->send(shift->recv);
+    $cv->send(CCNQ::AE::receive(@_));
   });
 
   return $cv;
@@ -137,7 +138,7 @@ sub activities_for_request {
   }
 
   request_to_activity($request->{action})->cb(sub{
-    my $sub = shift->recv;
+    my $sub = CCNQ::AE::receive(@_);
 
     if(!$sub) {
       $request->{status} = STATUS_FAILED;

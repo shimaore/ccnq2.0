@@ -107,6 +107,8 @@ Returns a condvar which will return either undef or a valid CCNQ::Rating::Plan o
 
 =cut
 
+use CCNQ::AE;
+
 sub plan_of {
   my ($params) = @_;
   my $rcv = AE::cv;
@@ -114,7 +116,7 @@ sub plan_of {
     my $rec = CCNQ::AE::receive(@_);
     if($rec && $rec->{plan}) {
       CCNQ::Billing::Plan::retrieve_plan_by_name($rec->{plan})->cb(sub{
-        $rcv->send(eval {shift->recv});
+        $rcv->send(CCNQ::AE::receive(@_));
       })
     } else {
       $rcv->send;

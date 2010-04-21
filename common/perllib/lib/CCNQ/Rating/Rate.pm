@@ -18,6 +18,9 @@ use strict; use warnings;
 use CCNQ::Rating::Bucket;
 use CCNQ::Rating::Table;
 
+use AnyEvent;
+use CCNQ::AE;
+
 our $cbef_guards;
 our $cbef_actions;
 
@@ -53,13 +56,13 @@ sub apply_cbef_guards {
 
   # Run the code piece
   $sub->($cbef,@guard)->cb(sub{
-    my $result = shift->recv;
+    my $result = CCNQ::AE::receive(@_);
     # If false, return false.
     if(!$result) {
       $rcv->send(0);
     # If true, recursively test the remaining guards.
     } else {
-      apply_cbef_guards($cbef,@guards)->cb(sub{$rcv->send(shift->recv)});
+      apply_cbef_guards($cbef,@guards)->cb(sub{$rcv->send(CCNQ::AE::receive(@_))});
     }
   });
 
@@ -88,8 +91,8 @@ sub apply_cbef_actions {
   }
 
   $sub->($cbef,@action)->cb(sub{
-    shift->recv;
-    apply_cbef_actions($cbef,@actions)->cb(sub{$rcv->send(shift->recv)});
+    CCNQ::AE::receive(@_);
+    apply_cbef_actions($cbef,@actions)->cb(sub{$rcv->send(CCNQ::AE::receive(@_))});
   });
 
   return $rcv;
@@ -119,21 +122,21 @@ sub rate_cbef_step {
   my $guards = $rating_step->guards || [];
   apply_cbef_guards($cbef,@$guards)->cb(sub{
     # If the guard returned true, execute the actions.
-    my $result = shift->recv;
+    my $result = CCNQ::AE::receive(@_);
     if($result) {
       my $actions = $rating_step->actions || [];
       # Actions may return 1 to indicate no further processing of steps.
       apply_cbef_actions($cbef,@$actions)->cb(sub{
-        my $stop = shift->recv;
+        my $stop = CCNQ::AE::receive(@_);
         if($stop) {
           $rcv->send($cbef);
         } else {
-          rate_cbef_step($cbef,@rating_steps)->cb(sub{$rcv->send(shift->recv)});
+          rate_cbef_step($cbef,@rating_steps)->cb(sub{$rcv->send(CCNQ::AE::receive(@_))});
         }
       });
     # If the guard returned false, skip the actions and attempt the next step.
     } else {
-      rate_cbef_step($cbef,@rating_steps)->cb(sub{$rcv->send(shift->recv)});
+      rate_cbef_step($cbef,@rating_steps)->cb(sub{$rcv->send(CCNQ::AE::receive(@_))});
     }
   });
 
@@ -248,7 +251,7 @@ sub add_duration_rate_apply {
 
     if($cbef->cost_bucket) {
       $cbef->cost_bucket->use($cbef,$cost)->cb(sub{
-        $cost -= shift->recv;
+        $cost -= CCNQ::AE::receive(@_);
         $continuation_2->();
       });
     } else {
@@ -258,7 +261,7 @@ sub add_duration_rate_apply {
 
   if($cbef->duration_bucket) {
     $cbef->duration_bucket->use($cbef,$billed_seconds)->cb(sub{
-      $billed_seconds -= shift->recv;
+      $billed_seconds -= CCNQ::AE::receive(@_);
       $continuation_1->();
     })
   } else {
@@ -296,7 +299,7 @@ sub add_duration_rate_estimate {
   my $continuation_1 = sub {
     if($cbef->cost_bucket) {
       $cbef->cost_bucket->get_instance($cbef)->cb(sub{
-        my $bucket_instance = shift->recv;
+        my $bucket_instance = CCNQ::AE::receive(@_);
         my $remaining_amount = 0;
         $remaining_amount = $bucket_instance->{value} if $bucket_instance;
         my $duration = $remaining_amount / ($rate/seconds_per_minute);
@@ -310,7 +313,7 @@ sub add_duration_rate_estimate {
 
   if($cbef->duration_bucket) {
     $cbef->duration_bucket->get_instance($cbef)->cb(sub{
-      my $bucket_instance = shift->recv;
+      my $bucket_instance = CCNQ::AE::receive(@_);
       $remaining_duration += $bucket_instance->{value} if $bucket_instance;
       $continuation_1->();
     });
@@ -345,7 +348,7 @@ sub add_count_cost_apply {
 
   if($cbef->cost_bucket) {
     $cbef->cost_bucket->use($cost)->cb(sub{
-      $cost -= shift->recv;
+      $cost -= CCNQ::AE::receive(@_);
       $continuation_1->();
     });
   } else {
@@ -372,7 +375,7 @@ sub add_count_cost_estimate {
   $cbef->{estimated_cost} += $cost;
   if($cbef->cost_bucket) {
     $cbef->cost_bucket->get_value()->cb(sub{
-      $cost -= shift->recv;
+      $cost -= CCNQ::AE::receive(@_);
       $continuation_1->();
     });
   } else {
@@ -649,7 +652,7 @@ $cbef_actions = {
     my ($cbef,$table) = @_;
     my $rcv = AE::cv;
     $table->lookup($cbef->to->e164)->cb(sub{
-      my $r = shift->recv;
+      my $r = CCNQ::AE::receive(@_);
       if($r) {
         $cbef->{initial_duration}   = $r->{initial_duration};
         $cbef->{increment_duration} = $r->{increment_duration};
@@ -668,9 +671,9 @@ $cbef_actions = {
     my ($cbef,$table_name) = @_;
     my $rcv = AE::cv;
     CCNQ::Rating::Table->new($table_name)->lookup($cbef->to->e164)->cb(sub{
-      my $r = shift->recv;
+      my $r = CCNQ::AE::receive(@_);
       if($r) {
-        add_count_cost($cbef,$r->{count_cost})->cb(sub{$rcv->send(shift->recv)});
+        add_count_cost($cbef,$r->{count_cost})->cb(sub{$rcv->send(CCNQ::AE::receive(@_))});
       } else {
         $rcv->send;
       }
@@ -687,9 +690,9 @@ $cbef_actions = {
     my ($cbef,$table_name) = @_;
     my $rcv = AE::cv;
     CCNQ::Rating::Table->new($table_name)->lookup($cbef->to->e164)->cb(sub{
-      my $r = shift->recv;
+      my $r = CCNQ::AE::receive(@_);
       if($r) {
-        add_duration_rate($cbef,$r->{duration_rate})->cb(sub{$rcv->send(shift->recv)});
+        add_duration_rate($cbef,$r->{duration_rate})->cb(sub{$rcv->send(CCNQ::AE::receive(@_))});
       } else {
         $rcv->send;
       }
@@ -706,9 +709,9 @@ $cbef_actions = {
     my ($cbef,$table_name) = @_;
     my $rcv = AE::cv;
     CCNQ::Rating::Table->new($table_name)->lookup($cbef->to->e164)->cb(sub{
-      my $r = shift->recv;
+      my $r = CCNQ::AE::receive(@_);
       if($r) {
-        add_jurisdiction($cbef,{ $r->{jurisdiction} => $r->{rate} })->cb(sub{$rcv->send(shift->recv)});
+        add_jurisdiction($cbef,{ $r->{jurisdiction} => $r->{rate} })->cb(sub{$rcv->send(CCNQ::AE::receive(@_))});
       } else {
         $rcv->send;
       }

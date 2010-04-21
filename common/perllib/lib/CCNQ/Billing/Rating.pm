@@ -15,6 +15,8 @@ package CCNQ::Billing::Rating;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
 
+use CCNQ::AE;
+
 =head1 rate_and_save_cbef
 
 Save a flat (non-rated) CBEF.
@@ -39,7 +41,7 @@ sub rate_cbef {
     my $plan = CCNQ::AE::receive(@_);
     if($plan) {
       debug("CCNQ::Billing::Rating::rate_cbef() got plan");
-      CCNQ::Rating::rate_cbef($cbef,$plan)->cb(sub{$rcv->send(shift->recv)});
+      CCNQ::Rating::rate_cbef($cbef,$plan)->cb(sub{$rcv->send(CCNQ::AE::receive(@_))});
     } else {
       debug("CCNQ::Billing::Rating::rate_cbef() no plan");
       $rcv->send;
@@ -60,7 +62,7 @@ sub rate_and_save_cbef {
     $rated_cbef->compute_taxes();
 
     # Save the new (rated) CBEF...
-    CCNQ::CDR::insert($rated_cbef)->cb(sub{$rcv->send(shift->recv)});
+    CCNQ::CDR::insert($rated_cbef)->cb(sub{$rcv->send(CCNQ::AE::receive(@_))});
   });
   return $rcv;
 }

@@ -109,7 +109,7 @@ sub lookup {
     my $rcv = AE::cv;
     $self->load()->cb(sub{
       $self->_lookup($key)->cb(sub{
-        $rcv->send(shift->recv)
+        $rcv->send(CCNQ::AE::receive(@_))
       });
     });
     return $rcv;
