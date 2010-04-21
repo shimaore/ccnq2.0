@@ -17,6 +17,7 @@ use strict; use warnings;
 
 use CCNQ::Activities::Proxy;
 use CCNQ::Activities::Provisioning;
+use CCNQ::Manager;
 
 sub run {
   my $request = shift;
@@ -78,6 +79,8 @@ sub run {
     # 5. Add billing entry for the day of creation
     CCNQ::Activities::Billing::partial_day($request,'route_did'),
 
+    # 6. Mark completed
+    CCNQ::Manager::request_completed(),
   );
 }
 
