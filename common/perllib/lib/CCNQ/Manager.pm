@@ -30,7 +30,7 @@ sub request_completed {
   return (
     {
       action => 'mark_request_completed',
-      cluster_name => 'manager',
+      cluster_name => MANAGER_CLUSTER_NAME,
     },
   );
 }
