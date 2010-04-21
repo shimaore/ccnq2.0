@@ -303,6 +303,25 @@ sub _session_ready {
     '/manager' => sub {
       my ($httpd, $req) = @_;
 
+      # Accept a JSON body as parameters as well.
+      my $content = {};
+      if($req->content) {
+        my $json = eval { decode_json($req->content) };
+        if($@) {
+          debug('Invalid JSON content');
+          $req->respond([501,'Invalid JSON content']);
+          $httpd->stop_request;
+          return;
+        }
+        if(ref($json) ne 'HASH') {
+          debug('JSON content is not a hash');
+          $req->respond([501,'JSON content is not a hash']);
+          $httpd->stop_request;
+          return;
+        }
+        $content = $json;
+      }
+
       debug("node/api: Processing manager mapping request");
       my $body = {
         activity => 'manager/'.rand(),
@@ -319,7 +338,7 @@ sub _session_ready {
           $body->{action} = 'manager_retrieve';
         } elsif ($req->method eq 'PUT') {
           $body->{action} = 'manager_update';
-          $body->{code} = $req->parm('code');
+          $body->{code} = $content->{code};
         } elsif ($req->method eq 'DELETE') {
           $body->{action} = 'manager_delete';
         }
