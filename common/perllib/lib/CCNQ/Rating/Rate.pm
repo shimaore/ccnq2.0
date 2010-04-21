@@ -59,7 +59,7 @@ sub apply_cbef_guards {
       $rcv->send(0);
     # If true, recursively test the remaining guards.
     } else {
-      apply_cbef_guards($cbef,@guards)->cb($rcv);
+      apply_cbef_guards($cbef,@guards)->cb(sub{$rcv->send(shift->recv)});
     }
   });
 
@@ -89,7 +89,7 @@ sub apply_cbef_actions {
 
   $sub->($cbef,@action)->cb(sub{
     shift->recv;
-    apply_cbef_actions($cbef,@actions)->cb($rcv);
+    apply_cbef_actions($cbef,@actions)->cb(sub{$rcv->send(shift->recv)});
   });
 
   return $rcv;
@@ -128,12 +128,12 @@ sub rate_cbef_step {
         if($stop) {
           $rcv->send($cbef);
         } else {
-          rate_cbef_step($cbef,@rating_steps)->cb($rcv);
+          rate_cbef_step($cbef,@rating_steps)->cb(sub{$rcv->send(shift->recv)});
         }
       });
     # If the guard returned false, skip the actions and attempt the next step.
     } else {
-      rate_cbef_step($cbef,@rating_steps)->cb($rcv);
+      rate_cbef_step($cbef,@rating_steps)->cb(sub{$rcv->send(shift->recv)});
     }
   });
 
@@ -670,7 +670,7 @@ $cbef_actions = {
     CCNQ::Rating::Table->new($table_name)->lookup($cbef->to->e164)->cb(sub{
       my $r = shift->recv;
       if($r) {
-        add_count_cost($cbef,$r->{count_cost})->cb($rcv);
+        add_count_cost($cbef,$r->{count_cost})->cb(sub{$rcv->send(shift->recv)});
       } else {
         $rcv->send;
       }
@@ -689,7 +689,7 @@ $cbef_actions = {
     CCNQ::Rating::Table->new($table_name)->lookup($cbef->to->e164)->cb(sub{
       my $r = shift->recv;
       if($r) {
-        add_duration_rate($cbef,$r->{duration_rate})->cb($rcv);
+        add_duration_rate($cbef,$r->{duration_rate})->cb(sub{$rcv->send(shift->recv)});
       } else {
         $rcv->send;
       }
@@ -708,7 +708,7 @@ $cbef_actions = {
     CCNQ::Rating::Table->new($table_name)->lookup($cbef->to->e164)->cb(sub{
       my $r = shift->recv;
       if($r) {
-        add_jurisdiction($cbef,{ $r->{jurisdiction} => $r->{rate} })->cb($rcv);
+        add_jurisdiction($cbef,{ $r->{jurisdiction} => $r->{rate} })->cb(sub{$rcv->send(shift->recv)});
       } else {
         $rcv->send;
       }

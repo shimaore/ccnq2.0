@@ -213,7 +213,7 @@ sub replenish {
     my $current_bucket_value = $bucket_instance->{value};
     $current_bucket_value += $params->{value};
 
-    $self->set_instance_value($bucket_instance,$value)->cb($rcv);
+    $self->set_instance_value($bucket_instance,$value)->cb(sub{$rcv->send(shift->recv)});
   });
   return $rcv;
 }

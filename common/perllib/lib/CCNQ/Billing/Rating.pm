@@ -39,7 +39,7 @@ sub rate_cbef {
     my $plan = CCNQ::AE::receive(@_);
     if($plan) {
       debug("CCNQ::Billing::Rating::rate_cbef() got plan");
-      CCNQ::Rating::rate_cbef($cbef,$plan)->cb($rcv);
+      CCNQ::Rating::rate_cbef($cbef,$plan)->cb(sub{$rcv->send(shift->recv)});
     } else {
       debug("CCNQ::Billing::Rating::rate_cbef() no plan");
       $rcv->send;
@@ -60,7 +60,7 @@ sub rate_and_save_cbef {
     $rated_cbef->compute_taxes();
 
     # Save the new (rated) CBEF...
-    CCNQ::CDR::insert($rated_cbef)->cb($rcv);
+    CCNQ::CDR::insert($rated_cbef)->cb(sub{$rcv->send(shift->recv)});
   });
   return $rcv;
 }
