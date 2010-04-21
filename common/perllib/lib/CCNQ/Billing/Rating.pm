@@ -28,14 +28,20 @@ use AnyEvent;
 use CCNQ::Billing::Plan;
 use CCNQ::Rating;
 
+use Logger::Syslog;
+
 sub rate_cbef {
   my ($cbef) = @_;
   my $rcv = AE::cv;
+  debug("CCNQ::Billing::Rating::rate_cbef() started");
+
   CCNQ::Billing::Account::plan_of($cbef)->cb(sub{
     my $plan = CCNQ::AE::receive(@_);
     if($plan) {
+      debug("CCNQ::Billing::Rating::rate_cbef() got plan");
       CCNQ::Rating::rate_cbef($cbef,$plan)->cb($rcv);
     } else {
+      debug("CCNQ::Billing::Rating::rate_cbef() no plan");
       $rcv->send;
     }
   });
