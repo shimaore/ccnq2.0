@@ -29,9 +29,13 @@
       <div class="activity rank<% r.activity_rank %>">Activity <% r.activity_rank %>: <% r.action | loc %></div>
     <% ELSE %>
       <% IF r.request %>
-        <div class="request">Request ID <% r.request | html %></div>
+        <% IF r.completed %>
+          <div class="request"><% | loc r.request %>Request ID [_1] completed<% END %></div>
+        <% ELSE %>
+          <div class="request"><% | loc r.request %>Request ID [_1] pending<% END %></div>
+        <% END %>
       <% ELSE %>
-        <div class="request">Request pending</div>
+        <div class="request"><% | loc %>Request pending<% END %></div>
       <% END %>
     <% END %>
   <% END %>
