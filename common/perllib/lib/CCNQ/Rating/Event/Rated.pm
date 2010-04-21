@@ -16,16 +16,16 @@ sub compute_taxes {
   # Note: this is applied to the total cost, we don't
   #       know (yet) how to differentiate tax rates on
   #       duration_cost vs count_cost.
-  for my $tax (@{$cbef->tax || []}) {
+  for my $tax (@{$self->tax || []}) {
     for my $jurisdiction (keys %{$tax}) {
       my $rate = $tax->{$jurisdiction};
-      my $tax_amount = $self->rounding($cbef->taxable_cost * ($rate/100.0));
-      $cbef->{taxes}->{$jurisdiction} += $tax_amount;
-      $cbef->{tax_amount} += $tax_amount;
+      my $tax_amount = $self->rounding($self->taxable_cost * ($rate/100.0));
+      $self->{taxes}->{$jurisdiction} += $tax_amount;
+      $self->{tax_amount} += $tax_amount;
     }
   }
 
-  $cbef->{total_cost} = $cbef->taxable_cost + $cbef->tax_amount;  
+  $self->{total_cost} = $self->taxable_cost + $self->tax_amount;
 }
 
 sub as_json {
