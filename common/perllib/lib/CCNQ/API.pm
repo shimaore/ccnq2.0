@@ -111,8 +111,9 @@ sub _manager {
   } else {
     $uri->path_segments('manager');  # view
   }
-  $uri->query_form({code => $code});
-  http_request $method => $uri->as_string, _api_cb($cb);
+  my $body;
+  $body = encode_json({code => $code}) if $code;
+  http_request $method => $uri->as_string, body => $body, _api_cb($cb);
   return;
 }
 
