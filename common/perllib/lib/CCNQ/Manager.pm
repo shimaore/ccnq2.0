@@ -20,6 +20,17 @@ use File::Spec;
 use JSON;
 use Logger::Syslog;
 
+# Activity that should be used at the end of a normal request to mark the request "completed".
+sub request_completed {
+  return (
+    {
+      action => 'mark_request_completed',
+      cluster_name => 'manager',
+    },
+  );
+}
+
+# Database handling
 use constant::defer manager_uri => sub {
   CCNQ::Install::couchdb_local_uri;
 };
@@ -77,6 +88,14 @@ sub get_request_status {
   return CCNQ::CouchDB::view_cv(manager_uri,manager_db,{
     view => 'report/requests',
     _id  => [$request_id],
+  });
+}
+
+sub mark_request_completed {
+  my ($request_id) = @_;
+  return CCNQ::CouchDB::update_cv(manager_uri,manager_db,{
+    _id  => $request_id,
+    completed => 'true',
   });
 }
 

@@ -194,6 +194,11 @@ sub get_request_status {
   return CCNQ::Manager::get_request_status($params->{request_id});
 }
 
+sub mark_request_completed {
+  my ($params,$context) = @_;
+  return CCNQ::Manager::mark_request_completed($params->{request_id});
+}
+
 use CCNQ::Manager::CodeStore;
 
 sub manager_update {
