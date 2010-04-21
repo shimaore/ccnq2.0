@@ -110,4 +110,6 @@ dp Lingua::EN::Numbers::Ordinate
 dp Lingua::FR::Numbers
 # dp Lingua::FR::Numbers::Ordinate
 
+dp AnyEvent::HTTPD
+
 # We provide pre-built archives for AMD64 architecture, see INSTALL.

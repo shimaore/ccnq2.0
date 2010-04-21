@@ -3,7 +3,7 @@ use common::sense;
 use Scalar::Util qw/weaken/;
 use URI;
 use AnyEvent::HTTPD::Request;
-use CCNQ::HTTPD::Util;
+use AnyEvent::HTTPD::Util;
 
 use base qw/AnyEvent::HTTPD/;
 
