@@ -53,8 +53,9 @@ certs_path = /etc/mediaproxy/tls
 
 EOT
   CCNQ::Util::print_to(CCNQ::MediaProxy::mediaproxy_config,$config.$config_dispatcher.$config_relay);
-  unlink($dispatcher_file);
-  unlink($relay_file);
+  # Do not unlink the files. When we are both dispatcher and relay (in two different clusters) the installer might get called twice.
+  # unlink($dispatcher_file);
+  # unlink($relay_file);
   return;
 }
 
