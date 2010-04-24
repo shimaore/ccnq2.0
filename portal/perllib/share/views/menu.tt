@@ -9,9 +9,7 @@
   <% IF session.account || is_sysadmin %>
   <li><a href="/billing/account"><% | loc %>Account Management<% END %></a></li>
   <% END %>
-  <% IF session.user_id %>
-  <li><a href="/user_profile"><% | loc %>User Profile<% END %></a></li>
-  <% END %>
+  <li><a href="/user_profile"><% | loc %>My Profile<% END %></a></li>
 <% ELSE %>
   <!-- public menu -->
 <% END %>
