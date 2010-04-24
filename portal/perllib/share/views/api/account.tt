@@ -5,7 +5,7 @@
     <form id="account_form" action="/billing/account" method="post" accept-charset="utf-8" class="ui-widget validate">
       <p class="ui-helper-clearfix">
         <label for="account" class="left"><% | loc %>Account number:<% END %></label>
-        <input type="text" name="account" value="<% field.account | html %>" readonly />
+        <span id="account"><% field.account | html %></span>
       </p>
       <p class="ui-helper-clearfix">
         <label for="name" class="left"><% | loc %>Account name:<% END %></label>
@@ -71,5 +71,24 @@
     </fieldset>
   </fieldset>
 <% ELSE %>
-  <% | loc %>Please select an account.<% END %>
+  <% IF is_sysadmin %>
+  <fieldset>
+    <legend><% | loc %>Create new account<% END %></legend>
+    <form id="account_form" action="/billing/account" method="post" accept-charset="utf-8" class="ui-widget validate">
+      <p class="ui-helper-clearfix">
+        <label for="account" class="left"><% | loc %>Account number:<% END %></label>
+        <input type="text" name="account" value="<% field.account | html %>" class="required" />
+      </p>
+      <p class="ui-helper-clearfix">
+        <label for="name" class="left"><% | loc %>Account name:<% END %></label>
+        <input type="text" name="name" value="<% field.name | html %>" class="required"/>
+      </p>
+      <p class="ui-helper-clearfix submit">
+      <input type="submit" value="<% | loc %>Save<% END %>" />
+      </p>
+    </form>
+  </fieldset>
+  <% ELSE %>
+    <% | loc %>Please select an account.<% END %>
+  <% END %>
 <% END %>

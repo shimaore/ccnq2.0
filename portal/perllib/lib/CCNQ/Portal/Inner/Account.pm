@@ -84,11 +84,9 @@ sub gather_field_sub {
 
 get '/billing/account' => sub {
   return unless CCNQ::Portal->current_session->user;
-  return unless session('account');
-  return unless session('account') =~ /^[\w-]+$/;
-
-  gather_field();
-
+  if( session('account') && session('account') =~ /^[\w-]+$/ ) {
+    gather_field();
+  }
   var template_name => 'api/account';
   return CCNQ::Portal->site->default_content->();
 };
