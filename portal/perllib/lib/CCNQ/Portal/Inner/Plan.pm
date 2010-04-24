@@ -64,6 +64,7 @@ sub gather_field {
 
 post '/billing/plan' => sub {
   return unless CCNQ::Portal->current_session->user;
+  return unless CCNQ::Portal->current_session->user->profile->is_sysadmin;
 
   return unless params->{name} =~ /\S/;
 
@@ -100,6 +101,7 @@ get '/billing/plan/:name' => sub {
 
 post '/billing/plan/:name' => sub {
   return unless CCNQ::Portal->current_session->user;
+  return unless CCNQ::Portal->current_session->user->profile->is_sysadmin;
 
   return unless params->{name} =~ /\S/;
 

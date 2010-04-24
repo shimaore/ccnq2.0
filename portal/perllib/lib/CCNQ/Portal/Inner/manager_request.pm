@@ -57,6 +57,7 @@ get '/manager/:request_type' => $get_query_type;
 
 post '/manager/:request_type' => sub {
   return unless CCNQ::Portal->current_session->user;
+  return unless CCNQ::Portal->current_session->user->profile->is_sysadmin;
   var template_name => 'manager_request';
   my $request_type = params->{request_type};
 

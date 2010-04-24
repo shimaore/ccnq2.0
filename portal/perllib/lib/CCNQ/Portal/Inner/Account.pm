@@ -95,6 +95,7 @@ get '/billing/account' => sub {
 
 post '/billing/account' => sub {
   return unless CCNQ::Portal->current_session->user;
+  return unless CCNQ::Portal->current_session->user->profile->is_admin;
   return unless session('account');
   return unless session('account') =~ /^[\w-]+$/;
 
@@ -137,6 +138,7 @@ get '/billing/account_sub/:account_sub' => sub {
 
 sub handle_account_sub {
   return unless CCNQ::Portal->current_session->user;
+  return unless CCNQ::Portal->current_session->user->profile->is_admin;
   return unless session('account');
   return unless session('account') =~ /^[\w-]+$/;
   return unless params->{account_sub};
