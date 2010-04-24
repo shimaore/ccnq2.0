@@ -10,6 +10,8 @@ use AnyEvent::HTTPD::Util;
 use Scalar::Util qw/weaken/;
 our @ISA = qw/AnyEvent::HTTPD::HTTPConnection/;
 
+use Logger::Syslog;
+
 sub push_header_line {
    my ($self) = @_;
 
@@ -27,6 +29,8 @@ sub push_header_line {
       return unless defined $self;
 
       delete $self->{req_timeout};
+
+      debug("CCNQ::HTTPD::HTTPConnection Got $line");
 
       if ($line =~ /(\S+) \040 (\S+) \040 HTTP\/(\d+)\.(\d+)/xso) {
          my ($meth, $url, $vm, $vi) = ($1, $2, $3, $4);
