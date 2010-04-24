@@ -55,7 +55,6 @@ require_ok( 'CCNQ::XMPPAgent' );
 require_ok( 'CCNQ::Proxy' );
 require_ok( 'CCNQ::Proxy::aliases' );
 require_ok( 'CCNQ::Proxy::Base' );
-require_ok( 'CCNQ::Proxy::Bill' ); # deprecated
 require_ok( 'CCNQ::Proxy::Config' );
 require_ok( 'CCNQ::Proxy::Configuration' );
 require_ok( 'CCNQ::Proxy::domain' );
