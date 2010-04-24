@@ -189,6 +189,7 @@ use constant roles_to_functions => {
   'bucket-db'                   => [qw( db/bucket )],
   'cdr-db'                      => [qw( db/cdr )],
   'manager'                     => [qw( manager monit node )],
+  # Pick one of "api" or "portal" for any given server.
   'api'                         => [qw( node/api db/provisioning db/billing )],
   'portal'                      => [qw( node/api db/provisioning db/billing portal )],
 };
