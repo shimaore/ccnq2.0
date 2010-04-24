@@ -94,6 +94,10 @@ get '/billing/account' => sub {
 post '/billing/account' => sub {
   return unless CCNQ::Portal->current_session->user;
   return unless CCNQ::Portal->current_session->user->profile->is_admin;
+  # This is how we create new accounts.
+  if(params->{account} && params->{account} =~ /^[\w-]+$/) {
+       session account => params->{account};
+  }
   return unless session('account');
   return unless session('account') =~ /^[\w-]+$/;
 
