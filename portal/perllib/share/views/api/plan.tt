@@ -52,7 +52,7 @@
   <legend><% | loc %>Create plan<% END %></legend>
   <form id="new_plan_form" action="/billing/plan" method="post" accept-charset="utf-8" class="ui-widget validate">
     <p class="ui-helper-clearfix">
-      <label for="name" class="left"><% | loc %>Plan identifier:<% END %></label>
+      <label for="name" class="left"><% | loc %>Plan name:<% END %></label>
       <input type="text" name="name" value="<% field.name | html %>" class="required" />
     </p>
     <p class="ui-helper-clearfix submit">
