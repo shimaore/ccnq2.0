@@ -38,7 +38,7 @@
         <li><a href="/billing/account_sub/<% account_sub.account_sub | uri %>"><% account_sub.name %></a></li>
         <% END %>
       </ul>
-      <form action="/billing/account_sub" method="put" accept-charset="utf-8" class="ui-widget validate">
+      <form action="/billing/account_sub" method="post" accept-charset="utf-8" class="ui-widget validate">
         <p class="ui-helper-clearfix">
           <label for="account" class="left"><% | loc %>Account number:<% END %></label>
           <span id="account"><% field.account | html %></span>

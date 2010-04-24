@@ -168,6 +168,6 @@ sub handle_account_sub {
 }
 
 post '/billing/account_sub/:account_sub' => sub { handle_account_sub() };
-put  '/billing/account_sub'              => sub { handle_account_sub() };
+post '/billing/account_sub'              => sub { handle_account_sub() };
 
 'CCNQ::Portal::Inner::Account';
