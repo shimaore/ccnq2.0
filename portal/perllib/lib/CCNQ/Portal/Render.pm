@@ -95,7 +95,6 @@ use constant default_content => sub {
     %{$vars},
     lh       => CCNQ::Portal->current_session->locale,
     accounts => CCNQ::Portal::Outer::AccountSelection->available_accounts,
-    account  => CCNQ::Portal::Outer::AccountSelection->account,
   };
 
 
