@@ -38,6 +38,12 @@ sub account {
   my $account = shift;
   my $accounts = available_accounts;
 
+  # "is_admin" profiles can access any account.
+  if(CCNQ::Portal->current_session->user->profile->is_admin) {
+    session account => $account;
+    return session('account');
+  }
+
   if($#{$accounts} == -1) {
     # Account selection is not possible, the user does not have access to any account
     session account => undef;
