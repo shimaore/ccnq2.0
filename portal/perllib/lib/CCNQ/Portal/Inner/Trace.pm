@@ -24,6 +24,8 @@ use CCNQ::API;
 
 use constant TRACE_SERVERS_DNS_NAME => 'trace-server';
 
+use CCNQ::Install;
+
 sub get_node_names {
   my $dns_txt = sub {
     my $dn = CCNQ::Install::catdns(@_);
@@ -32,7 +34,7 @@ sub get_node_names {
     return ($cv->recv);
   };
 
-  return [$dns_txt->(cluster_fqdn(TRACE_SERVERS_DNS_NAME))];
+  return [$dns_txt->(CCNQ::Install::cluster_fqdn(TRACE_SERVERS_DNS_NAME))];
 }
 
 get '/trace' => sub {
