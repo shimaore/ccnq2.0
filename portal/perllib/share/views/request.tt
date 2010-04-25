@@ -8,12 +8,19 @@
       <% FOREACH s IN r.response.result.rows %>
         <div class="sniffer">
           <span class="sniffer timestamp"><% varname = 'frame.time' %><% s.$varname | html %></span>
-          <span class="sniffer callid"><a href="...">Call-ID: <% varname = 'sip.Call-ID' %><% s.$varname | html %></a></span><br/>
+          <span class="sniffer callid">Call-ID: <% varname = 'sip.Call-ID' %><% s.$varname | html %></a></span><br/>
           <span class="sniffer ip"><% varname = 'ip.src' %><% s.$varname | html %> &rarr; <% varname = 'ip.dst' %><% s.$varname %></span>
           <span class="sniffer method"><% varname = 'sip.Method' %><% s.$varname | html %></span>
           <span class="sniffer status"><% varname = 'sip.Status-Code' %><% s.$varname |html %></span><br/>
           <span class="sniffer from_addr">From: <% varname = 'sip.From' %><% s.$varname | html %></span>
           <span class="sniffer to_addr">To: <% varname = 'sip.To' %><% s.$varname | html %></span>
+          <form action="/trace" method="post" >
+            <input type="hidden" name="node_name" value="<% r.params.node_name | html %>" />
+            <input type="hidden" name="dump_packets" value="1" />
+            <input type="hidden" name="call_id" value="<% varname = 'sip.Call-ID' %><% s.$varname | html %>" />
+            <input type="hidden" name="days_ago" value="<% r.params.days_ago | html %>">
+            <input type="submit" value="<% | loc %>Download<% END %>">
+          </form>
         </div>
       <% END %>
     <% ELSE %>
