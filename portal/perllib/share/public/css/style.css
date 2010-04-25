@@ -96,6 +96,16 @@ div.sniffer {
   border-top: 1px solid grey;
   border-bottom: 1px solid grey;
 }
+.sniffer input {
+  border: none;
+  float: right;
+}
+div.sip-request {
+  margin-left: 5px;
+}
+div.sip-response {
+  margin-left: 50px;
+}
 span.timestamp, span.callid {
   font-size: 9px;
 }

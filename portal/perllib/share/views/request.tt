@@ -6,10 +6,19 @@
     <div class="status <% r.status %>">Node <% r.response.from %>: <% r.status %> [<% r.response.error.join(", ") %>]</div>
     <% IF r.action == "trace" && r.response.result.rows %>
       <% FOREACH s IN r.response.result.rows %>
-        <div class="sniffer">
+        <% sip_method = 'sip.Method' %>
+        <% IF s.$sip_method %>
+        <div class="sniffer sip-request">
+        <% ELSE %>
+        <div class="sniffer sip-response">
+        <% END %>
           <span class="sniffer timestamp"><% varname = 'frame.time' %><% s.$varname | html %></span>
           <span class="sniffer callid">Call-ID: <% varname = 'sip.Call-ID' %><% s.$varname | html %></a></span><br/>
+          <% IF s.$sip_method %>
           <span class="sniffer ip"><% varname = 'ip.src' %><% s.$varname | html %> &rarr; <% varname = 'ip.dst' %><% s.$varname %></span>
+          <% ELSE %>
+          <span class="sniffer ip"><% varname = 'ip.dst' %><% s.$varname | html %> &larr; <% varname = 'ip.src' %><% s.$varname %></span>
+          <% END %>
           <span class="sniffer method"><% varname = 'sip.Method' %><% s.$varname | html %></span>
           <span class="sniffer status"><% varname = 'sip.Status-Code' %><% s.$varname |html %></span><br/>
           <span class="sniffer from_addr">From: <% varname = 'sip.From' %><% s.$varname | html %></span>
