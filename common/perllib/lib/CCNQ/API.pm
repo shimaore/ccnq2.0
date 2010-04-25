@@ -63,7 +63,14 @@ sub _api {
   my ($method,$action,$params,$cb) = @_;
   my $uri = api_uri();
   $uri->path_segments('api',$action);
-  http_request $method => $uri->as_string, body => encode_json($params), _api_cb($cb);
+  my $body = undef;
+  # See CCNQ::HTTPD
+  if($method eq 'PUT') {
+    $body = encode_json($params);
+  } else {
+    $uri->query_form($params);
+  }
+  http_request $method => $uri->as_string, body => $body, _api_cb($cb);
   return;
 }
 
