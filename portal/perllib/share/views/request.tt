@@ -15,7 +15,7 @@
           <span class="sniffer from_addr">From: <% varname = 'sip.From' %><% s.$varname | html %></span>
           <span class="sniffer to_addr">To: <% varname = 'sip.To' %><% s.$varname | html %></span>
           <form action="/trace" method="post" >
-            <input type="hidden" name="node_name" value="<% r.params.node_name | html %>" />
+            <input type="hidden" name="node_name" value="<% r.node_name | html %>" />
             <input type="hidden" name="dump_packets" value="1" />
             <input type="hidden" name="call_id" value="<% varname = 'sip.Call-ID' %><% s.$varname | html %>" />
             <input type="hidden" name="days_ago" value="<% r.params.days_ago | html %>">
