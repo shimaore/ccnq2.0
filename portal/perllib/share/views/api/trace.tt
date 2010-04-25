@@ -37,6 +37,7 @@
           <option value="1"><% | loc %>Yesterday<% END %></option>
           <% FOREACH days IN [2..9]%>
           <option value="<% days %>"><% | loc %><% days %> days ago<% END %></option>
+          <%END%>
         </select>
       </p>
       <p class="ui-helper-clearfix submit">
