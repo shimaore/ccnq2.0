@@ -91,14 +91,17 @@ label.error {
 /* Used by request.tt to display sniffer traces */
 .sniffer {
   padding: 1px;
+  background-color: white;
 }
 div.sniffer {
-  border-top: 1px solid grey;
-  border-bottom: 1px solid grey;
+  border-top: 1px solid gray;
+  border-bottom: 1px solid gray;
+}
+.sniffer form {
+  display: inline;
 }
 .sniffer input {
   border: none;
-  float: right;
 }
 div.sip-request {
   margin-left: 5px;
