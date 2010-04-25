@@ -87,3 +87,24 @@ label.error {
     color:  red;
     background-color: white;
 }
+
+/* Used by request.tt to display sniffer traces */
+.sniffer {
+  padding: 1px;
+}
+div.sniffer {
+  border-top: 1px solid grey;
+  border-bottom: 1px solid grey;
+}
+span.timestamp, span.callid {
+  font-size: 9px;
+}
+span.ip {
+  color: red;
+}
+span.method, span.status {
+  color: blue;
+}
+span.from_addr, span.to_addr {
+  color: #030;
+}
