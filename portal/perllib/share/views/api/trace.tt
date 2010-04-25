@@ -1,3 +1,4 @@
+<% USE loc %>
 <% IF is_sysadmin %>
   <fieldset>
     <legend><% | loc %>Server Trace<% END %></legend>
