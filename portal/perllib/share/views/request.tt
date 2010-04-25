@@ -10,6 +10,7 @@
         <% call_id = 'sip.Call-ID' %>
         <% current_call_id = s.$call_id %>
         <% IF last_call_id != current_call_id %><% sip_changed = 'sip-changed' %><% END %>
+        <% last_call_id = current_call_id %>
         <% sip_method = 'sip.Method' %>
         <% IF s.$sip_method %>
         <div class="sniffer sip-request ui-widget <% sip_changed %>">
