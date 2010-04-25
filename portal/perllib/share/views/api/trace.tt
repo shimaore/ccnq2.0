@@ -1,0 +1,47 @@
+<% IF is_sysadmin %>
+  <fieldset>
+    <legend><% | loc %>Server Trace<% END %></legend>
+    <form action="/trace" method="post" accept-charset="utf-8" class="ui-widget validate">
+      <p class="ui-helper-clearfix">
+        <label for="node_name" class="left"><% | loc %>Node name:<% END %></label>
+        <select name="node_name" class="required">
+          <% FOREACH node_name IN field.node_names %>
+          <option value="<% node_name | html %>"><% node_name | html %></option>
+          <% END %>
+        </select>
+      </p>
+      <p class="ui-helper-clearfix">
+        <label for="dump_packets"><% | loc %>Dump packets:<% END %></label>
+        <select name="dump_packets">
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </select>
+      </p>
+      <p class="ui-helper-clearfix">
+        <label for="call_id"><% | loc %>Call-ID:<% END %></label>
+        <input type="text" name="call_id" value="" class=""/>
+      </p>
+      <p class="ui-helper-clearfix">
+        <label  for="from_user"><% | loc %>From username:<% END %></label>
+        <input name="from_user" type="text" value="" class=""/>
+      </p>
+      <p class="ui-helper-clearfix">
+        <label  for="to_user"><% | loc %>To username:<% END %></label>
+        <input name="to_user" type="text" value="" class=""/>
+      </p>
+      <p class="ui-helper-clearfix">
+        <label for="days_ago" class="left"><% | loc %>Timestamp:<% END %></label>
+        <select name="days_ago" class="required">
+          <option value=""><% | loc %>Any<% END %></option>
+          <option value="0"><% | loc %>Today<% END %></option>
+          <option value="1"><% | loc %>Yesterday<% END %></option>
+          <% FOREACH days IN [2..9]%>
+          <option value="<% days %>"><% | loc %><% days %> days ago<% END %></option>
+        </select>
+      </p>
+      <p class="ui-helper-clearfix submit">
+        <input type="submit" value="<% | loc %>Get Trace<% END %>" />
+      </p>
+    </form>
+  </fieldset>
+<% END %>
