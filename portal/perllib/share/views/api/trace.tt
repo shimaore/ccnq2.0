@@ -12,22 +12,22 @@
         </select>
       </p>
       <p class="ui-helper-clearfix">
-        <label for="dump_packets"><% | loc %>Dump packets:<% END %></label>
+        <label for="dump_packets" class="left"><% | loc %>Dump packets:<% END %></label>
         <select name="dump_packets">
           <option value="0">No</option>
           <option value="1">Yes</option>
         </select>
       </p>
       <p class="ui-helper-clearfix">
-        <label for="call_id"><% | loc %>Call-ID:<% END %></label>
+        <label for="call_id" class="left"><% | loc %>Call-ID:<% END %></label>
         <input type="text" name="call_id" value="" class=""/>
       </p>
       <p class="ui-helper-clearfix">
-        <label  for="from_user"><% | loc %>From username:<% END %></label>
+        <label  for="from_user" class="left"><% | loc %>From username:<% END %></label>
         <input name="from_user" type="text" value="" class=""/>
       </p>
       <p class="ui-helper-clearfix">
-        <label  for="to_user"><% | loc %>To username:<% END %></label>
+        <label  for="to_user" class="left"><% | loc %>To username:<% END %></label>
         <input name="to_user" type="text" value="" class=""/>
       </p>
       <p class="ui-helper-clearfix">

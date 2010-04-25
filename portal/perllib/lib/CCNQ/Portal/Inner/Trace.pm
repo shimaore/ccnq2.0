@@ -34,7 +34,7 @@ sub get_node_names {
     return ($cv->recv);
   };
 
-  return [$dns_txt->(CCNQ::Install::cluster_fqdn(TRACE_SERVERS_DNS_NAME))];
+  return [sort $dns_txt->(CCNQ::Install::cluster_fqdn(TRACE_SERVERS_DNS_NAME))];
 }
 
 get '/trace' => sub {
