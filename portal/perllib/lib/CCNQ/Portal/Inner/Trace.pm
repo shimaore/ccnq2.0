@@ -52,7 +52,12 @@ post '/trace' => sub {
   return unless CCNQ::Portal->current_session->user;
   return unless CCNQ::Portal->current_session->user->profile->is_admin;
 
-  my $params = params;
+  my $params = {};
+  for my $k (qw(node_name dump_packets call_id to_user from_user days_ago)) {
+    my $v = params->{$k};
+    next unless defined($v) && $v !~ /^\s*$/;
+    $params->{$k} = $v;
+  }
 
   my $cv1 = AE::cv;
   CCNQ::API::api_query('trace',$params,$cv1);
