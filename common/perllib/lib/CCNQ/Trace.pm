@@ -144,7 +144,7 @@ sub run {
   my $make_tshark_filter = sub {
     my @tshark_filter = ();
 
-    if(defined $days_ago) {
+    if(defined($days_ago) && $days_ago =~ /^\d+$/) {
       # Wireshark's format: Nov 12, 1999 08:55:44.123
       sub make_day {
         my $t = shift;
