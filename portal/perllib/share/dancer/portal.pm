@@ -41,6 +41,7 @@ use CCNQ::Portal::Inner::billing_plan;
 use CCNQ::Portal::Inner::provisioning;
 use CCNQ::Portal::Inner::request;
 use CCNQ::Portal::Inner::manager_request;
+use CCNQ::Portal::Inner::Trace;
 
 CCNQ::Portal->import($site);
 
