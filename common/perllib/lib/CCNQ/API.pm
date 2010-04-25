@@ -73,6 +73,7 @@ sub _api {
 
 =cut
 
+sub api_query  { _api('GET',@_) }
 sub api_update { _api('PUT',@_) }
 sub api_delete { _api('DELETE',@_) }
 
