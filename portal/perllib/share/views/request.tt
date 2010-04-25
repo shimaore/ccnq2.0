@@ -5,20 +5,24 @@
   <% IF r.status %>
     <div class="status <% r.status %>">Node <% r.response.from %>: <% r.status %> [<% r.response.error.join(", ") %>]</div>
     <% IF r.action == "trace" && r.response.result.rows %>
+      <% last_call_id = '' %>
       <% FOREACH s IN r.response.result.rows %>
+        <% call_id = 'sip.Call-ID' %>
+        <% current_call_id = s.$call_id %>
+        <% IF last_call_id != current_call_id %><% sip_changed = 'sip-changed' %><% END %>
         <% sip_method = 'sip.Method' %>
         <% IF s.$sip_method %>
-        <div class="sniffer sip-request ui-widget">
+        <div class="sniffer sip-request ui-widget <% sip_changed %>">
         <% ELSE %>
-        <div class="sniffer sip-response ui-widget">
+        <div class="sniffer sip-response ui-widget <% sip_changed %>">
         <% END %>
           <span class="sniffer timestamp"><% varname = 'frame.time' %><% s.$varname | html %></span>
-          <span class="sniffer callid">Call-ID: <% varname = 'sip.Call-ID' %><% s.$varname | html %></a></span>
+          <span class="sniffer callid">Call-ID: <% current_call_id | html %></a></span>
           <span>
           <form action="/trace" method="post" >
             <input type="hidden" name="node_name" value="<% r.node_name | html %>" />
             <input type="hidden" name="dump_packets" value="1" />
-            <input type="hidden" name="call_id" value="<% varname = 'sip.Call-ID' %><% s.$varname | html %>" />
+            <input type="hidden" name="call_id" value="<% current_call_id | html %>" />
             <input type="hidden" name="days_ago" value="<% r.params.days_ago | html %>">
             <input type="submit" value="<% | loc %>Download<% END %>">
           </form>

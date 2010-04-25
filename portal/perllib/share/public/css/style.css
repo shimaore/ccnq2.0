@@ -113,6 +113,9 @@ div.sip-request {
 div.sip-response {
   margin-left: 50px;
 }
+div.sip-changed {
+  margin-top: 7px;
+}
 span.timestamp, span.callid {
   font-size: 9px;
 }
