@@ -9,7 +9,7 @@
       <% FOREACH s IN r.response.result.rows %>
         <% call_id = 'sip.Call-ID' %>
         <% current_call_id = s.$call_id %>
-        <% IF last_call_id != current_call_id %><% sip_changed = 'sip-changed' %><% END %>
+        <% IF last_call_id != current_call_id %><% sip_changed = 'sip-changed' %><% ELSE %><% sip_changed = '' %><% END %>
         <% last_call_id = current_call_id %>
         <% sip_method = 'sip.Method' %>
         <% IF s.$sip_method %>
