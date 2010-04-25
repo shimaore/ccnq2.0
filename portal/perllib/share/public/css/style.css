@@ -95,8 +95,8 @@ label.error {
   background-color: white;
 }
 div.sniffer {
-  border-top: 1px solid transparent;
-  border-bottom: 1px solid transparent;
+  border-top: 1px solid gray;
+  border-bottom: 1px solid gray;
 }
 .sniffer form {
   display: inline;

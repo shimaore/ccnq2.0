@@ -8,9 +8,9 @@
       <% FOREACH s IN r.response.result.rows %>
         <% sip_method = 'sip.Method' %>
         <% IF s.$sip_method %>
-        <div class="sniffer sip-request">
+        <div class="sniffer sip-request ui-widget">
         <% ELSE %>
-        <div class="sniffer sip-response">
+        <div class="sniffer sip-response ui-widget">
         <% END %>
           <span class="sniffer timestamp"><% varname = 'frame.time' %><% s.$varname | html %></span>
           <span class="sniffer callid">Call-ID: <% varname = 'sip.Call-ID' %><% s.$varname | html %></a></span>
