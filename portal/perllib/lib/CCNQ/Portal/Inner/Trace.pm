@@ -52,8 +52,10 @@ post '/trace' => sub {
   return unless CCNQ::Portal->current_session->user;
   return unless CCNQ::Portal->current_session->user->profile->is_admin;
 
+  my $params = params;
+
   my $cv1 = AE::cv;
-  CCNQ::API::api_query('trace',params,$cv1);
+  CCNQ::API::api_query('trace',$params,$cv1);
   my $r = CCNQ::AE::receive($cv1);
   debug($r);
 
