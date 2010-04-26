@@ -55,5 +55,7 @@ require_ok( 'CCNQ::Portal::Inner::Trace' );
 
 require_ok( 'CCNQ::Portal::Template::Plugin::loc' );
 
+require_ok( 'CCNQ::Portal::Content' );
+
 done_testing();
 1;
