@@ -101,7 +101,7 @@
     <legend><% | loc %>Modify endpoint<% END %></legend>
     <form id="retrieve_endpoint" action="/provisioning/endpoint/select" method="post" accept-charset="utf-8" class="ui-widget">
       <p class="ui-helper-clearfix">
-        <label for="username" class="left"><% | loc %>Endpoint:<% END %></label>
+        <label for="endpoint" class="left"><% | loc %>Endpoint:<% END %></label>
         <select name="endpoint" class="required">
         <% FOREACH endpoint IN field.endpoints %>
           <option value="<% endpoint.endpoint | html %>"><% endpoint.endpoint | html %></option>
