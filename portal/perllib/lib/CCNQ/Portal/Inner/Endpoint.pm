@@ -64,76 +64,15 @@ sub get_endpoint {
   return $endpoints->{rows}->[0]->{doc} || {};
 }
 
-sub gather_field {
-  my ($cluster_name,$endpoint) = @_;
-  my $account = session('account');
-  debug(join(',',"CCNQ::Portal::Inner::Endpoint::gather_field",($cluster_name||''),($endpoint||''),($account||'')));
-
-  my $static_clusters  = clusters_for_static_endpoints;
-  my $dynamic_clusters = clusters_for_dynamic_endpoints;
-
-  my $endpoints = endpoints_for($account);
-  my $account_subs = CCNQ::Portal::Inner::Account::account_subs($account);
-
-  # Gather data for a specific endpoint if needed
-  my $endpoint_data = {};
-  if($endpoint) {
-    my $cv2 = AE::cv;
-    CCNQ::API::provisioning_view('report','endpoints',$account,$endpoint,$cv2);
-    my $r2 = CCNQ::AE::receive($cv2) || { rows => [] };
-    $endpoint_data = $r2->{rows}->[0]->{doc} || {};
-  }
-
-  my $is_static  = defined($cluster_name) &&
-    grep { $_ eq $cluster_name } @$static_clusters;
-  my $is_dynamic = defined($cluster_name) &&
-    grep { $_ eq $cluster_name } @$dynamic_clusters;
-
-  var field => {
-    cluster          => $cluster_name,
-    endpoint         => $endpoint,
-    %$endpoint_data,
-    endpoints        => $endpoints,
-    account_subs     => $account_subs,
-    is_static        => $is_static,
-    is_dynamic       => $is_dynamic,
-    static_clusters  => $static_clusters,
-    dynamic_clusters => $dynamic_clusters,
-  };
-}
-
-sub endpoint_default {
-  return unless CCNQ::Portal->current_session->user;
-  my $cluster_name = params->{cluster_name};
-  my $endpoint     = params->{endpoint};
-  if( session('account') && session('account') =~ /^[\w-]+$/ ) {
-    gather_field($cluster_name,$endpoint);
-  }
-  var template_name => 'api/endpoint';
-  return CCNQ::Portal->site->default_content->();
-}
-
-get '/provisioning/endpoint'           => sub { endpoint_default };
-get '/provisioning/endpoint/:endpoint' => sub { endpoint_default };
-get '/provisioning/endpoint/:cluster_name/:endpoint' => sub { endpoint_default };
-post '/provisioning/endpoint/select'   => sub { endpoint_default };
-
-post '/provisioning/endpoint' => sub {
-  return unless CCNQ::Portal->current_session->user;
-  return unless CCNQ::Portal->current_session->user->profile->is_admin;
-  # This is how we create new endpoints.
-  return unless session('account');
-  return unless session('account') =~ /^[\w-]+$/;
-
-  my $account = session('account');
-
+sub clean_params {
   my $params = {
-    account       => $account,
+    account       => session('account'),
   };
 
   for my $p (qw(
-    cluster_name
+    cluster
 
+    account
     account_sub
     username
     domain
@@ -161,8 +100,75 @@ post '/provisioning/endpoint' => sub {
     $params->{$p} = $v;
   }
 
-  # Save the actual cluster name inside the "endpoint" record for provisioning.
-  $params->{cluster} = $params->{cluster_name};
+  # As used by the API.
+  $params->{cluster_name} = $params->{cluster};
+
+  return $params;
+}
+
+sub gather_field {
+  my $params = clean_params();
+
+  my $endpoint  = $params->{endpoint};
+
+  my $account = $params->{account};
+
+  my $static_clusters  = clusters_for_static_endpoints;
+  my $dynamic_clusters = clusters_for_dynamic_endpoints;
+
+  my $endpoints = endpoints_for($account);
+  my $account_subs = CCNQ::Portal::Inner::Account::account_subs($account);
+
+  # Gather data for a specific endpoint if needed
+  my $endpoint_data;
+  if($endpoint) {
+    my $cv2 = AE::cv;
+    CCNQ::API::provisioning_view('report','endpoints',$account,$endpoint,$cv2);
+    my $r2 = CCNQ::AE::receive($cv2) || { rows => [] };
+    $endpoint_data = $r2->{rows}->[0]->{doc} || {};
+  } else {
+    $endpoint_data = $params;
+  }
+
+  my $is_static  = defined($endpoint_data->{cluster}) &&
+    grep { $_ eq $cluster_name } @$static_clusters;
+  my $is_dynamic = defined($endpoint_data->{cluster}) &&
+    grep { $_ eq $cluster_name } @$dynamic_clusters;
+
+  var field => {
+    cluster          => $cluster_name,
+    %$endpoint_data,
+    endpoints        => $endpoints,
+    account_subs     => $account_subs,
+    is_static        => $is_static,
+    is_dynamic       => $is_dynamic,
+    static_clusters  => $static_clusters,
+    dynamic_clusters => $dynamic_clusters,
+  };
+}
+
+sub endpoint_default {
+  return unless CCNQ::Portal->current_session->user;
+  if( session('account') && session('account') =~ /^[\w-]+$/ ) {
+    gather_field();
+  }
+  var template_name => 'api/endpoint';
+  return CCNQ::Portal->site->default_content->();
+}
+
+get '/provisioning/endpoint'           => sub { endpoint_default };
+get '/provisioning/endpoint/:endpoint' => sub { endpoint_default };
+get '/provisioning/endpoint/:cluster_name/:endpoint' => sub { endpoint_default };
+post '/provisioning/endpoint/select'   => sub { endpoint_default };
+
+post '/provisioning/endpoint' => sub {
+  return unless CCNQ::Portal->current_session->user;
+  return unless CCNQ::Portal->current_session->user->profile->is_admin;
+  # This is how we create new endpoints.
+  return unless session('account');
+  return unless session('account') =~ /^[\w-]+$/;
+
+  my $params = clean_params();
 
   # Update the information in the API.
   my $cv1 = AE::cv;
