@@ -1,5 +1,5 @@
 layout: "main"
-logger: "file"
+logger: "syslog"
 session: 'memcached'
 memcached_servers: "127.0.0.1:11211"
 template: template_toolkit
