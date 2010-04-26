@@ -1,0 +1,91 @@
+<% USE loc %>
+<% IF session.account %>
+  <% IF field.endpoint %>
+    <fieldset>
+      <legend><% | loc %>Endpoint details<% END %></legend>
+      <form id="account_form" action="/billing/account" method="post" accept-charset="utf-8" class="ui-widget validate">
+        <p class="ui-helper-clearfix">
+          <label for="username" class="left"><% | loc %>Username:<% END %></label>
+          <span id="username"><% field.username | html %></span>
+        </p>
+        <p class="ui-helper-clearfix">
+          <label for="domain" class="left"><% | loc %>Domain:<% END %></label>
+          <span id="domain"><% field.domain | html %></span>
+        </p>
+        <p class="ui-helper-clearfix">
+          <label for="account" class="left"><% | loc %>Account number:<% END %></label>
+          <span id="account"><% field.account | html %></span>
+        </p>
+
+        <p class="ui-helper-clearfix">
+          <label for="account_sub" class="left"><% | loc %>Account sub number:<% END %></label>
+          <select name="account_sub" class="required">
+          <% FOREACH account_sub IN field.account_subs %>
+            <option value="<% account_sub.account_sub | html %>" <% IF field.account_sub == account_sub.account_sub %>selected<% END %>><% account_sub.name | html %></option>
+          <% END %>
+          </select>
+        </p>
+
+        <% FOREACH p IN ["password","ip","port","srv"]%>
+        <p class="ui-helper-clearfix">
+          <label for="<% p %>" class="left"><% | loc %>IP:<% END %></label>
+          <input type="text" name="<% p %>" value="<% field.$p | html %>" />
+        </p>
+        <% END %>
+        
+        <!--
+        dest_domain
+        strip_digit
+        allow_onnet
+        always_proxy_media
+        forwarding_sbc
+        outbound_route
+        ignore_caller_outbound_route
+        ignore_default_outbound_route
+        check_from
+        -->
+
+        <% IF is_admin %>
+        <p class="ui-helper-clearfix submit">
+        <input type="submit" value="<% | loc %>Save<% END %>" />
+        </p>
+        <% END %>
+      </form>
+    </fieldset>
+  <% END %>
+  <fieldset>
+    <legend><% | loc %>Create endpoint<% END %></legend>
+    <form action="/provisioning/endpoint/select" method="post" accept-charset="utf-8" class="ui-widget validate">
+      <p class="ui-helper-clearfix">
+        <label for="username" class="left"><% | loc %>Username:<% END %></label>
+        <input type="text" name="username" value="<% field.username | html %>" class="required"/>
+      </p>
+      <p class="ui-helper-clearfix">
+        <label for="domain" class="left"><% | loc %>Domain:<% END %></label>
+        <input type="text" name="domain" value="<% field.domain | html %>" class="required"/>
+      </p>
+      <p class="ui-helper-clearfix submit">
+      <input type="submit" value="<% | loc %>Create<% END %>" />
+      </p>
+    </form>
+  </fieldset>
+  
+  <fieldset>
+    <legend><% | loc %>Modify endpoint<% END %></legend>
+    <form action="/provisioning/endpoint/select" method="post" accept-charset="utf-8" class="ui-widget validate">
+      <p class="ui-helper-clearfix">
+        <label for="username" class="left"><% | loc %>Endpoint:<% END %></label>
+        <select name="endpoint" class="required">
+        <% FOREACH endpoint IN field.endpoints %>
+          <option value="<% endpoint.endpoint | html %>"><% endpoint.endpoint | html %></option>
+        <% END %>
+        </select>
+      </p>
+      <p class="ui-helper-clearfix submit">
+      <input type="submit" value="<% | loc %>Retrieve<% END %>" />
+      </p>
+    </form>
+  </fieldset>
+<% ELSE %>
+  <% | loc %>Please select an account.<% END %>
+<% END %>

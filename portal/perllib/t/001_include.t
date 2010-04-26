@@ -52,6 +52,7 @@ require_ok( 'CCNQ::Portal::Inner::request' );
 require_ok( 'CCNQ::Portal::Inner::manager_request' );
 require_ok( 'CCNQ::Portal::Inner::default' );
 require_ok( 'CCNQ::Portal::Inner::Trace' );
+require_ok( 'CCNQ::Portal::Inner::Endpoint' );
 
 require_ok( 'CCNQ::Portal::Template::Plugin::loc' );
 
