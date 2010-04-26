@@ -69,7 +69,7 @@
       </p>
     </form>
   </fieldset>
-  <% IF field.endpoints %>
+  <% IF field.endpoints.size > 0 %>
   <fieldset>
     <legend><% | loc %>Modify endpoint<% END %></legend>
     <form action="/provisioning/endpoint/select" method="post" accept-charset="utf-8" class="ui-widget validate">
