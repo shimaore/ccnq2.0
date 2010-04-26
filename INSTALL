@@ -66,7 +66,7 @@ EOT
 # * On all servers, install the program:
 #
   sudo aptitude update
-  sudo aptitude -y install ntp monit psmisc libjson-perl libnet-libidn-perl libauthen-sasl-perl libxml-writer-perl libwww-perl libyaml-perl libexpat-dev liblogger-syslog-perl libio-stringy-perl git-core libnet-ssleay-perl build-essential libmodule-install-perl libuniversal-require-perl libdbi-perl liburi-perl libjson-xs-perl libdata-dump-streamer-perl libio-all-perl libdata-dump-perl libtest-deep-perl
+  sudo aptitude -y install ntp monit psmisc libjson-perl libnet-libidn-perl libauthen-sasl-perl libxml-writer-perl libwww-perl libyaml-perl libexpat-dev liblogger-syslog-perl libio-stringy-perl git-core libnet-ssleay-perl build-essential libmodule-install-perl libuniversal-require-perl libdbi-perl liburi-perl libjson-xs-perl libdata-dump-streamer-perl libio-all-perl libdata-dump-perl libtest-deep-perl libclass-inspector-perl
   # Now add non-Debian Perl modules.
   # Manual instructions moved to doc/INSTALL.perl
   # ------ Equivalent (from our servers): ------------
