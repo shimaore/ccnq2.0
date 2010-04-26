@@ -67,7 +67,7 @@ sub get_endpoint {
 sub gather_field {
   my ($cluster_name,$endpoint) = @_;
   my $account = session('account');
-  debug(join(',',"CCNQ::Portal::Inner::Endpoint::gather_field",$cluster_name||'',$endpoint||'',$account||'');
+  debug(join(',',"CCNQ::Portal::Inner::Endpoint::gather_field",($cluster_name||''),($endpoint||''),($account||'')));
 
   my $static_clusters  = clusters_for_static_endpoints;
   my $dynamic_clusters = clusters_for_dynamic_endpoints;
