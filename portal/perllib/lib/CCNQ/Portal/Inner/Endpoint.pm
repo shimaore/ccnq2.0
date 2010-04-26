@@ -124,7 +124,7 @@ sub gather_field {
 
   my $endpoint_data;
   if($endpoint) {
-    $endpoint_data = get_endpoint($endpoint);
+    $endpoint_data = get_endpoint($account,$endpoint);
   } else {
     $endpoint_data = $params;
   }
