@@ -15,6 +15,20 @@ package CCNQ::Manager::Requests::endpoint_update;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use CCNQ::Activities::Proxy;
-*run = \&CCNQ::Activities::Proxy::endpoint_update;
+use CCNQ::Activities::Provisioning;
+use CCNQ::Activities::Billing;
+use CCNQ::Manager;
+
+sub run {
+  my $request = shift;
+  $request->{endpoint} = join('@',$request->{username},$request->{domain});
+  # Return list of activities required to complete this request.
+  return (
+    CCNQ::Activities::Provisioning::update_endpoint($request),
+    CCNQ::Activities::Proxy::endpoint_update($request),
+    CCNQ::Activities::Billing::partial_day($request,'endpoint_update'),
+    CCNQ::Manager::request_completed(),
+  );
+}
 
 'CCNQ::Manager::Requests::endpoint_update';

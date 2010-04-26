@@ -15,6 +15,20 @@ package CCNQ::Manager::Requests::endpoint_delete;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use CCNQ::Activities::Proxy;
-*run = \&CCNQ::Activities::Proxy::endpoint_delete;
+use CCNQ::Activities::Provisioning;
+use CCNQ::Activities::Billing;
+use CCNQ::Manager;
+
+sub run {
+  my $request = shift;
+  $request->{endpoint} = join('@',$request->{username},$request->{domain});
+  # Return list of activities required to complete this request.
+  return (
+    CCNQ::Activities::Provisioning::delete_endpoint($request),
+    CCNQ::Activities::Proxy::endpoint_delete($request),
+    CCNQ::Activities::Billing::partial_day($request,'endpoint_delete'),
+    CCNQ::Manager::request_completed(),
+  );
+}
 
 'CCNQ::Manager::Requests::endpoint_delete';
