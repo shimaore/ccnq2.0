@@ -12,4 +12,16 @@
   <div class="content"><% result | loc %></div>
 <% END %>
 <% END %>
+
+<% IF session.account %>
+  <fieldset>
+    <legend><% | loc(session.account) %>Account [_1]<% END %></legend>
+    <ul>
+      <li><a href="/billing/account">Manage account</a></li>
+      <li><a href="/provisioning/endpoint">Manage endpoints</a></li>
+    </ul>
+  </fieldset>
+<% ELSE %>
+  <% | loc %>Please select an account.<% END %>
+<% END %>
 </div>
