@@ -149,7 +149,7 @@ post '/user_profile/select' => sub {
   var template_name => 'user_profile';
   retrieve(params->{user_id});
   return CCNQ::Portal->site->default_content->();
-}
+};
 
 # Regular user updates their own profile.
 post '/user_profile' => sub {
