@@ -79,8 +79,10 @@ sub gather_field {
   }
   $cluster_name = $endpoint_data->{cluster} if $endpoint_data->{cluster};
 
-  my $is_static  = grep { $_ eq $cluster_name } @$static_clusters;
-  my $is_dynamic = grep { $_ eq $cluster_name } @$dynamic_clusters;
+  my $is_static  = defined($cluster_name) &&
+    grep { $_ eq $cluster_name } @$static_clusters;
+  my $is_dynamic = defined($cluster_name) &&
+    grep { $_ eq $cluster_name } @$dynamic_clusters;
 
   var field => {
     cluster_name     => $cluster_name,
@@ -156,7 +158,7 @@ post '/provisioning/endpoint' => sub {
 
   # Save the actual cluster name inside the "endpoint" record for provisioning.
   $params->{cluster} = $params->{cluster_name};
-  
+
   # Update the information in the API.
   my $cv1 = AE::cv;
   CCNQ::API::api_update('endpoint',$params,$cv1);
