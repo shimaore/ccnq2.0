@@ -76,8 +76,10 @@ sub ccnq_template {
 
 use CCNQ::Portal::Outer::AccountSelection;
 
+use constant DEFAULT_TEMPLATE_NAME => 'index';
+
 use constant default_content => sub {
-  my $template_name = 'index';
+  my $template_name = DEFAULT_TEMPLATE_NAME;
   $template_name = 'result' if vars->{result};
   $template_name = vars->{template_name} if vars->{template_name};
 
