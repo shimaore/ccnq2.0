@@ -150,9 +150,9 @@ sub gather_field {
 
 sub endpoint_default {
   return unless CCNQ::Portal->current_session->user;
-  if( session('account') && session('account') =~ /^[\w-]+$/ ) {
-    gather_field();
-  }
+  return unless session('account');
+  return unless session('account') =~ /^[\w-]+$/;
+  gather_field();
   var template_name => 'api/endpoint';
   return CCNQ::Portal->site->default_content->();
 }
