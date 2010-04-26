@@ -33,6 +33,14 @@ sub endpoints_for {
   return [@endpoints];
 }
 
+sub get_endpoint {
+  my ($account,$endpoint) = @_;
+  my $cv = AE::cv;
+  CCNQ::API::provisioning_view('report','endpoints',$account,$endpoint,$cv);
+  my $endpoints = CCNQ::AE::receive($cv);
+  return $endpoints->{rows}->[0]->{doc} || {};
+}
+
 sub gather_field {
   my $endpoint = shift;
   my $account = session('account');
