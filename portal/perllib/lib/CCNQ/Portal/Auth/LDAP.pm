@@ -64,12 +64,10 @@ sub auth_change {
 
 sub create {
   my $self = shift;
-  my ($username,$password,$name,$email) = @_;
+  my ($user_id,$password,$name,$email) = @_;
 
   my $ldap = $self->get_ldap();
 
-  my $user_id = $username;
-  
   my $bind = "cn=${user_id},".$self->ldap_base;
 
   my $result = $ldap->add(
@@ -78,7 +76,7 @@ sub create {
       cn => [ $name, $email ],
       objectclass => ['inetOrgPerson'],
       mail => $email,
-      uid => $email,
+      uid => $user_id,
       sn => $name,
     ]
   );
@@ -100,7 +98,7 @@ sub exists {
   my $ldap = $self->get_ldap();
 
   # Make sure the email address does not already exist
-  my $mesg = $ldap->search( base => Portal::Directory::LDAP_BASE, filter => "(cn=$email)" );
+  my $mesg = $ldap->search( base => $self->ldap_base, filter => "(uid=$user_id)" );
   warn($mesg->error);
   return ['error',_('Internal error')_] if $mesg->code;
   return ['already'] if $mesg->entries;

@@ -19,7 +19,7 @@ use CCNQ;
 
 use Net::LDAP;
 
-use Syslog::Logger;
+use Logger::Syslog;
 
 #
 ## Open a link to the LDAP store
@@ -32,7 +32,7 @@ sub get_ldap
   chomp $ldap_password;
   close($pass_fh) or error($!);
 
-  my $ldap = Net::LDAP->new( $ldap_uri, timeout => 5 ) or _error($cgi,$!);
+  my $ldap = Net::LDAP->new( $ldap_uri, timeout => 5 ) or error($!);
   my $mesg = $ldap->bind( $ldap_bind, password => $ldap_password );
   error($mesg->error) if $mesg->code;
   return $ldap;
@@ -42,7 +42,7 @@ sub get_sn
 {
   my ($ldap,$email) = @_;
   my $mesg = $ldap->search(
-    base => LDAP_BASE,
+    base => $self->ldap_base,
     scope => 'one',
     attrs => ['sn'],
     filter => "(cn=${email})",
