@@ -5,6 +5,10 @@
       <legend><% | loc %>Endpoint details<% END %></legend>
       <form id="account_form" action="/billing/account" method="post" accept-charset="utf-8" class="ui-widget validate">
         <p class="ui-helper-clearfix">
+          <label for="cluster_name" class="left"><% | loc %>Cluster:<% END %></label>
+          <span id="cluster_name"><% field.cluster_name | html %></span>
+        </p>
+        <p class="ui-helper-clearfix">
           <label for="username" class="left"><% | loc %>Username:<% END %></label>
           <span id="username"><% field.username | html %></span>
         </p>
@@ -26,7 +30,9 @@
           </select>
         </p>
 
-        <% FOREACH p IN ["password","ip","port","srv"]%>
+        <% IF field.is_static  %><% configure_with = ["ip","port","srv"] %><% END %>
+        <% IF field.is_dynamic %><% configure_with = ["password "]       %><% END %>
+        <% FOREACH p IN configure_with %>
         <p class="ui-helper-clearfix">
           <label for="<% p %>" class="left"><% | loc %>IP:<% END %></label>
           <input type="text" name="<% p %>" value="<% field.$p | html %>" />
@@ -56,6 +62,19 @@
   <fieldset>
     <legend><% | loc %>Create endpoint<% END %></legend>
     <form action="/provisioning/endpoint/select" method="post" accept-charset="utf-8" class="ui-widget validate">
+      <p class="ui-helper-clearfix">
+        <label for="cluster_name" class="left"><% | loc %>Cluster:<% END %></label>
+        <select name="cluster_name" class="required">
+          <optgroup label="<% | loc %>Static IP<%END%>">
+          <% FOREACH c IN field.static_clusters %>
+            <option value="<% c | html %>"><% c | html %></option>
+          <% END %>
+          <optgroup label="<% | loc %>Register<%END%>">
+          <% FOREACH c IN field.dynamic_clusters %>
+            <option value="<% c | html %>"><% c | html %></option>
+          <% END %>
+        </select>
+      </p>
       <p class="ui-helper-clearfix">
         <label for="username" class="left"><% | loc %>Username:<% END %></label>
         <input type="text" name="username" value="<% field.username | html %>" class="required"/>

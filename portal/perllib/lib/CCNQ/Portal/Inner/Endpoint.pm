@@ -24,6 +24,24 @@ use CCNQ::API;
 
 use CCNQ::Portal::Inner::Account;
 
+use constant STATIC_ENDPOINTS_CLUSTERS_DNS_NAME  => 'static.clusters';
+use constant DYNAMIC_ENDPOINTS_CLUSTERS_DNS_NAME => 'register.clusters';
+
+sub dns_txt {
+  my $dn = CCNQ::Install::catdns(@_);
+  my $cv = AE::cv;
+  AnyEvent::DNS::txt( $dn, $cv );
+  return ($cv->recv);
+}
+
+use constant::defer clusters_for_static_endpoints => sub {
+  return [sort dns_txt(CCNQ::Install::cluster_fqdn(STATIC_ENDPOINTS_CLUSTERS_DNS_NAME))];
+};
+
+use constant::defer clusters_for_dynamic_endpoints => sub {
+  return [sort dns_txt(CCNQ::Install::cluster_fqdn(DYNAMIC_ENDPOINTS_CLUSTERS_DNS_NAME))];
+};
+
 sub endpoints_for {
   my $account = shift;
   my $cv3 = AE::cv;
@@ -42,8 +60,11 @@ sub get_endpoint {
 }
 
 sub gather_field {
-  my $endpoint = shift;
+  my ($cluster_name,$endpoint) = @_;
   my $account = session('account');
+
+  my $static_clusters  = clusters_for_static_endpoints;
+  my $dynamic_clusters = clusters_for_dynamic_endpoints;
 
   my $endpoints = endpoints_for($account);
   my $account_subs = CCNQ::Portal::Inner::Account::account_subs($account);
@@ -56,19 +77,30 @@ sub gather_field {
     my $r2 = CCNQ::AE::receive($cv2) || { rows => [] };
     $endpoint_data = $r2->{rows}->[0]->{doc} || {};
   }
+  $cluster_name = $endpoint_data->{cluster} if $endpoint_data->{cluster};
+
+  my $is_static  = grep { $_ eq $cluster_name } @$static_clusters;
+  my $is_dynamic = grep { $_ eq $cluster_name } @$dynamic_clusters;
 
   var field => {
+    cluster_name     => $cluster_name,
+    endpoint         => $endpoint,
     %$endpoint_data,
-    endpoints    => $endpoints,
-    account_subs => $account_subs,
+    endpoints        => $endpoints,
+    account_subs     => $account_subs,
+    is_static        => $is_static,
+    is_dynamic       => $is_dynamic,
+    static_clusters  => $static_clusters,
+    dynamic_clusters => $dynamic_clusters,
   };
 }
 
 sub endpoint_default {
   return unless CCNQ::Portal->current_session->user;
-  my $endpoint = params->{endpoint};
+  my $cluster_name = params->{cluster_name};
+  my $endpoint     = params->{endpoint};
   if( session('account') && session('account') =~ /^[\w-]+$/ ) {
-    gather_field($endpoint);
+    gather_field($cluster_name,$endpoint);
   }
   var template_name => 'api/endpoint';
   return CCNQ::Portal->site->default_content->();
@@ -76,6 +108,7 @@ sub endpoint_default {
 
 get '/provisioning/endpoint'           => sub { endpoint_default };
 get '/provisioning/endpoint/:endpoint' => sub { endpoint_default };
+get '/provisioning/endpoint/:cluster_name/:endpoint' => sub { endpoint_default };
 post '/provisioning/endpoint/select'   => sub { endpoint_default };
 
 post '/provisioning/endpoint' => sub {
@@ -92,6 +125,8 @@ post '/provisioning/endpoint' => sub {
   };
 
   for my $p (qw(
+    cluster_name
+
     account_sub
     username
     domain
@@ -118,6 +153,9 @@ post '/provisioning/endpoint' => sub {
     next if $v eq '';
     $params->{$p} = $v;
   }
+
+  # Save the actual cluster name inside the "endpoint" record for provisioning.
+  $params->{cluster} = $params->{cluster_name};
   
   # Update the information in the API.
   my $cv1 = AE::cv;
