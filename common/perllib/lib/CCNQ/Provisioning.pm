@@ -40,7 +40,7 @@ JAVASCRIPT
 use constant js_report_numbers => <<'JAVASCRIPT';
   function (doc){
     if(doc.profile == 'number') {
-      emit([doc.account,doc.number])
+      emit([doc.account,doc.number],null)
     }
   }
 JAVASCRIPT
@@ -48,7 +48,7 @@ JAVASCRIPT
 use constant js_report_endpoints => <<'JAVASCRIPT';
   function (doc){
     if(doc.profile == 'endpoint') {
-      emit([doc.account,doc.endpoint])
+      emit([doc.account,doc.endpoint],null)
     }
   }
 JAVASCRIPT
@@ -56,7 +56,7 @@ JAVASCRIPT
 use constant js_report_locations => <<'JAVASCRIPT';
   function (doc){
     if(doc.profile == 'location') {
-      emit([doc.account,doc.location])
+      emit([doc.account,doc.location],null)
     }
   }
 JAVASCRIPT
