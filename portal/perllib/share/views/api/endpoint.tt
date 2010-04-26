@@ -69,7 +69,7 @@
       </p>
     </form>
   </fieldset>
-  
+  <% IF field.endpoints %>
   <fieldset>
     <legend><% | loc %>Modify endpoint<% END %></legend>
     <form action="/provisioning/endpoint/select" method="post" accept-charset="utf-8" class="ui-widget validate">
@@ -86,6 +86,7 @@
       </p>
     </form>
   </fieldset>
+  <% END %>
 <% ELSE %>
   <% | loc %>Please select an account.<% END %>
 <% END %>
