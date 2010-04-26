@@ -56,7 +56,7 @@ sub gather_field {
   };
 }
 
-get '/provisioning/endpoint/:endpoint' => sub {
+sub endpoint_default {
   return unless CCNQ::Portal->current_session->user;
   my $endpoint = params->{endpoint};
   if( session('account') && session('account') =~ /^[\w-]+$/ ) {
@@ -64,17 +64,11 @@ get '/provisioning/endpoint/:endpoint' => sub {
   }
   var template_name => 'api/endpoint';
   return CCNQ::Portal->site->default_content->();
-};
+}
 
-post '/provisioning/endpoint/select' => sub {
-  return unless CCNQ::Portal->current_session->user;
-  my $endpoint = params->{endpoint};
-  if( session('account') && session('account') =~ /^[\w-]+$/ ) {
-    gather_field($endpoint);
-  }
-  var template_name => 'api/endpoint';
-  return CCNQ::Portal->site->default_content->();
-};
+get '/provisioning/endpoint'           => sub { endpoint_default };
+get '/provisioning/endpoint/:endpoint' => sub { endpoint_default };
+post '/provisioning/endpoint/select'   => sub { endpoint_default };
 
 post '/provisioning/endpoint' => sub {
   return unless CCNQ::Portal->current_session->user;
