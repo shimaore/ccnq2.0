@@ -171,7 +171,7 @@ post '/provisioning/endpoint' => sub {
 
   my $params = clean_params();
 
-  for my $v in qw(username domain cluster account account_sub) {
+  for my $v qw(username domain cluster account account_sub) {
     next if exists $params->{$v};
     var error => _("$v is required")_;
     var template_name => 'api/endpoint';
