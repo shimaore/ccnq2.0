@@ -143,6 +143,14 @@ get '/user_profile/:user_id' => sub {
   return CCNQ::Portal->site->default_content->();
 };
 
+post '/user_profile/select' => sub {
+  return unless CCNQ::Portal->current_session->user;
+  return unless CCNQ::Portal->current_session->user->profile->is_admin;
+  var template_name => 'user_profile';
+  retrieve(params->{user_id});
+  return CCNQ::Portal->site->default_content->();
+}
+
 # Regular user updates their own profile.
 post '/user_profile' => sub {
   return unless CCNQ::Portal->current_session->user;

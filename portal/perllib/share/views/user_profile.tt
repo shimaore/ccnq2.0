@@ -8,6 +8,8 @@
   </div>
 <% END %>
 <% IF session.user_id == field.id %>
+<fieldset>
+  <legend><% | loc %>My Profile<% END %></legend>
 <form action="/user_profile" method="POST" class="ui-widget validate" accept-charset="utf-8">
 <% ELSE %>
 <form action="/user_profile/<% field.id | uri %>" method="POST" class="ui-widget validate" accept-charset="utf-8">
@@ -56,3 +58,18 @@
   <input type="submit" value="<% | loc %>Save<% END %>" />
   </p>
 </form>
+</fieldset>
+<% IF is_isadmin %>
+<fieldset>
+  <legend>Manage another User Profile</legend>
+  <form action="/user_profile/select" method="post" class="ui-widget validate" accept-charset="utf-8">
+    <p class="ui-helper-clearfix">
+    <label for="user_id" class="left"><% | loc %>User ID<% END %></label>
+    <input type="text" name="user_id" value="<% field.id | html %>" class="required"/>
+    </p>
+    <p class="ui-helper-clearfix submit">
+    <input type="submit" value="<% | loc %>Retrieve<% END %>" />
+    </p>
+  </form>
+</fieldset>
+<% END %>
