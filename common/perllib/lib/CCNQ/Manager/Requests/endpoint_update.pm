@@ -25,7 +25,7 @@ sub run {
   # Return list of activities required to complete this request.
   return (
     CCNQ::Activities::Provisioning::update_endpoint($request),
-    CCNQ::Activities::Proxy::endpoint_update($request),
+    CCNQ::Activities::Proxy::endpoint_update({%$request, cluster_name => $request->{cluster}}),
     CCNQ::Activities::Billing::partial_day($request,'endpoint_update'),
     CCNQ::Manager::request_completed(),
   );

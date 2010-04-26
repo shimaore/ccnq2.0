@@ -105,16 +105,13 @@ sub clean_params {
     $params->{$p} = $v;
   }
 
-  # As used by the API.
-  $params->{cluster_name} = $params->{cluster};
-
   return $params;
 }
 
 sub gather_field {
   my $params = clean_params();
 
-  my $endpoint  = $params->{endpoint};
+  my $endpoint = $params->{endpoint};
 
   my $account = $params->{account};
 
@@ -162,7 +159,7 @@ sub endpoint_default {
 
 get '/provisioning/endpoint'           => sub { endpoint_default };
 get '/provisioning/endpoint/:endpoint' => sub { endpoint_default };
-get '/provisioning/endpoint/:cluster_name/:endpoint' => sub { endpoint_default };
+get '/provisioning/endpoint/:cluster/:endpoint' => sub { endpoint_default };
 post '/provisioning/endpoint/select'   => sub { endpoint_default };
 
 post '/provisioning/endpoint' => sub {
@@ -173,6 +170,13 @@ post '/provisioning/endpoint' => sub {
   return unless session('account') =~ /^[\w-]+$/;
 
   my $params = clean_params();
+
+  for my $v in qw(username domain cluster account account_sub) {
+    next if exists $params->{$v};
+    var error => _("$v is required")_;
+    var template_name => 'api/endpoint';
+    return CCNQ::Portal->site->default_content->();
+  }
 
   # Update the information in the API.
   my $cv1 = AE::cv;
