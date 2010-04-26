@@ -19,6 +19,8 @@ use base qw( CCNQ::Portal::Auth );
 use Net::LDAP;
 use CCNQ::Portal::I18N;
 
+use Logger::Syslog;
+
 sub auth
 {
   my $self = shift;
@@ -34,7 +36,7 @@ sub auth
   my $ldap = Net::LDAP->new( $self->ldap_uri, timeout => 5 ) or die $@;
   my $mesg = $ldap->bind( $bind, password => $password );
   my $ok = $mesg->code ? 0 : 1;
-  warn($bind.':' .$mesg->error) if $mesg->code;
+  warning($bind.':' .$mesg->error) if $mesg->code;
   $ldap->unbind;
 
   undef $ldap;
@@ -99,7 +101,7 @@ sub exists {
 
   # Make sure the email address does not already exist
   my $mesg = $ldap->search( base => $self->ldap_base, filter => "(uid=$user_id)" );
-  warn($mesg->error);
+  warning($mesg->error);
   return ['error',_('Internal error')_] if $mesg->code;
   return ['already'] if $mesg->entries;
   return ['not-present'];
