@@ -32,8 +32,8 @@ require_ok( 'CCNQ::Portal::Session' );
 require_ok( 'CCNQ::Portal::UserProfile' );
 require_ok( 'CCNQ::Portal::User' );
 
-# require_ok( 'CCNQ::Portal::LDAP' );
-# require_ok( 'CCNQ::Portal::Auth::LDAP' );
+require_ok( 'CCNQ::Portal::LDAP' );
+require_ok( 'CCNQ::Portal::Auth::LDAP' );
 require_ok( 'CCNQ::Portal::Auth::Dummy' );
 require_ok( 'CCNQ::Portal::Auth::CouchDB' );
 
