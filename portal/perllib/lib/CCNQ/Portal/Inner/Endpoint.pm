@@ -30,19 +30,19 @@ use constant DYNAMIC_ENDPOINTS_CLUSTERS_DNS_NAME => 'register.clusters';
 use AnyEvent;
 use AnyEvent::DNS;
 
-sub dns_txt {
+my $dns_txt = sub {
   my $dn = CCNQ::Install::catdns(@_);
   my $cv = AE::cv;
   AnyEvent::DNS::txt( $dn, $cv );
   return ($cv->recv);
-}
+};
 
 use constant::defer clusters_for_static_endpoints => sub {
-  return [sort dns_txt(CCNQ::Install::cluster_fqdn(STATIC_ENDPOINTS_CLUSTERS_DNS_NAME))];
+  return [sort $dns_txt->(CCNQ::Install::cluster_fqdn(STATIC_ENDPOINTS_CLUSTERS_DNS_NAME))];
 };
 
 use constant::defer clusters_for_dynamic_endpoints => sub {
-  return [sort dns_txt(CCNQ::Install::cluster_fqdn(DYNAMIC_ENDPOINTS_CLUSTERS_DNS_NAME))];
+  return [sort $dns_txt->(CCNQ::Install::cluster_fqdn(DYNAMIC_ENDPOINTS_CLUSTERS_DNS_NAME))];
 };
 
 sub endpoints_for {
