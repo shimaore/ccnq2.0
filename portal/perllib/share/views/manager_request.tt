@@ -2,7 +2,7 @@
 <div class="manager">
   <fieldset><legend><% | loc %>Code for request <% params.request_type | html %><% END %></legend>
     <form action="/manager/<% params.request_type | uri %>" method="POST"  accept-charset="utf-8" class="ui-widget validate">
-      <textarea name="code" class="required"><% result.code | html %></textarea>
+      <textarea name="code" class="required" rows="24" cols="72"><% result.code | html %></textarea>
       <input type="submit" />
     </form>
   </fieldset>

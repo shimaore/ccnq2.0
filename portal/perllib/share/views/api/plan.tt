@@ -30,7 +30,7 @@
       </p>
       <p class="ui-helper-clearfix">
         <label for="rating_steps" class="left"><% | loc %>Rating steps (JSON):<% END %></label>
-        <textarea name="rating_steps" class="required"><% field.rating_steps | html %></textarea>
+        <textarea name="rating_steps" class="required" rows="24" cols="72"><% field.rating_steps | html %></textarea>
       </p>
       <p class="ui-helper-clearfix submit">
       <input type="submit" value="<% | loc %>Save<% END %>" />
