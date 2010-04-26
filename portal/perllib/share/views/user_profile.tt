@@ -59,7 +59,7 @@
   </p>
 </form>
 </fieldset>
-<% IF is_isadmin %>
+<% IF is_sysadmin %>
 <fieldset>
   <legend>Manage another User Profile</legend>
   <form action="/user_profile/select" method="post" class="ui-widget validate" accept-charset="utf-8">
