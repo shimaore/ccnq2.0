@@ -49,7 +49,7 @@ sub auth_change {
   
   return ['error',_('Missing parameters')_] unless defined $user_id and defined $password;
 
-  my $ldap = Portal::Directory::get_ldap();
+  my $ldap = $self->get_ldap();
 
   my $bind = "cn=${user_id},".$self->ldap_base;
 
@@ -66,7 +66,7 @@ sub create {
   my $self = shift;
   my ($username,$password,$name,$email) = @_;
 
-  my $ldap = Portal::Directory::get_ldap();
+  my $ldap = $self->get_ldap();
 
   my $user_id = $username;
   
@@ -97,7 +97,7 @@ sub exists {
   my $self = shift;
   my ($user_id) = @_;
 
-  my $ldap = Portal::Directory::get_ldap();
+  my $ldap = $self->get_ldap();
 
   # Make sure the email address does not already exist
   my $mesg = $ldap->search( base => Portal::Directory::LDAP_BASE, filter => "(cn=$email)" );
