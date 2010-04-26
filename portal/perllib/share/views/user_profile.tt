@@ -28,6 +28,16 @@
   <label for="billing_accounts" class="left"><% | loc %>Billing accounts<% END %></label>
   <input type="text" name="billing_accounts" value="<% field.billing_accounts.join(' ') | html %>" <% IF not is_admin %>readonly<% END %> />
   </p>
+  <% IF is_sysadmin %>
+  <p class="ui-helper-clearfix">
+  <label for="is_admin" class="left"><% | loc %>Is administrator<% END %></label>
+  <select name="is_admin" class="required"><option value="0"><% | loc %>No<% END %></option><option value="1"><% | loc %>Yes<% END %></option></select>
+  </p>
+  <p class="ui-helper-clearfix">
+  <label for="is_sysadmin" class="left"><% | loc %>Is system administrator<% END %></label>
+  <select name="is_sysadmin" class="required"><option value="0"><% | loc %>No<% END %></option><option value="1"><% | loc %>Yes<% END %></option></select>
+  </p>
+  <% END %>
   <p class="ui-helper-clearfix">
   <label for="default_locale" class="left"><% | loc %>Language<% END %></label>
   <select name="default_locale">

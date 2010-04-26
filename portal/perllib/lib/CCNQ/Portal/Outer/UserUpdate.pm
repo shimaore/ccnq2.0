@@ -108,7 +108,8 @@ sub update {
   }
 
   if( CCNQ::Portal->current_session->user->profile->is_sysadmin ) {
-    $params->{is_admin} = params->{is_admin} ? 1 : 0;
+    $params->{is_admin}    = params->{is_admin}    ? 1 : 0;
+    $params->{is_sysadmin} = params->{is_sysadmin} ? 1 : 0;
   }
 
   # Update the portal-side data
