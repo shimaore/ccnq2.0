@@ -24,17 +24,32 @@ use CCNQ::API;
 
 use CCNQ::Portal::Inner::Plan;
 
-sub gather_field {
-  my $account = session('account');
+sub account_subs {
+  my $account = shift;
+  my $cv3 = AE::cv;
+  CCNQ::API::billing_view('report','account_subs',$account,$cv3);
+  my $account_subs = CCNQ::AE::receive($cv3);
+  my @account_subs = map { $_->{doc} } @{$account_subs->{rows} || []};
+  return [@account_subs];
+}
 
-  # Get the information from the portal.
-  # e.g. print a list of users who have portal access to this account
+sub portal_users {
+  my $account = shift;
   my $cv1 = CCNQ::Portal::db->view('report/portal_users_by_account', {
     startkey => [$account],
     endkey   => [$account,{}],
   });
   my $portal_users = CCNQ::AE::receive($cv1);
   my @portal_users = map { $_->{id} } @{$portal_users->{rows} || []};
+  return [@portal_users];
+}
+
+sub gather_field {
+  my $account = session('account');
+
+  # Get the information from the portal.
+  # e.g. print a list of users who have portal access to this account
+  my $portal_users = portal_users($account);
 
   # Get the information from the API.
   my $cv2 = AE::cv;
@@ -46,17 +61,14 @@ sub gather_field {
   # .. that'd be the keys of the 'email_recipients' hash.
 
   # e.g. print a list of account_subs for this account
-  my $cv3 = AE::cv;
-  CCNQ::API::billing_view('report','account_subs',$account,$cv3);
-  my $account_subs = CCNQ::AE::receive($cv3);
-  my @account_subs = map { $_->{doc} } @{$account_subs->{rows} || []};
+  my $account_subs = account_subs($account);
 
   # e.g. print account details.
   var field => {
     name    => $account_billing_data->{name},
     account => $account,
-    portal_users => [@portal_users],
-    account_subs => [@account_subs],
+    portal_users => $portal_users,
+    account_subs => $account_subs,
     plans        => [CCNQ::Portal::Inner::Plan::gather_plans()],
   };
 }
