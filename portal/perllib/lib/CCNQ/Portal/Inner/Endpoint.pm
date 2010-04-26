@@ -124,10 +124,7 @@ sub gather_field {
   # Gather data for a specific endpoint if needed
   my $endpoint_data;
   if($endpoint) {
-    my $cv2 = AE::cv;
-    CCNQ::API::provisioning_view('report','endpoints',$account,$endpoint,$cv2);
-    my $r2 = CCNQ::AE::receive($cv2) || { rows => [] };
-    $endpoint_data = $r2->{rows}->[0]->{doc} || {};
+    $endpoint_data = get_endpoint($endpoint);
   } else {
     $endpoint_data = $params;
   }
