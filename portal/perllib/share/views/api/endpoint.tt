@@ -34,7 +34,7 @@
         <% IF field.is_dynamic %><% configure_with = ["password "]       %><% END %>
         <% FOREACH p IN configure_with %>
         <p class="ui-helper-clearfix">
-          <label for="<% p %>" class="left"><% | loc %>IP:<% END %></label>
+          <label for="<% p %>" class="left"><% | loc %><% p %><% END %></label>
           <input type="text" name="<% p %>" value="<% field.$p | html %>" />
         </p>
         <% END %>
