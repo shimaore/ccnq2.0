@@ -111,8 +111,6 @@ sub clean_params {
 sub gather_field {
   my $params = clean_params();
 
-  my $endpoint = $params->{endpoint};
-
   my $account = $params->{account};
 
   my $static_clusters  = clusters_for_static_endpoints;
@@ -122,6 +120,8 @@ sub gather_field {
   my $account_subs = CCNQ::Portal::Inner::Account::account_subs($account);
 
   # Gather data for a specific endpoint if needed
+  my $endpoint = params->{endpoint};
+
   my $endpoint_data;
   if($endpoint) {
     $endpoint_data = get_endpoint($endpoint);
