@@ -19,15 +19,6 @@ use base qw( CCNQ::Portal::Auth );
 use Net::LDAP;
 use CCNQ::Portal::I18N;
 
-=pod
-
-  new CCNQ::Portal::Auth::LDAP({
-    ldap_base => 'ou=Users,dc=sotelips,dc=net',
-    ldap_uri => 'ldaps://ldap.sotelips.net',
-  })
-
-=cut
-
 sub auth
 {
   my $self = shift;

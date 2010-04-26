@@ -30,7 +30,7 @@ sub new {
 }
 
 =pod
-  $user_id = auth($request)
+  $user_id = auth($username,$password)
     Method must return $user_id iff the login/password combination
     successfully authenticated the login.
     Otherwise should return undef.
