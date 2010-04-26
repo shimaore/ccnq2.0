@@ -30,8 +30,6 @@ use constant DYNAMIC_ENDPOINTS_CLUSTERS_DNS_NAME => 'register.clusters';
 use AnyEvent;
 use AnyEvent::DNS;
 
-use Logger::Syslog;
-
 my $dns_txt = sub {
   my $dn = CCNQ::Install::catdns(@_);
   my $cv = AE::cv;
@@ -131,12 +129,11 @@ sub gather_field {
   }
 
   my $is_static  = defined($endpoint_data->{cluster}) &&
-    grep { $_ eq $cluster_name } @$static_clusters;
+    grep { $_ eq $endpoint_data->{cluster} } @$static_clusters;
   my $is_dynamic = defined($endpoint_data->{cluster}) &&
-    grep { $_ eq $cluster_name } @$dynamic_clusters;
+    grep { $_ eq $endpoint_data->{cluster} } @$dynamic_clusters;
 
   var field => {
-    cluster          => $cluster_name,
     %$endpoint_data,
     endpoints        => $endpoints,
     account_subs     => $account_subs,
