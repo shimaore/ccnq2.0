@@ -13,6 +13,7 @@
 <% END %>
 <% END %>
 
+<!-- Inner -->
 <% IF session.account %>
   <fieldset>
     <legend><% | loc(session.account) %>Account [_1]<% END %></legend>
@@ -24,4 +25,15 @@
 <% ELSE %>
   <% | loc %>Please select an account.<% END %>
 <% END %>
+
+<% IF is_sysadmin %>
+  <fieldset>
+    <legend><% | loc %>System global<% END %></legend>
+    <ul>
+      <li><a href="/manager">Manage Manager Requests (Back-end Business Logic)</a></li>
+    </ul>
+  </fieldset>
+<% END %>
+<!-- /Inner -->
+
 </div>
