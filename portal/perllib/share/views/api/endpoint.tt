@@ -66,10 +66,10 @@
         <% END %>
       </form>
     </fieldset>
-  <% END %>
+  <% ELSE %>
   <fieldset>
     <legend><% | loc %>Create endpoint<% END %></legend>
-    <form action="/provisioning/endpoint/select" method="post" accept-charset="utf-8" class="ui-widget validate">
+    <form id="create_endpoint" action="/provisioning/endpoint/select" method="post" accept-charset="utf-8" class="ui-widget validate">
       <p class="ui-helper-clearfix">
         <label for="cluster" class="left"><% | loc %>Cluster:<% END %></label>
         <select name="cluster" class="required">
@@ -92,14 +92,14 @@
         <input type="text" name="domain" value="<% field.domain | html %>" class="required"/>
       </p>
       <p class="ui-helper-clearfix submit">
-      <input type="submit" value="<% | loc %>Create<% END %>" />
+      <input name="create_endpoint_submit" type="submit" value="<% | loc %>Create<% END %>" />
       </p>
     </form>
   </fieldset>
   <% IF field.endpoints && field.endpoints.size %>
   <fieldset>
     <legend><% | loc %>Modify endpoint<% END %></legend>
-    <form action="/provisioning/endpoint/select" method="post" accept-charset="utf-8" class="ui-widget validate">
+    <form id="retrieve_endpoint" action="/provisioning/endpoint/select" method="post" accept-charset="utf-8" class="ui-widget">
       <p class="ui-helper-clearfix">
         <label for="username" class="left"><% | loc %>Endpoint:<% END %></label>
         <select name="endpoint" class="required">
@@ -109,10 +109,11 @@
         </select>
       </p>
       <p class="ui-helper-clearfix submit">
-      <input type="submit" value="<% | loc %>Retrieve<% END %>" />
+      <input name="retrieve_endpoint_submit" type="submit" value="<% | loc %>Retrieve<% END %>" />
       </p>
     </form>
   </fieldset>
+  <% END %>
   <% END %>
 <% ELSE %>
   <% | loc %>Please select an account.<% END %>
