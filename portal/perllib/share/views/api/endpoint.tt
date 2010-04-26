@@ -14,19 +14,19 @@
       <form action="/provisioning/endpoint" method="post" accept-charset="utf-8" class="ui-widget validate">
         <p class="ui-helper-clearfix">
           <label for="cluster" class="left"><% | loc %>Cluster:<% END %></label>
-          <span id="cluster"><% field.cluster | html %></span>
+          <input type="text" readonly name="cluster" value="<% field.cluster | html %>" />
         </p>
         <p class="ui-helper-clearfix">
           <label for="username" class="left"><% | loc %>Username:<% END %></label>
-          <span id="username"><% field.username | html %></span>
+          <input type="text" readonly name="username" value="<% field.username | html %>" />
         </p>
         <p class="ui-helper-clearfix">
           <label for="domain" class="left"><% | loc %>Domain:<% END %></label>
-          <span id="domain"><% field.domain | html %></span>
+          <input type="text" readonly name="domain" value="<% field.domain | html %>" />
         </p>
         <p class="ui-helper-clearfix">
           <label for="account" class="left"><% | loc %>Account number:<% END %></label>
-          <span id="account"><% field.account | html %></span>
+          <input type="text" readonly name="account" value="<% field.account | html %>" />
         </p>
 
         <p class="ui-helper-clearfix">
