@@ -12,6 +12,8 @@
   <legend><% | loc %>My Profile<% END %></legend>
 <form action="/user_profile" method="POST" class="ui-widget validate" accept-charset="utf-8">
 <% ELSE %>
+<fieldset>
+  <legend><% | loc(field.id) %>[_1]'s Profile<% END %></legend>
 <form action="/user_profile/<% field.id | uri %>" method="POST" class="ui-widget validate" accept-charset="utf-8">
 <% END %>
   <p class="ui-helper-clearfix">
