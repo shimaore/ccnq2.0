@@ -40,9 +40,9 @@ sub get_ldap
 
 sub get_sn
 {
-  my ($ldap,$email) = @_;
+  my ($ldap,$ldap_base,$email) = @_;
   my $mesg = $ldap->search(
-    base => $self->ldap_base,
+    base => $ldap_base,
     scope => 'one',
     attrs => ['sn'],
     filter => "(cn=${email})",
