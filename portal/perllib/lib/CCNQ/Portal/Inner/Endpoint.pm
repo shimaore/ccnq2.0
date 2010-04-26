@@ -80,7 +80,6 @@ sub gather_field {
     my $r2 = CCNQ::AE::receive($cv2) || { rows => [] };
     $endpoint_data = $r2->{rows}->[0]->{doc} || {};
   }
-  $cluster_name = $endpoint_data->{cluster} if $endpoint_data->{cluster};
 
   my $is_static  = defined($cluster_name) &&
     grep { $_ eq $cluster_name } @$static_clusters;
@@ -88,7 +87,7 @@ sub gather_field {
     grep { $_ eq $cluster_name } @$dynamic_clusters;
 
   var field => {
-    cluster_name     => $cluster_name,
+    cluster          => $cluster_name,
     endpoint         => $endpoint,
     %$endpoint_data,
     endpoints        => $endpoints,

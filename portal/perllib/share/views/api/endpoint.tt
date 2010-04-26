@@ -1,12 +1,12 @@
 <% USE loc %>
 <% IF session.account %>
-  <% IF field.endpoint %>
+  <% IF field.username && field.domain %>
     <fieldset>
       <legend><% | loc %>Endpoint details<% END %></legend>
-      <form id="account_form" action="/billing/account" method="post" accept-charset="utf-8" class="ui-widget validate">
+      <form action="/provisioning/endpoint" method="post" accept-charset="utf-8" class="ui-widget validate">
         <p class="ui-helper-clearfix">
           <label for="cluster_name" class="left"><% | loc %>Cluster:<% END %></label>
-          <span id="cluster_name"><% field.cluster_name | html %></span>
+          <span id="cluster_name"><% field.cluster | html %></span>
         </p>
         <p class="ui-helper-clearfix">
           <label for="username" class="left"><% | loc %>Username:<% END %></label>
