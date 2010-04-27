@@ -150,14 +150,18 @@ sub endpoint_default {
   return unless session('account');
   return unless session('account') =~ /^[\w-]+$/;
   gather_field();
-  var template_name => 'api/endpoint';
   return CCNQ::Portal->site->default_content->();
 }
 
-get '/provisioning/endpoint'           => sub { endpoint_default };
-get '/provisioning/endpoint/:endpoint' => sub { endpoint_default };
-get '/provisioning/endpoint/:cluster/:endpoint' => sub { endpoint_default };
-post '/provisioning/endpoint/select'   => sub { endpoint_default };
+sub generic_endpoint_default {
+  var template_name => 'api/endpoint';
+  endpoint_default();
+}
+
+get '/provisioning/endpoint'           => sub { generic_endpoint_default };
+get '/provisioning/endpoint/:endpoint' => sub { generic_endpoint_default };
+get '/provisioning/endpoint/:cluster/:endpoint' => sub { generic_endpoint_default };
+post '/provisioning/endpoint/select'   => sub { generic_endpoint_default };
 
 post '/provisioning/endpoint' => sub {
   return unless CCNQ::Portal->current_session->user;
