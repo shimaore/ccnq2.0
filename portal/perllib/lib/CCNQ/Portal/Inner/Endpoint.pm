@@ -168,6 +168,8 @@ post '/provisioning/endpoint' => sub {
 
   my $params = clean_params();
 
+  $params->{domain} ||= CCNQ::Install::cluster_fqdn($params->{cluster});
+
   for my $v qw(username domain cluster account account_sub) {
     next if exists $params->{$v};
     var error => _("$v is required")_;
