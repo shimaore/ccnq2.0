@@ -13,6 +13,7 @@
 <% END %>
 <% END %>
 
+<% IF session.user_id %>
 <!-- Inner -->
 <% IF session.account %>
   <fieldset>
@@ -35,5 +36,8 @@
   </fieldset>
 <% END %>
 <!-- /Inner -->
+<% ELSE %>
+<% | loc %>Please log in using your username and password.<% END %>
+<% END %>
 
 </div>
