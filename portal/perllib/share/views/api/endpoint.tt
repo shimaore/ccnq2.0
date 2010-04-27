@@ -47,17 +47,42 @@
         </p>
         <% END %>
         
-        <!--
-        dest_domain
-        strip_digit
-        allow_onnet
-        always_proxy_media
-        forwarding_sbc
-        outbound_route
-        ignore_caller_outbound_route
-        ignore_default_outbound_route
-        check_from
-        -->
+        <p class="ui-helper-clearfix">
+          <label for="dest_domain" class="left"><% | loc %>Destination Domain:<% END %></label>
+          <input type="text" name="dest_domain" value="<% field.dest_domain | html %>" />
+        </p>
+        <p class="ui-helper-clearfix">
+          <label for="strip_digit" class="left"><% | loc %>Strip digit<% END %></label>
+          <input type="checkbox" name="strip_digit" <% IF field.strip_digit %>checked<% END %> value="1" />
+        </p>
+        <p class="ui-helper-clearfix">
+          <label for="allow_onnet" class="left"><% | loc %>Allow on-net calls<% END %></label>
+          <input type="checkbox" name="allow_onnet" <% IF field.allow_onnet %>checked<% END %> value="1" />
+        </p>
+        <p class="ui-helper-clearfix">
+          <label for="always_proxy_media" class="left"><% | loc %>Always proxy media<% END %></label>
+          <input type="checkbox" name="always_proxy_media" <% IF field.always_proxy_media %>checked<% END %> value="1" />
+        </p>
+        <p class="ui-helper-clearfix">
+          <label for="forwarding_sbc" class="left"><% | loc %>Is a Forwarding SBC<% END %></label>
+          <input type="checkbox" name="forwarding_sbc" <% IF field.forwarding_sbc %>checked<% END %> value="1" />
+        </p>
+        <p class="ui-helper-clearfix">
+          <label for="outbound_route" class="left"><% | loc %>Force outbound route:<% END %></label>
+          <input type="text" name="outbound_route" value="<% field.outbound_route | html %>" />
+        </p>
+        <p class="ui-helper-clearfix">
+          <label for="ignore_caller_outbound_route" class="left"><% | loc %>Ignore caller outbound route<% END %></label>
+          <input type="checkbox" name="ignore_caller_outbound_route" <% IF field.ignore_caller_outbound_route %>checked<% END %> value="1" />
+        </p>
+        <p class="ui-helper-clearfix">
+          <label for="ignore_default_outbound_route" class="left"><% | loc %>Ignore default outbound route<% END %></label>
+          <input type="checkbox" name="ignore_default_outbound_route" <% IF field.ignore_default_outbound_route %>checked<% END %> value="1" />
+        </p>
+        <p class="ui-helper-clearfix">
+          <label for="check_from" class="left"><% | loc %>Check From username<% END %></label>
+          <input type="checkbox" name="check_from" <% IF field.check_from %>checked<% END %> value="1" />
+        </p>
 
         <% IF is_admin %>
         <p class="ui-helper-clearfix submit">
