@@ -25,7 +25,7 @@ use CCNQ::API;
 use CCNQ::Portal::Inner::Account;
 
 use constant STATIC_ENDPOINTS_CLUSTERS_DNS_NAME  => 'static.clusters';
-use constant DYNAMIC_ENDPOINTS_CLUSTERS_DNS_NAME => 'register.clusters';
+use constant DYNAMIC_ENDPOINTS_CLUSTERS_DNS_NAME => 'dynamic.clusters';
 
 use AnyEvent;
 use AnyEvent::DNS;
