@@ -21,6 +21,7 @@
     <ul>
       <li><a href="/billing/account">Manage account</a></li>
       <li><a href="/provisioning/endpoint">Manage endpoints</a></li>
+      <li><a href="/provisioning/account">Inventory</a></li>
     </ul>
   </fieldset>
 <% ELSE %>
