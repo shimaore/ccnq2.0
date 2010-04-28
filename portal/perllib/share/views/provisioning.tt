@@ -2,7 +2,7 @@
 <div class="provisioning">
 <% FOREACH row IN result.rows %>
   <div class="row">
-    <% row.id %>
+    <span class="id"><% row.id %></span>
     <% FOREACH d IN row.doc %>
       <div class="entry">
         <span class="key"><% | loc %><% d.key %><% END %></span>
