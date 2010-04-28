@@ -14,6 +14,13 @@
   </condition>
 </extension>
 
+<!-- from: international number -->
+<extension name="cleanup-caller-id-intl" continue="true">
+  <condition field="caller_id_number" expression="^(011|\+)([2-9][0-9]*)$">
+    <action application="set" data="ccnq_from_e164=$2"/>
+  </condition>
+</extension>
+
 <!-- Verify that the called number follows the proper format (liberally) -->
 
 <!-- national number -->
