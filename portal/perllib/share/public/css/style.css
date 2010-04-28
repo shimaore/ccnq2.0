@@ -128,3 +128,14 @@ span.method, span.status {
 span.from_addr, span.to_addr {
   color: #030;
 }
+
+/* Reports */
+.row .id  {
+  font-weight: bold;
+}
+.entry {
+  margin-left: 20px;
+}
+.entry .key {
+  font-weight: bold;
+}
