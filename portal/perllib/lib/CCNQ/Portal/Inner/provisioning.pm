@@ -28,6 +28,7 @@ Generic Provisioning API query, restricted to administrative accounts.
 
 get '/provisioning/:view/*' => sub {
   return unless CCNQ::Portal->current_session->user;
+  return unless session('account');
   # Restrict the generic view to administrators
   return unless CCNQ::Portal->current_session->user->profile->is_admin;
 
@@ -49,7 +50,7 @@ get '/provisioning/account' => sub {
   my $id = [session('account')];
 
   my $cv = AE::cv;
-  CCNQ::API::provisioning_view('report',params->{view},@$id,$cv);
+  CCNQ::API::provisioning_view('report','account',@$id,$cv);
   var result => $cv->recv;
   return CCNQ::Portal->site->default_content->();
 };
