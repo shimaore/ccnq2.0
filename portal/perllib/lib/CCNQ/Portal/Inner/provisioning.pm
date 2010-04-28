@@ -32,8 +32,21 @@ get '/provisioning/:view/*' => sub {
   return unless CCNQ::Portal->current_session->user->profile->is_admin;
 
   var template_name => 'provisioning';
-  my $id = splat;
+  my ($id) = splat;
   unshift @$id, session('account');
+
+  my $cv = AE::cv;
+  CCNQ::API::provisioning_view('report',params->{view},@$id,$cv);
+  var result => $cv->recv;
+  return CCNQ::Portal->site->default_content->();
+};
+
+get '/provisioning/account' => sub {
+  return unless CCNQ::Portal->current_session->user;
+  return unless session('account');
+
+  var template_name => 'provisioning';
+  my $id = [session('account')];
 
   my $cv = AE::cv;
   CCNQ::API::provisioning_view('report',params->{view},@$id,$cv);
