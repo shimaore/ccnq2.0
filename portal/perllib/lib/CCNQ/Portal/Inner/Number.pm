@@ -56,6 +56,7 @@ sub submit_number {
   my $params = {
     account       => $endpoint_data->{account},
     account_sub   => $endpoint_data->{account_sub},
+    endpoint      => $endpoint_data->{endpoint},
     endpoint_ip   => $endpoint_data->{ip},
     username      => $endpoint_data->{username},
     cluster       => $endpoint_data->{cluster},
