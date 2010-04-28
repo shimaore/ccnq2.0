@@ -2,10 +2,10 @@
 <div class="provisioning">
 <% FOREACH row IN result.rows %>
   <div class="row">
-    <% row.doc.profile | loc %>
-    <% FOREACH entry IN row.doc %>
+    <% row.id %>
+    <% FOREACH d IN row.doc %>
       <div class="entry">
-        <% entry.key | loc %>: <% entry.value %>
+        <% d.key | loc %>: <% d.value %>
       </div>
     <% END %>
   </div>
