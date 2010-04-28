@@ -2,7 +2,7 @@
 <div class="provisioning">
 <% FOREACH row IN result.rows %>
   <div class="row">
-    <span class="id"><% row.id %></span>
+    <span class="id"><a href="/provisioning/<% row.id | uri %>"><% row.id %></a></span>
     <% FOREACH d IN row.doc; UNLESS d.key.match('^_') %>
       <div class="entry">
         <span class="key"><% d.key %></span>
