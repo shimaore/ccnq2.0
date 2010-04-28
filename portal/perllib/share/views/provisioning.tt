@@ -2,7 +2,8 @@
 <div class="provisioning">
 <% FOREACH row IN result.rows %>
   <div class="row">
-    <span class="id"><a href="/provisioning/<% row.id | uri %>"><% row.id %></a></span>
+    <% profile = row.doc.profile %>
+    <span class="id"><a href="/provisioning/<% profile | uri %>/<% row.doc.$profile | uri %>"><% row.id %></a></span>
     <% FOREACH d IN row.doc; UNLESS d.key.match('^_') %>
       <div class="entry">
         <span class="key"><% d.key %></span>
