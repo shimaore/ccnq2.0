@@ -5,7 +5,8 @@
     <% row.id %>
     <% FOREACH d IN row.doc %>
       <div class="entry">
-        <% d.key | loc %>: <% d.value %>
+        <span class="key"><% | loc %><% d.key %><% END %></span>
+        <span class="value"><% d.value %></span>
       </div>
     <% END %>
   </div>
