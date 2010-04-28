@@ -131,19 +131,30 @@ span.from_addr, span.to_addr {
 
 /* Reports */
 .row {
+  color: black;
+  border: 1px solid #999;
   background-color: white;
 }
-.row .endpoint {
+.row.endpoint {
   border-color: blue;
 }
-.row .number {
+.row.number {
   border-color: green;
 }
-.row .location {
+.row.location {
   border-color: red;
 }
 .row .id  {
   font-weight: bold;
+}
+.endpoint .id {
+  color: blue;
+}
+.number .id {
+  color: green;
+}
+.location .id {
+  color: red;
 }
 .entry {
   margin-left: 20px;
