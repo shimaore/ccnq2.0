@@ -3,7 +3,7 @@
 <% FOREACH row IN result.rows %>
   <div class="row">
     <span class="id"><% row.id %></span>
-    <% FOREACH d IN row.doc; UNLESS d.key.match('_.*') %>
+    <% FOREACH d IN row.doc; UNLESS d.key.match('^_') %>
       <div class="entry">
         <span class="key"><% d.key %></span>
         <span class="value"><% d.value %></span>
