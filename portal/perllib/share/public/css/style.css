@@ -130,6 +130,18 @@ span.from_addr, span.to_addr {
 }
 
 /* Reports */
+.row {
+  background-color: white;
+}
+.row .endpoint {
+  border-color: blue;
+}
+.row .number {
+  border-color: green;
+}
+.row .location {
+  border-color: red;
+}
 .row .id  {
   font-weight: bold;
 }

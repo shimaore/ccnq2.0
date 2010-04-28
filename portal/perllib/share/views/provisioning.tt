@@ -1,9 +1,8 @@
 <% USE loc %>
 <div class="provisioning">
-<% FOREACH row IN result.rows %>
-  <div class="row">
-    <% profile = row.doc.profile %>
-    <span class="id"><a href="/provisioning/<% profile | uri %>/<% row.doc.$profile | uri %>"><% row.id %></a></span>
+<% FOREACH row IN result.rows; SET profile = row.doc.profile %>
+  <div class="row <% profile %>">
+    <span class="id <% profile %>"><a href="/provisioning/<% profile | uri %>/<% row.doc.$profile | uri %>"><% row.id %></a></span>
     <% FOREACH d IN row.doc; UNLESS d.key.match('^_') %>
       <div class="entry">
         <span class="key"><% d.key %></span>
