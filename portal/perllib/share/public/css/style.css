@@ -132,7 +132,7 @@ span.from_addr, span.to_addr {
 /* Reports */
 .row {
   color: black;
-  border: 1px solid #999;
+  border: 2px solid #999;
   background-color: white;
 }
 .row.endpoint {
@@ -147,13 +147,13 @@ span.from_addr, span.to_addr {
 .row .id  {
   font-weight: bold;
 }
-.endpoint .id {
+.endpoint .id a {
   color: blue;
 }
-.number .id {
+.number .id a {
   color: green;
 }
-.location .id {
+.location .id a {
   color: red;
 }
 .entry {
