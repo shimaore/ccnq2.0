@@ -5,7 +5,7 @@
     <% row.profile | loc %>
     <% FOREACH entry IN row %>
       <div class="entry">
-        <% row.key | loc %>: <% row.value %>
+        <% entry.key | loc %>: <% entry.value %>
       </div>
     <% END %>
   </div>
