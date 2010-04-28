@@ -2,8 +2,8 @@
 <div class="provisioning">
 <% FOREACH row IN result.rows %>
   <div class="row">
-    <% row.profile | loc %>
-    <% FOREACH entry IN row %>
+    <% row.doc.profile | loc %>
+    <% FOREACH entry IN row.doc %>
       <div class="entry">
         <% entry.key | loc %>: <% entry.value %>
       </div>
