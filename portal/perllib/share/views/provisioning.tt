@@ -6,7 +6,11 @@
     <% FOREACH d IN row.doc; UNLESS d.key.match('^_') %>
       <div class="entry">
         <span class="key"><% d.key %></span>
-        <span class="value"><% d.value %></span>
+        <span class="value">
+          <% IF    d.key == 'endpoint' %><a href="/provisioning/endpoint_all/<% d.value | uri %>"><% d.value %></a>
+          <% ELSIF d.key == 'location' %><a href="/provisioning/location_all/<% d.value | uri %>"><% d.value %></a>
+          <% ELSE %><% d.value %><% END %>
+        </span>
       </div>
     <% END; END %>
   </div>
