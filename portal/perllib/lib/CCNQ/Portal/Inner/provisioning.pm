@@ -26,14 +26,14 @@ Generic Provisioning API query, restricted to administrative accounts.
 
 =cut
 
-get '/provisioning/:view/*' => sub {
+get '/provisioning/:view/:id' => sub {
   return unless CCNQ::Portal->current_session->user;
   return unless session('account');
   # Restrict the generic view to administrators
   return unless CCNQ::Portal->current_session->user->profile->is_admin;
 
   var template_name => 'provisioning';
-  my ($id) = splat;
+  my ($id) = [params->{id}];
   unshift @$id, session('account');
 
   my $cv = AE::cv;
