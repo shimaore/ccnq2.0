@@ -102,11 +102,14 @@
       </condition>
     </extension>
 
-    <extension name="refer">
+    <extension name="refer-block">
       <!-- do not accept REFER pointing to the destination_number at the local domain -->
       <condition field="${sip_refer_to}">
        <expression><![CDATA[<sip:${destination_number}@${domain_name}]]></expression>
       </condition>
+    </extension>
+
+    <extension name="refer">
       <condition field="${sip_refer_to}">
         <expression><![CDATA[<sip:(.*)@(.*)>]]></expression>
         <action application="set" data="refer_user=$1"/>
