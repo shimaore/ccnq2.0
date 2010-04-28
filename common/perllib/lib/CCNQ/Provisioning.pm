@@ -70,15 +70,15 @@ use constant provisioning_designs => {
         map => js_report_by_account,
         # no reduce function
       },
-      numbers => {
+      number => {
         map => js_report_numbers,
         # no reduce function
       },
-      endpoints => {
+      endpoint => {
         map => js_report_endpoints,
         # no reduce function
       },
-      locations => {
+      location => {
         map => js_report_locations,
         # no reduce function
       },
