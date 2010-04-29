@@ -64,8 +64,9 @@ sub gather_field {
 }
 
 post '/billing/plan' => sub {
-  return unless CCNQ::Portal->current_session->user;
-  return unless CCNQ::Portal->current_session->user->profile->is_sysadmin;
+  var template_name => 'api/plan';
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_sysadmin;
 
   return unless params->{name} =~ /\S/;
 
@@ -73,36 +74,36 @@ post '/billing/plan' => sub {
   $name =~ s/^\s+//; $name =~ s/^\s+$//; $name =~ s/\s+/ /g;
   gather_field($name);
 
-  var template_name => 'api/plan';
-  return CCNQ::Portal->site->default_content->();
+  return CCNQ::Portal::content;
 };
 
 get '/billing/plan' => sub {
-  return unless CCNQ::Portal->current_session->user;
+  var template_name => 'api/plan';
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
 
   var field => {
     plans         => \&gather_plans,
     currencies    => \&gather_currencies,
   };
-  var template_name => 'api/plan';
-  return CCNQ::Portal->site->default_content->();
+  return CCNQ::Portal::content;
 };
 
 get '/billing/plan/:name' => sub {
-  return unless CCNQ::Portal->current_session->user;
+  var template_name => 'api/plan';
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
 
   return unless params->{name} =~ /\S/;
   my $name = params->{name};
   $name =~ s/^\s+//; $name =~ s/^\s+$//; $name =~ s/\s+/ /g;
   gather_field($name);
 
-  var template_name => 'api/plan';
-  return CCNQ::Portal->site->default_content->();
+  return CCNQ::Portal::content;
 };
 
 post '/billing/plan/:name' => sub {
-  return unless CCNQ::Portal->current_session->user;
-  return unless CCNQ::Portal->current_session->user->profile->is_sysadmin;
+  var template_name => 'api/plan';
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_sysadmin;
 
   return unless params->{name} =~ /\S/;
 
@@ -128,7 +129,7 @@ post '/billing/plan/:name' => sub {
       $fields->{currencies} = \&gather_currencies;
       var field => $fields;
       var template_name => 'api/plan';
-      return CCNQ::Portal->site->default_content->();
+      return CCNQ::Portal::content;
     }
     $params->{rating_steps} = $rating_steps;
   }

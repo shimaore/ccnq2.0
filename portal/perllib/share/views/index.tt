@@ -1,13 +1,6 @@
 <% USE loc %>
 <div class="ui-widget">
-<% IF error %>
-  <div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;">
-    <p>
-    <span style="float: left; margin-right: 0.3em;" class="ui-icon ui-icon-alert"></span>
-    <% error %>
-    </p>
-  </div>
-<% ELSIF result %>
+<% IF result %>
   <div class="content"><% result %></div>
 <% END %>
 

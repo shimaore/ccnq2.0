@@ -1,5 +1,5 @@
 <% USE loc %>
-<% IF is_sysadmin %>
+<% IF is_admin %>
   <fieldset>
     <legend><% | loc %>Server Trace<% END %></legend>
     <form action="/trace" method="post" accept-charset="utf-8" class="ui-widget validate">

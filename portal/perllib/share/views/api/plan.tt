@@ -1,12 +1,7 @@
 <% USE loc %>
-<% IF error %>
-  <div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;">
-    <p>
-    <span style="float: left; margin-right: 0.3em;" class="ui-icon ui-icon-alert"></span>
-    <% error | loc %>
-    </p>
-  </div>
-<% END %>
+<% IF not user_name %>
+<% | loc %>Please log in.<% END %>
+<% ELSE %>
 <% IF field.name %>
   <fieldset>
     <legend><% | loc %>Plan details<% END %></legend>
@@ -32,13 +27,15 @@
         <label for="rating_steps" class="left"><% | loc %>Rating steps (JSON):<% END %></label>
         <textarea name="rating_steps" class="required" rows="24" cols="72"><% field.rating_steps | html %></textarea>
       </p>
+      <% IF is_sysadmin %>
       <p class="ui-helper-clearfix submit">
       <input type="submit" value="<% | loc %>Save<% END %>" />
       </p>
+      <% END %>
     </form>
   </fieldset>
 <% END %>
-<% IF field.plans %>
+<% IF field.plans and is_sysadmin %>
   <fieldset>
     <legend><% | loc %>Plans<% END %></legend>
     <ul>
@@ -48,6 +45,7 @@
     </ul>
   </fieldset>
 <% END %>
+<% IF is_sysadmin %>
 <fieldset>
   <legend><% | loc %>Create plan<% END %></legend>
   <form id="new_plan_form" action="/billing/plan" method="post" accept-charset="utf-8" class="ui-widget validate">
@@ -60,3 +58,5 @@
     </p>
   </form>
 </fieldset>
+<% END %>
+<% END %>

@@ -88,7 +88,9 @@
       </p>
     </form>
   </fieldset>
-  <% ELSE %>
+  <% ELSIF user_name %>
     <% | loc %>Please select an account.<% END %>
+  <% ELSE %>
+    <% | loc %>Please log in.<% END %>
   <% END %>
 <% END %>

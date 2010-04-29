@@ -86,6 +86,14 @@ sub site {
   return $site;
 }
 
+=head2 content()
+
+Provides the default content for this portal's site.
+
+=cut
+
+sub content { site->default_content->() }
+
 
 our $session;
 

@@ -22,12 +22,12 @@ use CCNQ::Portal;
 
 post '/locale' => sub {
   session locale => params->{locale};
-  return CCNQ::Portal->site->default_content->();
+  return CCNQ::Portal::content;
 };
 
 get '/locale/:locale' => sub {
   session locale => params->{locale};
-  return CCNQ::Portal->site->default_content->();
+  return CCNQ::Portal::content;
 };
 
 1;

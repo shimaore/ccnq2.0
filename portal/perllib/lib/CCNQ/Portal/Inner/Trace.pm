@@ -38,19 +38,20 @@ sub get_node_names {
 }
 
 get '/trace' => sub {
-  return unless CCNQ::Portal->current_session->user;
-  return unless CCNQ::Portal->current_session->user->profile->is_admin;
+  var template_name => 'api/trace';
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_admin;
 
   var field => {
     node_names => get_node_names(),
   };
-  var template_name => 'api/trace';
-  return CCNQ::Portal->site->default_content->();
+  return CCNQ::Portal::content;
 };
 
 post '/trace' => sub {
-  return unless CCNQ::Portal->current_session->user;
-  return unless CCNQ::Portal->current_session->user->profile->is_admin;
+  var template_name => 'api/trace';
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_admin;
 
   my $params = {};
   for my $k (qw(node_name dump_packets call_id to_user from_user days_ago)) {

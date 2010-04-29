@@ -26,8 +26,8 @@ use CCNQ::Portal;
 use CCNQ::Portal::Inner::Endpoint;
 
 sub default {
-  return unless CCNQ::Portal->current_session->user;
-  return unless session('account');
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+  return CCNQ::Portal::content unless session('account');
 
   my $account = session('account');
 
@@ -37,19 +37,19 @@ sub default {
     endpoints => $endpoints,
   };
 
-  return CCNQ::Portal->site->default_content->();
+  return CCNQ::Portal::content;
 }
 
 sub submit_number {
   my ($api_name) = @_;
 
-  return unless CCNQ::Portal->current_session->user;
-  return unless session('account');
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+  return CCNQ::Portal::content unless session('account');
 
   my $account  = session('account');
 
   my $endpoint = params->{endpoint};
-  return unless $endpoint;
+  return CCNQ::Portal::content unless $endpoint;
 
   my $endpoint_data = CCNQ::Portal::Inner::Endpoint::get_endpoint($account,$endpoint);
 

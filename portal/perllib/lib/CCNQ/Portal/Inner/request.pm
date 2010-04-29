@@ -29,8 +29,9 @@ Display the request.
 use MIME::Base64;
 
 get '/request/:request_id' => sub {
-  return unless CCNQ::Portal->current_session->user;
   var template_name => 'request';
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+
   my $request_id = params->{request_id};
   # XXX Authenticate (i.e. check that this user can legitimately access this request.)
 
@@ -45,7 +46,7 @@ get '/request/:request_id' => sub {
     return MIME::Base64::decode($pcap);
   } else {
     var result => $res;
-    return CCNQ::Portal->site->default_content->();
+    return CCNQ::Portal::content;
   }
 };
 

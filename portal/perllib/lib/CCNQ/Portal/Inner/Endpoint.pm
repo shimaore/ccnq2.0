@@ -146,11 +146,11 @@ sub gather_field {
 }
 
 sub endpoint_default {
-  return unless CCNQ::Portal->current_session->user;
-  return unless session('account');
-  return unless session('account') =~ /^[\w-]+$/;
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+  return CCNQ::Portal::content unless session('account');
+  return CCNQ::Portal::content unless session('account') =~ /^[\w-]+$/;
   gather_field();
-  return CCNQ::Portal->site->default_content->();
+  return CCNQ::Portal::content;
 }
 
 sub generic_endpoint_default {
@@ -164,11 +164,12 @@ get '/provisioning/endpoint/:cluster/:endpoint' => sub { generic_endpoint_defaul
 post '/provisioning/endpoint/select'   => sub { generic_endpoint_default };
 
 post '/provisioning/endpoint' => sub {
-  return unless CCNQ::Portal->current_session->user;
-  return unless CCNQ::Portal->current_session->user->profile->is_admin;
+  var template_name => 'api/endpoint';
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_admin;
   # This is how we create new endpoints.
-  return unless session('account');
-  return unless session('account') =~ /^[\w-]+$/;
+  return CCNQ::Portal::content unless session('account');
+  return CCNQ::Portal::content unless session('account') =~ /^[\w-]+$/;
 
   my $params = clean_params();
 
@@ -178,7 +179,7 @@ post '/provisioning/endpoint' => sub {
     next if exists $params->{$v};
     var error => _("$v is required")_;
     var template_name => 'api/endpoint';
-    return CCNQ::Portal->site->default_content->();
+    return CCNQ::Portal::content;
   }
 
   # Update the information in the API.

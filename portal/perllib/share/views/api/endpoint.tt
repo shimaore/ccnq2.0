@@ -1,13 +1,9 @@
 <% USE loc %>
-<% IF error %>
-  <div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;">
-    <p>
-    <span style="float: left; margin-right: 0.3em;" class="ui-icon ui-icon-alert"></span>
-    <% error | loc %>
-    </p>
-  </div>
-<% END %>
-<% IF session.account %>
+<% IF not user_name %>
+<% | loc %>Please log in.<% END %>
+<% ELSIF not session.account %>
+<% | loc %>Please select an account.<% END %>
+<% ELSE %>
   <% IF field.username && field.domain %>
     <fieldset>
       <legend><% | loc %>Endpoint details<% END %></legend>
@@ -142,6 +138,4 @@
   </fieldset>
   <% END %>
   <% END %>
-<% ELSE %>
-  <% | loc %>Please select an account.<% END %>
 <% END %>

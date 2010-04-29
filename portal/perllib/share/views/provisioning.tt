@@ -1,4 +1,5 @@
 <% USE loc %>
+<% IF user_name and session.account %>
 <div class="provisioning">
 <% FOREACH row IN result.rows; SET profile = row.doc.profile %>
   <div class="row <% profile %>">
@@ -16,3 +17,10 @@
   </div>
 <% END %>
 </div>
+<% ELSE %>
+  <% IF user_name %>
+    <% | loc %>Please select an account.<% END %>
+  <% ELSE %>
+    <% | loc %>Please log in.<% END %>
+  <% END %>
+<% END %>

@@ -26,7 +26,7 @@ This is the page shown by default when no parameters are provided.
 =cut
 
 get '/' => sub {
-  return CCNQ::Portal->site->default_content->();
+  return CCNQ::Portal::content;
 };
 
 'CCNQ::Portal::Inner::default';

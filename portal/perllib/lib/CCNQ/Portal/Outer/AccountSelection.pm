@@ -61,7 +61,7 @@ sub account {
 post '/account' => sub {
   my $account = params->{account};
   account($account);
-  CCNQ::Portal->site->default_content->();
+  CCNQ::Portal::content;
 };
 
 post '/account/:account' => sub {

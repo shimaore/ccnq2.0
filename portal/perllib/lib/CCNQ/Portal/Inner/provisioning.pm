@@ -27,32 +27,32 @@ Generic Provisioning API query, restricted to administrative accounts.
 =cut
 
 get '/provisioning/:view/:id' => sub {
-  return unless CCNQ::Portal->current_session->user;
-  return unless session('account');
-  # Restrict the generic view to administrators
-  return unless CCNQ::Portal->current_session->user->profile->is_admin;
-
   var template_name => 'provisioning';
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+  return CCNQ::Portal::content unless session('account');
+  # Restrict the generic view to administrators
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_admin;
+
   my ($id) = [params->{id}];
   unshift @$id, session('account');
 
   my $cv = AE::cv;
   CCNQ::API::provisioning_view('report',params->{view},@$id,$cv);
   var result => $cv->recv;
-  return CCNQ::Portal->site->default_content->();
+  return CCNQ::Portal::content;
 };
 
 get '/provisioning/account' => sub {
-  return unless CCNQ::Portal->current_session->user;
-  return unless session('account');
-
   var template_name => 'provisioning';
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+  return CCNQ::Portal::content unless session('account');
+
   my $id = [session('account')];
 
   my $cv = AE::cv;
   CCNQ::API::provisioning_view('report','account',@$id,$cv);
   var result => $cv->recv;
-  return CCNQ::Portal->site->default_content->();
+  return CCNQ::Portal::content;
 };
 
 'CCNQ::Portal::Inner::billing_plan';

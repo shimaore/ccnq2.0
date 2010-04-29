@@ -1,5 +1,7 @@
 <% USE loc %>
+<% IF user_name %>
 <div class="manager">
+  <% IF result %>
   <fieldset><legend><% | loc %>Review or modify existing request<% END %></legend>
     <ul>
     <% FOREACH row IN result.rows %>
@@ -7,7 +9,8 @@
     <% END %>
     </ul>
   </fieldset>
-
+  <% END %>
+  <% IF is_sysadmin %>
   <fieldset><legend><% | loc %>Create new request<% END %></legend>
     <form action="/manager" method="POST" accept-charset="utf-8" class="ui-widget validate">
       <label for="request_type" class="left"><% | loc %>Request name:<% END %></label>
@@ -15,4 +18,6 @@
       <input type="submit" />
     </form>
   </fieldset>
+  <% END %>
 </div>
+<% END %>

@@ -28,20 +28,21 @@ Display the request.
 =cut
 
 get '/manager' => sub {
-  return unless CCNQ::Portal->current_session->user;
   var template_name => 'manager_request_list';
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
 
   my $cv = AE::cv;
   CCNQ::API::manager_query(undef,$cv);
   my $res = $cv->recv;
 
   var result => $res;
-  return CCNQ::Portal->site->default_content->();
+  return CCNQ::Portal::content;
 };
 
 my $get_query_type = sub {
-  return unless CCNQ::Portal->current_session->user;
   var template_name => 'manager_request';
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+
   my $request_type = params->{request_type};
 
   my $cv = AE::cv;
@@ -49,16 +50,17 @@ my $get_query_type = sub {
   my $res = $cv->recv;
 
   var result => $res;
-  return CCNQ::Portal->site->default_content->();
+  return CCNQ::Portal::content;
 };
 
 post '/manager'              => $get_query_type;
 get '/manager/:request_type' => $get_query_type;
 
 post '/manager/:request_type' => sub {
-  return unless CCNQ::Portal->current_session->user;
-  return unless CCNQ::Portal->current_session->user->profile->is_sysadmin;
   var template_name => 'manager_request';
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_sysadmin;
+
   my $request_type = params->{request_type};
 
   my $cv = AE::cv;
@@ -66,7 +68,7 @@ post '/manager/:request_type' => sub {
   my $res = $cv->recv;
 
   var result => $res;
-  return CCNQ::Portal->site->default_content->();
+  return CCNQ::Portal::content;
 };
 
 'CCNQ::Portal::Inner::request';

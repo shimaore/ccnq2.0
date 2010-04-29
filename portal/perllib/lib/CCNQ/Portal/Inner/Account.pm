@@ -95,23 +95,24 @@ sub gather_field_sub {
 }
 
 get '/billing/account' => sub {
-  return unless CCNQ::Portal->current_session->user;
+  var template_name => 'api/account';
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
   if( session('account') && session('account') =~ /^[\w-]+$/ ) {
     gather_field();
   }
-  var template_name => 'api/account';
-  return CCNQ::Portal->site->default_content->();
+  return CCNQ::Portal::content;
 };
 
 post '/billing/account' => sub {
-  return unless CCNQ::Portal->current_session->user;
-  return unless CCNQ::Portal->current_session->user->profile->is_admin;
+  var template_name => 'api/account';
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_admin;
   # This is how we create new accounts.
   if(params->{account} && params->{account} =~ /^[\w-]+$/) {
        session account => params->{account};
   }
-  return unless session('account');
-  return unless session('account') =~ /^[\w-]+$/;
+  return CCNQ::Portal::content unless session('account');
+  return CCNQ::Portal::content unless session('account') =~ /^[\w-]+$/;
 
   my $account = session('account');
 
@@ -136,27 +137,28 @@ post '/billing/account' => sub {
 };
 
 get '/billing/account_sub/:account_sub' => sub {
-  return unless CCNQ::Portal->current_session->user;
-  return unless session('account');
-  return unless session('account') =~ /^[\w-]+$/;
-  return unless params->{account_sub};
-  return unless params->{account_sub} =~ /^[\w-]+$/;
+  var template_name => 'api/account_sub';
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+  return CCNQ::Portal::content unless session('account');
+  return CCNQ::Portal::content unless session('account') =~ /^[\w-]+$/;
+  return CCNQ::Portal::content unless params->{account_sub};
+  return CCNQ::Portal::content unless params->{account_sub} =~ /^[\w-]+$/;
 
   my $account_sub = params->{account_sub};
 
   gather_field_sub($account_sub);
 
-  var template_name => 'api/account_sub';
-  return CCNQ::Portal->site->default_content->();
+  return CCNQ::Portal::content;
 };
 
 sub handle_account_sub {
-  return unless CCNQ::Portal->current_session->user;
-  return unless CCNQ::Portal->current_session->user->profile->is_admin;
-  return unless session('account');
-  return unless session('account') =~ /^[\w-]+$/;
-  return unless params->{account_sub};
-  return unless params->{account_sub} =~ /^[\w-]+$/;
+  var template_name => 'api/account_sub';
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_admin;
+  return CCNQ::Portal::content unless session('account');
+  return CCNQ::Portal::content unless session('account') =~ /^[\w-]+$/;
+  return CCNQ::Portal::content unless params->{account_sub};
+  return CCNQ::Portal::content unless params->{account_sub} =~ /^[\w-]+$/;
 
   my $account_sub = params->{account_sub};
 
