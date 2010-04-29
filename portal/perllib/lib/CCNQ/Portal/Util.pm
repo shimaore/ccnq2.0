@@ -25,8 +25,6 @@ a hashref.
 
 =cut
 
-use Encode;
-
 sub neat {
   my $params = shift;
   for my $p (@_) {
