@@ -1,5 +1,6 @@
 <% USE loc %>
 <% IF user_name %>
+<% SET do_refresh = 0 %>
 <div class="request">
 <% FOREACH row IN result.rows %>
   <% SET r = row.doc %>
@@ -65,19 +66,19 @@
     <% ELSE %>
       <% IF r.request %>
         <% IF r.completed %>
-          <div class="request"><% | loc r.request %>Request ID [_1] completed <img src="/images/tango-icon-theme/22x22/status/dialog-information.png"><% END %></div>
+          <div class="request"><% | loc r.request %>Request ID [_1] completed<% END %> <img src="/images/tango-icon-theme/22x22/status/dialog-information.png"></div>
         <% ELSE %>
           <div class="request"><% | loc r.request %>Request ID [_1] pending<% END %></div>
         <% END %>
       <% ELSE %>
-        <div class="request"><% | loc %>Request pending<% END %> <img src="/images/tango-icon-theme/22x22/animations/process-working.png"></div><% SET do_refresh = 1 %>
+        <div class="request"><% | loc %>Request pending<% END %> <img src="/images/tango-icon-theme/22x22/animations/process-working.png"></div>
+        <% SET do_refresh = 1 %>
       <% END %>
     <% END %>
   <% END %>
 <% END %>
 <% IF do_refresh %>
 <div><a href="/request/<% r.request | uri %>"><% | loc %>Refresh<% END %></a></div>
-<script type="text/javascript">var t=setTimeout("location.reload()",4000);</script>
 <%END%>
 </div>
 <% ELSE %>
