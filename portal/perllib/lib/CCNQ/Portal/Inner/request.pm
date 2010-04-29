@@ -42,7 +42,7 @@ get '/request/:request_id' => sub {
   my $pcap = $res->{rows}->[2]->{doc}->{response}->{result}->{pcap};
   if($pcap) {
     content_type 'binary/appplication';
-    header 'attachment' => 'trace.pcap';
+    header 'Content-Disposition' => qq(attachment; filename="trace.pcap");
     return MIME::Base64::decode($pcap);
   } else {
     var result => $res;
