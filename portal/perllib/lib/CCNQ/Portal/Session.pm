@@ -56,6 +56,7 @@ sub end {
   session user_id => undef;
   session expires => undef;
   # Keep the user's locale.
+  session account => undef;
   return $self;
 }
 
