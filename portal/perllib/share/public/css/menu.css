@@ -32,6 +32,7 @@
     width:12em;
     top:1.5em;
     display:none;
+    z-index: 1;
 }
 
 #nav li ul a{
