@@ -93,7 +93,7 @@ Returns the HTML content for the default site, with the specified error message.
 
 use constant default_content => sub {
   my %p = @_;
-  var error => $error if $p->{error};
+  var error => $p{error} if $p{error};
 
   my $template_name = vars->{template_name} || DEFAULT_TEMPLATE_NAME;
 
