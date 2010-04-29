@@ -108,12 +108,11 @@
         <label for="username" class="left"><% | loc %>Username:<% END %></label>
         <input type="text" name="username" value="<% field.username | html %>" class="required"/>
       </p>
-      <!--
+      <!-- Required for registration endpoints -->
       <p class="ui-helper-clearfix">
         <label for="domain" class="left"><% | loc %>Domain:<% END %></label>
-        <input type="text" name="domain" value="<% field.domain | html %>" class="required"/>
+        <input type="text" name="domain" value="<% field.domain | html %>" />
       </p>
-      -->
       <p class="ui-helper-clearfix submit">
       <input name="create_endpoint_submit" type="submit" value="<% | loc %>Create<% END %>" />
       </p>
