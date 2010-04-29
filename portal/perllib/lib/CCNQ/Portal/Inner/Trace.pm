@@ -18,6 +18,7 @@ use strict; use warnings;
 use Dancer ':syntax';
 use CCNQ::Portal;
 use CCNQ::Portal::I18N;
+use CCNQ::Portal::Util;
 
 use CCNQ::AE;
 use CCNQ::API;
