@@ -78,10 +78,24 @@ use CCNQ::Portal::Outer::AccountSelection;
 
 use constant DEFAULT_TEMPLATE_NAME => 'index';
 
+=head2 default_content()
+
+Returns the HTML content for the default site.
+
+The Dancer variable 'error' may be used to provide an error message.
+The Dancer variable 'template_name' contains the name of the template to be used.
+
+=head2 default_content( error => $error)
+
+Returns the HTML content for the default site, with the specified error message.
+
+=cut
+
 use constant default_content => sub {
-  my $template_name = DEFAULT_TEMPLATE_NAME;
-  $template_name = 'result' if vars->{result};
-  $template_name = vars->{template_name} if vars->{template_name};
+  my %p = @_;
+  var error => $error if $p->{error};
+
+  my $template_name = vars->{template_name} || DEFAULT_TEMPLATE_NAME;
 
   my $vars = vars;
 
