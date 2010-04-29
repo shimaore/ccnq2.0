@@ -20,6 +20,15 @@
         <% END %>
           <span class="sniffer timestamp"><% varname = 'frame.time' %><% s.$varname | html %></span>
           <span class="sniffer callid">Call-ID: <% current_call_id | html %></a></span>
+          <% IF not seen.$call_id; SET seen.$call_id = 1 %>
+          <span>
+          <form action="/trace" method="post" >
+            <input type="hidden" name="node_name" value="<% r.node_name | html %>" />
+            <input type="hidden" name="call_id" value="<% current_call_id | html %>" />
+            <input type="hidden" name="days_ago" value="<% r.params.days_ago | html %>">
+            <input type="submit" value="<% | loc %>View<% END %>">
+          </form>
+          </span>
           <span>
           <form action="/trace" method="post" >
             <input type="hidden" name="node_name" value="<% r.node_name | html %>" />
@@ -29,6 +38,7 @@
             <input type="submit" value="<% | loc %>Download<% END %>">
           </form>
           </span>
+          <% END %>
           <br/>
           <% IF s.$sip_method %>
           <span class="sniffer ip"><% varname = 'ip.src' %><% s.$varname | html %> &rarr; <% varname = 'ip.dst' %><% s.$varname %></span>
