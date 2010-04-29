@@ -4,7 +4,7 @@
 <% ELSIF not session.account %>
 <% | loc %>Please select an account.<% END %>
 <% ELSE %>
-  <% IF field.username && field.domain %>
+  <% IF field.username %>
     <fieldset>
       <legend><% | loc %>Endpoint details<% END %></legend>
       <form action="/provisioning/endpoint" method="post" accept-charset="utf-8" class="ui-widget validate">
