@@ -20,7 +20,7 @@
         <% END %>
           <span class="sniffer timestamp"><% varname = 'frame.time' %><% s.$varname | html %></span>
           <span class="sniffer callid">Call-ID: <% current_call_id | html %></a></span>
-          <% IF not seen.$call_id; SET seen.$call_id = 1 %>
+          <% IF not seen.$current_call_id; SET seen.$current_call_id = 1 %>
           <span>
           <form action="/trace" method="post" >
             <input type="hidden" name="node_name" value="<% r.node_name | html %>" />
