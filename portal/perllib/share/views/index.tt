@@ -4,13 +4,11 @@
   <div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;">
     <p>
     <span style="float: left; margin-right: 0.3em;" class="ui-icon ui-icon-alert"></span>
-    <% error | loc %>
+    <% error %>
     </p>
   </div>
-<% ELSE %>
-<% IF result %>
-  <div class="content"><% result | loc %></div>
-<% END %>
+<% ELSIF result %>
+  <div class="content"><% result %></div>
 <% END %>
 
 <% IF session.user_id %>
