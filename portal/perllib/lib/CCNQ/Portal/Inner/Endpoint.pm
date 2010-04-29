@@ -182,6 +182,12 @@ post '/provisioning/endpoint' => sub {
     return CCNQ::Portal::content;
   }
 
+  unless($params->{password} || $params->{ip}) {
+    var error => _("Either a password or an IP is required")_;
+    var template_name => 'api/endpoint';
+    return CCNQ::Portal::content;
+  }
+
   # Update the information in the API.
   my $cv1 = AE::cv;
   CCNQ::API::api_update('endpoint',$params,$cv1);
@@ -212,7 +218,6 @@ get '/provisioning/endpoint_location' => sub {
     domain        => $endpoint_data->{domain},
   };
 
-  # Update the information in the API.
   my $cv1 = AE::cv;
   CCNQ::API::api_query('location',$params,$cv1);
   my $r = CCNQ::AE::receive($cv1);
