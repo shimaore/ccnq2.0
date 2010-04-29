@@ -159,7 +159,7 @@ sub handle_account_sub {
   return CCNQ::Portal::content unless params->{account_sub};
   return CCNQ::Portal::content unless params->{account_sub} =~ /^[\w-]+$/;
 
-  my $params = CCNQ::Portal::Utils::neat({
+  my $params = CCNQ::Portal::Util::neat({
     account     => session('account'),
   }, qw(
     account_sub
