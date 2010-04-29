@@ -18,6 +18,7 @@ use strict; use warnings;
 use Dancer ':syntax';
 use CCNQ::Portal;
 use CCNQ::Portal::I18N;
+use CCNQ::Portal::Util;
 
 use CGI::Untaint;
 
@@ -75,11 +76,8 @@ sub update {
 
   if( $user_id eq CCNQ::Portal->current_session->user->id ||
       CCNQ::Portal->current_session->user->profile->is_admin ) {
-    # Name
-    $params->{name} = Encode::decode_utf8(params->{name});
-    $params->{name} =~ s/^\s+//g;
-    $params->{name} =~ s/\s+$//g;
-    $params->{name} =~ s/\s+/ /g;
+
+    CCNQ::Portal::Util::neat($params,qw(name));
 
     $billing_params->{name} = $params->{name};
 
