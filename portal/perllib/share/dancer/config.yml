@@ -2,6 +2,7 @@ layout: "main"
 logger: "syslog"
 session: 'memcached'
 memcached_servers: "127.0.0.1:11211"
+route_cache: 1
 template: template_toolkit
 engines:
   template_toolkit:
