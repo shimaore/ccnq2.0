@@ -135,6 +135,9 @@ div.row {
   border: 2px solid #999;
   background-color: white;
 }
+div.row a {
+  color: black;
+}
 div.row.endpoint {
   border-color: blue;
 }
