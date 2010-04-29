@@ -19,6 +19,7 @@ use utf8;
 use Dancer ':syntax';
 use CCNQ::Portal;
 use CCNQ::Portal::I18N;
+use CCNQ::Portal::Util;
 
 use CCNQ::AE;
 use CCNQ::API;
@@ -68,11 +69,10 @@ post '/billing/plan' => sub {
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_sysadmin;
 
-  return unless params->{name} =~ /\S/;
+  my $params = CCNQ::Portal::Util::neat({},qw(name));
+  return unless $params->{name} =~ /\S/;
 
-  my $name = params->{name};
-  $name =~ s/^\s+//; $name =~ s/^\s+$//; $name =~ s/\s+/ /g;
-  gather_field($name);
+  gather_field($params->{name});
 
   return CCNQ::Portal::content;
 };
@@ -105,27 +105,22 @@ post '/billing/plan/:name' => sub {
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_sysadmin;
 
-  return unless params->{name} =~ /\S/;
+  my $params = CCNQ::Portal::Util::neat({},qw(
+    name
+    currency
+    decimals
+    rating_steps
+  ));
 
-  my $name = params->{name};
-  $name =~ s/^\s+//; $name =~ s/^\s+$//; $name =~ s/\s+/ /g;
+  return unless $params->{name} =~ /\S/;
 
-  my $currency = params->{currency};
   # XXX validate currency
 
-  my $decimals = params->{decimals};
-
-  my $params = {
-    name          => $name,
-    currency      => $currency,
-    decimals      => $decimals,
-  };
-
   if(params->{rating_steps}) {
-    my $rating_steps = eval { decode_json(params->{rating_steps}) };
+    my $rating_steps = eval { decode_json($params->{rating_steps}) };
     if($@) {
       var error => _('Invalid JSON content')_;
-      my $fields = params;
+      my $fields = $params;
       $fields->{currencies} = \&gather_currencies;
       var field => $fields;
       var template_name => 'api/plan';

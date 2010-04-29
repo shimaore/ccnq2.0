@@ -26,6 +26,7 @@ require_ok( 'CCNQ::Portal::Locale' );
 
 require_ok( 'CCNQ::Portal' );
 require_ok( 'CCNQ::Portal::Render' );
+require_ok( 'CCNQ::Portal::Util' );
 
 require_ok( 'CCNQ::Portal::Auth' );
 require_ok( 'CCNQ::Portal::Session' );

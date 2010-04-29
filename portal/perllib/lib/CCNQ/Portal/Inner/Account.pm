@@ -18,6 +18,7 @@ use strict; use warnings;
 use Dancer ':syntax';
 use CCNQ::Portal;
 use CCNQ::Portal::I18N;
+use CCNQ::Portal::Util;
 
 use CCNQ::AE;
 use CCNQ::API;
@@ -114,10 +115,11 @@ post '/billing/account' => sub {
   return CCNQ::Portal::content unless session('account');
   return CCNQ::Portal::content unless session('account') =~ /^[\w-]+$/;
 
-  my $account = session('account');
-
-  my $name = params->{name};
-  $name =~ s/^\s+//; $name =~ s/^\s+$//; $name =~ s/\s+/ /g;
+  my $params = CCNQ::Portal::Util::neat({
+    account => session('account')
+  },qw(
+    name
+  ));
 
   # Update the information in the portal.
   # N/A -- no native account-related information is stored in the portal.
@@ -125,10 +127,7 @@ post '/billing/account' => sub {
 
   # Update the information in the API.
   my $cv1 = AE::cv;
-  CCNQ::API::api_update('account',{
-    account       => $account,
-    name          => $name,
-  },$cv1);
+  CCNQ::API::api_update('account',$params,$cv1);
   my $r = CCNQ::AE::receive($cv1);
   debug($r);
 
@@ -160,21 +159,17 @@ sub handle_account_sub {
   return CCNQ::Portal::content unless params->{account_sub};
   return CCNQ::Portal::content unless params->{account_sub} =~ /^[\w-]+$/;
 
-  my $account_sub = params->{account_sub};
-
-  my $name = params->{name};
-  $name =~ s/^\s+//; $name =~ s/^\s+$//; $name =~ s/\s+/ /g;
-
-  my $plan = params->{plan};
+  my $params = CCNQ::Portal::Utils::neat({
+    account     => session('account'),
+  }, qw(
+    account_sub
+    name
+    plan
+  ));
 
   # Update the information in the API.
   my $cv1 = AE::cv;
-  CCNQ::API::api_update('account_sub',{
-    account     => session('account'),
-    account_sub => $account_sub,
-    name => $name,
-    plan => $plan,
-  },$cv1);
+  CCNQ::API::api_update('account_sub',$params,$cv1);
   my $r = CCNQ::AE::receive($cv1);
 
   # Redirect to the request

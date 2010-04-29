@@ -18,6 +18,7 @@ use strict; use warnings;
 use Dancer ':syntax';
 use CCNQ::Portal;
 use CCNQ::Portal::I18N;
+use CCNQ::Portal::Util;
 
 use CCNQ::AE;
 use CCNQ::API;
@@ -62,16 +63,10 @@ sub submit_number {
     cluster       => $endpoint_data->{cluster},
   };
 
-  for my $p (qw(
+  CCNQ::Portal::Util::neat($params,qw(
     number
     inbound_username
-  )) {
-    my $v = params->{$p};
-    next unless defined $v;
-    $v =~ s/^\s+//; $v =~ s/^\s+$//; $v =~ s/\s+/ /g;
-    next if $v eq '';
-    $params->{$p} = $v;
-  }
+  ));
 
   # Update the information in the API.
   my $cv1 = AE::cv;

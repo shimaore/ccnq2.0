@@ -18,6 +18,8 @@ use strict; use warnings;
 use Dancer ':syntax';
 use CCNQ::Portal;
 use CCNQ::Portal::I18N;
+use CCNQ::Portal::Util;
+
 use CCNQ::API;
 use AnyEvent;
 
@@ -61,10 +63,13 @@ post '/manager/:request_type' => sub {
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_sysadmin;
 
-  my $request_type = params->{request_type};
+  my $params = CCNQ::Portal::Util::neat({},qw(
+    request_type
+    code
+  ));
 
   my $cv = AE::cv;
-  CCNQ::API::manager_update($request_type,params->{code},$cv);
+  CCNQ::API::manager_update($params->{request_type},$params->{code},$cv);
   my $res = $cv->recv;
 
   var result => $res;
