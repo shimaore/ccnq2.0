@@ -54,7 +54,7 @@ post '/trace' => sub {
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_admin;
 
-  my $params = CCNQ::Portal::Util({},qw(
+  my $params = CCNQ::Portal::Util::neat({},qw(
     node_name
     dump_packets
     call_id
