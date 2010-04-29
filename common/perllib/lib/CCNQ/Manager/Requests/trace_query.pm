@@ -25,6 +25,7 @@ sub run {
         map { $_ => $request->{$_} } qw( dump_packets call_id to_user from_user days_ago  )
       }
     },
+    CCNQ::Manager::request_completed(),
   );
 }
 
