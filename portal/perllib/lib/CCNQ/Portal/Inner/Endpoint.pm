@@ -111,7 +111,7 @@ sub clean_params {
 sub gather_field {
   my $params = clean_params();
 
-  my $account = $params->{account};
+  my $account = session('account');
 
   my $static_clusters  = clusters_for_static_endpoints;
   my $dynamic_clusters = clusters_for_dynamic_endpoints;
