@@ -35,7 +35,7 @@
         </p>
 
         <% IF field.is_static  %><% configure_with = ["ip","port","srv"] %><% END %>
-        <% IF field.is_dynamic %><% configure_with = ["password "]       %><% END %>
+        <% IF field.is_dynamic %><% configure_with = ["password"]       %><% END %>
         <% FOREACH p IN configure_with %>
         <p class="ui-helper-clearfix">
           <label for="<% p %>" class="left"><% | loc %><% p %><% END %></label>
