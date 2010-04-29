@@ -110,10 +110,9 @@ use constant default_content => sub {
 
   my $template_params = {
     %{$vars},
-    lh       => CCNQ::Portal->current_session->locale,
-    accounts => CCNQ::Portal::Outer::AccountSelection->available_accounts,
+    lh       => sub { CCNQ::Portal->current_session->locale },
+    accounts => sub { CCNQ::Portal::Outer::AccountSelection->available_accounts },
   };
-
 
   my $r = ccnq_template( $template_name => $template_params );
   return ref($r) ? $r : encode_utf8($r);
