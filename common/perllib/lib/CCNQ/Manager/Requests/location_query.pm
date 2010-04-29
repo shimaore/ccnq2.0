@@ -26,6 +26,7 @@ sub run {
           domain
       )}
     },
+    CCNQ::Manager::request_completed(),
   );
 }
 
