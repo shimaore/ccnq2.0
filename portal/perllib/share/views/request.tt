@@ -76,10 +76,11 @@
       <% END %>
     <% END %>
   <% END %>
+  <% IF r.request and do_refresh %>
+  <div><a href="/request/<% r.request | uri %>"><% | loc %>Refresh<% END %></a></div>
+  <script type="text/javascript">var t=setTimeout("location.reload()",4000);</script>
+  <%END%>
 <% END %>
-<% IF do_refresh %>
-<div><a href="/request/<% r.request | uri %>"><% | loc %>Refresh<% END %></a></div>
-<%END%>
 </div>
 <% ELSE %>
   <% | loc %>Please log in.<% END %>
