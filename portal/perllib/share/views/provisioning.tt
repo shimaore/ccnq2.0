@@ -5,7 +5,7 @@
   <div class="row <% profile %>">
     <span class="id <% profile %>"><a href="/provisioning/<% profile | uri %>/<% row.doc.$profile | uri %>"><% row.doc.$profile %></a></span>
     <% IF profile == 'endpoint' and row.doc.password %>
-      <a href="/provisioning/endpoint_location?endpoint=<% row.doc.endpoint | uri %>">Registration status<% END %>
+      <span class="registration"><a href="/provisioning/endpoint_location?endpoint=<% row.doc.endpoint | uri %>">Registration status</a></span>
     <% END %>
     <% FOREACH d IN row.doc; UNLESS d.key.match('^_|^request|^type') %>
       <div class="entry">
