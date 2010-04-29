@@ -71,7 +71,7 @@
           <div class="request"><% | loc r.request %>Request ID [_1] pending<% END %></div>
         <% END %>
       <% ELSE %>
-        <div class="request"><% | loc %>Request pending<% END %> <img src="/images/tango-icon-theme/22x22/animations/process-working.png"></div>
+        <div class="request"><% | loc %>Request pending<% END %></div>
         <% SET do_refresh = 1 %>
       <% END %>
     <% END %>
