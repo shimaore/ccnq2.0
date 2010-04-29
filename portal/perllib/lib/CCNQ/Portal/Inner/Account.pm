@@ -69,7 +69,7 @@ sub gather_field {
     account => $account,
     portal_users => $portal_users,
     account_subs => $account_subs,
-    plans        => [CCNQ::Portal::Inner::Plan::gather_plans()],
+    plans        => \&CCNQ::Portal::Inner::Plan::gather_plans,
   };
 }
 
@@ -90,7 +90,7 @@ sub gather_field_sub {
     plan    => $account_sub_billing_data->{plan},
     account => $account,
     account_sub => $account_sub,
-    plans   => [CCNQ::Portal::Inner::Plan::gather_plans()],
+    plans   => \&CCNQ::Portal::Inner::Plan::gather_plans,
   };
 }
 

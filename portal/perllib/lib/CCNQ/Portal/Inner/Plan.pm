@@ -30,7 +30,8 @@ sub gather_plans {
   my $cv = AE::cv;
   CCNQ::API::billing_view('report','plans','',$cv);
   my $r = CCNQ::AE::receive($cv) || { rows => [] };
-  return map { $_->{doc} } @{$r->{rows}};
+  my @plans = map { $_->{doc} } @{$r->{rows}};
+  return [@plans];
 }
 
 sub gather_currencies {
@@ -51,8 +52,8 @@ sub gather_field {
     currency      => $plan_data->{currency},
     decimals      => $plan_data->{decimals},
 
-    plans         => [gather_plans()],
-    currencies    => gather_currencies(),
+    plans         => \&gather_plans,
+    currencies    => \&gather_currencies,
   };
 
   if($plan_data->{rating_steps}) {
@@ -80,8 +81,8 @@ get '/billing/plan' => sub {
   return unless CCNQ::Portal->current_session->user;
 
   var field => {
-    plans         => [gather_plans()],
-    currencies    => [gather_currencies()],
+    plans         => \&gather_plans,
+    currencies    => \&gather_currencies,
   };
   var template_name => 'api/plan';
   return CCNQ::Portal->site->default_content->();
@@ -124,7 +125,7 @@ post '/billing/plan/:name' => sub {
     if($@) {
       var error => _('Invalid JSON content')_;
       my $fields = params;
-      $fields->{currencies} = gather_currencies();
+      $fields->{currencies} = \&gather_currencies;
       var field => $fields;
       var template_name => 'api/plan';
       return CCNQ::Portal->site->default_content->();
