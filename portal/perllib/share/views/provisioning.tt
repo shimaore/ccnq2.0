@@ -4,6 +4,9 @@
 <% FOREACH row IN result.rows; SET profile = row.doc.profile %>
   <div class="row <% profile %>">
     <span class="id <% profile %>"><a href="/provisioning/<% profile | uri %>/<% row.doc.$profile | uri %>"><% row.doc.$profile %></a></span>
+    <% IF profile == 'endpoint' and and row.doc.password %>
+      <a href="/provisioning/endpoint_location?endpoint=<% row.doc.endpoint | uri %>">Registration status<% END %>
+    <% END %>
     <% FOREACH d IN row.doc; UNLESS d.key.match('^_|^request|^type') %>
       <div class="entry">
         <span class="key"><% d.key %></span>

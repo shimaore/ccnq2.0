@@ -192,4 +192,34 @@ post '/provisioning/endpoint' => sub {
   redirect '/request/'.$r->{request};
 };
 
+get '/provisioning/endpoint_location' => sub {
+  var template_name => 'api/endpoint';
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+  # This is how we create new endpoints.
+  return CCNQ::Portal::content unless session('account');
+  return CCNQ::Portal::content unless session('account') =~ /^[\w-]+$/;
+
+  my $account = session('account');
+
+  my $endpoint = params->{endpoint};
+  return CCNQ::Portal::content unless $endpoint;
+
+  my $endpoint_data = get_endpoint($account,$endpoint);
+
+  my $params = {
+    cluster_name  => $endpoint_data->{cluster},
+    username      => $endpoint_data->{username},
+    domain        => $endpoint_data->{domain},
+  };
+
+  # Update the information in the API.
+  my $cv1 = AE::cv;
+  CCNQ::API::api_query('location',$params,$cv1);
+  my $r = CCNQ::AE::receive($cv1);
+  debug($r);
+
+  # Redirect to the request
+  redirect '/request/'.$r->{request};
+};
+
 'CCNQ::Portal::Inner::Account';
