@@ -75,7 +75,7 @@ sub clean_params {
     account       => session('account'),
   };
 
-  CCNQ::Portal::Util::neat($params,(
+  CCNQ::Portal::Util::neat($params,qw(
     cluster
 
     account
