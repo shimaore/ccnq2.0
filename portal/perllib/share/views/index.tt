@@ -4,6 +4,7 @@
   <div class="content"><% result %></div>
 <% END %>
 
+<% local_index %>
 <% IF session.user_id %>
 <!-- Inner -->
 <% IF session.account %>
