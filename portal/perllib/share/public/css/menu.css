@@ -41,7 +41,8 @@
 
 #nav ul ul{
 	top:auto;
-}	
+	z-index: 2;
+}
 
 #nav li ul ul {
     left:12em;
