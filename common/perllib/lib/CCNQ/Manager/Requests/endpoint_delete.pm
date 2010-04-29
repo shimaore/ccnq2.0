@@ -24,8 +24,8 @@ sub run {
   $request->{endpoint} = join('@',$request->{username},$request->{domain});
   # Return list of activities required to complete this request.
   return (
-    CCNQ::Activities::Provisioning::delete_endpoint($request),
     CCNQ::Activities::Proxy::endpoint_delete($request),
+    CCNQ::Activities::Provisioning::delete_endpoint($request),
     CCNQ::Activities::Billing::partial_day($request,'endpoint_delete'),
     CCNQ::Manager::request_completed(),
   );
