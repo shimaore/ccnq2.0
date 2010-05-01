@@ -158,6 +158,10 @@ get '/billing/account_sub' => sub {
 
   if( params->{account_sub} && params->{account_sub} =~ /^[\w-]+$/ ) {
     gather_field_sub(params->{account_sub});
+  } else {
+    var field => {
+      plans   => \&CCNQ::Portal::Inner::Plan::gather_plans,
+    }
   }
 
   return CCNQ::Portal::content;
