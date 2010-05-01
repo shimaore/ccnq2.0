@@ -25,7 +25,7 @@
 
 <!-- national number -->
 <extension name="cleanup-called-1">
-  <condition field="destination_number" expression="^\+?1([2-9][0-9]{9})$">
+  <condition field="destination_number" expression="^\+?1?([2-9][0-9]{9})$">
     <action application="set" data="ccnq_to_e164=1$1"/>
     <action application="transfer" data="call"/>
   </condition>
