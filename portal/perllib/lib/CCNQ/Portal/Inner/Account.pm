@@ -156,8 +156,6 @@ sub handle_account_sub {
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_admin;
   return CCNQ::Portal::content unless session('account');
   return CCNQ::Portal::content unless session('account') =~ /^[\w-]+$/;
-  return CCNQ::Portal::content unless params->{account_sub};
-  return CCNQ::Portal::content unless params->{account_sub} =~ /^[\w-]+$/;
 
   my $params = CCNQ::Portal::Util::neat({
     account     => session('account'),
@@ -166,6 +164,12 @@ sub handle_account_sub {
     name
     plan
   ));
+
+  return CCNQ::Portal::content unless params->{account_sub};
+  return CCNQ::Portal::content unless params->{account_sub} =~ /^[\w-]+$/;
+
+  return CCNQ::Portal::content unless params->{name};
+  return CCNQ::Portal::content unless params->{plan};
 
   # Update the information in the API.
   my $cv1 = AE::cv;
