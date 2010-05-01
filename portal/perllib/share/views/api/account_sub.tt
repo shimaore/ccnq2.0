@@ -9,7 +9,7 @@
     <% END %>
       <p class="ui-helper-clearfix">
         <label for="account" class="left"><% | loc %>Account number:<% END %></label>
-        <span id="account"><% field.account | html %></span>
+        <span id="account"><% session.account | html %></span>
       </p>
       <p class="ui-helper-clearfix">
         <label for="account_sub" class="left"><% | loc %>Account sub number:<% END %></label>
