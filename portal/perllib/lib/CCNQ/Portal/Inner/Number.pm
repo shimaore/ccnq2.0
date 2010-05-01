@@ -41,6 +41,11 @@ sub default {
   return CCNQ::Portal::content;
 }
 
+sub get_default {
+  var template_name => 'api/number';
+  default();
+}
+
 sub submit_number {
   my ($api_name) = @_;
 
@@ -77,6 +82,20 @@ sub submit_number {
 
   # Redirect to the request
   redirect '/request/'.$r->{request};
+}
+
+sub submit_default {
+  my ($category_to_route) = @_;
+
+  var template_name => 'api/number';
+
+  exists(vars->{cluster_to_profiles}->{params->{cluster}}) and
+  exists(vars->{cluster_to_profiles}->{params->{cluster}}->{params->{inbound_username}}) and
+  exists(vars->{category_to_criteria}->{params->{category}})
+  # and category_to_criteria->{params->{category}}->($endpoint)
+  or return CCNQ::Portal::content;
+
+  CCNQ::Portal::Inner::Number::submit_number($category_to_route->{params->{category}});
 }
 
 1;

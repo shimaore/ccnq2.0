@@ -1,0 +1,41 @@
+<% USE loc %>
+<% SET category = params.category %>
+<% SET cluster  = params.cluster  %>
+<% IF category AND cluster %>
+  <fieldset>
+    <% SET select_endpoints = category_to_criteria.$category %>
+    <% SET profiles = cluster_to_profiles.$cluster %>
+    <legend><% | loc category %>Route [_1] number<% END %></legend>
+    <form action="/sotel/number/<% cluster %>/<% category %>" method="post" accept-charset="utf-8" class="ui-widget validate">
+      <p class="ui-helper-clearfix">
+        <label for="number" class="left"><% | loc %>Number:<% END %></label>
+        <input type="text" name="number" value="<% field.number | html %>" class="required digits"/>
+      </p>
+      <p class="ui-helper-clearfix">
+        <label for="endpoint" class="left"><% | loc %>Endpoint:<% END %></label>
+        <select name="endpoint" class="required">
+          <% FOREACH endpoint IN field.endpoints; IF endpoint.cluster == cluster AND select_endpoints(endpoint) %>
+            <% IF endpoint.endpoint == field.endpoint %>
+              <option value="<% endpoint.endpoint | html %>" selected><% endpoint.username | html %> (<% endpoint.ip | html %>)</option>
+            <% ELSE %>
+              <option value="<% endpoint.endpoint | html %>"><% endpoint.username | html %> (<% endpoint.ip | html %>)</option>
+            <% END %>
+          <% ELSE %>
+            <!-- Skipped <% endpoint.endpoint | html %> because <% endpoint.cluster | html %> vs <% cluster | html %>, <% select_endpoints(endpoint) %>  -->
+          <% END; END %>
+        </select>
+      </p>
+      <p class="ui-helper-clearfix">
+        <label for="inbound_username" class="left"><% | loc %>Profile:<% END %></label>
+        <select name="inbound_username" class="required" >
+          <% FOREACH o IN profiles %>
+          <option value="<% o.key %>" <% IF field.inbound_username == o.key %>selected<% END %>><% | loc %><% o.value %><% END%>
+          <% END %>
+        </select>
+      </p>
+      <p class="ui-helper-clearfix submit">
+      <input type="submit" value="<% | loc %>Save<% END %>" />
+      </p>
+    </form>
+  </fieldset>
+<% END %>
