@@ -65,11 +65,10 @@ post '/manager/:request_type' => sub {
 
   my $params = CCNQ::Portal::Util::neat({},qw(
     request_type
-    code
   ));
 
   my $cv = AE::cv;
-  CCNQ::API::manager_update($params->{request_type},$params->{code},$cv);
+  CCNQ::API::manager_update($params->{request_type},params->{code},$cv);
   my $res = $cv->recv;
 
   var result => $res;
