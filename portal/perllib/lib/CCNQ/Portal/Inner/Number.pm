@@ -60,6 +60,7 @@ sub submit_number {
     endpoint      => $endpoint_data->{endpoint},
     endpoint_ip   => $endpoint_data->{ip},
     username      => $endpoint_data->{username},
+    username_domain => $endpoint_data->{domain},
     cluster       => $endpoint_data->{cluster},
   };
 
