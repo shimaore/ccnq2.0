@@ -97,22 +97,20 @@ use constant default_content => sub {
 
   my $template_name = vars->{template_name} || DEFAULT_TEMPLATE_NAME;
 
-  my $vars = vars;
+  my $template_params = vars;
 
   if(CCNQ::Portal->current_session->user) {
-    $vars->{user_name} =
+    $template_params->{user_name} =
       CCNQ::Portal->current_session->user->profile->name;
-    $vars->{is_admin} =
+    $template_params->{is_admin} =
       CCNQ::Portal->current_session->user->profile->{is_admin} || 0;
-    $vars->{is_sysadmin} =
+    $template_params->{is_sysadmin} =
       CCNQ::Portal->current_session->user->profile->{is_sysadmin} || 0;
+    $template_params->{accounts} =
+      sub { CCNQ::Portal::Outer::AccountSelection->available_accounts },
   }
 
-  my $template_params = {
-    %{$vars},
-    lh       => sub { CCNQ::Portal->current_session->locale },
-    accounts => sub { CCNQ::Portal::Outer::AccountSelection->available_accounts },
-  };
+  $template_params->{lh} = sub { CCNQ::Portal->current_session->locale };
 
   my $r = ccnq_template( $template_name => $template_params );
   return ref($r) ? $r : encode_utf8($r);
