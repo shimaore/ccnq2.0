@@ -150,6 +150,19 @@ get '/billing/account_sub/:account_sub' => sub {
   return CCNQ::Portal::content;
 };
 
+get '/billing/account_sub' => sub {
+  var template_name => 'api/account_sub';
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+  return CCNQ::Portal::content unless session('account');
+  return CCNQ::Portal::content unless session('account') =~ /^[\w-]+$/;
+
+  if( params->{account_sub} && params->{account_sub} =~ /^[\w-]+$/ ) {
+    gather_field_sub(params->{account_sub});
+  }
+
+  return CCNQ::Portal::content;
+};
+
 sub handle_account_sub {
   var template_name => 'api/account_sub';
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
