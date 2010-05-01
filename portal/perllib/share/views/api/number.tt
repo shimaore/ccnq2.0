@@ -3,7 +3,6 @@
 <% SET cluster  = params.cluster  %>
 <% IF category AND cluster AND category_to_criteria AND cluster_to_profiles %>
   <fieldset>
-    <% SET select_endpoints = category_to_criteria.$category %>
     <% SET profiles = cluster_to_profiles.$cluster %>
     <legend><% | loc category %>Route [_1] number<% END %></legend>
     <form action="/sotel/number/<% cluster %>/<% category %>" method="post" accept-charset="utf-8" class="ui-widget validate">
@@ -20,8 +19,6 @@
             <% ELSE %>
               <option value="<% endpoint.endpoint | html %>"><% endpoint.username | html %> (<% endpoint.ip | html %>)</option>
             <% END %>
-          <% ELSE %>
-            <!-- Skipped <% endpoint.endpoint | html %> because <% endpoint.cluster | html %> vs <% cluster | html %>, <% select_endpoints(endpoint) | html %>  -->
           <% END; END %>
         </select>
       </p>
