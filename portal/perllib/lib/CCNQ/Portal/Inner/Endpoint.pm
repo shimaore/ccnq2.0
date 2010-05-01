@@ -101,7 +101,7 @@ sub clean_params {
   ));
 }
 
-use constant password_charset => "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-"
+use constant password_charset => "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-";
 use constant password_charset_length => length(password_charset);
 
 sub _random_password {
