@@ -33,11 +33,6 @@
     </fieldset>
     <fieldset>
       <legend><% | loc %>Account subs<% END %></legend>
-      <ul>
-        <% FOREACH account_sub IN field.account_subs %>
-        <li><a href="/billing/account_sub/<% account_sub.account_sub | uri %>"><% account_sub.name %></a></li>
-        <% END %>
-      </ul>
       <form id="create_account_sub_form" action="/billing/account_sub" method="post" accept-charset="utf-8" class="ui-widget validate">
         <p class="ui-helper-clearfix">
           <label for="account" class="left"><% | loc %>Account number:<% END %></label>
@@ -68,6 +63,11 @@
         <input id="create_account_sub_submit" type="submit" value="<% | loc %>Create<% END %>" />
         </p>
       </form>
+      <ul>
+        <% FOREACH account_sub IN field.account_subs %>
+        <li><a href="/billing/account_sub/<% account_sub.account_sub | uri %>"><% account_sub.name %></a></li>
+        <% END %>
+      </ul>
     </fieldset>
   </fieldset>
 <% ELSE %>
