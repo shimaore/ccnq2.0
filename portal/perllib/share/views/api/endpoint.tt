@@ -34,12 +34,18 @@
           </select>
         </p>
 
-        <% IF field.is_static  %><% configure_with = ["ip","port","srv"] %><% END %>
-        <% IF field.is_dynamic %><% configure_with = ["password"]       %><% END %>
+        <% IF field.is_static  %><% configure_with = ["ip","port","srv"] %>
         <% FOREACH p IN configure_with %>
         <p class="ui-helper-clearfix">
           <label for="<% p %>" class="left"><% | loc %><% p %><% END %></label>
           <input type="text" name="<% p %>" value="<% field.$p | html %>" />
+        </p>
+        <% END %>
+        <% END %>
+        <% IF field.is_dynamic %>
+        <p class="ui-helper-clearfix">
+          <label for="password" class="left"><% | loc %>Password<% END %></label>
+          <input type="text" name="password" value="<% (field.$p or random_password(16)) | html %>" />
         </p>
         <% END %>
         
