@@ -119,6 +119,7 @@ sub gather_field {
   if($endpoint) {
     $endpoint_data = get_endpoint($account,$endpoint);
   } else {
+    $params->{domain} ||= CCNQ::Install::cluster_fqdn($params->{cluster});
     $endpoint_data = $params;
   }
 
@@ -142,7 +143,6 @@ sub endpoint_default {
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
   return CCNQ::Portal::content unless session('account');
   return CCNQ::Portal::content unless session('account') =~ /^[\w-]+$/;
-  $params->{domain} ||= CCNQ::Install::cluster_fqdn($params->{cluster});
   gather_field();
   return CCNQ::Portal::content;
 }
