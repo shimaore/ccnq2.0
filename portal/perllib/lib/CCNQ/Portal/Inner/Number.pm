@@ -34,6 +34,17 @@ sub default {
 
   my $endpoints = CCNQ::Portal::Inner::Endpoint::endpoints_for($account);
 
+  if( params->{category} and
+      vars->{category_to_criteria} and
+      vars->{category_to_criteria}->{params->{category}} )
+  {
+    my $selector = vars->{category_to_criteria}->{params->{category}};
+    my @remove = grep { ! $selector->($endpoints->{$_}) } keys %$endpoints;
+    delete @$endpoints {@remove}; # hash splice
+  }
+  # and category_to_criteria->{params->{category}}->($endpoint)
+
+
   var field => {
     endpoints => $endpoints,
   };
