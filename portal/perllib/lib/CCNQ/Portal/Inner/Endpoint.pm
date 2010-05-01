@@ -128,7 +128,7 @@ sub gather_field {
   if($endpoint) {
     $endpoint_data = get_endpoint($account,$endpoint);
   } else {
-    $params->{domain} ||= CCNQ::Install::cluster_fqdn($params->{cluster});
+    $params->{domain} ||= CCNQ::Install::cluster_fqdn($params->{cluster}) if $params->{cluster};
     $endpoint_data = $params;
   }
 
