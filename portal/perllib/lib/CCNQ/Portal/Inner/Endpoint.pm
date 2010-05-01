@@ -129,6 +129,7 @@ sub gather_field {
     $endpoint_data = get_endpoint($account,$endpoint);
   } else {
     $params->{domain} ||= CCNQ::Install::cluster_fqdn($params->{cluster}) if $params->{cluster};
+    $params->{password} ||= _random_password(16);
     $endpoint_data = $params;
   }
 
@@ -145,7 +146,6 @@ sub gather_field {
     is_dynamic       => $is_dynamic,
     static_clusters  => $static_clusters,
     dynamic_clusters => $dynamic_clusters,
-    random_password  => \&_random_password,
   };
 }
 

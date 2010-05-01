@@ -45,7 +45,7 @@
         <% IF field.is_dynamic %>
         <p class="ui-helper-clearfix">
           <label for="password" class="left"><% | loc %>Password<% END %></label>
-          <input type="text" name="password" value="<% (field.$p or random_password(16)) | html %>" />
+          <input type="text" name="password" value="<% field.password | html %>" />
         </p>
         <% END %>
         
