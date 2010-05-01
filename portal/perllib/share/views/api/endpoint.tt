@@ -88,6 +88,7 @@
       </form>
     </fieldset>
   <% ELSE %>
+  <% IF create_generic_endpoint %>
   <fieldset>
     <legend><% | loc %>Create endpoint<% END %></legend>
     <form id="create_endpoint" action="/provisioning/endpoint/select" method="post" accept-charset="utf-8" class="ui-widget validate">
@@ -118,6 +119,7 @@
       </p>
     </form>
   </fieldset>
+  <% END %>
   <% IF field.endpoints && field.endpoints.size %>
   <fieldset>
     <legend><% | loc %>Modify endpoint<% END %></legend>
