@@ -39,8 +39,7 @@ sub default {
       vars->{category_to_criteria}->{params->{category}} )
   {
     my $selector = vars->{category_to_criteria}->{params->{category}};
-    my @remove = grep { ! $selector->($endpoints->{$_}) } keys %$endpoints;
-    delete @$endpoints {@remove}; # hash splice
+    $endpoints = [ grep { $selector->($_) } @$endpoints ];
   }
   # and category_to_criteria->{params->{category}}->($endpoint)
 
