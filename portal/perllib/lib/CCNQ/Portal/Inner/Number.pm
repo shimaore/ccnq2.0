@@ -39,7 +39,7 @@ sub default {
       vars->{category_to_criteria}->{params->{category}} )
   {
     my $selector = vars->{category_to_criteria}->{params->{category}};
-    $endpoints = [ grep { $selector->($_) } @$endpoints ];
+    $endpoints = [ grep { $_ && $selector->($_) } @$endpoints ];
   }
   # and category_to_criteria->{params->{category}}->($endpoint)
 
