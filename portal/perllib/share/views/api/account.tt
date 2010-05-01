@@ -12,7 +12,7 @@
         <input type="text" name="name" value="<% field.name | html %>" class="required"/>
       </p>
       <p class="ui-helper-clearfix submit">
-      <input type="submit" value="<% | loc %>Save<% END %>" />
+      <input id="account_form_submit" type="submit" value="<% | loc %>Save<% END %>" />
       </p>
     </form>
     <fieldset>
@@ -38,7 +38,7 @@
         <li><a href="/billing/account_sub/<% account_sub.account_sub | uri %>"><% account_sub.name %></a></li>
         <% END %>
       </ul>
-      <form action="/billing/account_sub" method="post" accept-charset="utf-8" class="ui-widget validate">
+      <form id="create_account_sub_form" action="/billing/account_sub" method="post" accept-charset="utf-8" class="ui-widget validate">
         <p class="ui-helper-clearfix">
           <label for="account" class="left"><% | loc %>Account number:<% END %></label>
           <span id="account"><% field.account | html %></span>
@@ -65,7 +65,7 @@
           </select>
         </p>
         <p class="ui-helper-clearfix submit">
-        <input type="submit" value="<% | loc %>Create<% END %>" />
+        <input id="create_account_sub_submit" type="submit" value="<% | loc %>Create<% END %>" />
         </p>
       </form>
     </fieldset>
