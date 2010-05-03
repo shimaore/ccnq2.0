@@ -48,9 +48,9 @@ sub default {
 
   var field => {
     endpoints => $endpoints,
-    category  => $category,
-    cluster   => $cluster,
   };
+  var category => $category;
+  var cluster  => $cluster;
 
   return CCNQ::Portal::content;
 }
