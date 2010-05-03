@@ -108,8 +108,8 @@ EOT
   # Install OpenSIPS (note: we provide "amd64" and "i386"-type Debian packages only)
   cd ~/src
   sudo aptitude install libmysqlclient15off mysql-client
-  wget http://opensource.sotelips.net/~stephane/osip-1.5.3-tls/opensips_1.5.3-0_amd64.deb
-  wget http://opensource.sotelips.net/~stephane/osip-1.5.3-tls/opensips-mysql-module_1.5.3-0_amd64.deb
+  wget http://opensource.sotelips.net/~stephane/amd64/opensips_1.5.3-0_amd64.deb
+  wget http://opensource.sotelips.net/~stephane/amd64/opensips-mysql-module_1.5.3-0_amd64.deb
   sudo dpkg -i opensips_1.5.3-0_amd64.deb
   sudo dpkg -i opensips-mysql-module_1.5.3-0_amd64.deb
 
@@ -125,8 +125,8 @@ EOT
   # Versions required for mediaproxy-common include python-application (>= 1.1.5) and python-gnutls (>= 1.1.8) which are not in Debian/Lenny
   sudo aptitude install python-application/testing python-gnutls/testing
   cd ~/src
-  wget http://opensource.sotelips.net/~stephane/mp-2.3.8/mediaproxy-common_2.3.8_amd64.deb
-  wget http://opensource.sotelips.net/~stephane/mp-2.3.8/mediaproxy-dispatcher_2.3.8_all.deb
+  wget http://opensource.sotelips.net/~stephane/amd64/mediaproxy-common_2.3.8_amd64.deb
+  wget http://opensource.sotelips.net/~stephane/amd64/mediaproxy-dispatcher_2.3.8_all.deb
   sudo dpkg -i mediaproxy-common_2.3.8_amd64.deb
   sudo dpkg -i mediaproxy-dispatcher_2.3.8_all.deb
 
@@ -142,8 +142,8 @@ EOT
   # Versions required for mediaproxy-common include python-application (>= 1.1.5) and python-gnutls (>= 1.1.8) which are not in Debian/Lenny
   sudo aptitude install python-application/testing python-gnutls/testing
   cd ~/src
-  wget http://opensource.sotelips.net/~stephane/mp-2.3.8/mediaproxy-common_2.3.8_amd64.deb
-  wget http://opensource.sotelips.net/~stephane/mp-2.3.8/mediaproxy-relay_2.3.8_all.deb
+  wget http://opensource.sotelips.net/~stephane/amd64/mediaproxy-common_2.3.8_amd64.deb
+  wget http://opensource.sotelips.net/~stephane/amd64/mediaproxy-relay_2.3.8_all.deb
   sudo dpkg -i mediaproxy-common_2.3.8_amd64.deb
   sudo dpkg -i mediaproxy-relay_2.3.8_all.deb
 
@@ -155,12 +155,12 @@ EOT
   sudo aptitude -y install libcrypt-ssleay-perl  # for CNAM
 
   cd ~/src
-  wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch_1.0.4-1_amd64.deb
-  wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch-lang-en_1.0.4-1_amd64.deb
-  wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch-perl_1.0.4-1_amd64.deb
-  # wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch-lua_1.0.4-1_amd64.deb
-  # wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch-sounds-en-us-callie-8000_1.0.4-1_amd64.deb
-  # wget http://opensource.sotelips.net/~stephane/fs-1.0.4/freeswitch-codec-passthru-g729_1.0.4-1_amd64.deb
+  wget http://opensource.sotelips.net/~stephane/amd64/freeswitch_1.0.4-1_amd64.deb
+  wget http://opensource.sotelips.net/~stephane/amd64/freeswitch-lang-en_1.0.4-1_amd64.deb
+  wget http://opensource.sotelips.net/~stephane/amd64/freeswitch-perl_1.0.4-1_amd64.deb
+  # wget http://opensource.sotelips.net/~stephane/amd64/freeswitch-lua_1.0.4-1_amd64.deb
+  # wget http://opensource.sotelips.net/~stephane/amd64/freeswitch-sounds-en-us-callie-8000_1.0.4-1_amd64.deb
+  # wget http://opensource.sotelips.net/~stephane/amd64/freeswitch-codec-passthru-g729_1.0.4-1_amd64.deb
 
 
   sudo dpkg -i freeswitch_1.0.4-1_amd64.deb

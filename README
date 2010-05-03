@@ -16,7 +16,7 @@ MediaProxy          2.3.8       mediaproxy.ag-projects.com
 FreeSwitch          1.0.4       www.freeswitch.org
 
 Pre-built Debian packages for some of the components are made available:
-  http://opensource.sotelips.net/
+  http://opensource.sotelips.net/~stephane/
 
 
 This work is supported by Sotel Systems LLC, http://www.sotelsystems.com
