@@ -36,7 +36,7 @@ sub default {
   my $endpoints = CCNQ::Portal::Inner::Endpoint::endpoints_for($account);
 
   my $category = params->{category};
-  my $cluste   = params->{cluster};
+  my $cluster  = params->{cluster};
 
   if( $category and
       $category_to_criteria and
