@@ -8,16 +8,44 @@ This document is up-to-date as of 2010-04-09.
 provisioning
   - used to store copy of the latest manager request for a given entity
   - entity types managed at this time include: number, endpoint, location
-  - distributed / replicatable
+  - distributed / replicatable: a local copy of the database is used
 
 billing
   - used to store billing-related meta-data
-  - distributed / replicatable
+  - distributed / replicatable: a local copy of the database is used
 
 cdr
   - used to store call details
-  - can be distributed
+  - can be distributed, but is currently unique (direct remote CouchDB access)
+    (needs aggregation code to become distributable)
 
 bucket
   - store values (but not meta-data) for buckets
-  - must be unique
+  - must be unique (direct remote CouchDB access)
+
+
+
+Usage examples:
+
+* The [realtime_estimator] process uses (a local copy of) the billing database,
+  and the (global) bucket database, to compute information about a call,
+
+    [realtime_estimator]  <------  billing db (local copy)
+            ^
+            |
+        bucket db
+
+* The [rating] process uses (a local copy of) the billing database, and the
+  (global) bucket database, to transform an unrated CBEF into a rated CDR,
+  and send it to the (global) cdr database.
+
+    billing_entry()  --> [rating]   <----  billing db (local copy)
+                            |
+                            v
+                           cdr db
+
+* The [provisioning_update] or [billing_update] process updates many local
+  copies of the respective databases, via the XMPP bus.
+
+   [provisioning_update] --> XMPP bus -->  provisioning db
+                                      -->  provisioning db
