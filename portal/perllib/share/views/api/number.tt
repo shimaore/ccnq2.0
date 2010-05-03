@@ -1,4 +1,6 @@
 <% USE loc %>
+<% SET category = params.category %>
+<% SET cluster  = params.cluster  %>
 <% IF category AND cluster AND cluster_to_profiles %>
   <fieldset>
     <% SET profiles = cluster_to_profiles.$cluster %>
