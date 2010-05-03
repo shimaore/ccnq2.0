@@ -4,6 +4,7 @@
 <% FOREACH row IN result.rows %>
   <% SET r = row.doc %>
   <% IF r.status %>
+    <% IF r.status == 'failed' %><% SET do_not_refresh = 1 %><% END %>
     <div class="status <% r.status %>">Node <% r.response.from %>: <% r.status %> [<% r.response.error.join(", ") %>]</div>
     <% IF r.action == "trace" && r.response.result.rows %>
       <% last_call_id = '' %>
@@ -70,7 +71,9 @@
         <% ELSE %>
           <div class="request"><% | loc %>Request pending<% END %></div>
           <div><a href="/request/<% r.request | uri %>"><% | loc %>Refresh<% END %></a></div>
+          <% IF not do_not_refresh %>
           <script type="text/javascript">var t=setTimeout("location.reload()",4000);</script>
+          <% END %>
         <% END %>
       <% ELSE %>
         <div class="request"><% | loc %>Pending<% END %></div>
