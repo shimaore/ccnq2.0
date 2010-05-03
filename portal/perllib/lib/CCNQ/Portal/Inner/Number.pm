@@ -35,16 +35,21 @@ sub default {
 
   my $endpoints = CCNQ::Portal::Inner::Endpoint::endpoints_for($account);
 
-  if( params->{category} and
+  my $category = params->{category};
+  my $cluste   = params->{cluster};
+
+  if( $category and
       $category_to_criteria and
-      $category_to_criteria->{params->{category}} )
+      $category_to_criteria->{$category} )
   {
-    my $selector = $category_to_criteria->{params->{category}};
+    my $selector = $category_to_criteria->{$category};
     $endpoints = [ grep { $selector->($_) } @$endpoints ];
   }
 
   var field => {
     endpoints => $endpoints,
+    category  => $category,
+    cluster   => $cluster,
   };
 
   return CCNQ::Portal::content;
