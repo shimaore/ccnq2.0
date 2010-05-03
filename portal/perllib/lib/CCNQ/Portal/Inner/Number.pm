@@ -27,6 +27,7 @@ use CCNQ::Portal;
 use CCNQ::Portal::Inner::Endpoint;
 
 sub default {
+  my ($category_to_criteria) = @_;
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
   return CCNQ::Portal::content unless session('account');
 
@@ -35,14 +36,12 @@ sub default {
   my $endpoints = CCNQ::Portal::Inner::Endpoint::endpoints_for($account);
 
   if( params->{category} and
-      vars->{category_to_criteria} and
-      vars->{category_to_criteria}->{params->{category}} )
+      $category_to_criteria and
+      $category_to_criteria->{params->{category}} )
   {
-    my $selector = vars->{category_to_criteria}->{params->{category}};
-    $endpoints = [ grep { $_ && $selector->($_) } @$endpoints ];
+    my $selector = $category_to_criteria->{params->{category}};
+    $endpoints = [ grep { $selector->($_) } @$endpoints ];
   }
-  # and category_to_criteria->{params->{category}}->($endpoint)
-
 
   var field => {
     endpoints => $endpoints,
@@ -53,7 +52,7 @@ sub default {
 
 sub get_default {
   var template_name => 'api/number';
-  default();
+  default(@_);
 }
 
 sub submit_number {
