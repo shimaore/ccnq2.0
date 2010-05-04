@@ -17,6 +17,8 @@ use strict; use warnings;
 
 use base 'CCNQ::Rating::Event';
 
+use Math::BigFloat;
+
 sub new {
   my $this = shift;
   my $class = ref($this) || $this;
@@ -46,6 +48,7 @@ sub compute_taxes {
   # Note: this is applied to the total cost, we don't
   #       know (yet) how to differentiate tax rates on
   #       duration_cost vs count_cost.
+  $self->{tax_amount} = Math::BigFloat->bzero;
   for my $tax (@{$self->tax || []}) {
     for my $jurisdiction (keys %{$tax}) {
       my $rate = $tax->{$jurisdiction};
