@@ -175,12 +175,7 @@ sub _response {
               # Actually not an error, most often times we get "Message queued for activity ..." as a reply.
               error("Submission failed (in response): $res->[1] for activity ID=$next_activity_id");
             }
-            $db->save_doc($next_activity)->cb(sub{
-              CCNQ::AE::receive(@_);
-              debug("Next activity ID=$next_activity_id submitted.");
-              $rcv->send('cancel');
-              return;
-            });
+            $rcv->send('cancel');
           });
         }
       });
