@@ -131,7 +131,7 @@ sub submit_number {
   my $number = $params->{number};
   return CCNQ::Portal::content unless $number;
 
-  _update_number($account,$number,$params);
+  return _update_number($account,$number,$params);
 }
 
 sub submit_default {
@@ -145,7 +145,7 @@ sub submit_default {
   # and category_to_criteria->{params->{category}}->($endpoint)
   or return CCNQ::Portal::content;
 
-  CCNQ::Portal::Inner::Number::submit_number($category_to_route->{params->{category}});
+  return CCNQ::Portal::Inner::Number::submit_number($category_to_route->{params->{category}});
 }
 
 # Customer-facing forwarding tools
@@ -192,7 +192,7 @@ sub submit_forwarding {
 
   $params->{forwarding_number} = $forwarding_number;
 
-  _update_number($account,$number,$params);
+  return _update_number($account,$number,$params);
 }
 
 1;

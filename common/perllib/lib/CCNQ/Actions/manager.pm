@@ -83,7 +83,8 @@ sub new_request {
           }
         }
 
-        $db->save_doc($activity)->cb(sub{$_[0]->recv;
+        $db->save_doc($activity)->cb(sub{
+          CCNQ::AE::receive(@_);
           $rcv->end;
           debug("New activity ID=$activity->{activity} was saved.");
         });
@@ -99,7 +100,8 @@ sub new_request {
     $request->{request} ||= $request->{_id};
     debug("Saving new request with ID=$request->{request}.");
 
-    $db->save_doc($request)->cb(sub{ $_[0]->recv;
+    $db->save_doc($request)->cb(sub{
+      CCNQ::AE::receive(@_);
       # Now split the request into independent activities
       CCNQ::Manager::activities_for_request($request)->cb($run_activities);
     });
