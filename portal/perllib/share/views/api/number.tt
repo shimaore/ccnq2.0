@@ -5,7 +5,7 @@
   <fieldset>
     <% SET profiles = cluster_to_profiles.$cluster %>
     <legend><% | loc category %>Route [_1] number<% END %></legend>
-    <form action="/sotel/number/<% cluster %>/<% category %>" method="post" accept-charset="utf-8" class="ui-widget validate">
+    <form action="/number/<% cluster %>/<% category %>" method="post" accept-charset="utf-8" class="ui-widget validate">
       <p class="ui-helper-clearfix">
         <label for="number" class="left"><% | loc %>Number:<% END %></label>
         <input type="text" name="number" value="<% field.number | html %>" class="required digits"/>
