@@ -54,7 +54,7 @@ sub new_request {
   my $cv = $db->save_doc($request);
 
   my $run_activities = sub {
-    my @activities = $_[0]->recv;
+    my @activities = CCNQ::AE::receive(@_);
     for my $activity_rank (0..$#activities) {
       my $activity = $activities[$activity_rank];
 
@@ -67,7 +67,8 @@ sub new_request {
         unless $activity_rank == $#activities;
 
       $rcv->begin;
-      $db->save_doc($activity)->cb(sub{ $_[0]->recv;
+      $db->save_doc($activity)->cb(sub{
+        CCNQ::AE::receive(@_);
 
         debug("New activity ID=$activity->{activity} was created.");
 
@@ -96,7 +97,8 @@ sub new_request {
     $rcv->send($request);
   };
 
-  $cv->cb( sub{ $_[0]->recv;
+  $cv->cb( sub{
+    CCNQ::AE::receive(@_);
     $request->{request} ||= $request->{_id};
     debug("Saving new request with ID=$request->{request}.");
 
@@ -127,7 +129,7 @@ sub _response {
 
   my $cv = $db->open_doc($response->{activity});
   $cv->cb(sub{
-    my $activity = $_[0]->recv;
+    my $activity = CCNQ::AE::receive(@_);
     if($activity) {
       debug("Found activity");
       $activity->{response} = $response;
@@ -140,7 +142,8 @@ sub _response {
       $activity_response->{_id} = $activity->{activity}.'.'.$response->{from};
       $activity_response->{activity_responder} = $response->{from};
 
-      $db->save_doc($activity_response)->cb(sub{$_[0]->recv;
+      $db->save_doc($activity_response)->cb(sub{
+        CCNQ::AE::receive(@_);
         debug("Activity response $activity_response->{_id} updated.");
 
         if($response->{error}) {
@@ -165,7 +168,7 @@ sub _response {
           };
           debug("Locating next activity $next_activity_id");
           $db->open_doc($next_activity_id)->cb(sub{
-            my $next_activity = $_[0]->recv;
+            my $next_activity = CCNQ::AE::receive(@_);
             my $res = CCNQ::XMPPAgent::submit_activity($context,$next_activity);
             if($res->[0] eq 'ok') {
               debug("Next activity ID=$next_activity_id was submitted.");
@@ -173,7 +176,8 @@ sub _response {
               # Actually not an error, most often times we get "Message queued for activity ..." as a reply.
               error("Submission failed (in response): $res->[1] for activity ID=$next_activity_id");
             }
-            $db->save_doc($next_activity)->cb(sub{$_[0]->recv;
+            $db->save_doc($next_activity)->cb(sub{
+              CCNQ::AE::receive(@_);
               debug("Next activity ID=$next_activity_id submitted.");
               $rcv->send('cancel');
               return;
