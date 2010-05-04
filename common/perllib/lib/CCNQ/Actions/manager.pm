@@ -47,7 +47,8 @@ sub new_request {
   my $db = couch(CCNQ::Manager::manager_uri)->db(CCNQ::Manager::manager_db);
 
   # Log the request.
-  $request->{_id} = $request->{request} if $request->{request};
+  delete $request->{_id};
+  delete $request->{_rev};
 
   my $rcv = AE::cv;
 
