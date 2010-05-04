@@ -93,7 +93,6 @@ sub _send_muc_message {
     my $json_body    = encode_json($body);
     my $immsg = $room->make_message(body => $json_body);
     $immsg->send();
-    $body->{submitted} = time;
     return ['ok'];
   } else {
     warning("$dest: Not joined yet");
@@ -133,7 +132,6 @@ sub _send_im_message {
     my $immsg = new AnyEvent::XMPP::IM::Message(to => $dest, body => $json_body);
     $immsg->send($context->{connection});
   }
-  $body->{submitted} = time;
   return ['ok'];
 }
 

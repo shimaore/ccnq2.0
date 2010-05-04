@@ -87,11 +87,7 @@ sub new_request {
           }
         }
 
-        $db->save_doc($activity)->cb(sub{
-          CCNQ::AE::receive(@_);
-          $rcv->end;
-          debug("New activity ID=$activity->{activity} was saved.");
-        });
+        $rcv->end;
       });
     } # for @activities
 
