@@ -1,9 +1,9 @@
+* FS code for feature-server / redirection server
+* FS code for prepaid (realtime_estimator)
+* API: get CDRs
+* end-of-month processing (including partial days)
+* daily crontab (e.g. import number of DIDs for partial month counts)
 * CDR + cost analysis on carrier SBC
   - collect CDRs
   - do rating analysis (private plans)
-* API: get CDRs
-* FS code for prepaid (realtime_estimator)
-* FS code for feature-server / redirection server
-* end-of-month processing (including partial days)
-* daily crontab (aggregation/import)
 * generalize form validation: generic Perl validation code + AJAX validation
