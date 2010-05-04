@@ -99,9 +99,9 @@ sub new_request {
   };
 
   $cv->cb( sub{
-    CCNQ::AE::receive(@_);
-    $request->{request} ||= $request->{_id};
-    debug("Saving new request with ID=$request->{request}.");
+    my $doc = CCNQ::AE::receive(@_);
+    $request->{request} ||= $doc->{id};
+    debug("Saved new request with ID=$request->{request}.");
 
     $db->save_doc($request)->cb(sub{
       CCNQ::AE::receive(@_);
