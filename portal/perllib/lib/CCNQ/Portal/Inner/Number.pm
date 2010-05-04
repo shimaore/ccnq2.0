@@ -78,6 +78,7 @@ sub submit_number {
     account_sub   => $endpoint_data->{account_sub},
     endpoint      => $endpoint_data->{endpoint},
     endpoint_ip   => $endpoint_data->{ip},
+    register      => $endpoint_data->{password} ? 1 : 0,
     username      => $endpoint_data->{username},
     username_domain => $endpoint_data->{domain},
     cluster       => $endpoint_data->{cluster},
@@ -88,14 +89,7 @@ sub submit_number {
     inbound_username
   ));
 
-  # Update the information in the API.
-  my $cv1 = AE::cv;
-  CCNQ::API::api_update($api_name,$params,$cv1);
-  my $r = CCNQ::AE::receive($cv1);
-  debug($r);
-
-  # Redirect to the request
-  redirect '/request/'.$r->{request};
+  update_number($account,$number,$params);
 }
 
 sub submit_default {
@@ -110,6 +104,34 @@ sub submit_default {
   or return CCNQ::Portal::content;
 
   CCNQ::Portal::Inner::Number::submit_number($category_to_route->{params->{category}});
+}
+
+sub get_number {
+  my ($account,$number) = @_;
+  my $cv = AE::cv;
+  CCNQ::API::provisioning_view('report','number',$account,$number,$cv);
+  my $numbers = CCNQ::AE::receive($cv);
+  return $numbers->{rows}->[0]->{doc} || {};
+}
+
+sub update_number {
+  my ($account,$number,$new_data) = @_;
+
+  my $number_data = CCNQ::Portal::Inner::Number::get_number($account,$number);
+
+  my $params = {
+    %$number_data, # Keep any existing information (this means data must be overwritten)
+    %$new_data,
+  };
+
+  # Update the information in the API.
+  my $cv1 = AE::cv;
+  CCNQ::API::api_update($api_name,$params,$cv1);
+  my $r = CCNQ::AE::receive($cv1);
+  debug($r);
+
+  # Redirect to the request
+  redirect '/request/'.$r->{request};
 }
 
 1;
