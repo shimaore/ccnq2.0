@@ -49,6 +49,7 @@ sub new_request {
   # Log the request.
   delete $request->{_id};
   delete $request->{_rev};
+  delete $request->{request};
 
   my $rcv = AE::cv;
 
@@ -100,7 +101,7 @@ sub new_request {
 
   $cv->cb( sub{
     my $doc = CCNQ::AE::receive(@_);
-    $request->{request} ||= $doc->{id};
+    $request->{request} = $doc->{id};
     debug("Saved new request with ID=$request->{request}.");
 
     $db->save_doc($request)->cb(sub{
