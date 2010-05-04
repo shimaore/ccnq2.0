@@ -18,6 +18,7 @@ FreeSwitch          1.0.4       www.freeswitch.org
 Pre-built Debian packages for some of the components are made available:
   http://opensource.sotelips.net/~stephane/
 
+See the file INSTALL for details.
 
 This work is supported by Sotel Systems LLC, http://www.sotelsystems.com
 who provide servers and network infrastructure for the development environment,
