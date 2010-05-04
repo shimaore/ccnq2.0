@@ -78,7 +78,6 @@ sub clean_params {
   CCNQ::Portal::Util::neat($params,qw(
     cluster
 
-    account
     account_sub
     username
     domain
