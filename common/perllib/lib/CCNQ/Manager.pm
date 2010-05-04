@@ -179,7 +179,7 @@ sub activities_for_request {
       return;
     }
 
-    $cv->send(@activities);
+    $cv->send([@activities]);
   });
 
   return $cv;

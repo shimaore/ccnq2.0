@@ -56,7 +56,8 @@ sub new_request {
   my $cv = $db->save_doc($request);
 
   my $run_activities = sub {
-    my @activities = CCNQ::AE::receive(@_);
+    my $activities = CCNQ::AE::receive(@_) || [];
+    my @activities = @{$activities};
     for my $activity_rank (0..$#activities) {
       my $activity = $activities[$activity_rank];
 
