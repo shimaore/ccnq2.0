@@ -2,12 +2,6 @@ CCNQ2.0 is a SIP softswitch built out of (mainly) OpenSIPS and FreeSwitch.
 It aims to provide provisioning, billing, and a user portal, while
 being fully distributed.
 
-Issues are tracked using SD[1]. You can obtain a copy of the SD
-repository using for example:
-  SD_REPO=. sd clone --from http://stephane.shimaore.net/sd/ccnq2.0
-
-[1] http://syncwith.us/sd/
-
 This code is designed to work with the following versions of these products:
 
 Debian GNU/Linux    lenny       www.debian.org
