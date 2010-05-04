@@ -24,6 +24,19 @@ sub new {
   return bless $self, $class;
 }
 
+# Prevent inserting twice the same CDR by mistake.
+sub id {
+  return join( '-',
+    $self->{account},
+    $self->{account_sub},
+    $self->{start_date},
+    $self->{start_time},
+    $self->{event_type},
+    ($self->{from_e164}||'none'),
+    ($self->{to_e164}||'none'),
+  );
+}
+
 sub compute_taxes {
   my ($self) = @_;
   $self->{taxable_cost} = $self->cost;
@@ -46,13 +59,13 @@ sub compute_taxes {
 
 sub as_json {
   my ($self) = @_;
-  return encode_json($self->cleanup);
+  return encode_json($self->as_hashref);
 }
 
 sub as_hashref {
   my ($self) = @_;
   $self->cleanup;
-  return { %$self };
+  return { %$self, _id => $self->id };
 }
 
 'CCNQ::Rating::Event::Rated';
