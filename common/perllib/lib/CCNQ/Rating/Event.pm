@@ -86,15 +86,6 @@ Common Billing Element Format (CBEF)
 
 =cut
 
-sub process {
-  my ($fh,$cb) = @_;
-  Rating::Process::process($fh, sub {
-    my ($cbef) = @_;
-    bless $cbef;
-    $cb->($cbef);
-  });
-}
-
 sub new {
   my $this = shift;
   my $class = ref($this) || $this;

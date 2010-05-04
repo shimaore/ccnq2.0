@@ -13,6 +13,8 @@ package CCNQ::B2BUA;
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+use strict; use warnings;
+
 use CCNQ;
 use CCNQ::Util;
 use File::Spec;
@@ -26,7 +28,7 @@ use constant::defer b2bua_directory =>
 use constant freeswitch_install_conf => '/opt/freeswitch/conf'; # Debian
 
 use constant log_dir  => '/var/log/freeswitch';         # As specified in logfile.conf.xml
-use constant cdr_dir  => log_dir.'/cdr_csv';            # As specified in cdr_csv.conf.xml
+use constant cdr_dir  => log_dir.'/cdr-csv';            # As specified in cdr_csv.conf.xml
 
 sub mk_dir {
   my $dst_dir = File::Spec->catfile(CCNQ::B2BUA::freeswitch_install_conf,@_);
