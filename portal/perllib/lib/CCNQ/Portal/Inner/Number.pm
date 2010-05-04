@@ -26,6 +26,44 @@ use CCNQ::API;
 use CCNQ::Portal;
 use CCNQ::Portal::Inner::Endpoint;
 
+# Generic get/update
+
+sub get_number {
+  my ($account,$number) = @_;
+  my $cv = AE::cv;
+  CCNQ::API::provisioning_view('report','number',$account,$number,$cv);
+  my $numbers = CCNQ::AE::receive($cv);
+  return $numbers->{rows}->[0]->{doc} || {};
+}
+
+sub _update_number {
+  my ($account,$number,$new_data) = @_;
+
+  my $number_data = CCNQ::Portal::Inner::Number::get_number($account,$number);
+
+  my $params = {
+    %$number_data, # Keep any existing information (this means data must be overwritten)
+    %$new_data,
+  };
+
+  my $api_name = $params->{api_name};
+  return CCNQ::Portal::content unless $api_name;
+
+  # Update the information in the API.
+  my $cv1 = AE::cv;
+  CCNQ::API::api_update($api_name,$params,$cv1);
+  my $r = CCNQ::AE::receive($cv1);
+  debug($r);
+
+  # Redirect to the request
+  redirect '/request/'.$r->{request};
+}
+
+# Number routing form.
+# This updates:
+#  - the endpoint
+#  - the "profile" on the client-sbc
+
 sub default {
   my ($category_to_criteria) = @_;
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
@@ -74,6 +112,7 @@ sub submit_number {
   my $endpoint_data = CCNQ::Portal::Inner::Endpoint::get_endpoint($account,$endpoint);
 
   my $params = {
+    api_name      => $api_name,
     account       => $endpoint_data->{account},
     account_sub   => $endpoint_data->{account_sub},
     endpoint      => $endpoint_data->{endpoint},
@@ -89,7 +128,10 @@ sub submit_number {
     inbound_username
   ));
 
-  update_number($account,$number,$params);
+  my $number = $params->{number};
+  return CCNQ::Portal::content unless $number;
+
+  _update_number($account,$number,$params);
 }
 
 sub submit_default {
@@ -106,32 +148,51 @@ sub submit_default {
   CCNQ::Portal::Inner::Number::submit_number($category_to_route->{params->{category}});
 }
 
-sub get_number {
-  my ($account,$number) = @_;
-  my $cv = AE::cv;
-  CCNQ::API::provisioning_view('report','number',$account,$number,$cv);
-  my $numbers = CCNQ::AE::receive($cv);
-  return $numbers->{rows}->[0]->{doc} || {};
+# Customer-facing forwarding tools
+# Allows for "Never", "Always" and "On Failure".
+
+sub get_forwarding {
+  my ($normalize_number) = @_;
+
+  var template_name => 'api/number-forwarding';
+
+  my $account = session('account');
+
+  my $number = $normalize_number->(params->{number});
+  return CCNQ::Portal::content unless $number;
+
+  my $number_data = CCNQ::Portal::Inner::get_number($account,$number);
+  var field => $number_data;
+  return CCNQ::Portal::content;
 }
 
-sub update_number {
-  my ($account,$number,$new_data) = @_;
+sub submit_forwarding {
+  my ($category_to_route,$normalize_number) = @_;
 
-  my $number_data = CCNQ::Portal::Inner::Number::get_number($account,$number);
+  var template_name => 'api/number-forwarding';
 
-  my $params = {
-    %$number_data, # Keep any existing information (this means data must be overwritten)
-    %$new_data,
-  };
+  my $account  = session('account');
 
-  # Update the information in the API.
-  my $cv1 = AE::cv;
-  CCNQ::API::api_update($api_name,$params,$cv1);
-  my $r = CCNQ::AE::receive($cv1);
-  debug($r);
+  my $number = $normalize_number->(params->{number});
+  return CCNQ::Portal::content unless $number;
 
-  # Redirect to the request
-  redirect '/request/'.$r->{request};
+  my $params = {};
+  CCNQ::Portal::Util::neat($params,qw(
+    forwarding_type
+    forwarding_number
+  ));
+
+  my $forwarding_type = $params->{forwarding_type};
+  return CCNQ::Portal::content unless grep { $forwarding_type eq $_ } qw( none all err );
+
+  my $forwarding_number = $normalize_number->($params->{forwarding_number});
+
+  # Forwarding number must be provided for all types except "none"/Never.
+  return CCNQ::Portal::content if $forwarding_type ne 'none' and not $forwarding_number;
+
+  $params->{forwarding_number} = $forwarding_number;
+
+  _update_number($account,$number,$params);
 }
 
 1;

@@ -1,0 +1,38 @@
+<% USE loc %>
+<% IF field.number %>
+  <fieldset><legend><% | loc %>Number update<% END %></legend>
+    <form method="post" action="/number/<% field.number | uri %>" accept-charset="utf-8" class="ui-widget validate">
+      <p class="ui-helper-clearfix">
+        <label for="number" class="left"><% | loc %>Number:<% END %></label>
+        <input type="text" readonly name="number" value="<% field.number | html %>" />
+      </p>
+      <p class="ui-helper-clearfix">
+        <label for="forwarding_type" class="left"><% | loc %>Call Forwarding:<% END %></label>
+        <select name="forwarding_type">
+          <option value="none" <% IF field.forwarding_type == "none" %>selected<%END %>><% |loc %>Never<% END %></option>
+          <option value="all"  <% IF field.forwarding_type == "all"  %>selected<%END %>><% |loc %>All calls<% END %></option>
+          <option value="err"  <% IF field.forwarding_type == "err"  %>selected<%END %>><% |loc %>On error<% END %></option>
+        </select>
+      </p>
+      <p class="ui-helper-clearfix">
+        <label for="forwarding_number" class="left"><% | loc %>Forward to:<% END %></label>
+        <input type="text" readonly name="forwarding_number" value="<% field.forwarding_number | html %>" />
+      </p>
+      <p class="ui-helper-clearfix submit">
+        <input type="submit" value="<% | loc %>Save<% END %>" />
+      </p>
+    </form>
+  </fieldset>
+<% ELSE %>
+  <fieldset><legend><% | loc %>Number update<% END %></legend>
+    <form method="post" action="/number" accept-charset="utf-8" class="ui-widget validate">
+      <p class="ui-helper-clearfix">
+        <label for="number" class="left"><% | loc %>Number:<% END %></label>
+        <input type="text" name="number" value="<% field.number | html %>" class="required" />
+      </p>
+      <p class="ui-helper-clearfix submit">
+        <input type="submit" value="<% | loc %>Retrieve<% END %>" />
+      </p>
+    </form>
+  </fieldset>
+<% END %>
