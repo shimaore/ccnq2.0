@@ -138,6 +138,8 @@ sub _session_ready {
         },
       };
 
+      delete $body->{params}->{request};
+
       use URI;
       my $url = URI->new($req->url);
       my $path = $url->path;
