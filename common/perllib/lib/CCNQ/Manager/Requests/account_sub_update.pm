@@ -28,6 +28,7 @@ sub run {
         map { $_ => $request->{$_} } qw( account account_sub name plan )
       }
     },
+    CCNQ::Manager::request_completed(),
   );
 }
 

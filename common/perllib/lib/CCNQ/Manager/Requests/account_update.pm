@@ -28,6 +28,7 @@ sub run {
         map { $_ => $request->{$_} } qw( account name billing_address billing_cycle )
       }
     },
+    CCNQ::Manager::request_completed(),
   );
 }
 
