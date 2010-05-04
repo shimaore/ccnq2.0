@@ -56,6 +56,8 @@ EOT
   # Do not unlink the files. When we are both dispatcher and relay (in two different clusters) the installer might get called twice.
   # unlink($dispatcher_file);
   # unlink($relay_file);
+  CCNQ::Util::execute('/etc/init.d/mediaproxy-dispatcher','restart') if $dispatcher_file;
+  CCNQ::Util::execute('/etc/init.d/mediaproxy-relay',     'restart') if $relay_file;
   return;
 }
 
