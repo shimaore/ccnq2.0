@@ -26,6 +26,7 @@ sub new {
 
 # Prevent inserting twice the same CDR by mistake.
 sub id {
+  my ($self) = @_;
   return join( '-',
     $self->{account},
     $self->{account_sub},
