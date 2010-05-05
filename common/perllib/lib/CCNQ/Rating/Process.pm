@@ -34,8 +34,8 @@ sub process {
   chomp $headers;
   my @headers = split(/\t/,$headers);
   debug("Found headers: ".join(',',@headers));
-  my $w;
-  $w = AnyEvent->io( fh => $fh, poll => 'r', cb => sub {
+
+  while(1) {
     my $input = <$fh>;
     if(defined $input) {
       chomp $input;
@@ -45,9 +45,9 @@ sub process {
       $cb_line->($data);
     } else {
       $close_cv->end();
+      return;
     }
   });
-  return $w;
 }
 
 1;
