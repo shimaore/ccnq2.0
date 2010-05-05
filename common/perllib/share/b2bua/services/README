@@ -1,0 +1,16 @@
+Available services "profile"s:
+
+signaling-server: provides targets for various (non-media) failures:
+  error-XXX    terminates with XXX as a response
+  rejected     terminates call with Rejected error
+  busy         terminates call with Busy (486) indication
+  ring         provide 180 ringback for up to 3 minutes
+
+signaling-server-with-media: provides targets for various (media) feature:
+  busy-us      provides media busy tone (US) for up to 3 minutes
+  ring-us      provides media ringback tone (US) for up to 3 minutes
+  echo         provides media echo
+  delay-echo   provides 1s delayed media echo
+
+redirect: provides call forwarding feature:
+  (number)     send a new call out towards that number (used for the call forwarding portal services)

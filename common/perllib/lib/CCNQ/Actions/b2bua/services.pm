@@ -15,6 +15,23 @@ package CCNQ::Actions::b2bua::services;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
 
+=head1 OVERVIEW
+
+The "services" type of node is a generic FreeSwitch node that will be
+used to implement anything that is not a SBC.
+
+For example:
+- without origination: signaling-server, conferences, voicemail;
+- with origination ("forwarding_sbc"): redirection, hunting, social-server.
+
+Typically all these services are provided "on-a-stick", never sending signaling
+traffic directly to a customer or carrier. These "services" server are
+on the customer-side of the proxy. (Therefor they cannot be co-located with
+any of that proxies' client-sbc. However they can be co-located with
+carrier-sbc services.)
+
+=cut
+
 use CCNQ::B2BUA;
 use CCNQ::Install;
 use CCNQ::Util;
