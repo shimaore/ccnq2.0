@@ -29,12 +29,6 @@ sub _session_ready {
   return;
 }
 
-sub insert_cdr {
-  my ($params,$context) = @_;
-  my $rated_cbef = CCNQ::Rating::Event::Rated->new($params->{params});
-  return CCNQ::CDR::insert($rated_cbef);
-}
-
 use CCNQ::Billing::Rating;
 use CCNQ::Install; # for host_name
 
