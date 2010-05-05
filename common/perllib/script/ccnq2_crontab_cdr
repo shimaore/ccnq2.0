@@ -18,6 +18,9 @@ use strict; use warnings;
 
 # Run-as: freeswitch
 
+use CCNQ::AE;
+$CCNQ::AE::debug_receive = 0;
+
 # This script will locate all CDR files created since the last run,
 # process them (sending them to the cdr server), then move the processed
 # files away.

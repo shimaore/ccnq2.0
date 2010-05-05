@@ -62,15 +62,17 @@ sub pp {
   return encode_utf8(qq("$v"));
 }
 
+our $debug_receive = 1;
+
 sub receive {
   my $result;
   eval { $result = $_[0]->recv };
   if($@) {
-    debug("Callback failed: ".pp($@).", with result ".pp($result));
+    debug("Callback failed: ".pp($@).", with result ".pp($result)) if $debug_receive;
     return undef;
   }
 
-  debug("Callback received ".pp($result));
+  debug("Callback received ".pp($result)) if $debug_receive;
   return $result;
 }
 
