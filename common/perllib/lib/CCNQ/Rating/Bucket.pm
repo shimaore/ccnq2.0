@@ -167,7 +167,7 @@ sub use {
 
     if($current_bucket_value < $value) {
       $self->set_instance_value($bucket_instance,Math::BigFloat->bzero)->cb(sub{
-        if(CCNQ::CouchDB::receive_ok(@_,$rcv)) {
+        if(CCNQ::CouchDB::receive_ok(undef,@_)) {
           $rcv->send($current_bucket_value);
         } else {
           $cv_failed->();
@@ -176,7 +176,7 @@ sub use {
     } else {
       my $remaining = $current_bucket_value - $value;
       $self->set_instance_value($bucket_instance,$remaining)->cb(sub{
-        if(CCNQ::CouchDB::receive_ok(@_,$rcv)) {
+        if(CCNQ::CouchDB::receive_ok(undef,@_)) {
           $rcv->send($value);
         } else {
           $cv_failed->();

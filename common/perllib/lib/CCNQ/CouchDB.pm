@@ -24,13 +24,13 @@ use AnyEvent::CouchDB;
 use CCNQ::AE;
 
 sub receive_ok {
-  my ($cv,$rcv) = @_;
+  my ($rcv,$cv) = @_;
   my $result = CCNQ::AE::receive($cv);
   if($result && $result->{ok} eq 'true') {
-    $rcv->send;
+    $rcv->send if $rcv;
     return 1;
   } else {
-    $rcv->send(['Operation failed']);
+    $rcv->send(['Operation failed']) if $rcv;
     return 0;
   }
 }

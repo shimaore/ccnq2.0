@@ -52,7 +52,7 @@ sub insert {
   my $rcv = AE::cv;
   my $record = $rated_cbef->as_hashref;
   couch(cdr_uri)->db(cdr_db)->save_doc($record)->cb(sub{
-    CCNQ::CouchDB::receive_ok(@_,$rcv);
+    CCNQ::CouchDB::receive_ok($rcv,@_);
   });
   return $rcv;
 }

@@ -24,7 +24,7 @@ sub create {
   my $rcv = AE::cv;
   my $db = CCNQ::Rating::Table->new(_db_name($params->{name}));
   $db->create()->cb(sub{
-    CCNQ::CouchDB::receive_ok(@_,$rcv);
+    CCNQ::CouchDB::receive_ok($rcv,@_);
   });
   return $rcv;
 }
