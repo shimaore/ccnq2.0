@@ -27,7 +27,7 @@ Generic Provisioning API query, restricted to administrative accounts.
 =cut
 
 # View one
-get '/provisioning/:view/:id' => sub {
+get '/provisioning/view/:view/:id' => sub {
   var template_name => 'provisioning';
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
   return CCNQ::Portal::content unless session('account');
@@ -47,15 +47,15 @@ get '/provisioning/:view/:id' => sub {
   return CCNQ::Portal::content;
 };
 
-get '/provisioning/account' => sub {
+get '/provisioning/view/account' => sub {
   var template_name => 'provisioning';
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
   return CCNQ::Portal::content unless session('account');
 
-  my $id = [session('account')];
+  my $account = session('account');
 
   my $cv = AE::cv;
-  CCNQ::API::provisioning_view('report','account',@$id,$cv);
+  CCNQ::API::provisioning_view('report','account',$account,$cv);
   var result => $cv->recv;
   return CCNQ::Portal::content;
 };
