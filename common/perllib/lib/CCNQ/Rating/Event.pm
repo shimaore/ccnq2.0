@@ -103,12 +103,9 @@ sub cleanup {
     return [map { cleanup($_) } @{$self}];
   }
   if(ref($self) eq 'HASH') {
-    return { map { $_ => cleanup($self->{$_}) } grep { /^[^_]/ } keys %{$self} };
+    return { map { cleanup($_) => cleanup($self->{$_}) } grep { /^[^_]/ } keys %{$self} };
   }
-  if(ref($self) eq 'Math::BigInt') {
-    return $self->bstr();
-  }
-  if(ref($self) eq 'Math::BigFloat') {
+  if(ref($self) =~ /^Math::Big/) {
     return $self->bstr();
   }
   # For objects, assume they are hashref based.
