@@ -72,13 +72,17 @@ sub process_file {
       collecting_node => CCNQ::Install::host_name,
     })->cb(sub{
       my $error = CCNQ::AE::receive(@_);
-      $rcv->croak if $error;
+      if($error) {
+        use Logger::Syslog;
+        warning(CCNQ::AE::pp($error));
+        $rcv->croak;
+      }
     });
   };
   my $send_ok = sub { $rcv->send(OK) };
   my $w = CCNQ::Rating::Process::process($fh,$rate_and_save_flat_cbef,$send_ok);
   my $result = CCNQ::AE::receive($rcv);
-  $result eq OK or die $result;
+  return $result eq OK;
 }
 
 sub run {
@@ -87,9 +91,9 @@ sub run {
   for my $file (@entries) {
     my $full_name = CCNQ::B2BUA::cdr_dir.'/'.$file;
     open(my $fh, '<', $full_name) or die "$file: $!";
-    process_file($fh);
+    my $ok = process_file($fh);
     close($fh) or die "$file: $!";
-    stow_away($file);
+    stow_away($file) if $ok;
   }
 }
 
