@@ -94,10 +94,13 @@ sub new {
 }
 
 use Scalar::Util qw(blessed);
+use Data::Structure::Util qw(unbless);
 
 sub cleanup {
-  # Remove all the fields that start with _
   my $self = shift;
+  $self = unbless($self);
+
+  # Remove all the fields that start with _
   if(!defined($self)) {
     return undef;
   }
@@ -105,20 +108,10 @@ sub cleanup {
     return [map { cleanup($_) } @{$self}];
   }
   if(UNIVERSAL::isa($self, "HASH")) {
-    return { map { cleanup($_) => cleanup($self->{$_}) } grep { /^[^_]/ } keys %{$self} };
+    return { map { $_ => cleanup($self->{$_}) } grep { /^[^_]/ } keys %{$self} };
   }
-  if(blessed($self) =~ /^Math::Big/) {
-    return ''.$self->bstr();
-  }
-  if(blessed($self)) {
-    return 'object '.blessed($self);
-  } else {
-    return "$self";
-  }
-  # For objects, assume they are hashref based.
-  # return cleanup(%{$self});
+  return "$self";
 }
-
 
 sub to {
   my ($self) = @_;
