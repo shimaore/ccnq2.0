@@ -85,7 +85,6 @@ Where:
       activity      => "${request_id}.${sequential_index}",
       activity_rank => ${sequential_index},
       cluster_name  => $cluster_name,
-      submitted     => $timestamp,
       params        => $params_hash,
     }
   Content of the $params_hash is provided by the request business logic code (e.g.
