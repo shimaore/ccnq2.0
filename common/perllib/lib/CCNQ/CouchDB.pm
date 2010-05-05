@@ -137,6 +137,8 @@ sub update_cv {
       for my $key (grep { !/^(_id|_rev)$/ } keys %{$params}) {
         $doc->{$key} = $params->{$key};
       }
+      use Logger::Syslog; use CCNQ::AE;
+      debug(CCNQ::AE::pp($doc));
       $couch_db->save_doc($doc)->cb(sub{ shift->recv; $rcv->send($doc) });
     } else {
       # Assume missing document
