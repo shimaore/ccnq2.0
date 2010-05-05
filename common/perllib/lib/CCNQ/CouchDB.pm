@@ -130,6 +130,8 @@ sub update_cv {
   my $couch = couch($uri);
   my $couch_db = $couch->db($db_name);
 
+  use Logger::Syslog; use CCNQ::AE;
+  debug(CCNQ::AE::pp($params));
   $couch_db->open_doc($params->{_id})->cb(sub{
     my $doc = CCNQ::AE::receive(@_);
     if($doc) {
@@ -137,8 +139,6 @@ sub update_cv {
       for my $key (grep { !/^(_id|_rev)$/ } keys %{$params}) {
         $doc->{$key} = $params->{$key};
       }
-      use Logger::Syslog; use CCNQ::AE;
-      debug(CCNQ::AE::pp($doc));
       $couch_db->save_doc($doc)->cb(sub{ shift->recv; $rcv->send($doc) });
     } else {
       # Assume missing document
