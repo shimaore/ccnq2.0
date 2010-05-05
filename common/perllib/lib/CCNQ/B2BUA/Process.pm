@@ -39,6 +39,7 @@ sub rotate_cdr {
 
 # Create the stowaway directory if it does not exist.
 use constant PROCESSED_DIR => CCNQ::B2BUA::cdr_dir.'/processed';
+use constant REJECTED_DIR  => CCNQ::B2BUA::cdr_dir.'/rejected';
 
 sub stow_away {
   my ($file_name) = @_;
@@ -64,7 +65,7 @@ sub read_entries {
 use Logger::Syslog;
 
 sub read_b2bua {
-  my ($fh,$cb) = @_;
+  my ($fh,$eh,$cb) = @_;
   my $line = 0;
   while(1) {
     my $input = <$fh>;
@@ -74,12 +75,15 @@ sub read_b2bua {
     debug("At line $line") if $line % 100 == 0;
     my %f = map { /^(\w+)=(.*)$/; $1 => $2 }
             split(/\t/,$input);
-    $cb->(\%f);
+    my $error = $cb->(\%f);
+    if($error) {
+      print $eh "$input\n";
+    }
   }
 }
 
 sub process_file {
-  my ($fh) = @_;
+  my ($fh,$eh) = @_;
 
   my $rating_errors = 0;
   my $rate_and_save_flat_cbef = sub {
@@ -89,15 +93,10 @@ sub process_file {
       collecting_node => CCNQ::Install::host_name,
     });
     my $error = CCNQ::AE::receive($cv);
-    if($error) {
-      warning(CCNQ::AE::pp($error));
-      $rating_errors++;
-    }
+    return $error;
   };
 
-  read_b2bua($fh,$rate_and_save_flat_cbef);
-
-  return $rating_errors == 0;
+  read_b2bua($fh,$eh,$rate_and_save_flat_cbef);
 }
 
 sub run {
@@ -105,12 +104,17 @@ sub run {
 
   my @entries = read_entries();
 
+  -d REJECTED_DIR or mkdir REJECTED_DIR;
+
   for my $file (@entries) {
     my $full_name = CCNQ::B2BUA::cdr_dir.'/'.$file;
-    open(my $fh, '<', $full_name) or die "$file: $!";
-    my $ok = process_file($fh);
-    close($fh) or die "$file: $!";
-    stow_away($file) if $ok;
+    my $rejected  = REJECTED_DIR.'/'.$file;
+    open(my $fh, '<', $full_name) or die "$full_name: $!";
+    open(my $eh, '>', $rejected ) or die "$rejected: $!";
+    my $ok = process_file($fh,$eh);
+    close($eh) or die "$rejected: $!";
+    close($fh) or die "$full_name: $!";
+    stow_away($file);
   }
 }
 
