@@ -143,6 +143,7 @@ sub rate_cbef_step {
   return $rcv;
 }
 
+use Math::BigFloat;
 
 sub rate_cbef {
   my ($cbef,$plan) = @_;
@@ -150,6 +151,9 @@ sub rate_cbef {
   # ... do the preparation work (e.g. locate plan currency)
   $cbef->{currency} = $plan->currency;
   $cbef->{decimals} = $plan->decimals;
+
+  $cbef->{cost} = Math::BigFloat->bzero;
+  $cbef->{tax}  = [];
 
   return rate_cbef_step($cbef,$plan->rating_steps);
 }
@@ -196,7 +200,6 @@ sub estimate_cbef {
 
 
 
-use Math::BigFloat;
 use constant seconds_per_minute => Math::BigFloat->new(60);
 
 =pod
