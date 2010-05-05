@@ -101,6 +101,8 @@ sub process_file {
 }
 
 sub run {
+  rotate_cdr();
+
   my @entries = read_entries();
 
   for my $file (@entries) {
