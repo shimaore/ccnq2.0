@@ -106,7 +106,7 @@ sub run {
 
   -d REJECTED_DIR or mkdir REJECTED_DIR;
 
-  for my $file (@entries) {
+  for my $file (sort @entries) {
     my $full_name = CCNQ::B2BUA::cdr_dir.'/'.$file;
     my $rejected  = REJECTED_DIR.'/'.$file;
     open(my $fh, '<', $full_name) or die "$full_name: $!";
