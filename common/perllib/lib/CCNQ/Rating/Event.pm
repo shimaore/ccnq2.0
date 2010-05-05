@@ -97,8 +97,7 @@ use Scalar::Util qw(blessed);
 use Data::Structure::Util qw(unbless);
 
 sub cleanup {
-  my $self = shift;
-  $self = unbless($self);
+  my $self = unbless(shift);
 
   # Remove all the fields that start with _
   if(!defined($self)) {
@@ -109,6 +108,9 @@ sub cleanup {
   }
   if(UNIVERSAL::isa($self, "HASH")) {
     return { map { $_ => cleanup($self->{$_}) } grep { /^[^_]/ } keys %{$self} };
+  }
+  if(blessed($self) =~ /^Math::Big/) {
+    return unbless($self->bstr());
   }
   return "$self";
 }
