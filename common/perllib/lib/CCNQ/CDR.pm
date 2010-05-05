@@ -50,6 +50,8 @@ sub install {
 sub insert {
   my ($rated_cbef) = @_;
   my $record = $rated_cbef->as_hashref;
+  use Logger::Syslog; use CCNQ::AE;
+  debug(CCNQ::AE::pp($record));
   return CCNQ::CouchDB::update_cv(cdr_uri,cdr_db,$record);
 }
 
