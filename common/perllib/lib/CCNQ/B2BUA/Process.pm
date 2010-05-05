@@ -72,7 +72,7 @@ sub read_b2bua {
     return if !defined($input);
     chomp($input);
     $line++;
-    debug("At line $line") if $line % 100 == 0;
+    debug("At line $line") if $line % 1000 == 0;
     my %f = map { /^(\w+)=(.*)$/; $1 => $2 }
             split(/\t/,$input);
     my $error = $cb->(\%f);
