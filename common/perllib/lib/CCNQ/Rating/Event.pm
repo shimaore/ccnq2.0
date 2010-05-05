@@ -93,25 +93,28 @@ sub new {
   return bless $self, $class;
 }
 
+use Scalar::Util qw(blessed);
+
 sub cleanup {
   # Remove all the fields that start with _
   my $self = shift;
   if(!defined($self)) {
     return undef;
   }
-  if(!ref($self)) {
-    return "$self";
-  }
-  if(ref($self) eq 'ARRAY') {
+  if(UNIVERSAL::isa($self, "ARRAY")) {
     return [map { cleanup($_) } @{$self}];
   }
-  if(ref($self) eq 'HASH') {
+  if(UNIVERSAL::isa($self, "HASH")) {
     return { map { cleanup($_) => cleanup($self->{$_}) } grep { /^[^_]/ } keys %{$self} };
   }
-  if(ref($self) =~ /^Math::Big/) {
-    return scalar($self->bstr());
+  if(blessed($self) =~ /^Math::Big/) {
+    return $self->bstr();
   }
-  return 'object '.ref($self);
+  if(blessed($self)) {
+    return 'object '.blessed($self);
+  } else {
+    return "$self";
+  }
   # For objects, assume they are hashref based.
   # return cleanup(%{$self});
 }
