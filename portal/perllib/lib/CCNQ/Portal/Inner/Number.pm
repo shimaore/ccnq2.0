@@ -39,7 +39,7 @@ sub get_number {
 sub _update_number {
   my ($account,$number,$new_data) = @_;
 
-  my $number_data = CCNQ::Portal::Inner::Number::get_number($account,$number);
+  my $number_data = get_number($account,$number);
 
   my $params = {
     %$number_data, # Keep any existing information (this means data must be overwritten)
@@ -161,7 +161,7 @@ sub get_forwarding {
   my $number = $normalize_number->(params->{number});
   return CCNQ::Portal::content unless $number;
 
-  my $number_data = CCNQ::Portal::Inner::get_number($account,$number);
+  my $number_data = get_number($account,$number);
   var field => $number_data;
   return CCNQ::Portal::content;
 }
