@@ -61,12 +61,17 @@ sub read_entries {
 
 # Process each CDR file.
 
+use Logger::Syslog;
+
 sub read_b2bua {
   my ($fh,$cb) = @_;
+  my $line = 0;
   while(1) {
     my $input = <$fh>;
     return if !defined($input);
     chomp($input);
+    $line++;
+    debug("At line $line") if $line % 100 == 0;
     my %f = map { /^(\w+)=(.*)$/; $1 => $2 }
             split(/\t/,$input);
     $cb->(\%f);
@@ -85,7 +90,6 @@ sub process_file {
     });
     my $error = CCNQ::AE::receive($cv);
     if($error) {
-      use Logger::Syslog;
       warning(CCNQ::AE::pp($error));
       $rating_errors++;
     }
