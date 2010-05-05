@@ -44,7 +44,7 @@ get '/provisioning/:view/:id' => sub {
 };
 
 # View all (for an account)
-get '/provisioning/:view' => sub {
+get '/provisioning/:view/_all' => sub {
   var template_name => 'provisioning';
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
   return CCNQ::Portal::content unless session('account');
