@@ -1,4 +1,4 @@
-package CCNQ::Actions::b2bua::signaling_server;
+package CCNQ::Actions::b2bua::services;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -15,12 +15,120 @@ package CCNQ::Actions::b2bua::signaling_server;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
 
-use CCNQ::B2BUA::Stick;
-
+use CCNQ::B2BUA;
+use CCNQ::Install;
+use CCNQ::Util;
+use AnyEvent;
+use AnyEvent::DNS;
 use Logger::Syslog;
 
-sub _install{
-  return CCNQ::B2BUA::Stick::install('signaling-server',@_);
+sub _install  {
+  my ($params,$context) = @_;
+
+  my $dns_txt = sub {
+    my $dn = CCNQ::Install::catdns(@_);
+    my $cv = AE::cv;
+    AnyEvent::DNS::txt( $dn, $cv );
+    return ($cv->recv);
+  };
+
+  my $dns_a = sub {
+    my $dn = CCNQ::Install::catdns(@_);
+    my $cv = AE::cv;
+    AnyEvent::DNS::a( $dn, $cv );
+    return ($cv->recv);
+  };
+
+  my $b2bua_name = 'services';
+
+  CCNQ::B2BUA::mk_dir(qw(autoload_configs));
+  CCNQ::B2BUA::mk_dir(qw(sip_profiles));
+  CCNQ::B2BUA::mk_dir(qw(dialplan));
+
+  $context->{resolver} = AnyEvent::DNS::resolver;
+
+  my $sip_profile_text = '';
+  my $dialplan_text    = '';
+  my $acl_text         = '';
+
+  my @sbc_names = $dns_txt->( 'sbc-names',CCNQ::Install::fqdn );
+  debug("Query TXT sbc-names -> ".join(',',@sbc_names));
+
+  my ($stick_ip) = $dns_a->(CCNQ::Install::fqdn);
+
+  for my $name (@sbc_names) {
+    # Figure out whether we have all the data to configure this instance.
+    # We need to have:
+    #   profile   -- TXT record of the profile (templates) to use
+    #   port      -- TXT record of the SIP port to use (externally)
+    #                (The internal port is always $external_port + 10000.)
+    #   egress    -- TXT record with the name of our egress proxy
+    #   ingress   -- A records of servers authorized to talk to us
+
+    my ($profile) = $dns_txt->( 'profile',$name,CCNQ::Install::fqdn );
+    debug("Query TXT profile -> $profile") if defined $profile;
+
+    error("Name $name has no profile recorded in DNS, skipping"),
+    next if !defined($profile);
+
+    CCNQ::B2BUA::copy_file($b2bua_name,qw( dialplan template ),"${profile}.xml");
+    CCNQ::B2BUA::copy_file($b2bua_name,qw( sip_profiles template ),"${profile}.xml");
+
+    my $profile_template  = $profile;
+    my $dialplan_template = $profile;
+
+    debug("b2bua/$b2bua_name: Creating configuration for name $name / profile $profile.");
+
+    my $port = $dns_txt->( 'port',$name,CCNQ::Install::fqdn );
+    debug("Query TXT port -> $port") if defined $port;
+
+    next unless defined($port) && defined($stick_ip);
+
+    debug("b2bua/$b2bua_name: Found port $port");
+
+    # Generate sip_profile entries
+    $sip_profile_text .= <<"EOT";
+      <X-PRE-PROCESS cmd="set" data="profile_name=${name}"/>
+      <X-PRE-PROCESS cmd="set" data="sip_port=${port}"/>
+      <X-PRE-PROCESS cmd="set" data="sip_ip=${stick_ip}"/>
+      <X-PRE-PROCESS cmd="include" data="template/${profile_template}.xml"/>
+
+EOT
+
+    # Generate ACLs
+    my @ingress_ips = $dns_a->( 'ingress',$name,CCNQ::Install::fqdn );
+    debug("b2bua/$b2bua_name: Found ingress IPs ".join(',',@ingress_ips));
+
+    $acl_text .= qq(<list name="sbc-${name}" default="deny">);
+    $acl_text .= join('',map { qq(<node type="allow" cidr="$_/32"/>) } @ingress_ips);
+    $acl_text .= qq(</list>);
+
+    # Generate dialplan entries
+    my @egress = $dns_txt->( 'egress',$name,CCNQ::Install::fqdn );
+    debug("b2bua/$b2bua_name: Found egress ".join(',',@egress));
+
+    my $egress = shift(@egress) || '';
+    $dialplan_text .= <<"EOT";
+      <X-PRE-PROCESS cmd="set" data="profile_name=${name}"/>
+      <X-PRE-PROCESS cmd="set" data="external_sip_port=${port}"/>
+      <X-PRE-PROCESS cmd="set" data="external_sip_ip=${stick_ip}"/>
+      <X-PRE-PROCESS cmd="set" data="egress_target=${egress}"/>
+      <X-PRE-PROCESS cmd="include" data="template/${dialplan_template}.xml"/>
+
+EOT
+  } # for $name
+
+  my $sip_profile_file = CCNQ::B2BUA::install_dir(qw( sip_profiles ), "${b2bua_name}.xml" );
+  CCNQ::Util::print_to($sip_profile_file,$sip_profile_text);
+
+  my $acl_file = CCNQ::B2BUA::install_dir(qw( autoload_configs ), "${b2bua_name}.acl.xml" );
+  CCNQ::Util::print_to($acl_file,$acl_text);
+
+  my $dialplan_file = CCNQ::B2BUA::install_dir(qw( dialplan ), "${b2bua_name}.xml" );
+  CCNQ::Util::print_to($dialplan_file,$dialplan_text);
+
+  CCNQ::B2BUA::finish();
+  return;
 }
 
 'CCNQ::Actions::b2bua::signaling_server';

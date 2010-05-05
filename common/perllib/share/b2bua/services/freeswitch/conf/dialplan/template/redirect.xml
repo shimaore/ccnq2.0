@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<include>
+  <context name="ingress-$${profile_name}">
+
+    <extension name="unloop">
+      <condition field="${unroll_loops}" expression="^true$"/>
+      <condition field="${sip_looped_call}" expression="^true$">
+        <action application="deflect" data="${destination_number}"/>
+      </condition>
+    </extension>
+
+    <extension name="redirect">
+      <condition field="destination_number" expression="^(\d+)$">
+        <action application="set" data="ccnq_account=${regex(${sip_req_params}|account=([^;]*)|%1)}"/>
+        <action application="set" data="ccnq_account_sub=${regex(${sip_req_params}|account_sub=([^;]*)|%1)}"/>
+        <action application="bridge" data="sofia/sbc-$${profile_name}/${destination_number}@$${egress_target};account=${ccnq_account};account_sub=${ccnq_account_sub}"/>
+      </condition>
+    </extension>
+
+  </context>
+</include>
