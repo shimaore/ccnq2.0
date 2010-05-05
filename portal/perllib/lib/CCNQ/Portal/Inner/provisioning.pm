@@ -34,27 +34,15 @@ get '/provisioning/:view/:id' => sub {
   # Restrict the generic view to administrators
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_admin;
 
-  my ($id) = [params->{id}];
-  unshift @$id, session('account');
-
-  my $cv = AE::cv;
-  CCNQ::API::provisioning_view('report',params->{view},@$id,$cv);
-  var result => $cv->recv;
-  return CCNQ::Portal::content;
-};
-
-# View all (for an account)
-get '/provisioning/:view/_all' => sub {
-  var template_name => 'provisioning';
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
-  return CCNQ::Portal::content unless session('account');
-  # Restrict the generic view to administrators
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_admin;
-
   my $account = session('account');
+  my $id = params->{id};
 
   my $cv = AE::cv;
-  CCNQ::API::provisioning_view('report',params->{view},$account,$cv);
+  if($id eq '_all') {
+    CCNQ::API::provisioning_view('report',params->{view},$account,$cv);
+  } else {
+    CCNQ::API::provisioning_view('report',params->{view},$account,$id,$cv);
+  }
   var result => $cv->recv;
   return CCNQ::Portal::content;
 };
