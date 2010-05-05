@@ -1,0 +1,97 @@
+<profile name="sbc-$${profile_name}">
+  <domains>
+    <domain name="all" alias="true" parse="false"/>
+  </domains>
+
+  <settings>
+    <param name="alias" value="sip:$${external_sip_ip}:$${external_sip_port}"/>
+    <!--<param name="media-option" value="resume-media-on-hold"/> -->
+    <param name="media-option" value="bypass-media-after-att-xfer"/>
+    <param name="user-agent-string" value="CCNQ2.0"/>
+    <param name="debug" value="0"/>
+    <param name="sip-trace" value="no"/>
+    <param name="context" value="ingress-$${profile_name}"/>
+    <param name="rfc2833-pt" value="101"/>
+    <param name="sip-port" value="$${external_sip_port}"/>
+    <param name="dialplan" value="XML"/>
+    <param name="dtmf-duration" value="100"/>
+    <param name="codec-prefs" value="$${global_codec_prefs}"/>
+    <param name="use-rtp-timer" value="true"/>
+    <param name="rtp-timer-name" value="soft"/>
+    <param name="rtp-ip" value="$${local_ip_v4}"/>  <!-- <param name="rtp-ip" value="$${use_local_ip}"/> -->
+    <param name="sip-ip" value="$${external_sip_ip}"/>  <!-- <param name="sip-ip" value="$${use_local_ip}"/> -->
+    <param name="hold-music" value="$${hold_music}"/>
+    <!--<param name="apply-nat-acl" value="rfc1918"/>-->
+    <!--<param name="aggressive-nat-detection" value="true"/>-->
+    <!-- <param name="enable-100rel" value="false"/> -->
+    <!--<param name="minimum-session-expires" value="120"/>-->
+    <param name="apply-inbound-acl" value="sbc-$${profile_name}"/>
+    <!--<param name="apply-register-acl" value="domains"/>-->
+    <!--<param name="dtmf-type" value="info"/>-->
+    <!--<param name="record-template" value="$${base_dir}/recordings/${caller_id_number}.${target_domain}.${strftime(%Y-%m-%d-%H-%M-%S)}.wav"/>-->
+    <param name="manage-presence" value="false"/>
+    <param name="manage-shared-appearance" value="false"/>
+    <!--<param name="dbname" value="share_presence"/>-->
+    <!--<param name="presence-hosts" value="$${domain}"/>-->
+
+    <!-- <param name="bitpacking" value="aal2"/> -->
+    <param name="max-proceeding" value="3000"/>
+    <!--<param name="session-timeout" value="120"/>-->
+    <!--<param name="multiple-registrations" value="contact"/>-->
+    <param name="inbound-codec-negotiation" value="greedy"/>
+    <!--<param name="bind-params" value="transport=udp"/>-->
+    <!--<param name="unregister-on-options-fail" value="true"/>-->
+
+    <param name="tls" value="$${internal_ssl_enable}"/>
+    <param name="tls-bind-params" value="transport=tls"/>
+    <param name="tls-sip-port" value="$${internal_tls_port}"/>
+    <param name="tls-cert-dir" value="$${internal_ssl_dir}"/>
+    <param name="tls-version" value="$${sip_tls_version}"/>
+
+    <!--<param name="rtp-rewrite-timestamps" value="true"/>-->
+    <param name="pass-rfc2833" value="true"/>
+    <!--<param name="odbc-dsn" value="dsn:user:pass"/>-->
+
+    <param name="inbound-bypass-media" value="true"/>
+    <param name="inbound-proxy-media" value="false"/>
+    <param name="inbound-late-negotiation" value="true"/>
+
+    <!-- <param name="accept-blind-reg" value="true"/> -->
+    <!-- <param name="accept-blind-auth" value="true"/> -->
+    <!-- <param name="suppress-cng" value="true"/> -->
+    <param name="nonce-ttl" value="60"/>
+    <param name="disable-transcoding" value="true"/>
+    <!--<param name="NDLB-broken-auth-hash" value="true"/>-->
+    <!--<param name="NDLB-received-in-nat-reg-contact" value="true"/>-->
+    <param name="auth-calls" value="$${internal_auth_calls}"/>
+    <param name="inbound-reg-force-matching-username" value="true"/>
+    <param name="auth-all-packets" value="false"/>
+    <!-- <param name="ext-rtp-ip" value="$${external_rtp_ip}"/> -->
+    <!-- <param name="ext-sip-ip" value="$${external_sip_ip}"/> -->
+    <param name="rtp-timeout-sec" value="300"/>
+    <param name="rtp-hold-timeout-sec" value="1800"/>
+    <!-- <param name="vad" value="in"/> -->
+    <!-- <param name="vad" value="out"/> -->
+    <!-- <param name="vad" value="both"/> -->
+    <param name="force-register-domain" value="$${domain}"/>
+    <param name="force-register-db-domain" value="$${domain}"/>
+    <!--<param name="force-subscription-expires" value="60"/>-->
+    <!--<param name="disable-transfer" value="true"/>-->
+    <param name="disable-register" value="true"/>
+
+    <!--<param name="enable-3pcc" value="true"/>-->
+
+    <!--<param name="NDLB-force-rport" value="true"/>-->
+    <param name="challenge-realm" value="auto_from"/>
+    <!--<param name="disable-rtp-auto-adjust" value="true"/>-->
+    <!--<param name="inbound-use-callid-as-uuid" value="true"/>-->
+    <!--<param name="outbound-use-uuid-as-callid" value="true"/>-->
+
+    <param name="auto-rtp-bugs" data="clear"/>
+
+         <!--<param name="disable-srv" value="false" />-->
+         <!--<param name="disable-naptr" value="false" />-->
+
+
+  </settings>
+</profile>
