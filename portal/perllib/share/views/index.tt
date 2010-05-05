@@ -14,8 +14,8 @@
       <li><a href="/billing/account">Manage account</a></li>
       <li><a href="/provisioning/endpoint">Manage endpoints</a></li>
       <li><a href="/provisioning/view/account">Inventory</a></li>
-      <li><a href="/provisioning/view/endpoint">View All Endpoints</a></li>
-      <li><a href="/provisioning/view/number">View All Numbers</a></li>
+      <li><a href="/provisioning/view/endpoint/_all">View All Endpoints</a></li>
+      <li><a href="/provisioning/view/number/_all">View All Numbers</a></li>
     </ul>
   </fieldset>
 <% ELSE %>
