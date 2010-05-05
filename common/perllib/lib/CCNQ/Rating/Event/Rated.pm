@@ -68,8 +68,8 @@ sub as_json {
 
 sub as_hashref {
   my ($self) = @_;
-  $self->cleanup;
-  return { %$self, _id => $self->id };
+  my $data = $self->cleanup;
+  return { %$data, _id => $data->{id} };
 }
 
 'CCNQ::Rating::Event::Rated';

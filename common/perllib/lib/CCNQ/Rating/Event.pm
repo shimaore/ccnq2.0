@@ -97,7 +97,7 @@ use Scalar::Util qw(blessed);
 use Data::Structure::Util qw(unbless);
 
 sub cleanup {
-  my $self = unbless(shift);
+  my $self = shift;
 
   # Remove all the fields that start with _
   if(!defined($self)) {
