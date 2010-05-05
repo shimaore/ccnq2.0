@@ -67,17 +67,16 @@ sub process_file {
   my $rcv;
   my $rate_and_save_flat_cbef = sub {
     my ($flat_cbef) = @_;
-    $rcv->begin(sub { $rcv->send(OK) });
     CCNQ::Billing::Rating::rate_and_save_cbef({
       %$flat_cbef,
       collecting_node => CCNQ::Install::host_name,
     })->cb(sub{
       my $error = CCNQ::AE::receive(@_);
       $rcv->croak if $error;
-      $rcv->end;
     });
   };
-  $rcv = CCNQ::Rating::Process::process($fh,$rate_and_save_flat_cbef);
+  my $send_ok = sub { $rcv->send(OK) };
+  $rcv = CCNQ::Rating::Process::process($fh,$rate_and_save_flat_cbef,$send_ok);
   CCNQ::AE::receive($rcv) eq OK or die;
 }
 
