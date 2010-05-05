@@ -47,7 +47,7 @@ sub process {
       $close_cv->end();
       return;
     }
-  });
+  }
 }
 
 1;
