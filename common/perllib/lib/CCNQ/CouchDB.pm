@@ -16,7 +16,7 @@ package CCNQ::CouchDB;
 
 use strict; use warnings;
 
-sub id_required { die ['ID is required'] }
+sub id_required { die 'ID is required' }
 
 use Logger::Syslog;
 use AnyEvent;
@@ -254,10 +254,10 @@ sub view_cv {
   my $rcv = AE::cv;
 
   unless($params->{view}) {
-    die ['View is required'];
+    die 'View is required';
   }
   unless($params->{_id} && ref($params->{_id}) eq 'ARRAY') {
-    die ['ID is required and must be an array'];
+    die 'ID is required and must be an array';
   }
   my @key_prefix = @{$params->{_id}};
 
