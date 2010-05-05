@@ -106,10 +106,11 @@ sub cleanup {
     return { map { cleanup($_) => cleanup($self->{$_}) } grep { /^[^_]/ } keys %{$self} };
   }
   if(ref($self) =~ /^Math::Big/) {
-    return $self->bstr();
+    return scalar($self->bstr());
   }
+  return 'object '.ref($self);
   # For objects, assume they are hashref based.
-  return cleanup(%{$self});
+  # return cleanup(%{$self});
 }
 
 
