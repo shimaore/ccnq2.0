@@ -51,8 +51,8 @@ sub _install  {
   my $dialplan_text    = '';
   my $acl_text         = '';
 
-  my @sbc_names = $dns_txt->( 'sbc-names',CCNQ::Install::fqdn );
-  debug("Query TXT sbc-names -> ".join(',',@sbc_names));
+  my @services_names = $dns_txt->( 'services-names',CCNQ::Install::fqdn );
+  debug("Query TXT services-names -> ".join(',',@sbc_names));
 
   my ($stick_ip) = $dns_a->(CCNQ::Install::fqdn);
 
