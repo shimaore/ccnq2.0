@@ -24,6 +24,8 @@ The standard format for CBEF is:
 
 =cut
 
+use AnyEvent;
+
 sub process {
   my ($fh,$cb) = @_;
   my $headers = <$fh>;
