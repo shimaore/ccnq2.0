@@ -31,7 +31,7 @@ sub process {
   my $headers = <$fh>;
   chomp $headers;
   my @headers = split(/\t/,$headers);
-  my $w = new AnyEvent->io( fh => $fh, poll => 'r', cb => sub {
+  my $w = AnyEvent->io( fh => $fh, poll => 'r', cb => sub {
     my $input = <$fh>;
     return undef $w if !defined $input;
     chomp $input;
