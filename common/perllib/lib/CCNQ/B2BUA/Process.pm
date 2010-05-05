@@ -73,15 +73,12 @@ sub process_file {
       %$flat_cbef,
       collecting_node => CCNQ::Install::host_name,
     });
-    $cv->cb(sub{
-      my $error = CCNQ::AE::receive(@_);
-      if($error) {
-        use Logger::Syslog;
-        warning(CCNQ::AE::pp($error));
-        $rating_errors++;
-      }
-    });
-    CCNQ::AE::receive($cv);
+    my $error = CCNQ::AE::receive($cv);
+    if($error) {
+      use Logger::Syslog;
+      warning(CCNQ::AE::pp($error));
+      $rating_errors++;
+    }
   };
 
   my $w = CCNQ::Rating::Process::process($fh,$rate_and_save_flat_cbef,$rcv);
