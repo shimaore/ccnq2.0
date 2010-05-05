@@ -61,10 +61,20 @@ sub read_entries {
 
 # Process each CDR file.
 
+sub read_b2bua {
+  my ($fh,$cb) = @_;
+  while(1) {
+    my $input = <$fh>;
+    return if !defined($input);
+    chomp($input);
+    my %f = map { /^(\w+)=(.*)$/; $1 => $2 }
+            split(/\t/,$input);
+    $cb->(\%f);
+  }
+}
+
 sub process_file {
   my ($fh) = @_;
-  my $rcv = AE::cv;
-  $rcv->begin;
 
   my $rating_errors = 0;
   my $rate_and_save_flat_cbef = sub {
@@ -81,8 +91,8 @@ sub process_file {
     }
   };
 
-  my $w = CCNQ::Rating::Process::process($fh,$rate_and_save_flat_cbef,$rcv);
-  my $result = CCNQ::AE::receive($rcv);
+  read_b2bua($fh,$rate_and_save_flat_cbef);
+
   return $rating_errors == 0;
 }
 
