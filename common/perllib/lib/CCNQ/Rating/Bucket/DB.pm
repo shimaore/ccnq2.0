@@ -46,7 +46,7 @@ sub retrieve_bucket_instance {
   return CCNQ::CouchDB::retrieve_cv(bucket_server,bucket_db,$id);
 }
 
-sub save_bucket_instance {
+sub update_bucket_instance {
   my ($rec) = @_;
   return CCNQ::CouchDB::update_cv(bucket_server,bucket_db,$rec);
 }
