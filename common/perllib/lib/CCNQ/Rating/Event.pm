@@ -108,7 +108,7 @@ sub cleanup {
     return { map { cleanup($_) => cleanup($self->{$_}) } grep { /^[^_]/ } keys %{$self} };
   }
   if(blessed($self) =~ /^Math::Big/) {
-    return $self->bstr();
+    return ''.$self->bstr();
   }
   if(blessed($self)) {
     return 'object '.blessed($self);
