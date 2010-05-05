@@ -29,6 +29,7 @@ use AnyEvent;
 
 use CCNQ::Billing::Plan;
 use CCNQ::Rating;
+use CCNQ::Billing::Account;
 
 use Logger::Syslog;
 
