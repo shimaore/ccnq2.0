@@ -96,8 +96,11 @@ sub new {
 sub cleanup {
   # Remove all the fields that start with _
   my $self = shift;
-  if(!defined($self) || !ref($self)) {
-    return $self;
+  if(!defined($self)) {
+    return undef;
+  }
+  if(!ref($self)) {
+    return "$self";
   }
   if(ref($self) eq 'ARRAY') {
     return [map { cleanup($_) } @{$self}];
