@@ -89,8 +89,9 @@ sub process_file {
   my $rate_and_save_flat_cbef = sub {
     my ($flat_cbef) = @_;
     if($flat_cbef->{start} =~ /^(\d\d\d\d-\d\d-\d\d) (\d\d:\d\d:\d\d)$/) {
-      $flat_cbef->{start_date} = $1; $flat_cbef->{start_date} =~ s/[^\d]//g;
-      $flat_cbef->{start_time} = $2; $flat_cbef->{start_time} =~ s/[^\d]//g;
+      $flat_cbef->{start_date} = $1; $flat_cbef->{start_time} = $2;
+      $flat_cbef->{start_date} =~ s/[^\d]//g;
+      $flat_cbef->{start_time} =~ s/[^\d]//g;
     } else {
       debug("Invalid start timestamp: ".$flat_cbef->{start});
     }
