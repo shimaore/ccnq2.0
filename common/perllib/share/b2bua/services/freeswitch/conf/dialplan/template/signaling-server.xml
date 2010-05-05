@@ -15,20 +15,6 @@
       </condition>
     </extension>
 
-    <extension name="echo">
-      <condition field="destination_number" expression="^echo$">
-        <action application="answer"/>
-        <action application="echo"/>
-      </condition>
-    </extension>
-
-    <extension name="delay-echo">
-      <condition field="destination_number" expression="^delay-echo$">
-        <action application="answer"/>
-        <action application="delay_echo" data="1000"/>
-      </condition>
-    </extension>
-
     <extension name="rejected">
       <condition field="destination_number" expression="^rejected$">
         <action application="hangup" data="CALL_REJECTED"/>
