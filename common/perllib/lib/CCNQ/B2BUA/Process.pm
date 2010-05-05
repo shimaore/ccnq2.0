@@ -60,11 +60,12 @@ sub read_entries {
 }
 
 # Process each CDR file.
-use constant OK => 'ok';
 
 sub process_file {
   my ($fh) = @_;
   my $rcv = AE::cv;
+  $rcv->begin;
+
   my $rating_errors = 0;
   my $rate_and_save_flat_cbef = sub {
     my ($flat_cbef) = @_;
@@ -80,10 +81,10 @@ sub process_file {
       }
     });
   };
-  my $send_ok = sub { $rcv->send(OK) };
-  my $w = CCNQ::Rating::Process::process($fh,$rate_and_save_flat_cbef,$send_ok);
+
+  my $w = CCNQ::Rating::Process::process($fh,$rate_and_save_flat_cbef,$rcv);
   my $result = CCNQ::AE::receive($rcv);
-  return $result eq OK && $rating_errors == 0;
+  return $rating_errors == 0;
 }
 
 sub run {

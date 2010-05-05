@@ -29,12 +29,13 @@ use AnyEvent;
 use Logger::Syslog;
 
 sub process {
-  my ($fh,$cb_line,$cb_end) = @_;
+  my ($fh,$cb_line,$close_cv) = @_;
   my $headers = <$fh>;
   chomp $headers;
   my @headers = split(/\t/,$headers);
   debug("Found headers: ".join(',',@headers));
-  my $w = AnyEvent->io( fh => $fh, poll => 'r', cb => sub {
+  my $w;
+  $w = AnyEvent->io( fh => $fh, poll => 'r', cb => sub {
     my $input = <$fh>;
     if(defined $input) {
       chomp $input;
@@ -43,7 +44,7 @@ sub process {
       @$data{@headers} = @input;
       $cb_line->($data);
     } else {
-      $cb_end->();
+      $close_cv->end();
     }
   });
   return $w;
