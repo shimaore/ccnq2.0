@@ -72,7 +72,8 @@ sub process_file {
     my $cv = CCNQ::Billing::Rating::rate_and_save_cbef({
       %$flat_cbef,
       collecting_node => CCNQ::Install::host_name,
-    })->cb(sub{
+    });
+    $cv->cb(sub{
       my $error = CCNQ::AE::receive(@_);
       if($error) {
         use Logger::Syslog;
