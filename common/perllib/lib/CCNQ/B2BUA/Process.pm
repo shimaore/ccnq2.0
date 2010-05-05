@@ -64,7 +64,7 @@ use constant OK => 'ok';
 
 sub process_file {
   my ($fh) = @_;
-  my $rcv;
+  my $rcv = AE::cv;
   my $rate_and_save_flat_cbef = sub {
     my ($flat_cbef) = @_;
     CCNQ::Billing::Rating::rate_and_save_cbef({
@@ -76,8 +76,9 @@ sub process_file {
     });
   };
   my $send_ok = sub { $rcv->send(OK) };
-  $rcv = CCNQ::Rating::Process::process($fh,$rate_and_save_flat_cbef,$send_ok);
-  CCNQ::AE::receive($rcv) eq OK or die;
+  my $w = CCNQ::Rating::Process::process($fh,$rate_and_save_flat_cbef,$send_ok);
+  my $result = CCNQ::AE::receive($rcv);
+  $result eq OK or die $result;
 }
 
 sub run {
