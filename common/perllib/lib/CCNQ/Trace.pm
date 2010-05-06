@@ -120,8 +120,9 @@ sub run {
     if defined $to_user   && $to_user   !~ /^\d+$/;
   die ['Invalid from_user']
     if defined $from_user && $from_user !~ /^\d+$/;
+  # Call-ID: RFC3261 says word [ "@" word ] with 'word' defined as most ASCII printables.
   die ['Invalid call_id']
-    if defined $call_id   && $call_id   !~ /^[\w@-]+$/;
+    if defined $call_id   && $call_id   !~ /^[[:print:]]+$/;
   die ['Invalid days_ago']
     if defined $days_ago  && $days_ago  !~ /^\d{1,5}$/;
 
