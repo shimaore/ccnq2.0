@@ -71,7 +71,6 @@ EOT
   # Manual instructions moved to doc/INSTALL.perl
   # ------ Equivalent (from our servers): ------------
   ARCH=amd64
-  # ARCH=i386
   (mkdir /tmp/perl && cd /tmp/perl && \
     wget http://opensource.sotelips.net/~stephane/perl/all-${ARCH}.tar.gz && \
     tar xzvf all-${ARCH}.tar.gz && \
@@ -112,11 +111,12 @@ EOT
 
   # Install OpenSIPS (note: we provide "amd64" and "i386"-type Debian packages only)
   cd ~/src
+  OPENSIPS=1.6.2-0
   sudo aptitude install libmysqlclient15off mysql-client
-  wget http://opensource.sotelips.net/~stephane/amd64/opensips_1.5.3-0_amd64.deb
-  wget http://opensource.sotelips.net/~stephane/amd64/opensips-mysql-module_1.5.3-0_amd64.deb
-  sudo dpkg -i opensips_1.5.3-0_amd64.deb
-  sudo dpkg -i opensips-mysql-module_1.5.3-0_amd64.deb
+  wget http://opensource.sotelips.net/~stephane/${ARCH}/opensips_${OPENSIPS}_${ARCH}.deb
+  wget http://opensource.sotelips.net/~stephane/${ARCH}/opensips-mysql-module_${OPENSIPS}_${ARCH}.deb
+  sudo dpkg -i opensips_${OPENSIPS}_${ARCH}.deb
+  sudo dpkg -i opensips-mysql-module_${OPENSIPS}_${ARCH}.deb
 
   sudo aptitude install mysql-server
   # (leave the MySQL root password empty)
@@ -130,10 +130,12 @@ EOT
   # Versions required for mediaproxy-common include python-application (>= 1.1.5) and python-gnutls (>= 1.1.8) which are not in Debian/Lenny
   sudo aptitude install python-application/testing python-gnutls/testing
   cd ~/src
-  wget http://opensource.sotelips.net/~stephane/amd64/mediaproxy-common_2.3.8_amd64.deb
-  wget http://opensource.sotelips.net/~stephane/amd64/mediaproxy-dispatcher_2.3.8_all.deb
-  sudo dpkg -i mediaproxy-common_2.3.8_amd64.deb
-  sudo dpkg -i mediaproxy-dispatcher_2.3.8_all.deb
+  MEDIAPROXY=2.4.2
+  ARCH=amd64
+  wget http://opensource.sotelips.net/~stephane/${ARCH}/mediaproxy-common_${MEDIAPROXY}_${ARCH}.deb
+  wget http://opensource.sotelips.net/~stephane/${ARCH}/mediaproxy-dispatcher_${MEDIAPROXY}_all.deb
+  sudo dpkg -i mediaproxy-common_${MEDIAPROXY}_${ARCH}.deb
+  sudo dpkg -i mediaproxy-dispatcher_${MEDIAPROXY}_all.deb
 
   # Also make sure that the user which will be running xmpp_agent.pl is a member of the "opensips" group.
   # (This is required so that xmpp_agent.pl can get access to the OpenSIPS FIFO.)
@@ -147,10 +149,10 @@ EOT
   # Versions required for mediaproxy-common include python-application (>= 1.1.5) and python-gnutls (>= 1.1.8) which are not in Debian/Lenny
   sudo aptitude install python-application/testing python-gnutls/testing
   cd ~/src
-  wget http://opensource.sotelips.net/~stephane/amd64/mediaproxy-common_2.3.8_amd64.deb
-  wget http://opensource.sotelips.net/~stephane/amd64/mediaproxy-relay_2.3.8_all.deb
-  sudo dpkg -i mediaproxy-common_2.3.8_amd64.deb
-  sudo dpkg -i mediaproxy-relay_2.3.8_all.deb
+  wget http://opensource.sotelips.net/~stephane/${ARCH}/mediaproxy-common_${MEDIAPROXY}_${ARCH}.deb
+  wget http://opensource.sotelips.net/~stephane/${ARCH}/mediaproxy-relay_${MEDIAPROXY}_all.deb
+  sudo dpkg -i mediaproxy-common_${MEDIAPROXY}_${ARCH}.deb
+  sudo dpkg -i mediaproxy-relay_${MEDIAPROXY}_all.deb
 
 # * On the SBC servers:
 
@@ -160,20 +162,21 @@ EOT
   sudo aptitude -y install libcrypt-ssleay-perl  # for CNAM
 
   cd ~/src
-  wget http://opensource.sotelips.net/~stephane/amd64/freeswitch_1.0.4-1_amd64.deb
-  wget http://opensource.sotelips.net/~stephane/amd64/freeswitch-lang-en_1.0.4-1_amd64.deb
-  wget http://opensource.sotelips.net/~stephane/amd64/freeswitch-perl_1.0.4-1_amd64.deb
-  # wget http://opensource.sotelips.net/~stephane/amd64/freeswitch-lua_1.0.4-1_amd64.deb
-  # wget http://opensource.sotelips.net/~stephane/amd64/freeswitch-sounds-en-us-callie-8000_1.0.4-1_amd64.deb
-  # wget http://opensource.sotelips.net/~stephane/amd64/freeswitch-codec-passthru-g729_1.0.4-1_amd64.deb
+  FREESWITCH=1.0.6-1
+  wget http://opensource.sotelips.net/~stephane/${ARCH}/freeswitch_${FREESWITCH}_${ARCH}.deb
+  wget http://opensource.sotelips.net/~stephane/${ARCH}/freeswitch-lang-en_${FREESWITCH}_${ARCH}.deb
+  wget http://opensource.sotelips.net/~stephane/${ARCH}/freeswitch-perl_${FREESWITCH}_${ARCH}.deb
+  wget http://opensource.sotelips.net/~stephane/${ARCH}/freeswitch-lua_${FREESWITCH}_${ARCH}.deb
+  # wget http://opensource.sotelips.net/~stephane/${ARCH}/freeswitch-sounds-en-us-callie-8000_${FREESWITCH}_${ARCH}.deb
+  # wget http://opensource.sotelips.net/~stephane/${ARCH}/freeswitch-codec-passthru-g729_${FREESWITCH}_${ARCH}.deb
 
 
-  sudo dpkg -i freeswitch_1.0.4-1_amd64.deb
-  sudo dpkg -i freeswitch-lang-en_1.0.4-1_amd64.deb
-  sudo dpkg -i freeswitch-perl_1.0.4-1_amd64.deb   # CNAM, currently
-  # sudo dpkg -i freeswitch-lua_1.0.4-1_amd64.deb
-  # sudo dpkg -i freeswitch-sounds-en-us-callie-8000_1.0.4-1_amd64.deb
-  # sudo dpkg -i freeswitch-codec-passthru-g729_1.0.4-1_amd64.deb
+  sudo dpkg -i freeswitch_${FREESWITCH}_${ARCH}.deb
+  sudo dpkg -i freeswitch-lang-en_${FREESWITCH}_${ARCH}.deb
+  sudo dpkg -i freeswitch-perl_${FREESWITCH}_${ARCH}.deb   # CNAM, currently
+  sudo dpkg -i freeswitch-lua_${FREESWITCH}_${ARCH}.deb
+  # sudo dpkg -i freeswitch-sounds-en-us-callie-8000_${FREESWITCH}_${ARCH}.deb
+  # sudo dpkg -i freeswitch-codec-passthru-g729_${FREESWITCH}_${ARCH}.deb
 
   # Important: move the original configuration files out of the way.
   sudo mv /opt/freeswitch/conf /opt/freeswitch/conf.orig
