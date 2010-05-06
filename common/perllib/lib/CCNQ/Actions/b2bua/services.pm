@@ -69,11 +69,11 @@ sub _install  {
   my $acl_text         = '';
 
   my @services_names = $dns_txt->( 'services-names',CCNQ::Install::fqdn );
-  debug("Query TXT services-names -> ".join(',',@sbc_names));
+  debug("Query TXT services-names -> ".join(',',@services_names));
 
   my ($stick_ip) = $dns_a->(CCNQ::Install::fqdn);
 
-  for my $name (@sbc_names) {
+  for my $name (@services_names) {
     # Figure out whether we have all the data to configure this instance.
     # We need to have:
     #   profile   -- TXT record of the profile (templates) to use
