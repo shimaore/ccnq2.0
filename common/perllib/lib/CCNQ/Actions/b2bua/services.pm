@@ -148,4 +148,4 @@ EOT
   return;
 }
 
-'CCNQ::Actions::b2bua::signaling_server';
+'CCNQ::Actions::b2bua::services';
