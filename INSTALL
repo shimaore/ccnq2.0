@@ -107,6 +107,11 @@ EOT
   # to avoid filling the disk with log messages.
   sudo sed -i -e 's/^;level = .*$/level = error/' /etc/couchdb/local.ini
 
+  # Also, importantly, you MUST allow remote access to the "cdr" and "bucket" databases.
+  # So on the cdr and bucket couchdb servers, assuming LOCAL_IP is the local IP to use:
+  sed -i -e "s/;bind_address = 127.0.0.1/bind_address = $LOCAL_IP/" /etc/couchdb/local.ini
+  echo $LOCAL_IP | tee /etc/ccn/couchdb_local_server >/dev/null
+
 # * On the proxy servers:
 
   # Install OpenSIPS (note: we provide "amd64" and "i386"-type Debian packages only)
