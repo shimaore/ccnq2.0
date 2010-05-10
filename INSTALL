@@ -154,6 +154,10 @@ EOT
   sudo dpkg -i mediaproxy-common_${MEDIAPROXY}_${ARCH}.deb
   sudo dpkg -i mediaproxy-relay_${MEDIAPROXY}_all.deb
 
+  # Also make sure to enable IP forwarding
+  sudo sed -i -e 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/' /etc/sysctl.conf
+  echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward >/dev/null
+
 # * On the SBC servers:
 
   # Install FreeSwitch
