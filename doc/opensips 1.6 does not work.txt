@@ -1,0 +1,38 @@
+May  8 12:35:57 [25593] ERROR:core:yyparse: module 'uri_db.so' not found in '/usr/lib/opensips/modules/'
+May  8 12:35:57 [25593] CRITICAL:core:yyerror: parse error in config file, line 154, column 13-14: failed to load module
+May  8 12:35:57 [25593] ERROR:core:sr_load_module: could not open module </usr/lib/opensips/modules/>: /usr/lib/opensips/modules/: cannot read file data: Is a directory
+May  8 12:35:57 [25593] CRITICAL:core:yyerror: parse error in config file, line 154, column 13-14: failed to load module
+May  8 12:35:57 [25593] ERROR:core:set_mod_param_regex: no module matching uri_db found
+May  8 12:35:57 [25593] CRITICAL:core:yyerror: parse error in config file, line 155, column 29-30: Parameter <db_url> not found in module <uri_db> - can't set
+May  8 12:35:57 [25593] ERROR:core:set_mod_param_regex: no module matching uri_db found
+May  8 12:35:57 [25593] CRITICAL:core:yyerror: parse error in config file, line 156, column 24-25: Parameter <use_domain> not found in module <uri_db> - can't set
+May  8 12:35:57 [25593] ERROR:core:set_mod_param_regex: no module matching uri_db found
+May  8 12:35:57 [25593] CRITICAL:core:yyerror: parse error in config file, line 157, column 21-22: Parameter <use_uri_table> not found in module <uri_db> - can't set
+
+-> uri_db is deprecated; parameters apply to the "uri" module
+-> replaced by "uri" module
+     check_to() -> db_check_to()
+     check_from() -> db_check_from()
+
+May  8 12:35:57 [25593] ERROR:core:set_mod_param_regex: parameter <db_mode> not found in module <permissions>
+May  8 12:35:57 [25593] CRITICAL:core:yyerror: parse error in config file, line 176, column 19-20: Parameter <db_mode> not found in module <permissions> - can't set
+May  8 12:35:57 [25593] ERROR:core:set_mod_param_regex: parameter <trusted_table> not found in module <permissions>
+May  8 12:35:57 [25593] CRITICAL:core:yyerror: parse error in config file, line 177, column 20-21: Parameter <trusted_table> not found in module <permissions> - can't set
+
+Apparently "allow_trusted" no longer exists.
+
+
+May  8 12:35:57 [25593] ERROR:core:set_mod_param_regex: parameter <use_domain> not found in module <alias_db>
+May  8 12:35:57 [25593] CRITICAL:core:yyerror: parse error in config file, line 185, column 19-20: Parameter <use_domain> not found in module <alias_db> - can't set
+
+May  8 12:35:57 [25593] ERROR:core:set_mod_param_regex: parameter <rr_store_param> not found in module <uac>
+May  8 12:35:57 [25593] CRITICAL:core:yyerror: parse error in config file, line 301, column 22-23: Parameter <rr_store_param> not found in module <uac> - can't set
+
+May  8 12:35:57 [25593] ERROR:core:set_mod_param_regex: parameter <sort_order> not found in module <drouting>
+May  8 12:35:57 [25593] CRITICAL:core:yyerror: parse error in config file, line 324, column 19-20: Parameter <sort_order> not found in module <drouting> - can't set
+
+
+May  8 12:35:57 [25593] CRITICAL:core:yyerror: parse error in config file, line 413, column 29-30: unknown command <allow_source_address>, missing loadmodule?
+May  8 12:35:57 [25593] CRITICAL:core:yyerror: parse error in config file, line 605, column 21-22: unknown command <allow_trusted>, missing loadmodule?
+May  8 12:35:57 [25593] CRITICAL:core:yyerror: parse error in config file, line 760, column 21-22: unknown command <allow_trusted>, missing loadmodule?
+May  8 12:35:57 [25593] ERROR:core:main: bad config file (13 errors)
