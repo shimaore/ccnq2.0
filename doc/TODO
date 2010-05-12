@@ -4,6 +4,7 @@
 * API: get CDRs
 * end-of-month processing (including partial days)
 * daily crontab (e.g. import number of DIDs for partial month counts)
+  .. e.g.: generate a CDR for number of numbers / endpoints / locations per account_sub ?
 * CDR + cost analysis on carrier SBC
   - collect CDRs
   - do rating analysis (private plans)
