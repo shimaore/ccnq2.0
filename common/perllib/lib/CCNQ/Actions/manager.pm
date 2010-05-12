@@ -164,7 +164,7 @@ sub _response {
               debug("Next activity ID=$next_activity_id was submitted.");
             } else {
               # Actually not an error, most often times we get "Message queued for activity ..." as a reply.
-              error("Submission failed (in response): $res->[1] for activity ID=$next_activity_id");
+              warning("Submission failed (in response): $res->[1] for activity ID=$next_activity_id");
             }
             $rcv->send('cancel');
           });
