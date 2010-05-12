@@ -128,6 +128,15 @@ span.method, span.status {
 span.from_addr, span.to_addr {
   color: #030;
 }
+div.completed {
+  color: #030;
+}
+div.failed {
+  color: #300;
+}
+div.status {
+  display: inline;
+}
 
 /* Reports */
 div.row {
