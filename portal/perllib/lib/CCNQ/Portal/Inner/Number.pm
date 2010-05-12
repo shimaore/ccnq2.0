@@ -128,8 +128,7 @@ sub submit_number {
     inbound_username
   ));
 
-  my $number = $params->{number};
-  $number = $normalize_number->($number) if defined $normalize_number;
+  my $number = $normalize_number->($params->{number});
   return CCNQ::Portal::content( error => _('Please specify a valid number')_ ) unless $number;
 
   return _update_number($account,$number,$params);
@@ -159,8 +158,7 @@ sub get_forwarding {
 
   my $account = session('account');
 
-  my $number = params->{number};
-  $number = $normalize_number->($number) if defined $normalize_number;
+  my $number = $normalize_number->(params->{number});
   return CCNQ::Portal::content( error => _('Please specify a valid number')_ ) unless $number;
 
   my $number_data = get_number($account,$number);
@@ -175,8 +173,7 @@ sub submit_forwarding {
 
   my $account  = session('account');
 
-  my $number = params->{number};
-  $number = $normalize_number->($number) if defined $normalize_number;
+  my $number = $normalize_number->(params->{number});
   return CCNQ::Portal::content( error => _('Please specify a valid number')_ ) unless $number;
 
   my $params = {};
@@ -188,8 +185,7 @@ sub submit_forwarding {
   my $forwarding_type = $params->{forwarding_type};
   return CCNQ::Portal::content unless grep { $forwarding_type eq $_ } qw( none all err );
 
-  my $forwarding_number = $params->{forwarding_number};
-  $forwarding_number = $normalize_number->($forwarding_number) if defined $normalize_number;
+  my $forwarding_number = $normalize_number->($params->{forwarding_number});
 
   # Forwarding number must be provided for all types except "none"/Never.
   return CCNQ::Portal::content( error => _('Please specify a valid forwarding number')_ )
