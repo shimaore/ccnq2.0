@@ -119,7 +119,7 @@ sub do_delete
     my @delete_commands = $self->delete($params);
 
     if(!@delete_commands) {
-      die ["Invalid parameters"];
+      die ["Invalid parameters",$params];
     }
 
     return $self->do_sql(@delete_commands);
@@ -141,7 +141,7 @@ sub do_update
     # Parameter errors are indicated by the methods returning
     # empty lists.
     if(!@delete_commands || !@insert_commands) {
-      die ["Invalid parameters"];
+      die ["Invalid parameters",$params];
     }
 
     return $self->do_sql(@delete_commands,@insert_commands);
