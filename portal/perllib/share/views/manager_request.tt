@@ -1,5 +1,5 @@
 <% USE loc %>
-<% IF user_name %>
+<% IF session.user_id %>
 <div class="manager">
   <fieldset><legend><% | loc %>Code for request <% params.request_type | html %><% END %></legend>
     <form action="/manager/<% params.request_type | uri %>" method="POST"  accept-charset="utf-8" class="ui-widget validate">

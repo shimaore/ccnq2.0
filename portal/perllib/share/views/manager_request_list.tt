@@ -1,5 +1,5 @@
 <% USE loc %>
-<% IF user_name %>
+<% IF session.user_id %>
 <div class="manager">
   <% IF result %>
   <fieldset><legend><% | loc %>Review or modify existing request<% END %></legend>

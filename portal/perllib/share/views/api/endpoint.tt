@@ -1,5 +1,5 @@
 <% USE loc %>
-<% IF not user_name %>
+<% IF not session.user_id %>
 <% | loc %>Please log in.<% END %>
 <% ELSIF not session.account %>
 <% | loc %>Please select an account.<% END %>

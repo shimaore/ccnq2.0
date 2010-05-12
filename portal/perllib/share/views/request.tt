@@ -1,5 +1,5 @@
 <% USE loc %>
-<% IF user_name %>
+<% IF session.user_id %>
 <div class="request">
 <% FOREACH row IN result.rows %>
   <% SET r = row.doc %>

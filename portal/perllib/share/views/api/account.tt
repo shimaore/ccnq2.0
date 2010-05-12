@@ -59,7 +59,7 @@
       </p>
     </form>
   </fieldset>
-  <% ELSIF user_name %>
+  <% ELSIF session.user_id %>
     <% | loc %>Please select an account.<% END %>
   <% ELSE %>
     <% | loc %>Please log in.<% END %>
