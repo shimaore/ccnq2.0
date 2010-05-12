@@ -16,6 +16,7 @@ package CCNQ::Manager::Requests::user_update;
 use strict; use warnings;
 
 use CCNQ::Billing;
+use CCNQ::Manager;
 
 sub run {
   my $request = shift;
@@ -28,6 +29,7 @@ sub run {
         map { $_ => $request->{$_} } qw( user_id name email billing_accounts )
       }
     },
+    CCNQ::Manager::request_completed(),
   );
 }
 
