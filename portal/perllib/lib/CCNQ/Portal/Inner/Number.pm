@@ -99,7 +99,7 @@ sub get_default {
 }
 
 sub submit_number {
-  my ($api_name) = @_;
+  my ($api_name,$normalize_number) = @_;
 
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
   return CCNQ::Portal::content unless session('account');
@@ -129,13 +129,14 @@ sub submit_number {
   ));
 
   my $number = $params->{number};
+  $number = $normalize_number->($number) if defined $normalize_number;
   return CCNQ::Portal::content unless $number;
 
   return _update_number($account,$number,$params);
 }
 
 sub submit_default {
-  my ($category_to_route) = @_;
+  my ($category_to_route,$normalize_number) = @_;
 
   var template_name => 'api/number';
 
@@ -145,7 +146,7 @@ sub submit_default {
   # and category_to_criteria->{params->{category}}->($endpoint)
   or return CCNQ::Portal::content;
 
-  return CCNQ::Portal::Inner::Number::submit_number($category_to_route->{params->{category}});
+  return CCNQ::Portal::Inner::Number::submit_number($category_to_route->{params->{category}},$normalize_number);
 }
 
 # Customer-facing forwarding tools
@@ -158,7 +159,8 @@ sub get_forwarding {
 
   my $account = session('account');
 
-  my $number = $normalize_number->(params->{number});
+  my $number = params->{number};
+  $number = $normalize_number->($number) if defined $normalize_number;
   return CCNQ::Portal::content unless $number;
 
   my $number_data = get_number($account,$number);
@@ -173,7 +175,8 @@ sub submit_forwarding {
 
   my $account  = session('account');
 
-  my $number = $normalize_number->(params->{number});
+  my $number = params->{number};
+  $number = $normalize_number->($number) if defined $normalize_number;
   return CCNQ::Portal::content unless $number;
 
   my $params = {};
@@ -185,7 +188,8 @@ sub submit_forwarding {
   my $forwarding_type = $params->{forwarding_type};
   return CCNQ::Portal::content unless grep { $forwarding_type eq $_ } qw( none all err );
 
-  my $forwarding_number = $normalize_number->($params->{forwarding_number});
+  my $forwarding_number = $params->{forwarding_number};
+  $forwarding_number = $normalize_number->($forwarding_number) if defined $normalize_number;
 
   # Forwarding number must be provided for all types except "none"/Never.
   return CCNQ::Portal::content if $forwarding_type ne 'none' and not $forwarding_number;
