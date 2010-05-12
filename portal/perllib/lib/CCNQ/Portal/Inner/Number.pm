@@ -111,6 +111,9 @@ sub submit_number {
 
   my $endpoint_data = CCNQ::Portal::Inner::Endpoint::get_endpoint($account,$endpoint);
 
+  my $number = $normalize_number->(params->{number});
+  return CCNQ::Portal::content( error => _('Please specify a valid number')_ ) unless $number;
+
   my $params = {
     api_name      => $api_name,
     account       => $endpoint_data->{account},
@@ -121,15 +124,12 @@ sub submit_number {
     username      => $endpoint_data->{username},
     username_domain => $endpoint_data->{domain},
     cluster       => $endpoint_data->{cluster},
+    number        => $number,
   };
 
   CCNQ::Portal::Util::neat($params,qw(
-    number
     inbound_username
   ));
-
-  my $number = $normalize_number->($params->{number});
-  return CCNQ::Portal::content( error => _('Please specify a valid number')_ ) unless $number;
 
   return _update_number($account,$number,$params);
 }
