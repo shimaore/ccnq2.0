@@ -64,7 +64,7 @@
 <% IF is_sysadmin %>
 <fieldset>
   <legend>Manage another User Profile</legend>
-  <form id="select_user_form" action="/user_profile/select" method="post" class="ui-widget validate" accept-charset="utf-8">
+  <form id="select_user_form" action="/user_profile/select" method="post" class="ui-widget" accept-charset="utf-8">
     <p class="ui-helper-clearfix">
     <label for="user_id" class="left"><% | loc %>User ID<% END %></label>
     <input type="text" name="user_id" value="<% field.id | html %>" class="required"/>
