@@ -130,10 +130,7 @@ sub submit_number {
 
   my $number = $params->{number};
   $number = $normalize_number->($number) if defined $normalize_number;
-  unless($number) {
-    var error => _('Please specify a valid number')_;
-    return CCNQ::Portal::content;
-  }
+  return CCNQ::Portal::content( error => _('Please specify a valid number')_ ) unless $number;
 
   return _update_number($account,$number,$params);
 }
@@ -147,7 +144,7 @@ sub submit_default {
   exists(vars->{cluster_to_profiles}->{params->{cluster}}->{params->{inbound_username}}) and
   exists(vars->{category_to_criteria}->{params->{category}})
   # and category_to_criteria->{params->{category}}->($endpoint)
-  or return CCNQ::Portal::content;
+  or return CCNQ::Portal::content( error => _('Invalid parameters')_ );
 
   return CCNQ::Portal::Inner::Number::submit_number($category_to_route->{params->{category}},$normalize_number);
 }
@@ -164,10 +161,7 @@ sub get_forwarding {
 
   my $number = params->{number};
   $number = $normalize_number->($number) if defined $normalize_number;
-  unless($number) {
-    var error => _('Please specify a valid number')_;
-    return CCNQ::Portal::content;
-  }
+  return CCNQ::Portal::content( error => _('Please specify a valid number')_ ) unless $number;
 
   my $number_data = get_number($account,$number);
   var field => $number_data;
@@ -183,10 +177,7 @@ sub submit_forwarding {
 
   my $number = params->{number};
   $number = $normalize_number->($number) if defined $normalize_number;
-  unless($number) {
-    var error => _('Please specify a valid number')_;
-    return CCNQ::Portal::content;
-  }
+  return CCNQ::Portal::content( error => _('Please specify a valid number')_ ) unless $number;
 
   my $params = {};
   CCNQ::Portal::Util::neat($params,qw(
@@ -201,10 +192,8 @@ sub submit_forwarding {
   $forwarding_number = $normalize_number->($forwarding_number) if defined $normalize_number;
 
   # Forwarding number must be provided for all types except "none"/Never.
-  if( $forwarding_type ne 'none' && !$forwarding_number ) {
-    var error => _('Please specify a valid forwarding number')_;
-    return CCNQ::Portal::content;
-  }
+  return CCNQ::Portal::content( error => _('Please specify a valid forwarding number')_ )
+    if $forwarding_type ne 'none' and not $forwarding_number;
 
   $params->{forwarding_number} = $forwarding_number;
 
