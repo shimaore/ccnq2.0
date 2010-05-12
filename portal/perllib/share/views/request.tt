@@ -5,7 +5,7 @@
   <% SET r = row.doc %>
   <% IF r.status %>
     <% IF r.status == 'failed' %><% SET do_not_refresh = 1 %><% END %>
-    <div class="status <% r.status %>">Node <% r.response.from %>: <% r.status %> [<% r.response.error.join(", ") %>]</div>
+    <div class="status <% r.status %>">Node <% r.response.from %>: <% r.status | loc %> <!-- <% r.response.error.join(", ") | html %> --></div>
     <% IF r.action == "trace" && r.response.result.rows %>
       <% last_call_id = '' %>
       <% FOREACH s IN r.response.result.rows %>
