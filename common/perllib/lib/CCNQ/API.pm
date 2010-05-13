@@ -107,12 +107,13 @@ sub billing_view {
   my $cb = pop;
   my ($design,$view,@id) = @_;
   my $uri = api_uri();
+  my $uri_string = $uri->as_string;
   use URI::Escape; my @map_id = map {uri_escape($_)} @id;
   use CCNQ::AE; debug("billing_view: ".CCNQ::AE::pp([$design,$view,[@id],[@map_id]]));
-  $uri->path_segments('billing',$design,$view,@map_id);
-  my $uri_string = $uri->as_string;
-  debug("billing_view: Querying $uri_string");
-  http_get $uri_string, _api_cb($cb);
+  my $path = join('/','billing',$design,$view,@map_id);
+  my $uri_final = "$uri_string/$path";
+  debug("billing_view: Querying $uri_final");
+  http_get $uri_final, _api_cb($cb);
   return;
 }
 
