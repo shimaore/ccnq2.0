@@ -16,6 +16,7 @@ package CCNQ::Manager::Requests::account_sub_update;
 use strict; use warnings;
 
 use CCNQ::Billing;
+use CCNQ::Manager;
 
 sub run {
   my $request = shift;
