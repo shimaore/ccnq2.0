@@ -31,6 +31,8 @@ use AnyEvent::CouchDB;
 use CCNQ::AE;
 use CCNQ::HTTPD;
 use Encode;
+use URI;
+use URI::Escape;
 use Logger::Syslog;
 use Carp;
 use CCNQ::Install;
@@ -231,7 +233,7 @@ sub _session_ready {
       my ($view,$id);
       if($path =~ m{^/provisioning/(\w+)/(\w+)/(.*)$}) {
         $view = $1.'/'.$2;
-        $id   = [map { decode_utf8($_) } split(qr|/|,$3)];
+        $id   = [map { decode_utf8(uri_unescape($_)) } split(qr|/|,$3)];
       } else {
         $req->respond([404,'Invalid request']);
         $httpd->stop_request;
@@ -269,13 +271,10 @@ sub _session_ready {
       my $url = URI->new($req->url);
       my $path = $url->path;
 
-      use URI::Escape;
-      $path = uri_unescape($path);
-
       my ($view,$id);
       if($path =~ m{^/billing/(\w+)/(\w+)/(.*)$}) {
         $view = $1.'/'.$2;
-        $id   = [map { decode_utf8($_) } split(qr|/|,$3)];
+        $id   = [map { decode_utf8(uri_unescape($_)) } split(qr|/|,$3)];
       } else {
         $req->respond([404,'Invalid request']);
         $httpd->stop_request;
