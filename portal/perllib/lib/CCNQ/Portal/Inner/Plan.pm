@@ -46,10 +46,10 @@ sub gather_field {
   my $cv2 = AE::cv;
   CCNQ::API::billing_view('report','plans',$plan_name,$cv2);
   my $r2 = CCNQ::AE::receive($cv2) || { rows => [] };
-  my $plan_data = $r2->{rows}->[0]->{doc} || { decimals => 2 };
+  my $plan_data = $r2->{rows}->[0]->{doc} || { name => $plan_name, decimals => 2 };
 
   my $field = {
-    name          => $plan_name,
+    name          => $plan_data->{name},
     currency      => $plan_data->{currency},
     decimals      => $plan_data->{decimals},
 
