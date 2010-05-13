@@ -270,7 +270,7 @@ sub view_cv {
     include_docs => "true",
   };
 
-  debug("view_cv for key ".join(',',@key_prefix));
+  debug(decode_utf8("view_cv for key ".join(',',@key_prefix)));
 
   my $view = $params->{view} eq '_all_docs' ?
       $couch_db->all_docs() :
