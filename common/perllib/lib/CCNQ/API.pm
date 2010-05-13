@@ -103,12 +103,19 @@ sub provisioning_view {
   return;
 }
 
+sub escape_utf8_uri {
+  my ($t) = @_;
+  $t = encode_utf8($t);
+  $t =~ s/([^\w])/sprintf('%%%02x',ord($1))/gxe;
+  return $t;
+}
+
 sub billing_view {
   my $cb = pop;
   my ($design,$view,@id) = @_;
   my $uri = api_uri();
   my $uri_string = $uri->as_string;
-  use URI::Escape; my @map_id = map {uri_escape_utf8($_)} @id;
+  my @map_id = map {escape_utf8_uri($_)} @id;
   use CCNQ::AE; debug("billing_view: ".CCNQ::AE::pp([$design,$view,[@id],[@map_id]]));
   my $path = join('/','billing',$design,$view,@map_id);
   my $uri_final = "$uri_string/$path";
