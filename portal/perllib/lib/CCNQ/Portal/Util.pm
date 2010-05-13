@@ -28,7 +28,8 @@ a hashref.
 sub neat {
   my $params = shift;
   for my $p (@_) {
-    my $v = Encode::decode_utf8(params->{$p});
+    my $v = params->{$p};
+    $v = Encode::decode_utf8($v) unless Encode::is_utf8($v);
     next unless defined $v;
     $v =~ s/^\s+//; $v =~ s/^\s+$//; $v =~ s/\s+/ /g;
     next if $v eq '';
