@@ -108,7 +108,9 @@ sub billing_view {
   my ($design,$view,@id) = @_;
   my $uri = api_uri();
   $uri->path_segments('billing',$design,$view,map { Encode::encode_utf8($_) } @id);
-  http_get $uri->as_string, _api_cb($cb);
+  my $uri_string = $uri->as_string;
+  debug("billing_view: Querying $uri_string");
+  http_get $uri_string, _api_cb($cb);
   return;
 }
 
