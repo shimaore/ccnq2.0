@@ -106,7 +106,7 @@ sub provisioning_view {
 sub escape_utf8_uri {
   my ($t) = @_;
   $t = encode_utf8($t);
-  $t =~ s/([^\w])/sprintf('%%%02x',ord($1))/gxe;
+  $t =~ s/([^\w])/'%'.sprintf('%02x',ord($1))/gxe;
   return $t;
 }
 
