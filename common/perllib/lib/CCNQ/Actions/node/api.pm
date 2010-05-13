@@ -285,6 +285,8 @@ sub _session_ready {
         return;
       }
 
+      debug("node/api: billing view $view with id ".join('/',@{$id}));
+
       CCNQ::Billing::billing_view({
         view => $view,
         _id  => $id,
