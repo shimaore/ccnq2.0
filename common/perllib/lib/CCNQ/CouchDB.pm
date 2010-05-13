@@ -271,6 +271,12 @@ sub view_cv {
     include_docs => "true",
   };
 
+  debug("view_cv: ".
+    join(',', map {
+        join(' ', map { sprintf("%04x",$_) } unpack("U*",$_));
+      } @key_prefix )
+  );
+
   my $view = $params->{view} eq '_all_docs' ?
       $couch_db->all_docs() :
       $couch_db->view($params->{view},$options);
