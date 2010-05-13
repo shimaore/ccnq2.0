@@ -11,7 +11,7 @@
         <span><% field.name | html %></span>
       </p>
       <p class="ui-helper-clearfix">
-        <label for="currency" class="left"><% | loc %>Plan currency:<% END %></label>
+        <label for="currency" class="left"><% | loc %>Plan currency:<% END %><!-- <% field.currency | html %> --></label>
         <select name="currency" class="required">
           <option value=""></option>
           <% FOREACH this IN field.currencies %>
