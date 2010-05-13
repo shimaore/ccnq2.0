@@ -260,7 +260,7 @@ sub view_cv {
   unless($params->{_id} && ref($params->{_id}) eq 'ARRAY') {
     die 'ID is required and must be an array';
   }
-  my @key_prefix = map { decode_utf8($_) } @{$params->{_id}};
+  my @key_prefix = @{$params->{_id}};
 
   # Return a CouchDB record, or a set of records
   my $couch = couch($uri);
@@ -270,8 +270,6 @@ sub view_cv {
     endkey       => [@key_prefix,{}],
     include_docs => "true",
   };
-
-  debug("view_cv for key ".join(',',@key_prefix));
 
   my $view = $params->{view} eq '_all_docs' ?
       $couch_db->all_docs() :
