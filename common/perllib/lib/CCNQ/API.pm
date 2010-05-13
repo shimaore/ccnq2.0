@@ -108,7 +108,7 @@ sub billing_view {
   my ($design,$view,@id) = @_;
   my $uri = api_uri();
   my $uri_string = $uri->as_string;
-  use URI::Escape; my @map_id = map {uri_escape($_)} @id;
+  use URI::Escape; my @map_id = map {uri_escape_utf8($_)} @id;
   use CCNQ::AE; debug("billing_view: ".CCNQ::AE::pp([$design,$view,[@id],[@map_id]]));
   my $path = join('/','billing',$design,$view,@map_id);
   my $uri_final = "$uri_string/$path";
