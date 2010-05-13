@@ -18,6 +18,9 @@ use strict; use warnings;
 use constant api_rendezvous_host => '127.0.0.1';
 use constant api_rendezvous_port => 9090;
 
+use URI;
+use Encode;
+
 use constant::defer api_uri => sub {
   my $uri = URI->new();
   $uri->scheme('http');
@@ -36,7 +39,6 @@ use AnyEvent;
 use CCNQ::AE;
 use AnyEvent::HTTP;
 use CCNQ::Install;
-use URI;
 use JSON;
 use Logger::Syslog;
 
@@ -96,7 +98,7 @@ sub provisioning_view {
   my $cb = pop;
   my ($design,$view,@id) = @_;
   my $uri = api_uri();
-  $uri->path_segments('provisioning',$design,$view,@id);
+  $uri->path_segments('provisioning',$design,$view,map { Encode::encode_utf8($_) } @id);
   http_get $uri->as_string, _api_cb($cb);
   return;
 }
@@ -105,7 +107,7 @@ sub billing_view {
   my $cb = pop;
   my ($design,$view,@id) = @_;
   my $uri = api_uri();
-  $uri->path_segments('billing',$design,$view,@id);
+  $uri->path_segments('billing',$design,$view,map { Encode::encode_utf8($_) } @id);
   http_get $uri->as_string, _api_cb($cb);
   return;
 }
