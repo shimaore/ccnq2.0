@@ -22,6 +22,7 @@ use Logger::Syslog;
 use AnyEvent;
 use AnyEvent::CouchDB;
 use CCNQ::AE;
+use Encode;
 
 sub receive_ok {
   my ($rcv,$cv) = @_;
