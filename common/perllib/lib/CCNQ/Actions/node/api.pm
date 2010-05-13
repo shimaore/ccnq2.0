@@ -269,6 +269,9 @@ sub _session_ready {
       my $url = URI->new($req->url);
       my $path = $url->path;
 
+      use URI::Escape;
+      $path = uri_unescape($path);
+
       my ($view,$id);
       if($path =~ m{^/billing/(\w+)/(\w+)/(.*)$}) {
         $view = $1.'/'.$2;
