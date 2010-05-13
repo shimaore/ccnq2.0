@@ -107,9 +107,9 @@ sub billing_view {
   my $cb = pop;
   my ($design,$view,@id) = @_;
   my $uri = api_uri();
-  my @enc_id = map { Encode::encode_utf8($_) } @id;
-  use CCNQ::AE; debug("billing_view: ".CCNQ::AE::pp([$design,$view,[@id],[@enc_id]]));
-  $uri->path_segments('billing',$design,$view,@enc_id);
+  use URI::Escape; my @map_id = map {uri_escape($_)} @id;
+  use CCNQ::AE; debug("billing_view: ".CCNQ::AE::pp([$design,$view,[@id],[@map_id]]));
+  $uri->path_segments('billing',$design,$view,@map_id);
   my $uri_string = $uri->as_string;
   debug("billing_view: Querying $uri_string");
   http_get $uri_string, _api_cb($cb);
