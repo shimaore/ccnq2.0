@@ -42,6 +42,8 @@ sub gather_currencies {
 sub gather_field {
   my ($plan_name) = @_;
 
+  debug("Gathering data for plan $plan_name");
+
   # Get the information from the API.
   my $cv2 = AE::cv;
   CCNQ::API::billing_view('report','plans',$plan_name,$cv2);
