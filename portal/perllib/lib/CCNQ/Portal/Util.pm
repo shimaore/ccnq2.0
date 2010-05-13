@@ -16,7 +16,7 @@ package CCNQ::Portal::Util;
 use strict; use warnings;
 
 use Dancer ':syntax';
-use Encode;
+use Encode qw(:fallbacks);
 
 =head2 neat(\$result,@fields)
 
@@ -29,7 +29,7 @@ sub neat {
   my $params = shift;
   for my $p (@_) {
     my $v = params->{$p};
-    # $v = Encode::decode_utf8($v) unless Encode::is_utf8($v);
+    $v = Encode::decode_utf8($v,Encode::FB_HTMLCREF);
     next unless defined $v;
     $v =~ s/^\s+//; $v =~ s/^\s+$//; $v =~ s/\s+/ /g;
     next if $v eq '';
