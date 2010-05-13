@@ -92,10 +92,10 @@ get '/billing/plan/:name' => sub {
   var template_name => 'api/plan';
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
 
-  return unless params->{name} =~ /\S/;
-  my $name = params->{name};
-  $name =~ s/^\s+//; $name =~ s/^\s+$//; $name =~ s/\s+/ /g;
-  gather_field($name);
+  my $params = CCNQ::Portal::Util::neat({},qw(name));
+  return unless $params->{name} =~ /\S/;
+
+  gather_field($params->{name});
 
   return CCNQ::Portal::content;
 };
