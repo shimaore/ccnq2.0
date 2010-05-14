@@ -23,7 +23,7 @@ requires      'AnyEvent::Watchdog::Util'  => '1.0';
 requires      'AnyEvent::DBI'             => '2.0';
 
 requires      'CouchDB::View'             => 0;
-requires      'AnyEvent::CouchDB'         => '1.14';
+requires      'AnyEvent::CouchDB'         => '1.20';
 
 requires      'Async::Interrupt'          => 0;
 requires      'Guard'                     => 0;
