@@ -36,7 +36,7 @@ get '/request/:request_id' => sub {
   # XXX Authenticate (i.e. check that this user can legitimately access this request.)
 
   my $cv = AE::cv;
-  CCNQ::API::request_query($request_id,$cv);
+  CCNQ::API::request($request_id,$cv);
   my $res = $cv->recv;
 
   my $pcap = $res->{rows}->[2]->{doc}->{response}->{result}->{pcap};

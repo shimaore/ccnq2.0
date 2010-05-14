@@ -86,7 +86,7 @@ sub api_query  { _api('GET',@_) }
 sub api_update { _api('PUT',@_) }
 sub api_delete { _api('DELETE',@_) }
 
-sub request_query {
+sub request {
   my ($request_id,$cb) = @_;
   my $uri = api_uri();
   $uri->path_segments('request',$request_id);
@@ -94,7 +94,7 @@ sub request_query {
   return;
 }
 
-sub provisioning_view {
+sub provisioning {
   my $cb = pop;
   my ($design,$view,@id) = @_;
   my $uri = api_uri();
@@ -103,7 +103,7 @@ sub provisioning_view {
   return;
 }
 
-sub billing_view {
+sub billing {
   my $cb = pop;
   my ($design,$view,@id) = @_;
   my $uri = api_uri();

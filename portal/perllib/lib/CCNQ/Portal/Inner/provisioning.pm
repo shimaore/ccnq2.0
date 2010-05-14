@@ -39,9 +39,9 @@ get '/provisioning/view/:view/:id' => sub {
 
   my $cv = AE::cv;
   if($id eq '_all') {
-    CCNQ::API::provisioning_view('report',params->{view},$account,$cv);
+    CCNQ::API::provisioning('report',params->{view},$account,$cv);
   } else {
-    CCNQ::API::provisioning_view('report',params->{view},$account,$id,$cv);
+    CCNQ::API::provisioning('report',params->{view},$account,$id,$cv);
   }
   var result => $cv->recv;
   return CCNQ::Portal::content;
@@ -55,7 +55,7 @@ get '/provisioning/view/account' => sub {
   my $account = session('account');
 
   my $cv = AE::cv;
-  CCNQ::API::provisioning_view('report','account',$account,$cv);
+  CCNQ::API::provisioning('report','account',$account,$cv);
   var result => $cv->recv;
   return CCNQ::Portal::content;
 };

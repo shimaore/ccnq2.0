@@ -31,7 +31,7 @@ use CCNQ::Portal::Inner::Endpoint;
 sub get_number {
   my ($account,$number) = @_;
   my $cv = AE::cv;
-  CCNQ::API::provisioning_view('report','number',$account,$number,$cv);
+  CCNQ::API::provisioning('report','number',$account,$number,$cv);
   my $numbers = CCNQ::AE::receive($cv);
   return $numbers->{rows}->[0]->{doc} || {};
 }

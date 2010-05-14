@@ -29,7 +29,7 @@ use JSON;
 sub gather_plans {
   my $account = session('account');
   my $cv = AE::cv;
-  CCNQ::API::billing_view('report','plans','',$cv);
+  CCNQ::API::billing('report','plans','',$cv);
   my $r = CCNQ::AE::receive($cv) || { rows => [] };
   my @plans = map { $_->{doc} } @{$r->{rows}};
   return [@plans];
@@ -44,7 +44,7 @@ sub gather_field {
 
   # Get the information from the API.
   my $cv2 = AE::cv;
-  CCNQ::API::billing_view('report','plans',$plan_name,$cv2);
+  CCNQ::API::billing('report','plans',$plan_name,$cv2);
   my $r2 = CCNQ::AE::receive($cv2) || { rows => [] };
   my $plan_data = $r2->{rows}->[0]->{doc} || { name => $plan_name, decimals => 2 };
 

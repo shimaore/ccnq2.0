@@ -28,7 +28,7 @@ use CCNQ::Portal::Inner::Plan;
 sub account_subs {
   my $account = shift;
   my $cv3 = AE::cv;
-  CCNQ::API::billing_view('report','account_subs',$account,$cv3);
+  CCNQ::API::billing('report','account_subs',$account,$cv3);
   my $account_subs = CCNQ::AE::receive($cv3);
   my @account_subs = map { $_->{doc} } @{$account_subs->{rows} || []};
   return [@account_subs];
@@ -54,7 +54,7 @@ sub gather_field {
 
   # Get the information from the API.
   my $cv2 = AE::cv;
-  CCNQ::API::billing_view('report','accounts',$account,$cv2);
+  CCNQ::API::billing('report','accounts',$account,$cv2);
   my $r2 = CCNQ::AE::receive($cv2) || { rows => [] };
   my $account_billing_data = $r2->{rows}->[0]->{doc} || {};
 
@@ -82,7 +82,7 @@ sub gather_field_sub {
 
   # Get the information from the API.
   my $cv2 = AE::cv;
-  CCNQ::API::billing_view('report','account_subs',$account,$account_sub,$cv2);
+  CCNQ::API::billing('report','account_subs',$account,$account_sub,$cv2);
   my $r2 = CCNQ::AE::receive($cv2) || { rows => [] };
   my $account_sub_billing_data = $r2->{rows}->[0]->{doc} || {};
 
