@@ -112,6 +112,14 @@ sub billing {
   return;
 }
 
+sub rating_table {
+  my $cb = pop;
+  my $uri = api_uri();
+  $uri->path_segments('rating_table',map { Encode::encode_utf8($_) } @_);
+  http_get $uri->as_string, _api_cb($cb);
+  return;
+}
+
 sub _manager {
   my $cb = pop;
   my ($method,$request_type,$code) = @_;

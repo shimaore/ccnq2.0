@@ -304,6 +304,58 @@ sub _session_ready {
       $httpd->stop_request;
     },
 
+    # For billing/rating we use our local copy of the database.
+    '/rating_table' => sub {
+      my ($httpd, $req) = @_;
+
+      debug("node/api: Processing rating_table view");
+
+      use URI;
+      my $url = URI->new($req->url);
+      my $path = $url->path;
+
+      my ($table,$prefix);
+      if($path =~ m{^/rating_table/(\w+)/(\S+)$}) {
+        ($table,$prefix) = ($1,$2);
+      } elsif($path =~ m{^/rating_table/(\w+)$}) {
+        ($table) = ($1);
+      } elsif($path =~ m{^/rating_table$}) {
+        ($table) = ($1);
+      } else {
+        $req->respond([404,'Invalid request']);
+        $httpd->stop_request;
+        return;
+      }
+
+      my $cv;
+      if($req->method eq 'GET') {
+        if(defined $table) {
+          if(defined $prefix) {
+            $cv = CCNQ::Billing::Table::retrieve_prefix({ name => $table, prefix => $prefix });
+          } else {
+            $cv = CCNQ::Billing::Table::all_prefixes({ name => $table });
+          }
+        } else {
+          $cv = CCNQ::Billing::Table::all_tables();
+        }
+      } else {
+        $req->respond([404,'Invalid request']);
+        $httpd->stop_request;
+        return;
+      }
+
+      $cv->cb(sub{
+        my $response = CCNQ::AE::receive(shift);
+        if($response) {
+          $req->respond([200,'OK',{ 'Content-Type' => 'text/json' }, encode_json($response)]);
+        } else {
+          $req->respond([500,'No results']);
+        }
+      });
+
+      $httpd->stop_request;
+    },
+
     '/manager' => sub {
       my ($httpd, $req) = @_;
 

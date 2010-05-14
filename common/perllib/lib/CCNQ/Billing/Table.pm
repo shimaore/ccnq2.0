@@ -16,6 +16,9 @@ package CCNQ::Billing::Table;
 use strict; use warnings;
 
 use CCNQ::Rating::Table;
+use AnyEvent;
+use AnyEvent::CouchDB;
+use CCNQ::AE;
 
 sub _db_name { return "table_".$_[0] }
 
@@ -29,7 +32,30 @@ sub create {
   return $rcv;
 }
 
+sub all_tables {
+  my $rcv = AE::cv;
+  my $couch = couch(CCNQ::Billing::billing_uri);
+  $couch->all_dbs->cb(sub{
+    my $dbs = CCNQ::AE::receive(@_);
+    $rcv->send( $dbs && [ grep { /^table_/ } @$dbs ]);
+  });
+  return $rcv;
+}
+
 use CCNQ::Billing;
+
+sub all_prefixes {
+  my ($params) = @_;
+  my $name       = delete $params->{name};
+  return CCNQ::CouchDB::view_cv(CCNQ::Billing::billing_uri,_db_name($name),{ view => '_all_docs' });
+}
+
+sub retrieve_prefix {
+  my ($params) = @_;
+  my $name       = delete $params->{name};
+  $params->{_id} = delete $params->{prefix};
+  return CCNQ::CouchDB::retrieve_cv(CCNQ::Billing::billing_uri,_db_name($name),$params);
+}
 
 sub update_prefix {
   my ($params) = @_;
