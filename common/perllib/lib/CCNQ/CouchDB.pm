@@ -247,6 +247,11 @@ sub retrieve_cv {
 Views in CCNQ::CouchDB always return an array as key. This is used
 so that we can return records that match a prefix.
 
+=head2 view_cv($uri,$db_name,{ view => $view_name, _id => [key1,key2,..] })
+
+Return a condvar which will return either undef or { rows => [ row1, row2, .. ] }
+where row1, row2, .. are hashrefs of row records.
+
 =cut
 
 sub view_cv {
@@ -257,29 +262,34 @@ sub view_cv {
   unless($params->{view}) {
     die 'View is required';
   }
-  unless($params->{_id} && ref($params->{_id}) eq 'ARRAY') {
-    die 'ID is required and must be an array';
-  }
-  my @key_prefix = @{$params->{_id}};
 
-  # Return a CouchDB record, or a set of records
   my $couch = couch($uri);
   my $couch_db = $couch->db($db_name);
-  my $options = {
-    startkey     => [@key_prefix],
-    endkey       => [@key_prefix,{}],
-    include_docs => "true",
-  };
+
+  my $view;
+  if($params->{view} eq '_all_docs') {
+    $view = $couch_db->all_docs();
+  } else {
+    unless($params->{_id} && ref($params->{_id}) eq 'ARRAY') {
+      die 'ID is required and must be an array';
+    }
+
+    my @key_prefix = @{$params->{_id}};
+
+    my $options = {
+      startkey     => [@key_prefix],
+      endkey       => [@key_prefix,{}],
+      include_docs => "true",
+    };
+
+    $view = $couch_db->view($params->{view},$options);
+  }
 
   debug("view_cv: ".
     join(',', map {
         join(' ', map { sprintf("%04x",$_) } unpack("U*",$_));
       } @key_prefix )
   );
-
-  my $view = $params->{view} eq '_all_docs' ?
-      $couch_db->all_docs() :
-      $couch_db->view($params->{view},$options);
 
   $view->cb(sub{
     my $view = CCNQ::AE::receive(@_);

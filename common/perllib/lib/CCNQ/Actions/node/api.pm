@@ -338,6 +338,7 @@ sub _session_ready {
       if($path =~ m{^/manager/([\w-]+)$}) {
         # Retrieve / update / delete one
         $body->{_id} = $1;   # request type
+        delete $body->{action};
         if($req->method eq 'GET') {
           $body->{action} = 'manager_retrieve';
         } elsif ($req->method eq 'PUT') {
@@ -348,7 +349,6 @@ sub _session_ready {
         }
       } elsif($path =~ m{^/manager$}) {
         # List all
-        $body->{_id}    = [];
         $body->{view}   = '_all_docs';
         delete $body->{action};
         if($req->method eq 'GET') {
