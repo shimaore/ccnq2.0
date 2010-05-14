@@ -79,6 +79,22 @@ sub receive {
   return $result;
 }
 
+sub receive_rows {
+  return receive(@_) || { rows => [] };
+}
+
+sub receive_docs {
+  return [ map { $_->{doc} } @{receive_rows(@_)->{rows}} ];
+}
+
+sub receive_ids {
+  return [ map { $_->{id} } @{receive_rows(@_)->{rows}} ];
+}
+
+sub receive_first_doc {
+  return receive_rows(@_)->{rows}->[0]->{doc};
+}
+
 sub croak_cv {
   my $cv = AE::cv;
   $cv->croak(@_);

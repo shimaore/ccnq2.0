@@ -29,9 +29,7 @@ sub account_subs {
   my $account = shift;
   my $cv3 = AE::cv;
   CCNQ::API::billing('report','account_subs',$account,$cv3);
-  my $account_subs = CCNQ::AE::receive($cv3);
-  my @account_subs = map { $_->{doc} } @{$account_subs->{rows} || []};
-  return [@account_subs];
+  return CCNQ::AE::receive_docs($cv3);
 }
 
 sub portal_users {
@@ -40,9 +38,7 @@ sub portal_users {
     startkey => [$account],
     endkey   => [$account,{}],
   });
-  my $portal_users = CCNQ::AE::receive($cv1);
-  my @portal_users = map { $_->{id} } @{$portal_users->{rows} || []};
-  return [@portal_users];
+  return CCNQ::AE::receive_ids($cv1);
 }
 
 sub gather_field {
@@ -55,8 +51,7 @@ sub gather_field {
   # Get the information from the API.
   my $cv2 = AE::cv;
   CCNQ::API::billing('report','accounts',$account,$cv2);
-  my $r2 = CCNQ::AE::receive($cv2) || { rows => [] };
-  my $account_billing_data = $r2->{rows}->[0]->{doc} || {};
+  my $account_billing_data = CCNQ::AE::receive_first_doc($cv2) || {};
 
   # e.g. print a list of users who receive bills for this account
   # .. that'd be the keys of the 'email_recipients' hash.
@@ -83,8 +78,7 @@ sub gather_field_sub {
   # Get the information from the API.
   my $cv2 = AE::cv;
   CCNQ::API::billing('report','account_subs',$account,$account_sub,$cv2);
-  my $r2 = CCNQ::AE::receive($cv2) || { rows => [] };
-  my $account_sub_billing_data = $r2->{rows}->[0]->{doc} || {};
+  my $account_sub_billing_data = CCNQ::AE::receive_first_doc($cv2) || {};
 
   var field => {
     name    => $account_sub_billing_data->{name},

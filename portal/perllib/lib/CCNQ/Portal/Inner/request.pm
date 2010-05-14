@@ -20,6 +20,9 @@ use CCNQ::Portal;
 use CCNQ::Portal::I18N;
 use CCNQ::API;
 
+use AnyEvent;
+use CCNQ::AE;
+
 =head1 /request/:request
 
 Display the request.
@@ -37,7 +40,7 @@ get '/request/:request_id' => sub {
 
   my $cv = AE::cv;
   CCNQ::API::request($request_id,$cv);
-  my $res = $cv->recv;
+  my $res = CCNQ::AE::receive($cv);
 
   my $pcap = $res->{rows}->[2]->{doc}->{response}->{result}->{pcap};
   if($pcap) {

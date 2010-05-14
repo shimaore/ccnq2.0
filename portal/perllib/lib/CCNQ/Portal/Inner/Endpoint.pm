@@ -66,8 +66,7 @@ sub get_endpoint {
   my ($account,$endpoint) = @_;
   my $cv = AE::cv;
   CCNQ::API::provisioning('report','endpoint',$account,$endpoint,$cv);
-  my $endpoints = CCNQ::AE::receive($cv);
-  return $endpoints->{rows}->[0]->{doc} || {};
+  return CCNQ::AE::receive_first_doc($cv) || {};
 }
 
 sub clean_params {
