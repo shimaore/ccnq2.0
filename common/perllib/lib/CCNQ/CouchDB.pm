@@ -293,13 +293,7 @@ sub view_cv {
 
   $view->cb(sub{
     my $view = CCNQ::AE::receive(@_);
-    if(!$view) {
-      debug("Document ".join(',',@key_prefix)." not found.");
-      $rcv->send;
-      return;
-    }
-
-    $rcv->send({rows => $view->{rows}});
+    $rcv->send($view);
   });
   return $rcv;
 }
