@@ -135,7 +135,7 @@ EOT
   # Versions required for mediaproxy-common include python-application (>= 1.1.5) and python-gnutls (>= 1.1.8) which are not in Debian/Lenny
   sudo aptitude install python-application/testing python-gnutls/testing
   cd ~/src
-  MEDIAPROXY=2.3.8
+  MEDIAPROXY=2.4.2
   ARCH=amd64
   wget http://opensource.sotelips.net/~stephane/${ARCH}/mediaproxy-common_${MEDIAPROXY}_${ARCH}.deb
   wget http://opensource.sotelips.net/~stephane/${ARCH}/mediaproxy-dispatcher_${MEDIAPROXY}_all.deb
