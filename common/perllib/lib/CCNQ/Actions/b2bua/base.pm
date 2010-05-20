@@ -57,7 +57,8 @@ EOT
   }
 
   # sip_profile/template
-  for my $name (qw( sbc-media sbc-nomedia )) {
+  for my $name (qw( sbc-media   sbc-media-internal   sbc-media-sbc
+                    sbc-nomedia sbc-nomedia-internal sbc-nomedia-sbc )) {
     CCNQ::B2BUA::copy_file($b2bua_name,qw( sip_profiles template ),"${name}.xml");
   }
 
