@@ -24,6 +24,7 @@
     </form>
   </td>
 </tr>
+<%END%>
 <tr><th>
   <form action="new_prefix">
     <input type="text" name="prefix" class="required"/>
