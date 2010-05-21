@@ -58,8 +58,11 @@ sub gather_prefix {
 
 sub set_rating_table {
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user and CCNQ::Portal->current_session->user->profile->is_admin;
-  if(defined params->{rating_table}) {
-    session rating_table => params->{rating_table};
+
+  my $params = CCNQ::Portal::Util::neat({}, qw( rating_table ));
+
+  if(defined $params->{rating_table}) {
+    session rating_table => $params->{rating_table};
     var template_name => 'api/rating_table/edit';
     var rating_table_prefixes => \&gather_prefixes;
     return CCNQ::Portal::content;
@@ -70,8 +73,27 @@ sub set_rating_table {
   }
 }
 
+sub new_rating_table {
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user and CCNQ::Portal->current_session->user->profile->is_admin;
+
+  my $params = CCNQ::Portal::Util::neat({}, qw( rating_table ));
+
+  if(defined $params->{rating_table}) {
+    my $cv = AE::cv;
+    CCNQ::API::api_update('table',{ name => $params->{rating_table} },$cv);
+    my $r = CCNQ::AE::receive($cv);
+    session rating_table => $params->{rating_table};
+    redirect '/request/'.$r->{request};
+  } else {
+    var template_name => 'api/rating_table/new';
+    return CCNQ::Portal::content;
+  }
+}
+
 get  '/rating_table' => \&set_rating_table;
 post '/rating_table' => \&set_rating_table;
+get  '/rating_table/new' => \&new_rating_table;
+post '/rating_table/new' => \&new_rating_table;
 
 # ******* Content update ***********
 
