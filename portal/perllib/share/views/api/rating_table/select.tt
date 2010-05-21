@@ -1,3 +1,4 @@
+<% USE loc %>
 <form>
   <select name="rating_table">
   <% FOREACH t IN rating_tables %>

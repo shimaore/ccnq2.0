@@ -1,3 +1,4 @@
+<% USE loc %>
 <table>
 <% FOREACH t IN rating_table_prefixes %>
 <tr><th><% t._id | html %></th>
