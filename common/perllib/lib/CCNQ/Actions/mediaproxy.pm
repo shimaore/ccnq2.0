@@ -22,6 +22,9 @@ use File::Copy;
 
 use Logger::Syslog;
 
+use constant::defer dispatcher_file => sub { CCNQ::MediaProxy::mediaproxy_config.'.dispatcher' };
+use constant::defer relay_file      => sub { CCNQ::MediaProxy::mediaproxy_config.'.relay' };
+
 sub _install {
   my ($params,$context) = @_;
 
@@ -30,8 +33,8 @@ sub _install {
     my $dst = File::Spec->catfile(CCNQ::MediaProxy::mediaproxy_install_conf,'tls',$file);
     CCNQ::MediaProxy::try_install($src,$dst);
   }
-  my $dispatcher_file = CCNQ::MediaProxy::mediaproxy_config.'.dispatcher';
-  my $relay_file      = CCNQ::MediaProxy::mediaproxy_config.'.relay';
+  my $dispatcher_file = dispatcher_file;
+  my $relay_file      = relay_file;
   my $config_dispatcher = -f($dispatcher_file) ? CCNQ::Util::content_of($dispatcher_file) : '';
   my $config_relay      = -f($relay_file)      ? CCNQ::Util::content_of($relay_file)      : '';
   my $config = <<'EOT';
