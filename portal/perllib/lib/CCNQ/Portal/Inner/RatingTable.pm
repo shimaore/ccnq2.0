@@ -90,8 +90,8 @@ sub new_rating_table {
   }
 }
 
-get  '/rating_table' => \&set_rating_table;
-post '/rating_table' => \&set_rating_table;
+get  '/rating_table/' => \&set_rating_table;
+post '/rating_table/' => \&set_rating_table;
 get  '/rating_table/new' => \&new_rating_table;
 post '/rating_table/new' => \&new_rating_table;
 
