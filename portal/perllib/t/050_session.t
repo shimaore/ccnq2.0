@@ -31,7 +31,7 @@ ok(!$session->user,'No user before session start');
 ok($session->locale,'Locale is present');
 is($session->locale->id,'en-US','Locale selected is default');
 
-$session->start('bob');
+$session->start_userid('bob');
 ok(!$session->expired,'expired too fast');
 ok($session->user,'user created');
 ok(!$session->expired,'expired too fast');

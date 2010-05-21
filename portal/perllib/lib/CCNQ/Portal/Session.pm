@@ -28,7 +28,7 @@ sub new {
 
 sub site { $_[0]->{site} }
 
-sub start {
+sub start_userid {
   my $self = shift;
   session user_id => shift;
   $self->update;

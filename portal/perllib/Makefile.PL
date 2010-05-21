@@ -11,7 +11,7 @@ requires      'CCNQ'                      => '0.01';
 requires      'File::ShareDir'            => '1.01';
 requires      'File::Spec'                => 0; # '3.2501'
 
-requires      'Dancer'                    => '1.155'; # pre-1.160 github
+requires      'Dancer'                    => '1.1802';
 requires      'Dancer::Session::Memcached' => 0;
 requires      'Dancer::Logger::Syslog'    => 0;
 requires      'Template'                  => 0;

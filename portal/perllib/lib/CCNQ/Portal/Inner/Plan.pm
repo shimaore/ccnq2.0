@@ -24,8 +24,6 @@ use CCNQ::Portal::Util;
 use CCNQ::AE;
 use CCNQ::API;
 
-use JSON;
-
 sub gather_plans {
   my $account = session('account');
   my $cv = AE::cv;
@@ -114,7 +112,7 @@ post '/billing/plan/:name' => sub {
   # XXX validate currency
 
   if(params->{rating_steps}) {
-    my $rating_steps = eval { decode_json($params->{rating_steps}) };
+    my $rating_steps = eval { to_json($params->{rating_steps}) };
     if($@) {
       var error => _('Invalid JSON content')_;
       my $fields = $params;
