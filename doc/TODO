@@ -1,3 +1,6 @@
+* modify OpenSIPS code so that:
+  it strips transport= from RURI
+  it strips maddr= from RURI
 * import rating tables
 * create/manage buckets
 * code for cfa/cfb
