@@ -18,8 +18,8 @@
 # on my servers at once.
 #
 # Usage: upgrade-all.sh [-q|-f]
-#  -q: quick -- only do git pull and restart xmpp-agent
-#  -f: force -- reconfigure and restart the call processing nodes
+#  -q: quick -- git pull, reconfigure, and restart xmpp-agent
+#  -f: force -- restart the call processing nodes
 #  no option: like -q but adds backup of /etc
 #
 
@@ -33,13 +33,6 @@ if [ "x$SERVERS" == "x" ]; then source /etc/ccn/servers; fi
 # I assume you use ssh-agent and sudo NOPASSWD.
 # I also assume you installed the source in ~/src/ccnq2.0 as mentioned
 # in INSTALL.
-
-if [ "x$1" == "x-f" ]; then
-  for s in $SERVERS; do
-    echo "Server $s: removing old FS configuration"
-    ssh $SSH_OPTIONS $s 'cd /opt/freeswitch && sudo mv conf conf.`date "+%FT%T"`'
-  done
-fi
 
 for s in $SERVERS; do
   echo "Server $s"
@@ -55,6 +48,7 @@ done
 
 for s in $SERVERS; do
   echo "Server $s: reconfigure node"
+  ssh $SSH_OPTIONS $s 'cd /opt/freeswitch && sudo mv conf conf.`date "+%FT%T"`'
   ssh $SSH_OPTIONS $s 'sudo ccnq2_upgrade; sudo tail -100 /var/log/syslog | grep -i error'
   ssh $SSH_OPTIONS $s 'killall opensipsctl; killall fs_cli'
 done
