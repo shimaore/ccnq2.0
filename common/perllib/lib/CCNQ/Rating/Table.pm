@@ -20,6 +20,7 @@ use strict; use warnings;
 
 use AnyEvent;
 use CCNQ::AE;
+use AnyEvent::CouchDB;
 
 use CCNQ::Trie;
 
