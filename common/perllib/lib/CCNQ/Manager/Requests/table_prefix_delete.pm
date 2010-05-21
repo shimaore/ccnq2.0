@@ -28,6 +28,7 @@ sub run {
         map { $_ => $request->{$_} } qw( name prefix )
       }
     },
+    CCNQ::Manager::request_completed(),
   );
 }
 

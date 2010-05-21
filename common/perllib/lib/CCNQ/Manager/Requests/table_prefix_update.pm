@@ -35,6 +35,7 @@ sub run {
         )
       }
     },
+    CCNQ::Manager::request_completed(),
   );
 }
 
