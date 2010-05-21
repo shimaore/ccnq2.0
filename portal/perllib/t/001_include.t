@@ -55,6 +55,7 @@ require_ok( 'CCNQ::Portal::Inner::default' );
 require_ok( 'CCNQ::Portal::Inner::Trace' );
 require_ok( 'CCNQ::Portal::Inner::Endpoint' );
 require_ok( 'CCNQ::Portal::Inner::Number' );
+require_ok( 'CCNQ::Portal::Inner::RatingTable' );
 
 require_ok( 'CCNQ::Portal::Template::Plugin::loc' );
 

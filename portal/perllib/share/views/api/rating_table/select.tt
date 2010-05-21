@@ -1,0 +1,7 @@
+<form>
+  <select name="rating_table">
+  <% FOREACH t IN rating_tables %>
+    <option value="<% t | html %>"><% t | html %></option>
+  <% END %>
+  </select>
+</form>
