@@ -60,11 +60,11 @@ sub set_rating_table {
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user and CCNQ::Portal->current_session->user->profile->is_admin;
   if(defined params->{rating_table}) {
     session rating_table => params->{rating_table};
-    var template_name => 'rating_table/edit';
+    var template_name => 'api/rating_table/edit';
     var rating_table_prefixes => \&gather_prefixes;
     return CCNQ::Portal::content;
   } else {
-    var template_name => 'rating_table/select';
+    var template_name => 'api/rating_table/select';
     var rating_tables => \&gather_ratingtables;
     return CCNQ::Portal::content;
   }
@@ -87,7 +87,7 @@ sub modify_field {
   # Empty prefix is OK.
   $params->{prefix} = '' if not defined $params->{prefix};
 
-  var template_name => 'rating_table/edit';
+  var template_name => 'api/rating_table/edit';
   var rating_table_prefixes => \&gather_prefixes;
   return CCNQ::Portal::content unless( defined($params->{field}) );
 
@@ -112,7 +112,7 @@ sub new_prefix {
   # Empty prefix is OK.
   $params->{prefix} = '' if not defined $params->{prefix};
 
-  var template_name => 'rating_table/edit';
+  var template_name => 'api/rating_table/edit';
   var rating_table_prefixes => \&gather_prefixes;
 
   my $cv = AE::cv;
