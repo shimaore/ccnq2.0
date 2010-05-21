@@ -15,5 +15,6 @@ use CCNQ::Portal::Inner::request;
 use CCNQ::Portal::Inner::manager_request;
 use CCNQ::Portal::Inner::Trace;
 use CCNQ::Portal::Inner::Endpoint;
+use CCNQ::Portal::Inner::RatingTable;
 
 'CCNQ::Portal::Content';
