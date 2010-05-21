@@ -50,6 +50,7 @@ require_ok( 'CCNQ::Provisioning' );
 require_ok( 'CCNQ::Trace' );
 require_ok( 'CCNQ::Trie' );
 require_ok( 'CCNQ::Upgrade' );
+require_ok( 'CCNQ::Restart' );
 require_ok( 'CCNQ::XMPPAgent' );
 
 require_ok( 'CCNQ::Proxy' );
