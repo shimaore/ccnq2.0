@@ -25,8 +25,8 @@ sub _db_name { return "table_".$_[0] }
 sub create {
   my ($params) = @_;
   my $rcv = AE::cv;
-  my $db = CCNQ::Rating::Table->new(_db_name($params->{name}));
-  $db->create()->cb(sub{
+  my $table = CCNQ::Rating::Table->new(_db_name($params->{name}));
+  $table->db->create()->cb(sub{
     CCNQ::CouchDB::receive_ok($rcv,@_);
   });
   return $rcv;
