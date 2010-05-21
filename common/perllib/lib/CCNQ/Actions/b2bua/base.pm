@@ -64,13 +64,15 @@ EOT
 
   CCNQ::B2BUA::finish();
 
-  # Restart FreeSwitch using the new configuration.
-  info("Restarting FreeSwitch");
   CCNQ::Util::execute('/bin/sed','-i','-e','s/^FREESWITCH_ENABLED="false"$/FREESWITCH_ENABLED="true"/','/etc/default/freeswitch');
-  CCNQ::Util::execute('/etc/init.d/freeswitch','stop');
-  CCNQ::Util::execute('/etc/init.d/freeswitch','start');
 
   CCNQ::Trace::install();
+  return;
+}
+
+sub _restart {
+  CCNQ::Util::execute('/etc/init.d/freeswitch','stop');
+  CCNQ::Util::execute('/etc/init.d/freeswitch','start');
   return;
 }
 

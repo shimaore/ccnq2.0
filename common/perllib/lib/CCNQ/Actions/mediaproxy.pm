@@ -56,11 +56,14 @@ certs_path = /etc/mediaproxy/tls
 
 EOT
   CCNQ::Util::print_to(CCNQ::MediaProxy::mediaproxy_config,$config.$config_dispatcher.$config_relay);
-  # Do not unlink the files. When we are both dispatcher and relay (in two different clusters) the installer might get called twice.
-  # unlink($dispatcher_file);
-  # unlink($relay_file);
-  CCNQ::Util::execute('/etc/init.d/mediaproxy-dispatcher','restart') if $dispatcher_file;
-  CCNQ::Util::execute('/etc/init.d/mediaproxy-relay',     'restart') if $relay_file;
+  return;
+}
+
+sub _restart {
+  CCNQ::Util::execute('/etc/init.d/mediaproxy-dispatcher','restart') if -f dispatcher_file;
+  unlink(dispatcher_file);
+  CCNQ::Util::execute('/etc/init.d/mediaproxy-relay',     'restart') if -f relay_file;
+  unlink(relay_file);
   return;
 }
 

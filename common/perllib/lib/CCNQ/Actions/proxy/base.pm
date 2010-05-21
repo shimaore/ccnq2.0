@@ -53,14 +53,15 @@ sub _install {
   File::Path::mkpath([CCNQ::Proxy::Configuration::cdr_directory]);
   CCNQ::Util::execute('chown','opensips',CCNQ::Proxy::Configuration::cdr_directory);
 
-  # Restart OpenSIPS using the new configuration.
-  info("Restarting OpenSIPS");
   CCNQ::Util::execute('/bin/sed','-i','-e','s/^RUN_OPENSIPS=no$/RUN_OPENSIPS=yes/','/etc/default/opensips');
-  CCNQ::Util::execute('/etc/init.d/opensips','restart');
-
-  debug("Restarted OpenSIPS");
 
   CCNQ::Trace::install();
+  return;
+}
+
+sub _restart {
+  # Restart OpenSIPS using the new configuration.
+  CCNQ::Util::execute('/etc/init.d/opensips','restart');
   return;
 }
 

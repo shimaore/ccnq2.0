@@ -26,6 +26,11 @@ sub install_all {
     return CCNQ::AE::Run::attempt_on_roles_and_functions('_install',$params,$context);
 }
 
+sub restart_all {
+    my ($params,$context) = @_;
+    return CCNQ::AE::Run::attempt_on_roles_and_functions('_restart',$params,$context);
+}
+
 # Used to provide server-wide status information.
 sub status {
   my ($params,$context) = @_;
@@ -34,7 +39,7 @@ sub status {
   return $rcv;
 }
 
-sub restart_all {
+sub restart_agent {
   my ($params,$context) = @_;
   use AnyEvent::Watchdog::Util;
   AnyEvent::Watchdog::Util::enabled

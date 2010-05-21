@@ -1,3 +1,7 @@
+* split the "_install" code so that it only contains configuration statement
+  * add a new "_restart" code that restarts the voice-handling processes
+  * ccnq2_upgrade(_all) only does reconfiguration (but now includes calling ccnq2_upgrade even without -f); add ccnq2_restart(_all)
+  * the "-f" option calls ccnq2_restart_all
 * modify OpenSIPS code so that:
   it strips transport= from RURI
   it strips maddr= from RURI

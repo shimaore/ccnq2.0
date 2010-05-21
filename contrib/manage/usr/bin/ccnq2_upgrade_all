@@ -53,10 +53,16 @@ for s in $SERVERS; do
     && make && make test && sudo make install' || exit 1
 done
 
+for s in $SERVERS; do
+  echo "Server $s: reconfigure node"
+  ssh $SSH_OPTIONS $s 'sudo ccnq2_upgrade; sudo tail -100 /var/log/syslog | grep -i error'
+  ssh $SSH_OPTIONS $s 'killall opensipsctl; killall fs_cli'
+done
+
 if [ "x$1" == "x-f" ]; then
   for s in $SERVERS; do
-    echo "Server $s: reconfigure and restart node"
-    ssh $SSH_OPTIONS $s 'sudo ccnq2_upgrade && sudo tail -100 /var/log/syslog | grep -i error'
+    echo "Server $s: restart node"
+    ssh $SSH_OPTIONS $s 'sudo ccnq2_restart; sudo tail -100 /var/log/syslog | grep -i error'
     ssh $SSH_OPTIONS $s 'killall opensipsctl; killall fs_cli'
   done
 fi
