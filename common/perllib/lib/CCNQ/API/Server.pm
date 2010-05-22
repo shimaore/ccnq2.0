@@ -199,6 +199,14 @@ Handles /api calls.
 use constant _api => __generic(sub {
   my ($httpd, $req, $path, $content) = @_;
 
+  my $suffix = {
+    GET     => '_query',
+    PUT     => '_update',
+    DELETE  => '_delete',
+  }->{$req->method};
+
+  $suffix or return 501;
+
   debug("node/api: Processing api request");
   my $body = {
     activity => 'node/api/'.rand(),
@@ -220,14 +228,6 @@ use constant _api => __generic(sub {
     return 404;
   }
 
-  my $suffix = {
-    GET     => '_query',
-    PUT     => '_update',
-    DELETE  => '_delete',
-  }->{$req->method};
-
-  $suffix or return 501;
-
   $body->{params}->{action} .= $suffix;
 
   return $body;
@@ -242,6 +242,8 @@ Handles /request calls.
 use constant _request => __generic(sub {
   my ($httpd, $req, $path) = @_;
 
+  $req->method eq 'GET' or return 501;
+
   my $body = {
     activity => 'node/request/'.rand(),
     action => 'get_request_status',
@@ -252,8 +254,6 @@ use constant _request => __generic(sub {
   } else {
     return 404;
   }
-
-  $req->method eq 'GET' or return 501;
 
   return $body;
 });
@@ -267,6 +267,8 @@ Handles /provisioning calls.
 use constant _provisioning => __generic(sub {
   my ($httpd, $req, $path) = @_;
 
+  $req->method eq 'GET' or return 501;
+
   my ($view,$id);
   if($path =~ m{^/provisioning/(\w+)/(\w+)/(.*)$}) {
     $view = $1.'/'.$2;
@@ -274,8 +276,6 @@ use constant _provisioning => __generic(sub {
   } else {
     return 404;
   }
-
-  $req->method eq 'GET' or return 501;
 
   CCNQ::Provisioning::provisioning_view({
     view => $view,
@@ -295,6 +295,8 @@ Handles /billing calls
 use constant _billing => __generic(sub {
   my ($httpd, $req, $path) = @_;
 
+  $req->method eq 'GET' or return 501;
+
   my ($view,$id);
   if($path =~ m{^/billing/(\w+)/(\w+)/(.*)$}) {
     $view = $1.'/'.$2;
@@ -302,8 +304,6 @@ use constant _billing => __generic(sub {
   } else {
     return 404;
   }
-
-  $req->method eq 'GET' or return 501;
 
   CCNQ::Billing::billing_view({
     view => $view,
@@ -323,6 +323,8 @@ Handles /rating_table calls.
 use constant _rating_table => __generic(sub {
   my ($httpd, $req, $path) = @_;
 
+  $req->method eq 'GET' or return 501;
+
   my ($table,$prefix);
   if($path =~ m{^/rating_table/(\w+)/(\S+)$}) {
     ($table,$prefix) = ($1,$2);
@@ -333,8 +335,6 @@ use constant _rating_table => __generic(sub {
   } else {
     return 404;
   }
-
-  $req->method eq 'GET' or return 501;
 
   my $cv;
   if(defined $table) {
