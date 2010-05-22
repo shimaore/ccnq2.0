@@ -330,24 +330,22 @@ use constant _rating_table => __generic(sub {
     ($table) = ($1);
   } elsif($path =~ m{^/rating_table$}) {
     ($table) = ($1);
+  } else {
+    return 404;
   }
 
-  $table or return 404;
+  $req->method eq 'GET' or return 501;
 
   my $cv;
-  if($req->method eq 'GET') {
-    if(defined $table) {
-      if(defined $prefix) {
-        $cv = CCNQ::Billing::Table::retrieve_prefix({ name => $table, prefix => $prefix });
-      } else {
-        $cv = CCNQ::Billing::Table::all_prefixes({ name => $table });
-      }
+  if(defined $table) {
+    if(defined $prefix) {
+      $cv = CCNQ::Billing::Table::retrieve_prefix({ name => $table, prefix => $prefix });
     } else {
-      $cv = CCNQ::Billing::Table::all_tables();
+      $cv = CCNQ::Billing::Table::all_prefixes({ name => $table });
     }
+  } else {
+    $cv = CCNQ::Billing::Table::all_tables();
   }
-
-  $cv or return 501;
 
   $cv->cb(__view_cb($req));
 
