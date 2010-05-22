@@ -32,6 +32,8 @@ require_ok( 'CCNQ::Util' );
 
 require_ok( 'CCNQ::AE' );
 require_ok( 'CCNQ::AE::Run' );
+require_ok( 'CCNQ::API' );
+require_ok( 'CCNQ::API::Server' );
 require_ok( 'CCNQ::Billing' );
 require_ok( 'CCNQ::Billing::Account' );
 require_ok( 'CCNQ::Billing::Bucket' );
