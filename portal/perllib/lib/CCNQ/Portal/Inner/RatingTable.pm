@@ -48,22 +48,23 @@ sub gather_prefixes {
   my $table_name = session('rating_table');
   return [] if not defined $table_name;
   CCNQ::API::rating_table($table_name,$cv);
-  my $docs = CCNQ::AE::receive_ids($cv);
-  return $docs;
+  my $ids = CCNQ::AE::receive_ids($cv);
+  return $ids;
 }
 
 sub gather_prefix {
   my ($prefix) = @_;
 
   my $table_name = session('rating_table');
-  return [] if not defined $table_name;
+  return {} if not defined $table_name;
   # Get the information from the API.
-  my $prefix_data;
+  my $prefix_data = {};
   if(defined $prefix) {
     my $cv2 = AE::cv;
     CCNQ::API::rating_table($table_name,$prefix,$cv2);
     $prefix_data = CCNQ::AE::receive_first_doc($cv2) || {};
   }
+  return $prefix_data;
 }
 
 # ******* Rating-table selection ***********
