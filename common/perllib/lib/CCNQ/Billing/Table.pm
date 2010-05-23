@@ -37,7 +37,7 @@ sub all_tables {
   my $couch = couch(CCNQ::Billing::billing_uri);
   $couch->all_dbs->cb(sub{
     my $dbs = CCNQ::AE::receive(@_);
-    $rcv->send( $dbs && [ map { s/^table_// } grep { /^table_/ } @$dbs ]);
+    $rcv->send( $dbs && [ map { s/^table_(.*)$/$1/ } grep { /^table_/ } @$dbs ]);
   });
   return $rcv;
 }
