@@ -2,7 +2,8 @@
 <table>
 <% FOREACH prefix IN rating_table_prefixes %>
 <tr><th><% prefix | html %></th>
-  <% FOREACH f IN rating_table_prefix(prefix).pairs; IF not f.key.match('^_') %>
+  <% prefix_data = rating_table_prefix(prefix) %>
+  <% FOREACH f IN prefix_data.pairs; IF not f.key.match('^_') %>
     <td>
       <form action="modify_field" method="post">
         <input type="hidden" name="prefix" value="<% prefix | html %>"/>
