@@ -27,6 +27,7 @@
 <%END%>
 <tr><th>
   <form action="new_prefix">
+    <label for="prefix"><% | loc %>prefix<% END %></label>
     <input type="text" name="prefix" class="required"/>
     <input type="submit" value="New"/>
   </form>
