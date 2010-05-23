@@ -25,13 +25,13 @@ sub run {
       action => 'update_table_prefix',
       cluster_name => CCNQ::Billing::BILLING_CLUSTER_NAME,
       params => {
-        map { $_ => $request->{$_} } qw( 
-          name prefix 
-          country us_state 
-          count_cost 
-          duration_rate 
-          initial_duration increment_duration 
-          jurisdiction rate 
+        map { $_ => $request->{$_} } grep { defined $request->{$_} } qw(
+          name prefix
+          country us_state
+          count_cost
+          duration_rate
+          initial_duration increment_duration
+          jurisdiction rate
         )
       }
     },
