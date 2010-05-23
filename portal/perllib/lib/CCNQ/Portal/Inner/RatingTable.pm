@@ -128,8 +128,13 @@ sub modify_field {
   var rating_table_prefix => \&gather_prefix;
   return CCNQ::Portal::content unless( defined($params->{field}) );
 
+  my $fields = gather_prefix($params->{prefix}) || {};
+  $fields->{name}   = $params->{rating_table};
+  $fields->{prefix} = $params->{prefix};
+  $fields->{$params->{field}} = $params->{value};
+
   my $cv = AE::cv;
-  CCNQ::API::api_update('table_prefix',{ name => $params->{rating_table}, prefix => $params->{prefix}, $params->{field} => $params->{value} },$cv);
+  CCNQ::API::api_update('table_prefix',$fields,$cv);
   my $r = CCNQ::AE::receive($cv);
 
   # Redirect to the request
