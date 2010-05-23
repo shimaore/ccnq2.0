@@ -7,14 +7,12 @@
   <% IF is_admin %>
   <li><span>Billing</span>
     <ul>
+      <li><a href="/billing/account"><% | loc %>Accounts<% END %></a></li>
       <li><a href="/billing/plan"><% | loc %>Plans<% END %></a></li>
       <li><a href="/rating_table/"><% | loc %>Rating tables<% END %></a></li>
     </ul>
   </li>
   <li><a href="/trace"><% | loc %>Trace<% END %></a></li>
-  <% END %>
-  <% IF session.account || is_sysadmin %>
-  <li><a href="/billing/account"><% | loc %>Account Management<% END %></a></li>
   <% END %>
   <li><a href="/user_profile"><% | loc %>My Profile<% END %></a></li>
 <% ELSE %>
