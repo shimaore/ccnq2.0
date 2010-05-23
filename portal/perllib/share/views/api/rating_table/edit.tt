@@ -4,7 +4,7 @@
 <tr><th><% t._id | html %></th>
   <% FOREACH f IN t.keys.sort; IF not t.match('^_') %>
     <td>
-      <form action="modify_field">
+      <form action="modify_field" method="post">
         <input type="hidden" name="prefix" value="<% t._id | html %>"/>
         <label for="value"><% f.key | html %></label>
         <input type="hidden" name="field" value="<% f.key | html %>"/>
@@ -14,7 +14,7 @@
     </td>
   <% END; END %>
   <td>
-    <form action="new_field">
+    <form action="new_field" method="post">
       <input type="hidden" name="prefix" value="<% t._id | html %>">
       <label for="field"><% | loc %>name<% END %></label>
       <input type="text" name="field"/>
@@ -26,7 +26,7 @@
 </tr>
 <%END%>
 <tr><th>
-  <form action="new_prefix">
+  <form action="new_prefix" method="post">
     <label for="prefix"><% | loc %>prefix<% END %></label>
     <input type="text" name="prefix" class="required"/>
     <input type="submit" value="New"/>
