@@ -1,11 +1,11 @@
 <% USE loc %>
 <table>
-<% FOREACH t IN rating_table_prefixes %>
-<tr><th><% t._id | html %></th>
-  <% FOREACH f IN t.keys.sort; IF not f.match('^_') %>
+<% FOREACH prefix IN rating_table_prefixes %>
+<tr><th><% prefix | html %></th>
+  <% FOREACH f IN rating_table_prefix($prefix); IF not f.key.match('^_') %>
     <td>
       <form action="modify_field" method="post">
-        <input type="hidden" name="prefix" value="<% t._id | html %>"/>
+        <input type="hidden" name="prefix" value="<% prefix | html %>"/>
         <label for="value"><% f.key | html %></label>
         <input type="hidden" name="field" value="<% f.key | html %>"/>
         <input type="text"   name="value" value="<% f.value | html %>"/>
@@ -15,7 +15,7 @@
   <% END; END %>
   <td>
     <form action="new_field" method="post">
-      <input type="hidden" name="prefix" value="<% t._id | html %>"/>
+      <input type="hidden" name="prefix" value="<% prefix | html %>"/>
       <label for="field"><% | loc %>name<% END %></label>
       <select name="field">
         <%FOREACH o IN rating_table_fields %>

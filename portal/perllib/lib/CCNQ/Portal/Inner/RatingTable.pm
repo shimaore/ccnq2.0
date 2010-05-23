@@ -48,13 +48,15 @@ sub gather_prefixes {
   my $table_name = session('rating_table');
   return [] if not defined $table_name;
   CCNQ::API::rating_table($table_name,$cv);
-  my $docs = CCNQ::AE::receive_docs($cv);
+  my $docs = CCNQ::AE::receive_ids($cv);
   return $docs;
 }
 
 sub gather_prefix {
-  my ($table_name,$prefix) = @_;
+  my ($prefix) = @_;
 
+  my $table_name = session('rating_table');
+  return [] if not defined $table_name;
   # Get the information from the API.
   my $prefix_data;
   if(defined $prefix) {
@@ -76,6 +78,7 @@ sub set_rating_table {
     var template_name => 'api/rating_table/edit';
     var rating_table_prefixes => \&gather_prefixes;
     var rating_table_fields => \&gather_fields;
+    var rating_table_prefix => \&gather_prefix;
     return CCNQ::Portal::content;
   } else {
     var template_name => 'api/rating_table/select';
@@ -123,6 +126,7 @@ sub modify_field {
   var template_name => 'api/rating_table/edit';
   var rating_table_prefixes => \&gather_prefixes;
   var rating_table_fields => \&gather_fields;
+  var rating_table_prefix => \&gather_prefix;
   return CCNQ::Portal::content unless( defined($params->{field}) );
 
   my $cv = AE::cv;
@@ -149,6 +153,7 @@ sub new_prefix {
   var template_name => 'api/rating_table/edit';
   var rating_table_prefixes => \&gather_prefixes;
   var rating_table_fields => \&gather_fields;
+  var rating_table_prefix => \&gather_prefix;
 
   my $cv = AE::cv;
   CCNQ::API::api_update('table_prefix',{ name => $params->{rating_table}, prefix => $params->{prefix} },$cv);
