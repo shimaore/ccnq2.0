@@ -5,7 +5,12 @@
   <% IF is_sysadmin %>
   <% END %>
   <% IF is_admin %>
-  <li><a href="/billing/plan"><% | loc %>Plan Management<% END %></a></li>
+  <li>Billing
+    <ul>
+      <li><a href="/billing/plan"><% | loc %>Plans<% END %></a></li>
+      <li><a href="/rating_table/"><% | loc %>Rating tables<% END %></a></li>
+    </ul>
+  </li>
   <li><a href="/trace"><% | loc %>Trace<% END %></a></li>
   <% END %>
   <% IF session.account || is_sysadmin %>
