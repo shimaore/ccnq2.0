@@ -5,7 +5,8 @@
   <% FOREACH f IN t.keys.sort; IF not t.match('^_') %>
     <td>
       <form action="modify_field" method="post">
-        <input type="hidden" name="prefix" value="<% t._id | html %>"/>
+        <label for="prefix">prefix</label>
+        <input type="text" name="prefix" value="<% t._id | html %>" readonly/>
         <label for="value"><% f.key | html %></label>
         <input type="hidden" name="field" value="<% f.key | html %>"/>
         <input type="text"   name="value" value="<% f.value | html %>"/>
@@ -17,8 +18,12 @@
     <form action="new_field" method="post">
       <input type="hidden" name="prefix" value="<% t._id | html %>">
       <label for="field"><% | loc %>name<% END %></label>
-      <input type="text" name="field"/>
-      <label for="field"><% | loc %>value<% END %></label>
+      <select name="field">
+        <%FOREACH o IN rating_table_fields %>
+        <option value="<% o | html %>"><% o | loc %></option>
+        <% END %>
+      </select>
+      <label for="value"><% | loc %>value<% END %></label>
       <input type="text" name="value"/>
       <input type="submit" value="New"/>
     </form>

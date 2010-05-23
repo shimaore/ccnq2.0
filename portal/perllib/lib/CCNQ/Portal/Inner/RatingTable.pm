@@ -26,6 +26,16 @@ use CCNQ::API;
 
 # ******* Utilities ***********
 
+sub gather_fields {
+  return [qw(
+    country us_state
+    count_cost
+    duration_rate
+    initial_duration increment_duration
+    jurisdiction rate
+  )];
+}
+
 sub gather_ratingtables {
   my $cv = AE::cv;
   CCNQ::API::rating_table($cv);
@@ -65,6 +75,7 @@ sub set_rating_table {
     session rating_table => $params->{rating_table};
     var template_name => 'api/rating_table/edit';
     var rating_table_prefixes => \&gather_prefixes;
+    var rating_table_fields => \&gather_fields;
     return CCNQ::Portal::content;
   } else {
     var template_name => 'api/rating_table/select';
@@ -111,6 +122,7 @@ sub modify_field {
 
   var template_name => 'api/rating_table/edit';
   var rating_table_prefixes => \&gather_prefixes;
+  var rating_table_fields => \&gather_fields;
   return CCNQ::Portal::content unless( defined($params->{field}) );
 
   my $cv = AE::cv;
@@ -136,6 +148,7 @@ sub new_prefix {
 
   var template_name => 'api/rating_table/edit';
   var rating_table_prefixes => \&gather_prefixes;
+  var rating_table_fields => \&gather_fields;
 
   my $cv = AE::cv;
   CCNQ::API::api_update('table_prefix',{ name => $params->{rating_table}, prefix => $params->{prefix} },$cv);
