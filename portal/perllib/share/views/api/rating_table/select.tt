@@ -1,11 +1,12 @@
 <% USE loc %>
-<form>
-  <label for="rating_table"><%|loc%>Rating table<%END%></label>
-  <select name="rating_table">
+<fieldset><legend><% | loc %>Rating tables<% END %></legend>
+  <ul>
   <% FOREACH t IN rating_tables %>
-    <option value="<% t | html %>"><% t | html %></option>
+    <li><a href="?rating_table=<% t | html %>"><% t | html %></a></li>
   <% END %>
-  </select>
-  <input type="submit" value="<% |loc %>Edit<%END%>">
+  </ul>
 </form>
+</fieldset>
+<fieldset><legend><% | loc %>Create new rating table<% END %></legend>
 <a href="new"><%|loc%>Create new rating table<%END%></a>
+</fieldset>
