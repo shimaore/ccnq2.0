@@ -9,22 +9,20 @@
         <label for="value"><% f.key | html %></label>
         <input type="hidden" name="field" value="<% f.key | html %>"/>
         <input type="text"   name="value" value="<% f.value | html %>"/>
-        <input type="submit" value="New"/>
+        <input type="submit" value="<% | loc %>Update<%END%>"/>
       </form>
     </td>
   <% END; END %>
   <td>
     <form action="new_field" method="post">
       <input type="hidden" name="prefix" value="<% prefix | html %>"/>
-      <label for="field"><% | loc %>name<% END %></label>
       <select name="field">
         <%FOREACH o IN rating_table_fields %>
         <option value="<% o | html %>"><% o | loc %></option>
         <% END %>
       </select>
-      <label for="value"><% | loc %>value<% END %></label>
       <input type="text" name="value"/>
-      <input type="submit" value="New"/>
+      <input type="submit" value="<% | loc %>New<%END%>"/>
     </form>
   </td>
 </tr>
@@ -33,7 +31,7 @@
   <form action="new_prefix" method="post">
     <label for="prefix"><% | loc %>prefix<% END %></label>
     <input type="text" name="prefix" class="required"/>
-    <input type="submit" value="New"/>
+    <input type="submit" value="<% | loc %>New<%END%>"/>
   </form>
   </th>
 </tr>
