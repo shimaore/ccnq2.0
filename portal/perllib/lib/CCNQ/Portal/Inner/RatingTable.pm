@@ -35,7 +35,7 @@ sub gather_ratingtables {
 
 sub gather_prefixes {
   my $cv = AE::cv;
-  my $table_name = session('table_name');
+  my $table_name = session('rating_table');
   return [] if not defined $table_name;
   CCNQ::API::rating_table($table_name,$cv);
   my $docs = CCNQ::AE::receive_docs($cv);
