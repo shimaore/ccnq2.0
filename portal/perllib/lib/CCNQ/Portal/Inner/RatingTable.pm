@@ -56,14 +56,13 @@ sub gather_prefix {
   my ($prefix) = @_;
 
   my $table_name = session('rating_table');
-  return {} if not defined $table_name;
+  return if not defined $table_name or not defined $prefix;
+
+  debug("gather_prefix($table_name,$prefix)");
   # Get the information from the API.
-  my $prefix_data = {};
-  if(defined $prefix) {
-    my $cv2 = AE::cv;
-    CCNQ::API::rating_table($table_name,$prefix,$cv2);
-    $prefix_data = CCNQ::AE::receive_first_doc($cv2) || {};
-  }
+  my $cv2 = AE::cv;
+  CCNQ::API::rating_table($table_name,$prefix,$cv2);
+  my $prefix_data = CCNQ::AE::receive_first_doc($cv2);
   return $prefix_data;
 }
 
