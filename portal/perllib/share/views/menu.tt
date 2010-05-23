@@ -1,5 +1,4 @@
 <ul id="nav">
-<% local_menu %>
 <% IF session.user_id %>
   <li><a href="/"><% | loc %>Summary<% END %></a></li>
   <% IF is_sysadmin %>
@@ -13,6 +12,7 @@
     </ul>
   </li>
   <li><a href="/trace"><% | loc %>Trace<% END %></a></li>
+  <% local_menu %>
   <% END %>
   <li><a href="/user_profile"><% | loc %>My Profile<% END %></a></li>
 <% ELSE %>
