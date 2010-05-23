@@ -16,7 +16,7 @@
   <% END; END %>
   <td>
     <form action="new_field" method="post">
-      <input type="hidden" name="prefix" value="<% t._id | html %>">
+      <input type="text" name="prefix" value="<% t._id | html %>" readonly/>
       <label for="field"><% | loc %>name<% END %></label>
       <select name="field">
         <%FOREACH o IN rating_table_fields %>
