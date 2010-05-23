@@ -5,7 +5,7 @@
   <% IF is_sysadmin %>
   <% END %>
   <% IF is_admin %>
-  <li>Billing
+  <li><span>Billing</span>
     <ul>
       <li><a href="/billing/plan"><% | loc %>Plans<% END %></a></li>
       <li><a href="/rating_table/"><% | loc %>Rating tables<% END %></a></li>
