@@ -64,6 +64,11 @@ post '/bucket/account/' => sub {
 
   var error => $r->{error};
   var response => $r;
+
+  var get_buckets        => \&CCNQ::Portal::Inner::Util::get_buckets;
+  var get_account_bucket => \&CCNQ::Portal::Inner::Util::get_account_bucket;
+  var account_subs       => \&CCNQ::Portal::Inner::Util::account_subs;
+
   return CCNQ::Portal::content;
 };
 
