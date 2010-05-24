@@ -50,5 +50,16 @@
         <%|loc%>No buckets defined.<%END%>
       <% END %>
     </fieldset>
-    <% END %>
+    <fieldset><legend><%|loc%>New bucket<%END%></legend>
+      <form method="get" class="validate">
+        <p class="ui-helper-clearfix">
+          <label for="name"       class="left"><% | loc %>Bucket name:<% END %></label>
+          <input type="text" name="name"      value="<% data.name | html %>" class="required" />
+        </p>
+        <p class="ui-helper-clearfix">
+          <input type="submit">
+        </p>
+      </form>
+    </fieldset>
+  <% END %>
 <% END %>
