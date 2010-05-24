@@ -85,7 +85,7 @@ sub default {
   }
 
   var field => {
-    endpoints => $endpoints,
+    available_endpoints => $endpoints,
   };
   var category => $category;
   var cluster  => $cluster;

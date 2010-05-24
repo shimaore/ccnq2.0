@@ -23,51 +23,7 @@ use CCNQ::Portal::Util;
 use CCNQ::AE;
 use CCNQ::API;
 
-use CCNQ::Portal::Inner::Account;
-
-use constant STATIC_ENDPOINTS_CLUSTERS_DNS_NAME  => 'static.clusters';
-use constant DYNAMIC_ENDPOINTS_CLUSTERS_DNS_NAME => 'dynamic.clusters';
-
-use AnyEvent;
-use AnyEvent::DNS;
-
-use constant::defer clusters_for_static_endpoints => sub {
-  my $dns_txt = sub {
-    my $dn = CCNQ::Install::catdns(@_);
-    my $cv = AE::cv;
-    AnyEvent::DNS::txt( $dn, $cv );
-    return ($cv->recv);
-  };
-
-  return [sort $dns_txt->(CCNQ::Install::cluster_fqdn(STATIC_ENDPOINTS_CLUSTERS_DNS_NAME))];
-};
-
-use constant::defer clusters_for_dynamic_endpoints => sub {
-  my $dns_txt = sub {
-    my $dn = CCNQ::Install::catdns(@_);
-    my $cv = AE::cv;
-    AnyEvent::DNS::txt( $dn, $cv );
-    return ($cv->recv);
-  };
-
-  return [sort $dns_txt->(CCNQ::Install::cluster_fqdn(DYNAMIC_ENDPOINTS_CLUSTERS_DNS_NAME))];
-};
-
-sub endpoints_for {
-  my $account = shift;
-  my $cv3 = AE::cv;
-  CCNQ::API::provisioning('report','endpoint',$account,$cv3);
-  my $endpoints = CCNQ::AE::receive($cv3);
-  my @endpoints = map { $_->{doc} } @{$endpoints->{rows} || []};
-  return [@endpoints];
-}
-
-sub get_endpoint {
-  my ($account,$endpoint) = @_;
-  my $cv = AE::cv;
-  CCNQ::API::provisioning('report','endpoint',$account,$endpoint,$cv);
-  return CCNQ::AE::receive_first_doc($cv) || {};
-}
+use CCNQ::Portal::Inner::Util;
 
 sub clean_params {
   my $params = {
@@ -113,11 +69,13 @@ sub gather_field {
 
   my $account = session('account');
 
-  my $static_clusters  = clusters_for_static_endpoints;
-  my $dynamic_clusters = clusters_for_dynamic_endpoints;
+  my $static_clusters  = CCNQ::Portal::Inner::Util::clusters_for_static_endpoints;
+  var static_clusters  => $static_clusters;
+  my $dynamic_clusters = CCNQ::Portal::Inner::Util::clusters_for_dynamic_endpoints;
+  var dynamic_clusters => $dynamic_clusters;
 
-  my $endpoints = endpoints_for($account);
-  my $account_subs = CCNQ::Portal::Inner::Account::account_subs($account);
+  var endpoints_for => \&CCNQ::Portal::Inner::Util::endpoints_for;
+  var account_subs  => \&CCNQ::Portal::Inner::Util::account_subs;
 
   # Gather data for a specific endpoint if needed
   my $endpoint = params->{endpoint};
@@ -138,12 +96,8 @@ sub gather_field {
 
   var field => {
     %$endpoint_data,
-    endpoints        => $endpoints,
-    account_subs     => $account_subs,
     is_static        => $is_static,
     is_dynamic       => $is_dynamic,
-    static_clusters  => $static_clusters,
-    dynamic_clusters => $dynamic_clusters,
   };
 }
 
@@ -229,4 +183,4 @@ get '/provisioning/endpoint_location' => sub {
   redirect '/request/'.$r->{request};
 };
 
-'CCNQ::Portal::Inner::Account';
+'CCNQ::Portal::Inner::EndPoint';

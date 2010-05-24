@@ -26,7 +26,7 @@
     <fieldset>
       <legend><% | loc %>Portal users<% END %></legend>
       <ul>
-        <% FOREACH user IN field.portal_users %>
+        <% FOREACH user IN portal_users(session.account) %>
         <li><% user | html %><!-- XXX button to remove this recipient --></li>
         <% END %>
       </ul>
@@ -35,7 +35,7 @@
       <legend><% | loc %>Account subs<% END %></legend>
       <div><a href="/billing/account_sub"><% | loc %>Create new account sub<% END %></a></div>
       <ul>
-        <% FOREACH account_sub IN field.account_subs %>
+        <% FOREACH account_sub IN account_subs(session.account) %>
         <li><a href="/billing/account_sub/<% account_sub.account_sub | uri %>"><% account_sub.name %></a></li>
         <% END %>
       </ul>

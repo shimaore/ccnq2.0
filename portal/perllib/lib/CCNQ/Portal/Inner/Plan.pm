@@ -24,13 +24,6 @@ use CCNQ::Portal::Util;
 use CCNQ::AE;
 use CCNQ::API;
 
-sub gather_plans {
-  my $account = session('account');
-  my $cv = AE::cv;
-  CCNQ::API::billing('report','plans','',$cv);
-  return CCNQ::AE::receive_docs($cv);
-}
-
 sub gather_currencies {
   return { 'EUR' => '€', 'USD' => 'US$' };
 }
@@ -43,12 +36,13 @@ sub gather_field {
   CCNQ::API::billing('report','plans',$plan_name,$cv2);
   my $plan_data = CCNQ::AE::receive_first_doc($cv2) || { name => $plan_name, decimals => 2 };
 
+  var get_plans => \&CCNQ::Portal::Inner::Util::get_plans;
+
   my $field = {
     name          => $plan_data->{name},
     currency      => $plan_data->{currency},
     decimals      => $plan_data->{decimals},
 
-    plans         => \&gather_plans,
     currencies    => \&gather_currencies,
   };
 
@@ -76,10 +70,9 @@ get '/billing/plan' => sub {
   var template_name => 'api/plan';
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
 
-  var field => {
-    plans         => \&gather_plans,
-    currencies    => \&gather_currencies,
-  };
+  var get_plans      => \&CCNQ::Portal::Inner::Util::get_plans;
+  var get_currencies => \&CCNQ::Portal::Inner::Util::get_currencies;
+
   return CCNQ::Portal::content;
 };
 

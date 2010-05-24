@@ -23,49 +23,22 @@ use CCNQ::Portal::Util;
 use CCNQ::AE;
 use CCNQ::API;
 
-use CCNQ::Portal::Inner::Plan;
-
-sub account_subs {
-  my $account = shift;
-  my $cv3 = AE::cv;
-  CCNQ::API::billing('report','account_subs',$account,$cv3);
-  return CCNQ::AE::receive_docs($cv3);
-}
-
-sub portal_users {
-  my $account = shift;
-  my $cv1 = CCNQ::Portal::db->view('report/portal_users_by_account', {
-    startkey => [$account],
-    endkey   => [$account,{}],
-  });
-  return CCNQ::AE::receive_ids($cv1);
-}
+use CCNQ::Portal::Inner::Util;
 
 sub gather_field {
   my $account = session('account');
 
-  # Get the information from the portal.
-  # e.g. print a list of users who have portal access to this account
-  my $portal_users = portal_users($account);
+  var portal_users  => \&CCNQ::Portal::Inner::Util::portal_users;
+  var account_subs  => \&CCNQ::Portal::Inner::Util::account_subs;
+  var get_plans     => \&CCNQ::Portal::Inner::Util::get_plans;
 
-  # Get the information from the API.
   my $cv2 = AE::cv;
   CCNQ::API::billing('report','accounts',$account,$cv2);
   my $account_billing_data = CCNQ::AE::receive_first_doc($cv2) || {};
 
-  # e.g. print a list of users who receive bills for this account
-  # .. that'd be the keys of the 'email_recipients' hash.
-
-  # e.g. print a list of account_subs for this account
-  my $account_subs = account_subs($account);
-
-  # e.g. print account details.
   var field => {
     name    => $account_billing_data->{name},
     account => $account,
-    portal_users => $portal_users,
-    account_subs => $account_subs,
-    plans        => \&CCNQ::Portal::Inner::Plan::gather_plans,
   };
 }
 
@@ -73,19 +46,15 @@ sub gather_field_sub {
   my $account = session('account');
   my $account_sub = shift;
 
-  # Get the information from the portal.
+  var get_plans     => \&CCNQ::Portal::Inner::Util::get_plans;
 
-  # Get the information from the API.
-  my $cv2 = AE::cv;
-  CCNQ::API::billing('report','account_subs',$account,$account_sub,$cv2);
-  my $account_sub_billing_data = CCNQ::AE::receive_first_doc($cv2) || {};
+  my $account_sub_billing_data = CCNQ::Portal::Inner::Util::account_sub_data($account,$account_sub) || {};
 
   var field => {
     name    => $account_sub_billing_data->{name},
     plan    => $account_sub_billing_data->{plan},
     account => $account,
     account_sub => $account_sub,
-    plans   => \&CCNQ::Portal::Inner::Plan::gather_plans,
   };
 }
 
@@ -153,9 +122,7 @@ get '/billing/account_sub' => sub {
   if( params->{account_sub} && params->{account_sub} =~ /^[\w-]+$/ ) {
     gather_field_sub(params->{account_sub});
   } else {
-    var field => {
-      plans   => \&CCNQ::Portal::Inner::Plan::gather_plans,
-    }
+    var get_plans      => \&CCNQ::Portal::Inner::Util::get_plans;
   }
 
   return CCNQ::Portal::content;

@@ -28,7 +28,7 @@
         <p class="ui-helper-clearfix">
           <label for="account_sub" class="left"><% | loc %>Account sub number:<% END %></label>
           <select name="account_sub" class="required">
-          <% FOREACH account_sub IN field.account_subs %>
+          <% FOREACH account_sub IN account_subs(session.account) %>
             <option value="<% account_sub.account_sub | html %>" <% IF field.account_sub == account_sub.account_sub %>selected<% END %>><% account_sub.name | html %></option>
           <% END %>
           </select>
@@ -102,11 +102,11 @@
         <label for="cluster" class="left"><% | loc %>Cluster:<% END %></label>
         <select name="cluster" class="required">
           <optgroup label="<% | loc %>Static IP<%END%>">
-          <% FOREACH c IN field.static_clusters %>
+          <% FOREACH c IN static_clusters %>
             <option value="<% c | html %>"><% c | html %></option>
           <% END %>
           <optgroup label="<% | loc %>Register<%END%>">
-          <% FOREACH c IN field.dynamic_clusters %>
+          <% FOREACH c IN dynamic_clusters %>
             <option value="<% c | html %>"><% c | html %></option>
           <% END %>
         </select>
@@ -126,14 +126,15 @@
     </form>
   </fieldset>
   <% END %>
-  <% IF field.endpoints && field.endpoints.size %>
+  <% SET endpoints = endpoints_for(session.account) %>
+  <% IF endpoints && endpoints.size %>
   <fieldset>
     <legend><% | loc %>Modify endpoint<% END %></legend>
     <form id="retrieve_endpoint" action="/provisioning/endpoint/select" method="post" accept-charset="utf-8" class="ui-widget">
       <p class="ui-helper-clearfix">
         <label for="endpoint" class="left"><% | loc %>Endpoint:<% END %></label>
         <select name="endpoint" class="required">
-        <% FOREACH endpoint IN field.endpoints %>
+        <% FOREACH endpoint IN endpoints %>
           <option value="<% endpoint.endpoint | html %>"><% endpoint.endpoint | html %></option>
         <% END %>
         </select>

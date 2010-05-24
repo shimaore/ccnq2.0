@@ -35,11 +35,11 @@
     </form>
   </fieldset>
 <% END %>
-<% IF field.plans and is_sysadmin %>
+<% IF is_sysadmin %>
   <fieldset>
     <legend><% | loc %>Plans<% END %></legend>
     <ul>
-      <% FOREACH plan IN field.plans %>
+      <% FOREACH plan IN get_plans() %>
       <li><a href="/billing/plan/<% plan.name | uri %>"><% plan.name | html %></a></li>
       <% END %>
     </ul>
