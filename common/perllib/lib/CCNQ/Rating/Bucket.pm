@@ -50,11 +50,17 @@ use Math::BigFloat;
 use CCNQ::CouchDB;
 use CCNQ::AE;
 
+=head2 new($name)
+
+Do no forget to call ->load() on the newly created object.
+
+=cut
+
 sub new {
   my $this = shift;
   my $class = ref($this) || $this;
   my ($name,$use_account) = @_;
-  my $self = { _name => $name, _use_account => $use_account };
+  my $self = { _name => $name };
   return bless $self, $class;
 }
 
@@ -230,7 +236,11 @@ sub replenish {
     my $current_bucket_value = $bucket_instance ? $bucket_instance->{value} : Math::BigFloat->bzero;
     $current_bucket_value += $params->{value};
 
-    $self->set_instance_value($bucket_instance,$current_bucket_value)->cb(sub{$rcv->send(CCNQ::AE::receive(@_))});
+    $bucket_instance ||= {};
+
+    $self->set_instance_value($bucket_instance,$current_bucket_value)->cb(sub{
+      $rcv->send(CCNQ::AE::receive(@_))
+    });
   });
 
   debug("replenish: return ".CCNQ::AE::pp($rcv));
