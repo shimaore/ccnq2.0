@@ -123,8 +123,8 @@ sub _bucket {
   return;
 }
 
-sub bucket_query  { _manager('GET',@_) }
-sub bucket_update { _manager('PUT',@_) }
+sub bucket_query  { _bucket('GET',@_) }
+sub bucket_update { _bucket('PUT',@_) }
 
 sub rating_table {
   my $cb = pop;
