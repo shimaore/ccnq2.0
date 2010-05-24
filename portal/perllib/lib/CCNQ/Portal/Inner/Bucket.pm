@@ -34,7 +34,7 @@ get  '/bucket/' => sub {
   CCNQ::Portal->current_session->user->profile->is_admin
     or return CCNQ::Portal::content;
 
-  var get_buckets        => \&get_buckets;
+  var get_buckets        => \&CCNQ::Portal::Inner::Util::get_buckets;
 
   return CCNQ::Portal::content;
 };

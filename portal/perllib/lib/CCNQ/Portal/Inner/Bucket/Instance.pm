@@ -34,20 +34,9 @@ get  '/bucket/account' => sub {
   session('account')
     or return CCNQ::Portal::content;
 
-  var get_buckets        => \&get_buckets;
-  var get_account_bucket => \&get_account_bucket;
-  var account_subs       => \&CCNQ::Portal::Inner::Accounts::account_sub;
-
-  var bucket_data => sub {
-    my $params = CCNQ::Portal::Util::neat({
-      account => session('account'),
-    },qw(
-      name
-      account_sub
-    ));
-
-    get_account_bucket($params->{name},$params->{account},$params->{account_sub});
-  };
+  var get_buckets        => \&CCNQ::Portal::Inner::Util::get_buckets;
+  var get_account_bucket => \&CCNQ::Portal::Inner::Util::get_account_bucket;
+  var account_subs       => \&CCNQ::Portal::Inner::Util::account_sub;
 
   return CCNQ::Portal::content;
 };
