@@ -379,9 +379,9 @@ use constant _bucket => __generic(sub {
   if($path =~ m{^/bucket$}) {
 
     # GET: name account (account_sub)
-    $cv_sub = sub { debug("GET"); return shift->get_instance($params) }  if $req->method eq 'GET';
+    $cv_sub = sub { return shift->get_instance($params) }  if $req->method eq 'GET';
     # PUT: name account (account_sub) value currency
-    $cv_sub = sub { debug("PUT"); return shift->replenish($params)    }  if $req->method eq 'PUT';
+    $cv_sub = sub { return shift->replenish($params)    }  if $req->method eq 'PUT';
 
   } else {
     return 404;
