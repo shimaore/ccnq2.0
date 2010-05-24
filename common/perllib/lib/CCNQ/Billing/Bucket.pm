@@ -17,11 +17,13 @@ use strict; use warnings;
 
 use CCNQ::Install;
 
+use CCNQ::Rating::Bucket::DB;
+
 # Normally only one server should be part of this cluster (until we
 # implementing sharding of the CDR db).
-use constant BUCKET_CLUSTER_NAME => 'bucket';
+
 use constant::defer bucket_cluster_jid => sub {
-  CCNQ::Install::make_muc_jid(BUCKET_CLUSTER_NAME)
+  CCNQ::Install::make_muc_jid(CCNQ::Rating::Bucket::DB::BUCKET_CLUSTER_NAME)
 };
 
 sub _bucket_id {
@@ -29,7 +31,6 @@ sub _bucket_id {
 }
 
 use CCNQ::Billing;
-use CCNQ::Rating::Bucket;
 
 =head2 update_bucket(\&)
 

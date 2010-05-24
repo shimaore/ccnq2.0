@@ -20,8 +20,10 @@ use CCNQ::Install;
 use AnyEvent;
 use CCNQ::CouchDB;
 
+use constant BUCKET_CLUSTER_NAME => 'bucket';
+
 use constant::defer bucket_server => sub {
-  CCNQ::Install::make_couchdb_uri_from_server(CCNQ::Install::cluster_fqdn('bucket'))
+  CCNQ::Install::make_couchdb_uri_from_server(CCNQ::Install::cluster_fqdn(BUCKET_CLUSTER_NAME))
 };
 use constant bucket_db => 'bucket';
 
