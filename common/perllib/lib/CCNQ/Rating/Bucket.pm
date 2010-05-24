@@ -82,8 +82,8 @@ sub load {
 sub short_name {
   my ($self,$cbef) = @_;
   return $self->use_account
-    ? $cbef->account
-    : $cbef->account.'/'.$cbef->account_sub;
+    ? $cbef->{account}
+    : $cbef->{account}.'/'.$cbef->{account_sub};
 }
 
 sub base_name {
