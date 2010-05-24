@@ -366,8 +366,6 @@ Handles /bucket calls.
 
 =cut
 
-our %bucket_queries;
-
 use constant _bucket => __generic(sub {
   my ($httpd, $req, $path, $content) = @_;
 
@@ -381,9 +379,9 @@ use constant _bucket => __generic(sub {
   if($path =~ m{^/bucket$}) {
 
     # GET: name account (account_sub)
-    $cv_sub = sub { shift->get_instance($params) }  if $req->method eq 'GET';
+    $cv_sub = sub { debug("GET"); return shift->get_instance($params) }  if $req->method eq 'GET';
     # PUT: name account (account_sub) value currency
-    $cv_sub = sub { shift->replenish($params)    }  if $req->method eq 'PUT';
+    $cv_sub = sub { debug("PUT"); return shift->replenish($params)    }  if $req->method eq 'PUT';
 
   } else {
     return 404;
@@ -392,17 +390,11 @@ use constant _bucket => __generic(sub {
   $cv_sub or return 501;
 
   use CCNQ::Rating::Bucket;
+
   my $bucket = CCNQ::Rating::Bucket->new($params->{name});
-  my $cv = $bucket->load();
-
-  my $uuid = rand();
-  $bucket_queries{$uuid} = $cv;
-
-  $cv->cb(sub{
-    my $r = CCNQ::AE::receive(@_);
-    my $cv1 = $cv_sub->($r);
-    $cv1->cb(__view_cb($req));
-    delete $bucket_queries{$uuid};
+  $bucket->load()->cb(sub{
+    CCNQ::AE::receive(@_);
+    $cv_sub->($bucket)->cb(__view_cb($req));
   });
 
   $httpd->stop_request;

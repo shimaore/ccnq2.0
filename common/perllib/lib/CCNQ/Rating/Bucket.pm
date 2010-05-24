@@ -80,7 +80,7 @@ sub load {
         $self->{$_} = $rec->{$_};
       }
     }
-    $rcv->send($self);
+    $rcv->send;
   });
   return $rcv;
 }
@@ -242,6 +242,7 @@ sub replenish {
       account_sub => $params->{account_sub}
     };
 
+    debug("replenish set_instance_value: ".CCNQ::AE::pp($bucket_instance));
     my $cv1 = $self->set_instance_value($bucket_instance,$current_bucket_value);
     $cv1->cb(sub{
       my $r = CCNQ::AE::receive(@_);
