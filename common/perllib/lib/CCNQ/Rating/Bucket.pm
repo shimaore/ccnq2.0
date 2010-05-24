@@ -41,6 +41,7 @@ Bucket-related data is stored in two different locations:
   - bucket instances are stored in a separate bucket database.
 
 =cut
+use strict; use warnings;
 
 sub _bucket_id { return join('/','bucket',@_) }
 
@@ -66,10 +67,10 @@ Loads the metadata from the billing database.
 sub load {
   my ($self) = @_;
   my $rcv = AE::cv;
-  CCNQ::Billing::billing_retrieve({ _id => _bucket_id($name) })->cb(sub{
+  CCNQ::Billing::billing_retrieve({ _id => _bucket_id($self->base_name) })->cb(sub{
     my $rec = CCNQ::AE::receive(@_);
     if($rec) {
-      for (qw(currency increment decimals cap)) {
+      for (qw(use_account currency increment decimals cap)) {
         $self->{$_} = $rec->{$_};
       }
     }
@@ -122,6 +123,7 @@ sub set_instance_value {
     $value = $self->cap;
   }
   $instance->{value} = $value;
+  $instance->{_id} = $self->full_name;
   return $self->_store($instance);
 }
 
@@ -228,7 +230,7 @@ sub replenish {
     my $current_bucket_value = $bucket_instance ? $bucket_instance->{value} : Math::BigFloat->bzero;
     $current_bucket_value += $params->{value};
 
-    $self->set_instance_value($bucket_instance,$value)->cb(sub{$rcv->send(CCNQ::AE::receive(@_))});
+    $self->set_instance_value($bucket_instance,$current_bucket_value)->cb(sub{$rcv->send(CCNQ::AE::receive(@_))});
   });
 
   debug("replenish: return ".CCNQ::AE::pp($rcv));
@@ -276,7 +278,7 @@ sub _store {
 =cut
 
 sub currency {
-  return $self->{currency};
+  return shift->{currency};
 }
 
 =head2 rounding
@@ -315,7 +317,7 @@ The number of decimal digits to round up or down to.
 =cut
 
 sub decimals {
-  return $self->{decimals} || 0;
+  return shift->{decimals} || 0;
 }
 
 =head2 increment
@@ -326,7 +328,7 @@ the bucket.
 =cut
 
 sub increment {
-  return $self->{increment} || 0;
+  return shift->{increment} || 0;
 }
 
 =head2 cap
@@ -337,7 +339,7 @@ stored in a bucket instance.
 =cut
 
 sub cap {
-  return $self->{cap};
+  return shift->{cap};
 }
 
 'CCNQ::Rating::Bucket';
