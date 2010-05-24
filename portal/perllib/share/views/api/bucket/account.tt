@@ -8,7 +8,7 @@
     <% IF bucket.use_account %>
       <% SET data = get_account_bucket(bucket.name,session.account) %>
       <li><% bucket.name | html %>:
-      <% IF is_sysadmin %>
+      <% IF is_admin %>
         <form>
           <input type="hidden" name="name"     value="<% bucket.name     | html %>" />
           <!-- account is implicit -->
@@ -31,7 +31,7 @@
       <% FOREACH s IN subs %>
         <% SET data = get_account_bucket(bucket.name,session.account,s.account_sub) %>
         <li><% s.account_sub | html %>:
-        <% IF is_sysadmin %>
+        <% IF is_admin %>
           <form>
             <input type="hidden" name="name"        value="<% bucket.name     | html %>" />
             <!-- account is implicit -->
