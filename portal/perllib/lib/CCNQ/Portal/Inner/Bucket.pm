@@ -25,8 +25,6 @@ use CCNQ::Portal::Inner::Util;
 use CCNQ::AE;
 use CCNQ::API;
 
-# XXX TBD
-
 get  '/bucket/' => sub {
   var template_name => 'api/bucket/select';
 
