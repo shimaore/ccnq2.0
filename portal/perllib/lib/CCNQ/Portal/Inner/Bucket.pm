@@ -46,7 +46,7 @@ post '/bucket/' => sub {
     or return CCNQ::Portal::content;
 
   my $params = CCNQ::Portal::Util::neat({},qw(
-    name currency increment decimals cap
+    name use_account currency increment decimals cap
   ));
 
   $params->{name} =~ /^\w+$/ or die "name is required";
