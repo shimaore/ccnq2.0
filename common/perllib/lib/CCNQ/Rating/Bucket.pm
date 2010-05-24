@@ -202,6 +202,9 @@ sub replenish {
   my $self = shift;
   my ($params) = @_;
 
+  use Logger::Syslog;
+  debug(CCNQ::AE::pp($params));
+
   my $rcv = AE::cv;
 
   if($params->{value} <= 0) {
@@ -217,6 +220,8 @@ sub replenish {
 
   $self->get_instance($params)->cb(sub{
     my $bucket_instance = CCNQ::AE::receive(@_);
+
+    debug(CCNQ::AE::pp($bucket_instance));
 
     my $current_bucket_value = $bucket_instance ? $bucket_instance->{value} : Math::BigFloat->bzero;
     $current_bucket_value += $params->{value};
