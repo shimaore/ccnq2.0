@@ -31,7 +31,7 @@ sub neat {
     my $v = params->{$p};
     $v = Encode::decode_utf8($v,Encode::FB_HTMLCREF);
     next unless defined $v;
-    $v =~ s/^\s+//; $v =~ s/^\s+$//; $v =~ s/\s+/ /g;
+    $v =~ s/^\s+//; $v =~ s/\s+$//; $v =~ s/\s+/ /g;
     next if $v eq '';
     $params->{$p} = $v;
   }
