@@ -125,6 +125,9 @@ sub get_account_bucket {
   defined($account) or die "account is required";
   # account_sub is optional (in case the bucket does "use_account").
 
+  use Logger::Syslog;
+  debug("name = $name, account = $account, account_sub = $account_sub");
+
   my $cv = AE::cv;
   if(defined $account_sub) {
     CCNQ::API::bucket_query({ name => $name, account => $account, account_sub => $account_sub },$cv);
