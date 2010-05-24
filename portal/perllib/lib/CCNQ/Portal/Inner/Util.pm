@@ -103,7 +103,11 @@ sub get_buckets {
   # name is optional
 
   my $cv = AE::cv;
-  CCNQ::API::billing('report','buckets',$name,$cv);
+  if(defined($name)) {
+    CCNQ::API::billing('report','buckets',$name,$cv);
+  } else {
+    CCNQ::API::billing('report','buckets',$cv);
+  }
   my $buckets = CCNQ::AE::receive($cv);
   return $buckets;
 }
