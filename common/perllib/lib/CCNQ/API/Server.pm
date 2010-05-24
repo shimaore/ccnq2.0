@@ -459,7 +459,8 @@ sub _session_ready {
 
   my $handle_return = sub {
     my ($code,$httpd,$req) = @_;
-    my $r = $code->($context,$httpd,$req);
+    my $r = eval { $code->($context,$httpd,$req) };
+    $@ and debug("code failed: $@");
     $context->{api_callback}->{$r} = __build_response_handler($req) if defined $r;
   };
 
