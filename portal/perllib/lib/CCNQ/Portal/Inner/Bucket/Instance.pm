@@ -42,7 +42,7 @@ get  '/bucket/account/' => sub {
 };
 
 post '/bucket/account/' => sub {
-  var template_name => 'api/bucket/select';
+  var template_name => 'api/bucket/account';
 
   CCNQ::Portal->current_session->user                    &&
   CCNQ::Portal->current_session->user->profile->is_admin &&
