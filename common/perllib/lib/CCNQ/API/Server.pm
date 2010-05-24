@@ -366,6 +366,8 @@ Handles /bucket calls.
 
 =cut
 
+our %bucket_queries;
+
 use constant _bucket => __generic(sub {
   my ($httpd, $req, $path, $content) = @_;
 
@@ -394,13 +396,13 @@ use constant _bucket => __generic(sub {
   my $cv = $bucket->load();
 
   my $uuid = rand();
-  $context->{bucket_queries}->{$uuid} = $cv;
+  $bucket_queries{$uuid} = $cv;
 
   $cv->cb(sub{
     my $r = CCNQ::AE::receive(@_);
     my $cv1 = $cv_sub->($r);
     $cv1->cb(__view_cb($req));
-    delete $context->{bucket_queries}->{$uuid};
+    delete $bucket_queries{$uuid};
   });
 
   $httpd->stop_request;
