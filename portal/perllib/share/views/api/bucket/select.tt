@@ -14,8 +14,8 @@
         </p>
         <p class="ui-helper-clearfix">
         <label for="currency"   class="left"><% | loc %>Bucket currency:<% END %></label>
-          <select name="currency" class="required">
-            <option value=""></option>
+          <select name="currency">
+            <option value=""><%|loc%>Seconds<%END%></option>
             <% FOREACH this IN get_currencies() %>
             <option value="<% this.key | html %>" <% IF this.key == data.currency %>selected<% END %> ><% this.value | html %></option>
             <% END %>
