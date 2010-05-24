@@ -43,7 +43,7 @@
       <% SET buckets = get_buckets(); IF buckets %>
         <ul>
         <% FOREACH bucket IN buckets %>
-          <li><a href="edit?name=<% bucket.name | html %>"><% bucket.name | html %></a></li>
+          <li><a href="?name=<% bucket.name | html %>"><% bucket.name | html %></a></li>
         <% END %>
         </ul>
       <% ELSE %>
