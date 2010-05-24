@@ -388,11 +388,11 @@ use constant _bucket => __generic(sub {
     use CCNQ::Rating::Bucket;
     my $bucket = CCNQ::Rating::Bucket->new($params->{name});
     my $cv = $bucket->load();
-    $cv->cb(
+    $cv->cb(sub{
       CCNQ::AE::receive(@_);
       my $cv1 = $cv_sub->($bucket);
       $cv1->cb(__view_cb($req));
-    );
+    });
   } else {
     return 404;
   }
