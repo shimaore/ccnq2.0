@@ -331,7 +331,7 @@ use constant _rating_table => __generic(sub {
   } elsif($path =~ m{^/rating_table/(\w+)$}) {
     ($table) = ($1);
   } elsif($path =~ m{^/rating_table$}) {
-    ($table) = ($1);
+    # List all tables
   } else {
     return 404;
   }
