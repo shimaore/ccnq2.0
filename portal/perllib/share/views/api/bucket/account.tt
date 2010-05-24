@@ -9,7 +9,7 @@
       <% SET data = get_account_bucket(bucket.name,session.account) %>
       <li><% bucket.name | html %>:
       <% IF is_admin %>
-        <form>
+        <form method="post">
           <input type="hidden" name="name"     value="<% bucket.name     | html %>" />
           <!-- account is implicit -->
           <!-- no account_sub -->
@@ -28,7 +28,7 @@
         <% SET data = get_account_bucket(bucket.name,session.account,s.account_sub) %>
         <li><% s.account_sub | html %>:
         <% IF is_admin %>
-          <form>
+          <form method="post">
             <input type="hidden" name="name"        value="<% bucket.name     | html %>" />
             <!-- account is implicit -->
             <input type="hidden" name="account_sub" value="<% s.account_sub   | html %>" />
