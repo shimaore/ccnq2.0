@@ -107,7 +107,7 @@ post '/billing/plan/:name' => sub {
   if(params->{rating_steps}) {
     my $rating_steps = eval { to_json($params->{rating_steps}) };
     if($@) {
-      var error => _('Invalid JSON content')_;
+      var error => _('Invalid JSON content: [_1]',$params->{rating_steps})_;
       my $fields = $params;
       $fields->{currencies} = \&gather_currencies;
       var field => $fields;
