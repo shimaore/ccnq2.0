@@ -29,20 +29,4 @@ sub _session_ready {
   return;
 }
 
-=pod
-
-replenish_bucket {
-  name
-  currency
-  value
-  account
-  account_sub
-}
-
-=cut
-
-sub replenish_bucket {
-  return CCNQ::Billing::Bucket::replenish(shift->{params});
-}
-
 'CCNQ::Actions::db::bucket';
