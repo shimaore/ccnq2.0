@@ -82,7 +82,7 @@ sub gather_field {
 
   my $endpoint_data;
   if($endpoint) {
-    $endpoint_data = get_endpoint($account,$endpoint);
+    $endpoint_data = CCNQ::Portal::Inner::Util::get_endpoint($account,$endpoint);
   } else {
     $params->{domain} ||= CCNQ::Install::cluster_fqdn($params->{cluster}) if $params->{cluster};
     $params->{password} ||= _random_password(16);
@@ -166,7 +166,7 @@ get '/provisioning/endpoint_location' => sub {
   my $endpoint = params->{endpoint};
   return CCNQ::Portal::content unless $endpoint;
 
-  my $endpoint_data = get_endpoint($account,$endpoint);
+  my $endpoint_data = CCNQ::Portal::Inner::Util::get_endpoint($account,$endpoint);
 
   my $params = {
     cluster_name  => $endpoint_data->{cluster},
