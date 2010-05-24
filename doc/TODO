@@ -1,7 +1,6 @@
 * modify OpenSIPS code so that:
   it strips transport= from RURI
   it strips maddr= from RURI
-* import rating tables
 * create/manage buckets
 * code for cfa/cfb
 * FS code for feature-server / redirection server
@@ -15,3 +14,4 @@
   - collect CDRs
   - do rating analysis (private plans)
 * generalize form validation: generic Perl validation code + AJAX validation
+* import rating tables (bulk)
