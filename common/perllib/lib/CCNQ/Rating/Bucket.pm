@@ -80,7 +80,7 @@ sub load {
         $self->{$_} = $rec->{$_};
       }
     }
-    $rcv->send;
+    $rcv->send($self);
   });
   return $rcv;
 }

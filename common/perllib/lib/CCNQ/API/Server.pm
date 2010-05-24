@@ -383,19 +383,21 @@ use constant _bucket => __generic(sub {
     # PUT: name account (account_sub) value currency
     $cv_sub = sub { shift->replenish($params)    }  if $req->method eq 'PUT';
 
-    $cv_sub or return 501;
-
-    use CCNQ::Rating::Bucket;
-    my $bucket = CCNQ::Rating::Bucket->new($params->{name});
-    my $cv = $bucket->load();
-    $cv->cb(sub{
-      CCNQ::AE::receive(@_);
-      my $cv1 = $cv_sub->($bucket);
-      $cv1->cb(__view_cb($req));
-    });
   } else {
     return 404;
   }
+
+  $cv_sub or return 501;
+
+  use CCNQ::Rating::Bucket;
+  my $bucket = CCNQ::Rating::Bucket->new($params->{name});
+  my $cv = $bucket->load();
+
+  $cv->cb(sub{
+    my $r = CCNQ::AE::receive(@_);
+    my $cv1 = $cv_sub->($r);
+    $cv1->cb(__view_cb($req));
+  });
 
   $httpd->stop_request;
   return;
