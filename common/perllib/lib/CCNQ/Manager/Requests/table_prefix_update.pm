@@ -27,7 +27,7 @@ sub run {
       params => {
         map { $_ => $request->{$_} } qw(
           name prefix
-          country us_state
+          country us_state city
           count_cost
           duration_rate
           initial_duration increment_duration

@@ -123,6 +123,7 @@ Example of fields in results (see CCNQ::Rating::Rate for more details):
 
   country         in 'e164_to_location'
   us_state        in 'e164_to_location'
+  city (optional) in 'e164_to_location'
 
   count_cost      count-base cost
   duration_rate   duration-based rate (per minute)
