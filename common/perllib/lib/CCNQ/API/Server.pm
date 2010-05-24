@@ -301,6 +301,11 @@ use constant _billing => __generic(sub {
   if($path =~ m{^/billing/(\w+)/(\w+)/(.*)$}) {
     $view = $1.'/'.$2;
     $id   = [map { decode_utf8(uri_unescape($_)) } split(qr|/|,$3)];
+  }
+  # This is valid e.g. to enumerate the buckets metadata.
+  elsif($path =~ m{^/billing/(\w+)/(\w+)$}) {
+    $view = $1.'/'.$2;
+    $id = [];
   } else {
     return 404;
   }
