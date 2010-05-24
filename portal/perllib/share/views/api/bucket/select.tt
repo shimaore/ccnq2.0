@@ -5,6 +5,7 @@
   <!-- Bucket metadata -->
   <% IF params.name %>
     <% SET data = get_buckets(params.name).0 %>
+    <% IF not data; SET data = { 'name' => params.name}; END %>
     <fieldset><legend><%|loc%>Modify bucket<%END%></legend>
       <form method="post" class="validate">
         <label for="name"       class="left"><% | loc %>Bucket name:<% END %></label>
@@ -27,11 +28,15 @@
     </fieldset>
   <% ELSE %>
     <fieldset><legend><% |loc %>Buckets<%END%></legend>
-      <ul>
-      <% FOREACH bucket IN get_buckets() %>
-        <li><a href="edit?name=<% bucket.name | html %>"><% bucket.name | html %></a></li>
+      <% SET buckets = get_buckets(); IF buckets %>
+        <ul>
+        <% FOREACH bucket IN buckets %>
+          <li><a href="edit?name=<% bucket.name | html %>"><% bucket.name | html %></a></li>
+        <% END %>
+        </ul>
+      <% ELSE %>
+        <%|loc%>No buckets defined.<%END%>
       <% END %>
-      </ul>
     </fieldset>
     <% END %>
 <% END %>
