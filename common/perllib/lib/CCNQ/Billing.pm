@@ -89,6 +89,15 @@ use constant js_report_users => <<'JAVASCRIPT';
   }
 JAVASCRIPT
 
+# All "bucket"-class documents.
+use constant js_report_buckets => <<'JAVASCRIPT';
+  function (doc) {
+    if(doc.profile == 'bucket') {
+      emit([doc.name],null);
+    }
+  }
+JAVASCRIPT
+
 use constant billing_designs => {
   report => {
     language => 'javascript',
@@ -110,6 +119,9 @@ use constant billing_designs => {
       },
       users => {
         map => js_report_users,
+      },
+      buckets => {
+        map => js_report_buckets,
       }
     },
   },
