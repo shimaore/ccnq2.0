@@ -34,11 +34,11 @@
         </p>
         <p class="ui-helper-clearfix">
           <label for="decimals"  class="left"><% | loc %>Decimals:<% END %></label>
-          <input type="text" name="decimals " value="<% data.decimals  | html %>" />
+          <input type="text" name="decimals"  value="<% data.decimals  | html %>" />
         </p>
         <p class="ui-helper-clearfix">
           <label for="cap"       class="left"><% | loc %>Cap:<% END %></label>
-          <input type="text" name="cap "      value="<% data.cap       | html %>" />
+          <input type="text" name="cap"       value="<% data.cap       | html %>" />
         </p>
         <p class="ui-helper-clearfix submit">
           <input type="submit">
