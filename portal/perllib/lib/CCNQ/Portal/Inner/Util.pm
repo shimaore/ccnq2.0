@@ -108,7 +108,7 @@ sub get_buckets {
   } else {
     CCNQ::API::billing('report','buckets',$cv);
   }
-  my $buckets = CCNQ::AE::receive($cv);
+  my $buckets = CCNQ::AE::receive_docs($cv);
   return $buckets;
 }
 
@@ -127,7 +127,7 @@ sub get_account_bucket {
 
   my $cv = AE::cv;
   CCNQ::API::bucket_query({ name => $name, account => $account, account_sub => $account_sub },$cv);
-  my $data = CCNQ::AE::receive($cv);
+  my $data = CCNQ::AE::receive_first_doc($cv);
   return $data;
 }
 
