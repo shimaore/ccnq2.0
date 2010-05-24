@@ -352,6 +352,8 @@ use constant _rating_table => __generic(sub {
     $cv = CCNQ::Billing::Table::all_tables();
   }
 
+  $cv or return 501;
+
   $cv->cb(__view_cb($req));
 
   $httpd->stop_request;
@@ -384,6 +386,8 @@ use constant _bucket => __generic(sub {
   } else {
     return 404;
   }
+
+  $cv or return 501;
 
   $cv->cb(__view_cb($req));
 
