@@ -33,6 +33,7 @@ sub i18n_gettext_location {
 use Locale::Maketext::Lexicon {
         'en' => [Gettext => i18n_gettext_location('en')],
         'fr' => [Gettext => i18n_gettext_location('fr')],
+        'fr_fr' => [Gettext => i18n_gettext_location('fr')],
         ### Uncomment to decode lexicon entries into Unicode strings
         _decode => 1,
         ### Uncomment to fallback when a key is missing from lexicons
