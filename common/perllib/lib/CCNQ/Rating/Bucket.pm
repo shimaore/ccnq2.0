@@ -187,6 +187,17 @@ sub use {
   return $rcv;
 }
 
+=pod
+
+replenish {
+  currency
+  value
+  account
+  account_sub
+}
+
+=cut
+
 sub replenish {
   my $self = shift;
   my ($params) = @_;

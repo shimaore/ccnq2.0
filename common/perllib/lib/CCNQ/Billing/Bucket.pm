@@ -31,7 +31,7 @@ sub _bucket_id {
 use CCNQ::Billing;
 use CCNQ::Rating::Bucket;
 
-=pod
+=head2 update_bucket(\&)
 
 update_bucket {
   name
@@ -52,31 +52,19 @@ sub update_bucket {
   });
 }
 
+=head2 retrieve_bucket(\&)
+
+retrieve_bucket {
+  name
+}
+
+=cut
+
 sub retrieve_bucket {
   my ($params) = @_;
   return CCNQ::Billing::billing_retrieve({
     _id => _bucket_id($params->{name})
   });
 }
-
-=pod
-
-replenish_bucket {
-  name
-  currency
-  value
-  account
-  account_sub
-}
-
-=cut
-
-sub replenish {
-  my ($params) = @_;
-  my $bucket = CCNQ::Rating::Bucket->new($params->{name});
-  return $bucket->replenish($params);
-}
-
-
 
 'CCNQ::Billing::Bucket';

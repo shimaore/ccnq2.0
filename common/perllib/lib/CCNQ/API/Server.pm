@@ -353,6 +353,47 @@ use constant _rating_table => __generic(sub {
   return;
 });
 
+=head2 _bucket
+
+Handles /bucket calls.
+
+=cut
+
+use constant _bucket => __generic(sub {
+  my ($httpd, $req, $path, $content) = @_;
+
+  my $params = {
+    $req->vars,
+    %$content
+  };
+
+  my $cv;
+  # Bucket-level (Billing) data
+  if($path =~ m{^/bucket$}) {
+    use CCNQ::Billing::Bucket;
+    # GET: name
+    $cv = CCNQ::Billing::Bucket::retrieve_bucket($params) if $req->method eq 'GET';
+    # PUT: name currency increment decimals cap
+    $cv = CCNQ::Billing::Bucket::update_bucket($params)   if $req->method eq 'PUT';
+  }
+  # Account or account-sub level (Bucket instance) data
+  elsif($path =~ m{^/bucket/account$}) {
+    use CCNQ::Rating::Bucket;
+    my $bucket = CCNQ::Rating::Bucket->new($params->{name});
+    # GET: name account (account_sub)
+    $cv = $bucket->get_instance($params)  if $req->method eq 'GET';
+    # PUT: name account (account_sub) value currency
+    $cv = $bucket->replenish($params)     if $req->method eq 'PUT';
+  } else {
+    return 404;
+  }
+
+  $cv->cb(__view_cb($req));
+
+  $httpd->stop_request;
+  return;
+});
+
 =head2 _manager
 
 Handles /manager calls.
@@ -428,6 +469,7 @@ sub _session_ready {
     '/provisioning' => sub { $handle_return->(_provisioning,@_) },
     '/billing'      => sub { $handle_return->(_billing,@_) },
     '/rating_table' => sub { $handle_return->(_rating_table,@_) },
+    '/bucket'       => sub { $handle_return->(_bucket,@_) },
     '/manager'      => sub { $handle_return->(_manager,@_) },
   );
   return;
