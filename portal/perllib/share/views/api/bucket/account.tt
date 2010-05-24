@@ -1,0 +1,52 @@
+<% USE loc %>
+<% IF session.account %>
+  <!-- Bucket instances -->
+  <fieldset><legend><% | loc(session.account) %>Buckets for account [_1]<%END%></legend>
+  <ul>
+  <% SET subs = account_subs(session.account) %>
+  <% FOREACH bucket IN get_buckets() %>
+    <% IF bucket.use_account %>
+      <% SET data = get_account_bucket(bucket.name,session.account) %>
+      <li><% bucket.name | html %>:
+      <% IF is_sysadmin %>
+        <form>
+          <input type="hidden" name="name"     value="<% bucket.name     | html %>" />
+          <!-- account is implicit -->
+          <!-- no account_sub -->
+          <input type="text"   name="value"    value="<% data.value      | html %>" />
+          <input type="hidden" name="currency" value="<% bucket.currency | html %>" /><% bucket.currency | html %>
+          <input type="submit">
+        </form>
+      <% ELSE %>
+        <% data.value | html %> <% bucket.currency | html %>
+      <% END %>
+      </li>
+    <% ELSE %>
+      <li><% bucket.name | html %>:
+      <ul>
+      <% FOREACH account_sub IN subs %>
+        <% SET data = get_account_bucket(bucket.name,session.account,account_sub) %>
+        <li><% account_sub | html %>:
+        <% IF is_sysadmin %>
+          <form>
+            <input type="hidden" name="name"        value="<% bucket.name     | html %>" />
+            <!-- account is implicit -->
+            <input type="hidden" name="account_sub" value="<% account_sub     | html %>" />
+            <input type="text"   name="value"       value="<% data.value      | html %>" />
+            <input type="hidden" name="currency"    value="<% bucket.currency | html %>" /><% bucket.currency | html %>
+            <input type="submit">
+          </form>
+        <% ELSE %>
+          <% data.value | html %> <% bucket.currency | html %>
+        <% END %>
+        </li>
+      <% END %>
+      </ul>
+      </li>
+    <% END %>
+  <% END %>
+  </ul>
+  </fieldset>
+<% ELSE %>
+  <%|loc%>Please select an account to use this feature.<%END%>
+<% END %>

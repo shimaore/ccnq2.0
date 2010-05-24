@@ -1,0 +1,37 @@
+<% USE loc %>
+<% IF not is_sysadmin %>
+<%|loc%>This function is not available to you.<%END%>
+<% ELSE %>
+  <!-- Bucket metadata -->
+  <% IF params.name %>
+    <% SET data = get_buckets(params.name).0 %>
+    <fieldset><legend><%|loc%>Modify bucket<%END%></legend>
+      <form method="post" class="validate">
+        <label for="name"       class="left"><% | loc %>Bucket name:<% END %></label>
+        <input type="text" name="name"      value="<% data.name | html %>" readonly />
+        <label for="currency"   class="left"><% | loc %>Bucket currency:<% END %></label>
+        <select name="currency" class="required">
+          <option value=""></option>
+          <% FOREACH this IN get_currencies() %>
+          <option value="<% this.key | html %>" <% IF this.key == data.currency %>selected<% END %> ><% this.value | html %></option>
+          <% END %>
+        </select>
+        <label for="increment" class="left"><% | loc %>Increment:<% END %></label>
+        <input type="text" name="increment" value="<% data.increment | html %>" />
+        <label for="decimals"  class="left"><% | loc %>Decimals:<% END %></label>
+        <input type="text" name="decimals " value="<% data.decimals  | html %>" />
+        <label for="cap"       class="left"><% | loc %>Cap:<% END %></label>
+        <input type="text" name="cap "      value="<% data.cap       | html %>" />
+        <input type="submit">
+      </form>
+    </fieldset>
+  <% ELSE %>
+    <fieldset><legend><% |loc %>Buckets<%END%></legend>
+      <ul>
+      <% FOREACH bucket IN get_buckets() %>
+        <li><a href="edit?name=<% bucket.name | html %>"><% bucket.name | html %></a></li>
+      <% END %>
+      </ul>
+    </fieldset>
+    <% END %>
+<% END %>
