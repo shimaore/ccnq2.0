@@ -254,12 +254,12 @@ sub use_account {
 }
 
 sub _retrieve {
-  my ($self,$key) = shift;
+  my ($self,$key) = @_;
   return CCNQ::Rating::Bucket::DB::retrieve_bucket_instance($key);
 }
 
 sub _store {
-  my ($self,$instance) = shift;
+  my ($self,$instance) = @_;
   return CCNQ::Rating::Bucket::DB::update_bucket_instance($instance);
 }
 
