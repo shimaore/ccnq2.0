@@ -15,3 +15,4 @@
   - do rating analysis (private plans)
 * generalize form validation: generic Perl validation code + AJAX validation
 * import rating tables (bulk)
+* rewrite the Dancer code so that it works under Twiggy (hint: must rewrite portal code to use AnyEvent conventions)

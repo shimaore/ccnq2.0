@@ -266,6 +266,7 @@ SQL
 
   # On the web portal server, you should also do:
   sudo aptitude install libtemplate-perl
+  sudo aptitude -t testing install libplack-perl # Used by the webserver starter (plackup)
   (cd ~/src/ccnq2.0/portal/perllib && perl Makefile.PL && make && make test && sudo make install)
 
   sudo aptitude install memcached
