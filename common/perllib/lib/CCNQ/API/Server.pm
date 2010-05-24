@@ -376,7 +376,7 @@ use constant _bucket => __generic(sub {
   # Account or account-sub level (Bucket instance) data
   if($path =~ m{^/bucket$}) {
     use CCNQ::Rating::Bucket;
-    my $bucket = CCNQ::Rating::Bucket->new($params->{name});
+    my $bucket = CCNQ::Rating::Bucket->new($params->{name},$params->{use_account});
     # GET: name account (account_sub)
     $cv = $bucket->get_instance($params)  if $req->method eq 'GET';
     # PUT: name account (account_sub) value currency

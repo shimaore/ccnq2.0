@@ -630,17 +630,15 @@ $cbef_actions = {
 
   use_minutes_from_bucket => sub {
     my ($cbef,$bucket_name) = @_;
-    $cbef->{duration_bucket} = CCNQ::Rating::Bucket->new($bucket_name);
-    # optionally
-    $cbef->{duration_bucket}->use_account(0); # 0 = use account+sub_account
+    my $use_account = 0; # 0 = use account+sub_account
+    $cbef->{duration_bucket} = CCNQ::Rating::Bucket->new($bucket_name,$use_account);
     return $cbef->{duration_bucket}->load;
   },
 
   use_amount_from_bucket => sub {
     my ($cbef,$bucket_name) = @_;
-    $cbef->{cost_bucket} = CCNQ::Rating::Bucket->new($bucket_name);
-    # optionally
-    $cbef->{cost_bucket}->use_account(0); # 0 = use account+sub_account
+    my $use_account = 0; # 0 = use account+sub_account
+    $cbef->{cost_bucket} = CCNQ::Rating::Bucket->new($bucket_name,$use_account);
     return $cbef->{duration_bucket}->load;
   },
 

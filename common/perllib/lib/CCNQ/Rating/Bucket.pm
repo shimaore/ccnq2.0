@@ -52,8 +52,8 @@ use CCNQ::AE;
 sub new {
   my $this = shift;
   my $class = ref($this) || $this;
-  my ($name) = @_;
-  my $self = { _name => $name };
+  my ($name,$use_account) = @_;
+  my $self = { _name => $name, _use_account => $use_account };
   return bless $self, $class;
 }
 
