@@ -28,14 +28,14 @@
     <% ELSE %>
       <li><% bucket.name | html %>:
       <ul>
-      <% FOREACH account_sub IN subs %>
-        <% SET data = get_account_bucket(bucket.name,session.account,account_sub) %>
-        <li><% account_sub | html %>:
+      <% FOREACH s IN subs %>
+        <% SET data = get_account_bucket(bucket.name,session.account,s.account_sub) %>
+        <li><% s.account_sub | html %>:
         <% IF is_sysadmin %>
           <form>
             <input type="hidden" name="name"        value="<% bucket.name     | html %>" />
             <!-- account is implicit -->
-            <input type="hidden" name="account_sub" value="<% account_sub     | html %>" />
+            <input type="hidden" name="account_sub" value="<% s.account_sub   | html %>" />
             <p class="ui-helper-clearfix">
             <input type="text"   name="value"       value="<% data.value      | html %>" />
             <input type="hidden" name="currency"    value="<% bucket.currency | html %>" /><% bucket.currency | html %>

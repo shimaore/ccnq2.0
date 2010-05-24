@@ -126,7 +126,11 @@ sub get_account_bucket {
   # account_sub is optional (in case the bucket does "use_account").
 
   my $cv = AE::cv;
-  CCNQ::API::bucket_query({ name => $name, account => $account, account_sub => $account_sub },$cv);
+  if(defined $account_sub) {
+    CCNQ::API::bucket_query({ name => $name, account => $account, account_sub => $account_sub },$cv);
+  } else {
+    CCNQ::API::bucket_query({ name => $name, account => $account },$cv);
+  }
   my $data = CCNQ::AE::receive_first_doc($cv);
   return $data;
 }
