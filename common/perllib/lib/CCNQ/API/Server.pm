@@ -368,16 +368,8 @@ use constant _bucket => __generic(sub {
   };
 
   my $cv;
-  # Bucket-level (Billing) data
-  if($path =~ m{^/bucket$}) {
-    use CCNQ::Billing::Bucket;
-    # GET: name
-    $cv = CCNQ::Billing::Bucket::retrieve_bucket($params) if $req->method eq 'GET';
-    # PUT: name currency increment decimals cap
-    $cv = CCNQ::Billing::Bucket::update_bucket($params)   if $req->method eq 'PUT';
-  }
   # Account or account-sub level (Bucket instance) data
-  elsif($path =~ m{^/bucket/account$}) {
+  if($path =~ m{^/bucket$}) {
     use CCNQ::Rating::Bucket;
     my $bucket = CCNQ::Rating::Bucket->new($params->{name});
     # GET: name account (account_sub)

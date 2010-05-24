@@ -112,6 +112,20 @@ sub billing {
   return;
 }
 
+sub _bucket {
+  my $cb = pop;
+  my ($method,$params) = @_;
+  my $uri = api_uri();
+  $uri->path_segments('bucket');
+  my $body;
+  $body = encode_json($params);
+  http_request $method => $uri->as_string, body => $body, _api_cb($cb);
+  return;
+}
+
+sub bucket_query  { _manager('GET',@_) }
+sub bucket_update { _manager('PUT',@_) }
+
 sub rating_table {
   my $cb = pop;
   my $uri = api_uri();
