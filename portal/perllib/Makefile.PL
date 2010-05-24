@@ -6,12 +6,12 @@ all_from      'lib/CCNQ/Portal.pm';
 license       'gpl';
 
 # Specific dependencies
-requires      'CCNQ'                      => '0.01';
+requires      'CCNQ'                      => '0.03';
 
 requires      'File::ShareDir'            => '1.01';
 requires      'File::Spec'                => 0; # '3.2501'
 
-requires      'Dancer'                    => '1.1802';
+requires      'Dancer'                    => '1.1803';
 requires      'Dancer::Session::Memcached' => 0;
 requires      'Dancer::Logger::Syslog'    => 0;
 requires      'Template'                  => 0;
