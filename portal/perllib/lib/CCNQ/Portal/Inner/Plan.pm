@@ -101,7 +101,8 @@ post '/billing/plan/:name' => sub {
 
   if(params->{rating_steps}) {
     my $rating_steps = eval { to_json($params->{rating_steps}) };
-    if($@ ne '') {
+    if($@) {
+      debug("JSON Error: $@");
       var error => _('Invalid JSON content ([_1]): [_2]',$@,$params->{rating_steps})_;
       my $fields = $params;
       var get_currencies  => \&CCNQ::Portal::Inner::Util::get_currencies;
