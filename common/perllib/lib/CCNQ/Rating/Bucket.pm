@@ -203,17 +203,19 @@ sub replenish {
   my ($params) = @_;
 
   use Logger::Syslog;
-  debug(CCNQ::AE::pp($params));
+  debug("replenish: ".CCNQ::AE::pp($params));
 
   my $rcv = AE::cv;
 
   if($params->{value} <= 0) {
+    debug("replenish: negative value");
     $rcv->send( { error => 'Negative value' } );
     return $rcv;
   }
 
   # If the bucket stores money, make sure the currency is the proper one.
   if($self->currency && $params->{currency} ne $self->currency) {
+    debug("replenish: invalid currency");
     $rcv->send( { error => 'Invalid currency' } );
     return $rcv;
   };
@@ -221,13 +223,15 @@ sub replenish {
   $self->get_instance($params)->cb(sub{
     my $bucket_instance = CCNQ::AE::receive(@_);
 
-    debug(CCNQ::AE::pp($bucket_instance));
+    debug("replenish get_instance: ".CCNQ::AE::pp($bucket_instance));
 
     my $current_bucket_value = $bucket_instance ? $bucket_instance->{value} : Math::BigFloat->bzero;
     $current_bucket_value += $params->{value};
 
     $self->set_instance_value($bucket_instance,$value)->cb(sub{$rcv->send(CCNQ::AE::receive(@_))});
   });
+
+  debug("replenish: return ".CCNQ::AE::pp($rcv));
   return $rcv;
 }
 
