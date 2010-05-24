@@ -59,7 +59,7 @@ Do no forget to call ->load() on the newly created object.
 sub new {
   my $this = shift;
   my $class = ref($this) || $this;
-  my ($name,$use_account) = @_;
+  my ($name) = @_;
   my $self = { _name => $name };
   return bless $self, $class;
 }
@@ -247,22 +247,6 @@ sub replenish {
   return $rcv;
 }
 
-=head2 use_account
-
-If true, use the account as the key.
-Otherwise, use the account+account_sub as the key.
-
-=cut
-
-sub use_account {
-  my ($self,$use_account) = @_;
-  if(defined($use_account)) {
-    $self->{use_account} = $use_account;
-  } else {
-    return $self->{use_account};
-  }
-}
-
 sub _retrieve {
   my ($self,$key) = @_;
   return CCNQ::Rating::Bucket::DB::retrieve_bucket_instance($key);
@@ -350,6 +334,17 @@ stored in a bucket instance.
 
 sub cap {
   return shift->{cap};
+}
+
+=head2 use_account
+
+If true, use the account as the key.
+Otherwise, use the account+account_sub as the key.
+
+=cut
+
+sub use_account {
+  return shift->{use_account};
 }
 
 'CCNQ::Rating::Bucket';

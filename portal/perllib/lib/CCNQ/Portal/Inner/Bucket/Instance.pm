@@ -61,13 +61,6 @@ post '/bucket/account/' => sub {
   defined($params->{name})     or die 'name is required';
   defined($params->{account})  or die 'account is required';
 
-  my $bucket_data = CCNQ::Portal::Inner::Util::get_buckets($params->{name});
-
-  defined($bucket_data)
-    or var(error=>_('No such bucket [_1]',$params->{name})_), return CCNQ::Portal::content
-
-  $params->{use_account} = $bucket_data->{use_account};
-
   my $cv = AE::cv;
   CCNQ::API::bucket_update($params,$cv);
   my $r = CCNQ::AE::receive($cv);
