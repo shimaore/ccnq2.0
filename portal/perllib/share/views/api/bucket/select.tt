@@ -13,6 +13,13 @@
           <input type="text" name="name"      value="<% data.name | html %>" readonly />
         </p>
         <p class="ui-helper-clearfix">
+        <label for="use_account"   class="left"><% | loc %>Level:<% END %></label>
+          <select name="use_account">
+            <option value="0" <% IF not data.use_account %>selected<% END %>><%|loc%>per account_sub<%END%></option>
+            <option value="1" <% IF     data.use_account %>selected<% END %>><%|loc%>per account<%END%></option>
+          </select>
+        </p>
+        <p class="ui-helper-clearfix">
         <label for="currency"   class="left"><% | loc %>Units:<% END %></label>
           <select name="currency">
             <option value=""><%|loc%>Seconds<%END%></option>

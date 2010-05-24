@@ -35,6 +35,7 @@ use CCNQ::Billing::Bucket;
 
 update_bucket {
   name
+  use_account
   currency
   increment
   decimals
