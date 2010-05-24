@@ -205,19 +205,20 @@ sub replenish {
   my $rcv = AE::cv;
 
   if($params->{value} <= 0) {
-    return { error => 'Negative value' };
+    $rcv->send( { error => 'Negative value' } );
+    return $rcv;
   }
 
   # If the bucket stores money, make sure the currency is the proper one.
   if($self->currency && $params->{currency} ne $self->currency) {
-    return { error => 'Invalid currency' };
+    $rcv->send( { error => 'Invalid currency' } );
+    return $rcv;
   };
 
   $self->get_instance($params)->cb(sub{
     my $bucket_instance = CCNQ::AE::receive(@_);
-    $bucket_instance ||= $params;
 
-    my $current_bucket_value = $bucket_instance->{value};
+    my $current_bucket_value = $bucket_instance ? $bucket_instance->{value} : Math::BigFloat->bzero;
     $current_bucket_value += $params->{value};
 
     $self->set_instance_value($bucket_instance,$value)->cb(sub{$rcv->send(CCNQ::AE::receive(@_))});
