@@ -32,7 +32,7 @@ sub gather_field {
   my $plan_data = CCNQ::AE::receive_first_doc($cv2) || { name => $plan_name, decimals => 2 };
 
   var get_plans       => \&CCNQ::Portal::Inner::Util::get_plans;
-  var get_currencies  => \&CCNQ::Portal::Inner::Util::get_currencies,
+  var get_currencies  => \&CCNQ::Portal::Inner::Util::get_currencies;
 
   my $field = {
     name          => $plan_data->{name},
@@ -66,7 +66,7 @@ get '/billing/plan' => sub {
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
 
   var get_plans       => \&CCNQ::Portal::Inner::Util::get_plans;
-  var get_currencies  => \&CCNQ::Portal::Inner::Util::get_currencies,
+  var get_currencies  => \&CCNQ::Portal::Inner::Util::get_currencies;
 
   return CCNQ::Portal::content;
 };
@@ -104,7 +104,7 @@ post '/billing/plan/:name' => sub {
     if($@) {
       var error => _('Invalid JSON content ([_1]): [_2]',$@,$params->{rating_steps})_;
       my $fields = $params;
-      var get_currencies  => \&CCNQ::Portal::Inner::Util::get_currencies,
+      var get_currencies  => \&CCNQ::Portal::Inner::Util::get_currencies;
       var field => $fields;
       var template_name => 'api/plan';
       return CCNQ::Portal::content;

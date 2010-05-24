@@ -177,7 +177,6 @@ sub get_endpoint {
 =cut
 
 sub get_currencies {
-  use utf8;
   return { 'EUR' => '€', 'USD' => 'US$' };
 }
 
