@@ -61,7 +61,10 @@ post '/bucket/account/' => sub {
   my $cv = AE::cv;
   CCNQ::API::bucket_update($params,$cv);
   my $r = CCNQ::AE::receive($cv);
-  redirect '/request/'.$r->{request};
+
+  var error => $r->{error};
+  var response => $r;
+  return CCNQ::Portal::content;
 };
 
 'CCNQ::Portal::Inner::Bucket::Instance';
