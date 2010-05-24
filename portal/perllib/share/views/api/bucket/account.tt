@@ -13,9 +13,13 @@
           <input type="hidden" name="name"     value="<% bucket.name     | html %>" />
           <!-- account is implicit -->
           <!-- no account_sub -->
+          <p class="ui-helper-clearfix">
           <input type="text"   name="value"    value="<% data.value      | html %>" />
           <input type="hidden" name="currency" value="<% bucket.currency | html %>" /><% bucket.currency | html %>
+          </p>
+          <p class="ui-helper-clearfix">
           <input type="submit">
+          </p>
         </form>
       <% ELSE %>
         <% data.value | html %> <% bucket.currency | html %>
@@ -32,9 +36,13 @@
             <input type="hidden" name="name"        value="<% bucket.name     | html %>" />
             <!-- account is implicit -->
             <input type="hidden" name="account_sub" value="<% account_sub     | html %>" />
+            <p class="ui-helper-clearfix">
             <input type="text"   name="value"       value="<% data.value      | html %>" />
             <input type="hidden" name="currency"    value="<% bucket.currency | html %>" /><% bucket.currency | html %>
+            </p>
+            <p class="ui-helper-clearfix">
             <input type="submit">
+            </p>
           </form>
         <% ELSE %>
           <% data.value | html %> <% bucket.currency | html %>

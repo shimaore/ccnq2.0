@@ -33,6 +33,7 @@ get  '/bucket/' => sub {
     or return CCNQ::Portal::content;
 
   var get_buckets        => \&CCNQ::Portal::Inner::Util::get_buckets;
+  var get_currencies     => \&CCNQ::Portal::Inner::Util::get_currencies;
 
   return CCNQ::Portal::content;
 };
