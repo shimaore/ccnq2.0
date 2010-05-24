@@ -42,7 +42,7 @@ sub gather_field {
   };
 
   if($plan_data->{rating_steps}) {
-    $field->{rating_steps} = eval { encode_json($plan_data->{rating_steps}) };
+    $field->{rating_steps} = eval { to_json($plan_data->{rating_steps}) };
   }
 
   var field => $field;
@@ -100,7 +100,7 @@ post '/billing/plan/:name' => sub {
   # XXX validate currency
 
   if(params->{rating_steps}) {
-    my $rating_steps = eval { to_json($params->{rating_steps}) };
+    my $rating_steps = eval { from_json($params->{rating_steps}) };
     if($@) {
       debug("JSON Error: $@");
       var error => _('Invalid JSON content ([_1]): [_2]',$@,$params->{rating_steps})_;
