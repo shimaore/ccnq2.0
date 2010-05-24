@@ -17,7 +17,7 @@
           <input type="text"   name="value"    value="<% data.value      | html %>" />
           <input type="hidden" name="currency" value="<% bucket.currency | html %>" /><% bucket.currency | html %>
           </p>
-          <p class="ui-helper-clearfix">
+          <p class="ui-helper-clearfix submit">
           <input type="submit">
           </p>
         </form>
@@ -40,7 +40,7 @@
             <input type="text"   name="value"       value="<% data.value      | html %>" />
             <input type="hidden" name="currency"    value="<% bucket.currency | html %>" /><% bucket.currency | html %>
             </p>
-            <p class="ui-helper-clearfix">
+            <p class="ui-helper-clearfix submit">
             <input type="submit">
             </p>
           </form>

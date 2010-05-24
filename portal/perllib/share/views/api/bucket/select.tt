@@ -33,7 +33,7 @@
           <label for="cap"       class="left"><% | loc %>Cap:<% END %></label>
           <input type="text" name="cap "      value="<% data.cap       | html %>" />
         </p>
-        <p class="ui-helper-clearfix">
+        <p class="ui-helper-clearfix submit">
           <input type="submit">
         </p>
       </form>
@@ -56,7 +56,7 @@
           <label for="name"       class="left"><% | loc %>Bucket name:<% END %></label>
           <input type="text" name="name"      value="<% data.name | html %>" class="required" />
         </p>
-        <p class="ui-helper-clearfix">
+        <p class="ui-helper-clearfix submit">
           <input type="submit">
         </p>
       </form>
