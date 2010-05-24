@@ -129,7 +129,6 @@ sub set_instance_value {
     $value = $self->cap;
   }
   $instance->{value} = $value;
-  $instance->{_id} = $self->full_name;
   return $self->_store($instance);
 }
 
@@ -236,7 +235,12 @@ sub replenish {
     my $current_bucket_value = $bucket_instance ? $bucket_instance->{value} : Math::BigFloat->bzero;
     $current_bucket_value += $params->{value};
 
-    $bucket_instance ||= {};
+    # Create a new bucket-instance if none was available.
+    $bucket_instance ||= {
+      _id         => $self->full_name($params),
+      account     => $params->{account},
+      account_sub => $params->{account_sub}
+    };
 
     $self->set_instance_value($bucket_instance,$current_bucket_value)->cb(sub{
       $rcv->send(CCNQ::AE::receive(@_))
