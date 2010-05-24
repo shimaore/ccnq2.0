@@ -45,7 +45,7 @@ use constant BUCKET_NAME_PREFIX => 'bucket';
 sub retrieve_bucket_instance {
   my ($key) = @_;
   my $id = join('/',BUCKET_NAME_PREFIX,$key);
-  return CCNQ::CouchDB::retrieve_cv(bucket_server,bucket_db,$id);
+  return CCNQ::CouchDB::retrieve_cv(bucket_server,bucket_db,{ _id => $id });
 }
 
 sub update_bucket_instance {
