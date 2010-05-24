@@ -28,6 +28,7 @@ sub run {
         map { $_ => $request->{$_} } qw( name currency increment decimals cap )
       }
     },
+    CCNQ::Manager::request_completed(),
   );
 }
 

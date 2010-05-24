@@ -27,7 +27,7 @@ use CCNQ::API;
 
 #
 
-get  '/bucket/account' => sub {
+get  '/bucket/account/' => sub {
   var template_name => 'api/bucket/account';
 
   CCNQ::Portal->current_session->user &&
@@ -41,7 +41,7 @@ get  '/bucket/account' => sub {
   return CCNQ::Portal::content;
 };
 
-post '/bucket/account' => sub {
+post '/bucket/account/' => sub {
   var template_name => 'api/bucket/select';
 
   CCNQ::Portal->current_session->user                    &&
