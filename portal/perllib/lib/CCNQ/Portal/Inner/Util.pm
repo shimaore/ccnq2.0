@@ -172,6 +172,15 @@ sub get_endpoint {
   return CCNQ::AE::receive_first_doc($cv) || {};
 }
 
+=head1 Plan Utilities
+
+=cut
+
+sub get_currencies {
+  use utf8;
+  return { 'EUR' => '€', 'USD' => 'US$' };
+}
+
 
 
 'CCNQ::Portal::Inner::Util';

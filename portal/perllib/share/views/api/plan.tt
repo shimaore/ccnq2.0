@@ -14,7 +14,7 @@
         <label for="currency" class="left"><% | loc %>Plan currency:<% END %><!-- <% field.currency | html %> --></label>
         <select name="currency" class="required">
           <option value=""></option>
-          <% FOREACH this IN field.currencies %>
+          <% FOREACH this IN get_currencies() %>
           <option value="<% this.key | html %>" <% IF this.key == field.currency %>selected<% END %> ><% this.value | html %></option>
           <% END %>
         </select>

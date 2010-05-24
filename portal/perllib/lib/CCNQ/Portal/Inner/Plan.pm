@@ -14,7 +14,6 @@ package CCNQ::Portal::Inner::Plan;
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
-use utf8;
 
 use Dancer ':syntax';
 use CCNQ::Portal;
@@ -24,10 +23,6 @@ use CCNQ::Portal::Util;
 use CCNQ::AE;
 use CCNQ::API;
 
-sub gather_currencies {
-  return { 'EUR' => '€', 'USD' => 'US$' };
-}
-
 sub gather_field {
   my ($plan_name) = @_;
 
@@ -36,14 +31,14 @@ sub gather_field {
   CCNQ::API::billing('report','plans',$plan_name,$cv2);
   my $plan_data = CCNQ::AE::receive_first_doc($cv2) || { name => $plan_name, decimals => 2 };
 
-  var get_plans => \&CCNQ::Portal::Inner::Util::get_plans;
+  var get_plans       => \&CCNQ::Portal::Inner::Util::get_plans;
+  var get_currencies  => \&CCNQ::Portal::Inner::Util::get_currencies,
 
   my $field = {
     name          => $plan_data->{name},
     currency      => $plan_data->{currency},
     decimals      => $plan_data->{decimals},
 
-    currencies    => \&gather_currencies,
   };
 
   if($plan_data->{rating_steps}) {
@@ -70,8 +65,8 @@ get '/billing/plan' => sub {
   var template_name => 'api/plan';
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
 
-  var get_plans      => \&CCNQ::Portal::Inner::Util::get_plans;
-  var get_currencies => \&CCNQ::Portal::Inner::Util::get_currencies;
+  var get_plans       => \&CCNQ::Portal::Inner::Util::get_plans;
+  var get_currencies  => \&CCNQ::Portal::Inner::Util::get_currencies,
 
   return CCNQ::Portal::content;
 };
@@ -109,7 +104,7 @@ post '/billing/plan/:name' => sub {
     if($@) {
       var error => _('Invalid JSON content ([_1]): [_2]',$@,$params->{rating_steps})_;
       my $fields = $params;
-      $fields->{currencies} = \&gather_currencies;
+      var get_currencies  => \&CCNQ::Portal::Inner::Util::get_currencies,
       var field => $fields;
       var template_name => 'api/plan';
       return CCNQ::Portal::content;
