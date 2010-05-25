@@ -40,11 +40,8 @@ sub install {
   return CCNQ::CouchDB::install(bucket_server,bucket_db,bucket_designs);
 }
 
-use constant BUCKET_NAME_PREFIX => 'bucket';
-
 sub retrieve_bucket_instance {
   my ($key) = @_;
-  my $id = join('/',BUCKET_NAME_PREFIX,$key);
   return CCNQ::CouchDB::retrieve_cv(bucket_server,bucket_db,{ _id => $id });
 }
 
