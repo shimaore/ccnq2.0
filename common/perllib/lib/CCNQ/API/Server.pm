@@ -63,7 +63,7 @@ sub __generic {
       'node/api',
       'method=' => $req->method,
       'URL='    => CCNQ::AE::pp($req->url),
-      'vars='   => CCNQ::AE::pp($req->vars),
+      'vars='   => CCNQ::AE::pp({$req->vars}),
       'headers='=> CCNQ::AE::pp($req->headers),
       'body='   => CCNQ::AE::pp($req->content),
     ));
