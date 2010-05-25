@@ -50,6 +50,8 @@ use Math::BigFloat;
 use CCNQ::CouchDB;
 use CCNQ::AE;
 
+use Carp;
+
 =head2 new($name)
 
 Do no forget to call ->load() on the newly created object.
@@ -60,6 +62,7 @@ sub new {
   my $this = shift;
   my $class = ref($this) || $this;
   my ($name) = @_;
+  $name or confess "name is required";
   my $self = { _name => $name };
   return bless $self, $class;
 }
@@ -88,7 +91,7 @@ sub load {
 sub short_name {
   my ($self,$params) = @_;
 
-  $self->use_account || $params->{account_sub} or do { use Carp; confess "account_sub required for ".$self->base_name; };
+  $self->use_account || $params->{account_sub} or confess "account_sub required for ".$self->base_name;
 
   return $self->use_account
     ? $params->{account}

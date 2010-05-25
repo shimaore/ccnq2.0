@@ -35,6 +35,11 @@ sub run {
   my ($program_name) = @_;
   info("$program_name starting");
 
+  # If using EV, this will drop callback errors into syslog.
+  $EV::DIED = sub {
+    error($@);
+  };
+
   $0 = $program_name;
   # Loop until we are asked to restart ourselves (e.g. after upgrade)
   # or until something breaks (e.g. server died).
