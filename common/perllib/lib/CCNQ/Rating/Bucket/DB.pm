@@ -48,6 +48,7 @@ sub retrieve_bucket_instance {
   return CCNQ::CouchDB::retrieve_cv(bucket_server,bucket_db,{ _id => $id });
 }
 
+use Scalar::Util qw(blessed);
 use Data::Structure::Util qw(unbless);
 
 sub cleanup {
