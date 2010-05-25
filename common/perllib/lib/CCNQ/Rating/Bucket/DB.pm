@@ -41,7 +41,7 @@ sub install {
 }
 
 sub retrieve_bucket_instance {
-  my ($key) = @_;
+  my ($id) = @_;
   return CCNQ::CouchDB::retrieve_cv(bucket_server,bucket_db,{ _id => $id });
 }
 
