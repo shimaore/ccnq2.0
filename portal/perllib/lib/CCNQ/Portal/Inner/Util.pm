@@ -131,7 +131,7 @@ sub get_account_bucket {
   } else {
     CCNQ::API::bucket_query({ name => $name, account => $account },$cv);
   }
-  my $data = CCNQ::AE::receive_first_doc($cv);
+  my $data = CCNQ::AE::receive($cv);
   return $data;
 }
 
