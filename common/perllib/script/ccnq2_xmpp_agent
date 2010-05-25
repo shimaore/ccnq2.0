@@ -37,7 +37,7 @@ sub run {
 
   # If using EV, this will drop callback errors into syslog.
   $EV::DIED = sub {
-    error($@);
+    error("*** EV::DIED: $@");
   };
 
   $0 = $program_name;
