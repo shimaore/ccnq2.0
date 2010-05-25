@@ -9,6 +9,7 @@
       <li><a href="/billing/account"><% | loc %>Accounts<% END %></a></li>
       <li><a href="/billing/plan"><% | loc %>Plans<% END %></a></li>
       <li><a href="/rating_table/"><% | loc %>Rating tables<% END %></a></li>
+      <li><a href="/bucket/"><% |loc %>Buckets<% END %></a></li>
     </ul>
   </li>
   <li><a href="/trace"><% | loc %>Trace<% END %></a></li>

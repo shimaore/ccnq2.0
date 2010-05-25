@@ -11,11 +11,12 @@
   <fieldset>
     <legend><% | loc(session.account) %>Account [_1]<% END %></legend>
     <ul>
-      <li><a href="/billing/account">Manage account</a></li>
-      <li><a href="/provisioning/endpoint">Manage endpoints</a></li>
-      <li><a href="/provisioning/view/account">Inventory</a></li>
-      <li><a href="/provisioning/view/endpoint/_all">View All Endpoints</a></li>
-      <li><a href="/provisioning/view/number/_all">View All Numbers</a></li>
+      <li><a href="/billing/account"><%|loc%>Manage account<%END%></a></li>
+      <li><a href="/provisioning/endpoint"><%|loc%>Manage endpoints<%END%></a></li>
+      <li><a href="/provisioning/view/account"><%|loc%>Inventory<%END%></a></li>
+      <li><a href="/provisioning/view/endpoint/_all"><%|loc%>View All Endpoints<%END%></a></li>
+      <li><a href="/provisioning/view/number/_all"><%|loc%>View All Numbers<%END%></a></li>
+      <li><a href="/bucket/account/"><%|loc%>View Bucket Values<%END%></a></li>
     </ul>
   </fieldset>
 <% ELSE %>
