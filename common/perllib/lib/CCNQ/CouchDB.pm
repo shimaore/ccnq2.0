@@ -120,6 +120,7 @@ Returns a condvar which will return the values saved.
 
 sub update_cv {
   my ($uri,$db_name,$params) = @_;
+  debug("CCNQ::CouchDB::update_cv(".CCNQ::AE::ppp(@_).")");
 
   my $rcv = AE::cv;
 
@@ -157,6 +158,7 @@ Returns a condvar which will return the values saved.
 
 sub update_key_cv {
   my ($uri,$db_name,$params) = @_;
+  debug("CCNQ::CouchDB::update_key_cv(".CCNQ::AE::ppp(@_).")");
 
   my $rcv = AE::cv;
 
@@ -200,6 +202,7 @@ Returns a condvar which will return the content of the deleted record.
 
 sub delete_cv {
   my ($uri,$db_name,$params) = @_;
+  debug("CCNQ::CouchDB::delete_cv(".CCNQ::AE::ppp(@_).")");
 
   my $rcv = AE::cv;
 
@@ -220,6 +223,7 @@ sub delete_cv {
 
 sub retrieve_cv {
   my ($uri,$db_name,$params) = @_;
+  debug("CCNQ::CouchDB::retrieve_cv(".CCNQ::AE::ppp(@_).")");
 
   my $rcv = AE::cv;
 
@@ -256,6 +260,7 @@ where row1, row2, .. are hashrefs of row records.
 
 sub view_cv {
   my ($uri,$db_name,$params) = @_;
+  debug("CCNQ::CouchDB::view_cv(".CCNQ::AE::ppp(@_).")");
 
   my $rcv = AE::cv;
 
