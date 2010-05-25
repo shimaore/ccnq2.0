@@ -118,7 +118,12 @@ sub _bucket {
   my $uri = api_uri();
   $uri->path_segments('bucket');
   my $body;
-  $body = encode_json($params);
+  # See CCNQ::HTTPD
+  if($method eq 'PUT') {
+    $body = encode_json($params);
+  } else {
+    $uri->query_form($params);
+  }
   http_request $method => $uri->as_string, body => $body, _api_cb($cb);
   return;
 }
