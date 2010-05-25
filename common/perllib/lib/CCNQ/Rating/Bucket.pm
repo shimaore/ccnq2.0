@@ -151,39 +151,40 @@ sub set_instance_value {
 
 sub use {
   my $self = shift;
-  my ($cbef,$value) = @_;
+  my ($params,$value) = @_;
 
   my $rcv = AE::cv;
 
-  my $cv_failed = sub {
-    $rcv->send(Math::BigFloat->bzero);
-    return $rcv;
-  };
-
   if($value <= 0) {
-    return $cv_failed;
+    die("use: negative value");
   }
 
   # If the bucket stores money, make sure the currency is the proper one.
-  if($self->currency && $cbef->currency ne $self->currency) {
-    error("Invalid currency");
-    return $cv_failed;
+  if($self->currency && $params->{currency} ne $self->currency) {
+    die("use: invalid currency");
   };
 
   $value = $self->round_up($value);
 
-  $self->get_instance($cbef)->cb(sub{
+  $self->get_instance($params)->cb(sub{
     my $bucket_instance = CCNQ::AE::receive(@_);
-    return $cv_failed->() unless $bucket_instance;
 
-    my $current_bucket_value = $bucket_instance->{value};
+
+    my $current_bucket_value = $bucket_instance ? $bucket_instance->{value} : Math::BigFloat->bzero;
+
+    # Create a new bucket-instance if none was available.
+    $bucket_instance ||= {
+      _id         => $self->full_name($params),
+      account     => $params->{account},
+      account_sub => $params->{account_sub}
+    };
 
     if($current_bucket_value < $value) {
       $self->set_instance_value($bucket_instance,Math::BigFloat->bzero)->cb(sub{
         if(CCNQ::CouchDB::receive_ok(undef,@_)) {
           $rcv->send($current_bucket_value);
         } else {
-          $cv_failed->();
+          $rcv->send(Math::BigFloat->bzero);
         }
       });
     } else {
@@ -192,7 +193,7 @@ sub use {
         if(CCNQ::CouchDB::receive_ok(undef,@_)) {
           $rcv->send($value);
         } else {
-          $cv_failed->();
+          $rcv->send(Math::BigFloat->bzero);
         }
       });
     }
