@@ -114,16 +114,19 @@ sub __generic {
     # Otherwise an integer (404 or 501) might be returned to indicate an error.
     if(defined($body)) {
       if($body == 404) {
+        debug('404 Invalid path');
         $req->respond([404,'Invalid request']);
         $httpd->stop_request;
         return;
       }
       if($body == 418) {
-        $req->respond([418,q(I'm not a teapot.)]);
+        debug('418 Invalid parameters');
+        $req->respond([418,q(I'm not a teapot. Invalid parameters.)]);
         $httpd->stop_request;
         return;
       }
       if($body == 501) {
+        debug('501 Invalid method');
         $req->respond([501,'Invalid method']);
         $httpd->stop_request;
         return;
