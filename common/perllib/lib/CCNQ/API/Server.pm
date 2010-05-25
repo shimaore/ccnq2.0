@@ -277,6 +277,7 @@ use constant _provisioning => __generic(sub {
     return 404;
   }
 
+  use CCNQ::Provisioning;
   CCNQ::Provisioning::provisioning_view({
     view => $view,
     _id  => $id,
@@ -310,6 +311,7 @@ use constant _billing => __generic(sub {
     return 404;
   }
 
+  use CCNQ::Billing;
   CCNQ::Billing::billing_view({
     view => $view,
     _id  => $id,
@@ -342,6 +344,7 @@ use constant _rating_table => __generic(sub {
   }
 
   my $cv;
+  use CCNQ::Billing::Table;
   if(defined $table) {
     if(defined $prefix) {
       $cv = CCNQ::Billing::Table::retrieve_prefix({ name => $table, prefix => $prefix });

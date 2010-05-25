@@ -215,16 +215,12 @@ sub replenish {
   my $rcv = AE::cv;
 
   if($params->{value} <= 0) {
-    debug("replenish: negative value");
-    $rcv->send( { error => 'Negative value' } );
-    return $rcv;
+    die("replenish: negative value");
   }
 
   # If the bucket stores money, make sure the currency is the proper one.
   if($self->currency && $params->{currency} ne $self->currency) {
-    debug("replenish: invalid currency");
-    $rcv->send( { error => 'Invalid currency' } );
-    return $rcv;
+    die("replenish: invalid currency");
   };
 
   $self->get_instance($params)->cb(sub{
