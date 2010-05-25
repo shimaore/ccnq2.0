@@ -86,10 +86,13 @@ sub load {
 }
 
 sub short_name {
-  my ($self,$cbef) = @_;
+  my ($self,$params) = @_;
+
+  $self->use_account || $params->{account_sub} or do { use Carp; confess "account_sub required for ".$self->base_name; };
+
   return $self->use_account
-    ? $cbef->{account}
-    : $cbef->{account}.'/'.$cbef->{account_sub};
+    ? $params->{account}
+    : $params->{account}.'/'.$params->{account_sub};
 }
 
 sub base_name {
@@ -98,8 +101,8 @@ sub base_name {
 }
 
 sub full_name {
-  my ($self,$cbef) = @_;
-  return join('/',$self->base_name,$self->short_name($cbef));
+  my ($self,$params) = @_;
+  return join('/',$self->base_name,$self->short_name($params));
 }
 
 =head2 ->get_instance($cbef)
