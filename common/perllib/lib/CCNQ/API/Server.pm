@@ -118,6 +118,11 @@ sub __generic {
         $httpd->stop_request;
         return;
       }
+      if($body == 418) {
+        $req->respond([418,q(I'm not a teapot.)]);
+        $httpd->stop_request;
+        return;
+      }
       if($body == 501) {
         $req->respond([501,'Invalid method']);
         $httpd->stop_request;
@@ -376,6 +381,8 @@ use constant _bucket => __generic(sub {
     $req->vars,
     %$content
   };
+
+  $params->{name} or return 418;
 
   use CCNQ::Rating::Bucket;
   my $bucket = CCNQ::Rating::Bucket->new($params->{name});
