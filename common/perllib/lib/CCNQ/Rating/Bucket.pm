@@ -293,24 +293,26 @@ Otherwise rounds using the increment if applicable.
 
 sub round_down {
   my ($self,$value) = @_;
+  $value = Math::BigFloat->new($value);
   if($self->decimals) {
     return $value->ffround(-$self->decimals,'-inf');
   }
   if($self->increment) {
     return $self->increment * ($value/$self->increment)->bfloor();
   }
-  returm $value;
+  return $value;
 }
 
 sub round_up {
   my ($self,$value) = @_;
+  $value = Math::BigFloat->new($value);
   if($self->decimals) {
     return $value->ffround(-$self->decimals,'+inf');
   }
   if($self->increment) {
     return $self->increment * ($value/$self->increment)->bceil();
   }
-  returm $value;
+  return $value;
 }
 
 =head2 decimals
