@@ -1,7 +1,6 @@
 * modify OpenSIPS code so that:
   it strips transport= from RURI
   it strips maddr= from RURI
-* create/manage buckets
 * code for cfa/cfb
 * FS code for feature-server / redirection server
 * FS code for prepaid (realtime_estimator)
