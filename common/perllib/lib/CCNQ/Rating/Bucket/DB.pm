@@ -50,9 +50,27 @@ sub retrieve_bucket_instance {
 
 use Data::Structure::Util qw(unbless);
 
+sub cleanup {
+  my $self = shift;
+
+  if(!defined($self)) {
+    return undef;
+  }
+  if(UNIVERSAL::isa($self, "ARRAY")) {
+    return [map { cleanup($_) } @{$self}];
+  }
+  if(UNIVERSAL::isa($self, "HASH")) {
+    return { map { $_ => cleanup($self->{$_}) } keys %{$self} };
+  }
+  if(blessed($self) =~ /^Math::Big/) {
+    return unbless($self->bstr());
+  }
+  return "$self";
+}
+
 sub update_bucket_instance {
   my ($rec) = @_;
-  return CCNQ::CouchDB::update_cv(bucket_server,bucket_db,unbless($rec));
+  return CCNQ::CouchDB::update_cv(bucket_server,bucket_db,cleanup($rec));
 }
 
 'CCNQ::Rating::Bucket::DB';
