@@ -48,9 +48,11 @@ sub retrieve_bucket_instance {
   return CCNQ::CouchDB::retrieve_cv(bucket_server,bucket_db,{ _id => $id });
 }
 
+use Data::Structure::Util qw(unbless);
+
 sub update_bucket_instance {
   my ($rec) = @_;
-  return CCNQ::CouchDB::update_cv(bucket_server,bucket_db,$rec);
+  return CCNQ::CouchDB::update_cv(bucket_server,bucket_db,unbless($rec));
 }
 
 'CCNQ::Rating::Bucket::DB';
