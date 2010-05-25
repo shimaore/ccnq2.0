@@ -18,13 +18,6 @@ use AnyEvent;
 use AnyEvent::Util;
 use Logger::Syslog;
 
-BEGIN {
-  # If using EV, this will drop callback errors into syslog.
-  $EV::DIED = sub {
-    error("*** EV::DIED: $@");
-  };
-}
-
 # Non-blocking version
 sub execute {
   my $context = shift;
