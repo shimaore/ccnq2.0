@@ -49,7 +49,7 @@ post '/bucket/' => sub {
     name use_account currency increment decimals cap
   ));
 
-  $params->{name} =~ /^\w+$/ or die "name is required";
+  $params->{name} =~ /\S/ or die "name is required";
 
   my $cv = AE::cv;
   CCNQ::API::api_update('bucket',$params,$cv);
