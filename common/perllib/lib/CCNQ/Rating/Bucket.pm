@@ -239,10 +239,9 @@ sub replenish {
     };
 
     debug("replenish set_instance_value: ".CCNQ::AE::pp($bucket_instance));
-    my $cv1 = $self->set_instance_value($bucket_instance,$current_bucket_value);
-    $cv1->cb(sub{
-      debug("replenish completed");
+    $self->set_instance_value($bucket_instance,$current_bucket_value)->cb(sub{
       $rcv->send(CCNQ::AE::receive(@_));
+      debug("replenish completed");
     });
   });
 
