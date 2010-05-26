@@ -26,6 +26,20 @@ set appdir => CCNQ::Portal::SRC;
 set views  => path(CCNQ::Portal::SRC, 'views');
 set public => path(CCNQ::Portal::SRC, 'public');
 
+sub template_file {
+  my ($view,$tokens,$options) = @_;
+
+  $tokens ||= {};
+  $tokens->{request} = Dancer::SharedData->request;
+  $tokens->{params}  = Dancer::SharedData->request->params;
+  if (setting('session')) {
+      $tokens->{session} = Dancer::Session->get;
+  }
+
+  my $content = Dancer::Template->engine->render($view, $tokens);
+  return $content;
+}
+
 =head1 ccnq_template
 
 This is a replacement for the 'template' function provided by Dancer.
@@ -42,7 +56,7 @@ sub ccnq_template {
 
     $view .= ".tt" if $view !~ /\.tt$/;
 
-    my $view_1 = path(CCNQ::CCN, 'views', $view);
+    my $view_1 = path( vars->{template_dir} || CCNQ::CCN, 'views', $view);
     my $view_2 = path(setting('views'), $view);
 
     $view = -r($view_1) ? $view_1 : $view_2;
@@ -55,14 +69,7 @@ sub ccnq_template {
         return Dancer::Response::set($error->render);
     }
 
-    $tokens ||= {};
-    $tokens->{request} = Dancer::SharedData->request;
-    $tokens->{params}  = Dancer::SharedData->request->params;
-    if (setting('session')) {
-        $tokens->{session} = Dancer::Session->get;
-    }
-
-    my $content = Dancer::Template->engine->render($view, $tokens);
+    my $content = template_file($view,$tokens);
     return $content if not defined $layout;
 
     $layout .= '.tt' if $layout !~ /\.tt/;
