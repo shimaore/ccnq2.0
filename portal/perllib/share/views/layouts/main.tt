@@ -19,10 +19,10 @@
 <body>
 <div id="header" class="ui-widget-header">
   <h1><% | loc %><% title || "Portal" %><% END %></h1>
-  <div id="mainmenu"><% INCLUDE menu.tt %></div>
   <div style="clear: both; height: 0px;">&nbsp;</div>
 </div>
 <div id="taskbar" class="ui-widget">
+  <div id="mainmenu"><% INCLUDE menu.tt %></div>
   <div id="locale"  class="ui-widget-content"><% INCLUDE LocaleSelection.tt %></div>
   <div id="account" class="ui-widget-content"><% INCLUDE AccountSelection.tt %></div>
   <div id="auth"    class="ui-widget-content"><% INCLUDE UserAuthentication.tt %></div>
