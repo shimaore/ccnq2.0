@@ -2,19 +2,24 @@
     font-weight: bold;
 }
 
-#UserAuthentication {
+#mainmenu {
+    /* float: right; */
+    display: inline;
+}
+
+#locale {
     /* float: right;
     height: 100%; */
     display: inline;
 }
 
-#AccountSelection {
+#account {
     /* float: right;
     height: 100%; */
     display: inline;
 }
 
-#LocaleSelection {
+#auth {
     /* float: right;
     height: 100%; */
     display: inline;
@@ -23,11 +28,6 @@
 h1 {
     float: left;
     margin-left: 2em;
-}
-
-#mainmenu {
-    /* float: right; */
-    display: inline;
 }
 
 #content {
