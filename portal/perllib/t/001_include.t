@@ -43,6 +43,7 @@ require_ok( 'CCNQ::Portal::Outer::LocaleSelection' );
 require_ok( 'CCNQ::Portal::Outer::UserAuthentication' );
 require_ok( 'CCNQ::Portal::Outer::UserRegistration' );
 require_ok( 'CCNQ::Portal::Outer::UserUpdate' );
+require_ok( 'CCNQ::Portal::Outer::Theme' );
 require_ok( 'CCNQ::Portal::Outer::Widget' );
 
 require_ok( 'CCNQ::Portal::Inner::Account' );
