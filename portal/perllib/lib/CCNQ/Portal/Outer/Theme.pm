@@ -25,7 +25,7 @@ It is up to the local package to provide a proper jquery-ui installation
 
 =cut
 
-get '/themes/*' => sub {
+get r('/themes/(.*)') => sub {
   send_file(path(CCNQ::CCN,'themes',splat));
 };
 
