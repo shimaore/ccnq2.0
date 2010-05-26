@@ -23,9 +23,9 @@
 </div>
 <div id="taskbar" class="ui-widget">
   <div id="mainmenu"><% INCLUDE menu.tt %></div>
-  <div id="locale"  class="ui-widget-content"><% INCLUDE LocaleSelection.tt %></div>
-  <div id="account" class="ui-widget-content"><% INCLUDE AccountSelection.tt %></div>
-  <div id="auth"    class="ui-widget-content"><% INCLUDE UserAuthentication.tt %></div>
+  <div id="locale"  ><% INCLUDE LocaleSelection.tt %></div>
+  <div id="account" ><% INCLUDE AccountSelection.tt %></div>
+  <div id="auth"    ><% INCLUDE UserAuthentication.tt %></div>
   <div class="ui-helper-clearfix">&nbsp;</div>
 </div>
 <% IF error %>
