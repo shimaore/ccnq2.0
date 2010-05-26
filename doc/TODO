@@ -1,17 +1,35 @@
+
+Portal:
+* admins can list accounts (in portal)
+* emergency data
+* code for cfa/cfb
+* import rating tables (bulk)
+* address fields for billing
+* themes
+
+Portal internals:
+* generalize form validation: generic Perl validation code + AJAX validation
+* rewrite the Dancer code so that it works under Twiggy (hint: must rewrite portal code to use AnyEvent conventions)
+
+
+API:
+* API: get CDRs
+
+
+Voice:
+* emergency call routing
 * modify OpenSIPS code so that:
   it strips transport= from RURI
   it strips maddr= from RURI
-* code for cfa/cfb
 * FS code for feature-server / redirection server
 * FS code for prepaid (realtime_estimator)
-* API: get CDRs
-* end-of-month processing (including partial days)
+
+
+Billing:
 * daily crontab (e.g. import number of DIDs for partial month counts)
   .. e.g.: generate a CDR for number of numbers / endpoints / locations per account_sub ?
-* emergency call routing
+* end-of-month processing (including partial days)
 * CDR + cost analysis on carrier SBC
   - collect CDRs
   - do rating analysis (private plans)
-* generalize form validation: generic Perl validation code + AJAX validation
-* import rating tables (bulk)
-* rewrite the Dancer code so that it works under Twiggy (hint: must rewrite portal code to use AnyEvent conventions)
+
