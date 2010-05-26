@@ -67,7 +67,7 @@ sub default {
 
   my $account = session('account');
 
-  my $endpoints = CCNQ::Portal::Inner::Endpoint::endpoints_for($account);
+  my $endpoints = CCNQ::Portal::Inner::Util::endpoints_for($account);
 
   my $category = params->{category};
   my $cluster  = params->{cluster};
