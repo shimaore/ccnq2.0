@@ -113,6 +113,7 @@ div.failed {
 }
 div.status {
   display: inline;
+  padding-left: 4em;
 }
 
 /* Reports */
