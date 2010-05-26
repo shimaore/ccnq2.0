@@ -52,9 +52,9 @@ get '/themes/css/:theme/jquery-ui.css' => sub {
   content_of(path(CCNQ::CCN,'themes','css',vars->{theme},'jquery-ui.css'));
 };
 
-get '/themes/css/:theme/images/:file.png' => sub {
+get '/themes/css/:theme/images/*.png' => sub {
   content_type 'image/png';
-  content_of(path(CCNQ::CCN,'themes','css',vars->{theme},'images',vars->{file}.".png"));
+  content_of(path(CCNQ::CCN,'themes','css',vars->{theme},'images',(splat)[0].".png"));
 };
 
 1;
