@@ -3,18 +3,21 @@
 }
 
 #UserAuthentication {
-    float: right;
-    height: 100%;
+    /* float: right;
+    height: 100%; */
+    display: inline;
 }
 
 #AccountSelection {
-    float: right;
-    height: 100%;
+    /* float: right;
+    height: 100%; */
+    display: inline;
 }
 
 #LocaleSelection {
-    float: right;
-    height: 100%;
+    /* float: right;
+    height: 100%; */
+    display: inline;
 }
 
 h1 {
@@ -22,9 +25,10 @@ h1 {
     margin-left: 2em;
 }
 
-/* #mainmenu {
-    float: right;
-} */
+#mainmenu {
+    /* float: right; */
+    display: inline;
+}
 
 #content {
     clear: both;
