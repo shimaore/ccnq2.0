@@ -3,25 +3,25 @@
 }
 
 #mainmenu {
-    /* float: right; */
+    float: left;
     display: inline;
 }
 
 #locale {
-    /* float: right;
-    height: 100%; */
+    float: right;
+    height: 100%;
     display: inline;
 }
 
 #account {
-    /* float: right;
-    height: 100%; */
+    float: right;
+    height: 100%;
     display: inline;
 }
 
 #auth {
-    /* float: right;
-    height: 100%; */
+    float: right;
+    height: 100%;
     display: inline;
 }
 
