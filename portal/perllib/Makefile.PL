@@ -6,7 +6,7 @@ all_from      'lib/CCNQ/Portal.pm';
 license       'gpl';
 
 # Specific dependencies
-requires      'CCNQ'                      => '0.03';
+requires      'CCNQ'                      => '0.04';
 
 requires      'File::ShareDir'            => '1.01';
 requires      'File::Spec'                => 0; # '3.2501'
