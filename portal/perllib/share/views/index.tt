@@ -8,7 +8,7 @@
 <% IF session.user_id %>
 <!-- Inner -->
 <% IF session.account %>
-  <fieldset>
+  <fieldset  class="ui-widget">
     <legend><% | loc(session.account) %>Account [_1]<% END %></legend>
     <ul>
       <li><a href="<% prefix | uri %>/billing/account"><%|loc%>Manage account<%END%></a></li>
@@ -24,7 +24,7 @@
 <% END %>
 
 <% IF is_sysadmin %>
-  <fieldset>
+  <fieldset  class="ui-widget">
     <legend><% | loc %>System global<% END %></legend>
     <ul>
       <li><a href="<% prefix | uri %>/manager">Manage Manager Requests (Back-end Business Logic)</a></li>

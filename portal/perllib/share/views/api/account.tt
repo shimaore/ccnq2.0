@@ -1,6 +1,6 @@
 <% USE loc %>
 <% IF session.account %>
-  <fieldset>
+  <fieldset class="ui-widget">
     <legend><% | loc %>Account details<% END %></legend>
     <form id="account_form" action="<% prefix | uri %>/billing/account" method="post" accept-charset="utf-8" class="ui-widget validate">
       <p class="ui-helper-clearfix">
@@ -15,7 +15,7 @@
       <input id="account_form_submit" type="submit" value="<% | loc %>Save<% END %>" />
       </p>
     </form>
-    <fieldset>
+    <fieldset  class="ui-widget">
       <legend><% | loc %>Billing email recipients<% END %></legend>
       <ul>
         <% FOREACH recipient IN field.email_recipients %>
@@ -23,7 +23,7 @@
         <% END %>
       </ul>
     </fieldset>
-    <fieldset>
+    <fieldset  class="ui-widget">
       <legend><% | loc %>Portal users<% END %></legend>
       <ul>
         <% FOREACH user IN portal_users(session.account) %>
@@ -31,7 +31,7 @@
         <% END %>
       </ul>
     </fieldset>
-    <fieldset>
+    <fieldset  class="ui-widget">
       <legend><% | loc %>Account subs<% END %></legend>
       <div><a href="<% prefix | uri %>/billing/account_sub"><% | loc %>Create new account sub<% END %></a></div>
       <ul>
@@ -43,7 +43,7 @@
   </fieldset>
 <% ELSE %>
   <% IF is_sysadmin %>
-  <fieldset>
+  <fieldset  class="ui-widget">
     <legend><% | loc %>Create new account<% END %></legend>
     <form id="account_form" action="<% prefix | uri %>/billing/account" method="post" accept-charset="utf-8" class="ui-widget validate">
       <p class="ui-helper-clearfix">

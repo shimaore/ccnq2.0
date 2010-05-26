@@ -1,6 +1,6 @@
 <% USE loc %>
 <% IF session.account %>
-  <fieldset>
+  <fieldset  class="ui-widget">
     <legend><% | loc %>Account sub<% END %></legend>
     <% IF field.account_sub %>
     <form action="<% prefix | uri %>/billing/account_sub/<% field.account_sub | uri %>" method="post" accept-charset="utf-8" class="ui-widget validate">

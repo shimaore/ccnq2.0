@@ -1,6 +1,6 @@
 <% USE loc %>
 <% IF is_admin %>
-  <fieldset>
+  <fieldset  class="ui-widget">
     <legend><% | loc %>Server Trace<% END %></legend>
     <form action="<% prefix | uri %>/trace" method="post" accept-charset="utf-8" class="ui-widget validate">
       <p class="ui-helper-clearfix">
