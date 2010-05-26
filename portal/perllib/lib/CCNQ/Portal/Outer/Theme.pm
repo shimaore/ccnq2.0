@@ -25,8 +25,24 @@ It is up to the local package to provide a proper jquery-ui installation
 
 =cut
 
-get r('/themes/(.*)') => sub {
-  send_file(path(CCNQ::CCN,'themes',splat));
+get '/themes/js/jquery.js' => sub {
+  send_file(path(CCNQ::CCN,'themes','js','jquery.js'));
+};
+
+get '/themes/js/jquery-ui.js' => sub {
+  send_file(path(CCNQ::CCN,'themes','js','jquery-ui.js'));
+};
+
+get '/themes/css/:theme/jquery-ui.css' => sub {
+  send_file(path(CCNQ::CCN,'themes','css',vars->{theme},'jquery-ui.css'));
+};
+
+get '/themes/css/:theme/jquery-ui.css' => sub {
+  send_file(path(CCNQ::CCN,'themes','css',vars->{theme},'jquery-ui.css'));
+};
+
+get '/themes/css/:theme/images/:file.css' => sub {
+  send_file(path(CCNQ::CCN,'themes','css',vars->{theme},'images',vars->{file}.".css"));
 };
 
 1;
