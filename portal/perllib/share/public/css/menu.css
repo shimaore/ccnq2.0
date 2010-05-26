@@ -11,15 +11,17 @@
 #nav a:link, #nav a:active, #nav a:visited, #nav span{
     display:block;
     padding:0px 5px;
-    /* border-color: #333; */
     border-width: 1px;
     border-style: solid;
     text-decoration:none;
+    /* This should be in the site CSS */
+    border-color: white;
     background-color: white;
     color: #333;
 }
 
 #nav a:hover{
+  /* This should be in the site CSS */
     background-color: #888;
     color: white;
 }
