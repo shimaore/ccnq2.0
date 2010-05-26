@@ -12,8 +12,9 @@
 <script type="text/javascript" src="<% prefix | uri %>/themes/js/jquery.js"></script>
 <script type="text/javascript" src="<% prefix | uri %>/themes/js/jquery-ui.js"></script>
 <!-- main package -->
-<script type="text/javascript" src="<% prefix %>/js/jquery.validate.min.js"></script>
-<script type="text/javascript" src="<% prefix %>/js/forms.js"></script>
+<script type="text/javascript" src="<% prefix | uri %>/js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<% prefix | uri %>/js/forms.js"></script>
+<script type="text/javascript" src="<% prefix | uri %>/js/localization/messages_<% session.locale %>.js"></script>
 <!-- / jquery + jquery.ui -->
 </head>
 <body>
