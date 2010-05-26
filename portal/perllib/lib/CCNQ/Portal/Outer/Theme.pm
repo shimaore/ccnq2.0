@@ -17,6 +17,13 @@ use strict; use warnings;
 
 use Dancer ':syntax';
 use CCNQ;
+use CCNQ::Util;
+
+our %cache;
+sub content_of {
+  my $path = shift;
+  return $cache{$path} ||= CCNQ::Util::content_of($path);
+}
 
 =head2 Theming
 
@@ -26,23 +33,28 @@ It is up to the local package to provide a proper jquery-ui installation
 =cut
 
 get '/themes/js/jquery.js' => sub {
-  send_file(path(CCNQ::CCN,'themes','js','jquery.js'));
+  content_type 'text/javascript';
+  content_of(path(CCNQ::CCN,'themes','js','jquery.js'));
 };
 
 get '/themes/js/jquery-ui.js' => sub {
-  send_file(path(CCNQ::CCN,'themes','js','jquery-ui.js'));
+  content_type 'text/javascript';
+  content_of(path(CCNQ::CCN,'themes','js','jquery-ui.js'));
 };
 
 get '/themes/css/:theme/jquery-ui.css' => sub {
-  send_file(path(CCNQ::CCN,'themes','css',vars->{theme},'jquery-ui.css'));
+  content_type 'text/css';
+  content_of(path(CCNQ::CCN,'themes','css',vars->{theme},'jquery-ui.css'));
 };
 
 get '/themes/css/:theme/jquery-ui.css' => sub {
-  send_file(path(CCNQ::CCN,'themes','css',vars->{theme},'jquery-ui.css'));
+  content_type 'text/css';
+  content_of(path(CCNQ::CCN,'themes','css',vars->{theme},'jquery-ui.css'));
 };
 
-get '/themes/css/:theme/images/:file.css' => sub {
-  send_file(path(CCNQ::CCN,'themes','css',vars->{theme},'images',vars->{file}.".css"));
+get '/themes/css/:theme/images/:file.png' => sub {
+  content_type 'image/png';
+  content_of(path(CCNQ::CCN,'themes','css',vars->{theme},'images',vars->{file}.".png"));
 };
 
 1;
