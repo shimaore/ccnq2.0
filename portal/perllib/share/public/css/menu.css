@@ -11,15 +11,17 @@
 #nav a:link, #nav a:active, #nav a:visited, #nav span{
     display:block;
     padding:0px 5px;
-    border:1px solid #333;
-    color:#fff;
+    /* border:1px solid #333; */
+    border-width: 1px;
+    border-style: solid;
+    /* color:#fff; */
     text-decoration:none;
-    background-color:#333;
+    /* background-color:#333; */
 }
 
 #nav a:hover{
-    background-color:#fff;
-    color:#333;
+    /* background-color:#fff; */
+    /* color:#333; */
 }
 
 #nav li{
