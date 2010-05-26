@@ -1,7 +1,7 @@
 <% USE loc %>
 <% IF session.account %>
   <!-- Bucket instances -->
-  <fieldset  class="ui-widget"><legend><% | loc(session.account) %>Buckets for account [_1]<%END%></legend>
+  <fieldset class="ui-widget-content"><legend><% | loc(session.account) %>Buckets for account [_1]<%END%></legend>
   <ul>
   <% SET subs = account_subs(session.account) %>
   <% FOREACH bucket IN get_buckets() %>

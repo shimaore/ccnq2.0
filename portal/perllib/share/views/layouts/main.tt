@@ -22,11 +22,11 @@
   <div id="mainmenu"><% INCLUDE menu.tt %></div>
   <div style="clear: both; height: 0px;">&nbsp;</div>
 </div>
-<div id="taskbar" class="ui-widget-content">
-  <div id="locale"><% INCLUDE LocaleSelection.tt %></div>
-  <div id="account"><% INCLUDE AccountSelection.tt %></div>
-  <div id="auth"><% INCLUDE UserAuthentication.tt %></div>
-  <div style="clear: both; height: 0px;">&nbsp;</div>
+<div id="taskbar" class="ui-widget">
+  <div id="locale"  class="ui-widget-content"><% INCLUDE LocaleSelection.tt %></div>
+  <div id="account" class="ui-widget-content"><% INCLUDE AccountSelection.tt %></div>
+  <div id="auth"    class="ui-widget-content"><% INCLUDE UserAuthentication.tt %></div>
+  <div class="ui-helper-clearfix">&nbsp;</div>
 </div>
 <% IF error %>
 <div id="error" class="ui-widget">
@@ -38,7 +38,7 @@
   </div>
 </div>
 <% END %>
-<div id="content" class="ui-widget-content"><% content %></div>
+<div id="content" class="ui-widget"><% content %></div>
 <div id="footer"><% INCLUDE footer.tt %></div>
 </body>
 </html>
