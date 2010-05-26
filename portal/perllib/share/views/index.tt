@@ -11,12 +11,12 @@
   <fieldset>
     <legend><% | loc(session.account) %>Account [_1]<% END %></legend>
     <ul>
-      <li><a href="/billing/account"><%|loc%>Manage account<%END%></a></li>
-      <li><a href="/provisioning/endpoint"><%|loc%>Manage endpoints<%END%></a></li>
-      <li><a href="/provisioning/view/account"><%|loc%>Inventory<%END%></a></li>
-      <li><a href="/provisioning/view/endpoint/_all"><%|loc%>View All Endpoints<%END%></a></li>
-      <li><a href="/provisioning/view/number/_all"><%|loc%>View All Numbers<%END%></a></li>
-      <li><a href="/bucket/account/"><%|loc%>View Bucket Values<%END%></a></li>
+      <li><a href="<% prefix | uri %>/billing/account"><%|loc%>Manage account<%END%></a></li>
+      <li><a href="<% prefix | uri %>/provisioning/endpoint"><%|loc%>Manage endpoints<%END%></a></li>
+      <li><a href="<% prefix | uri %>/provisioning/view/account"><%|loc%>Inventory<%END%></a></li>
+      <li><a href="<% prefix | uri %>/provisioning/view/endpoint/_all"><%|loc%>View All Endpoints<%END%></a></li>
+      <li><a href="<% prefix | uri %>/provisioning/view/number/_all"><%|loc%>View All Numbers<%END%></a></li>
+      <li><a href="<% prefix | uri %>/bucket/account/"><%|loc%>View Bucket Values<%END%></a></li>
     </ul>
   </fieldset>
 <% ELSE %>
@@ -27,7 +27,7 @@
   <fieldset>
     <legend><% | loc %>System global<% END %></legend>
     <ul>
-      <li><a href="/manager">Manage Manager Requests (Back-end Business Logic)</a></li>
+      <li><a href="<% prefix | uri %>/manager">Manage Manager Requests (Back-end Business Logic)</a></li>
     </ul>
   </fieldset>
 <% END %>

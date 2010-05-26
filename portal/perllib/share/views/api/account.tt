@@ -2,7 +2,7 @@
 <% IF session.account %>
   <fieldset>
     <legend><% | loc %>Account details<% END %></legend>
-    <form id="account_form" action="/billing/account" method="post" accept-charset="utf-8" class="ui-widget validate">
+    <form id="account_form" action="<% prefix | uri %>/billing/account" method="post" accept-charset="utf-8" class="ui-widget validate">
       <p class="ui-helper-clearfix">
         <label for="account" class="left"><% | loc %>Account number:<% END %></label>
         <span id="account"><% field.account | html %></span>
@@ -33,10 +33,10 @@
     </fieldset>
     <fieldset>
       <legend><% | loc %>Account subs<% END %></legend>
-      <div><a href="/billing/account_sub"><% | loc %>Create new account sub<% END %></a></div>
+      <div><a href="<% prefix | uri %>/billing/account_sub"><% | loc %>Create new account sub<% END %></a></div>
       <ul>
         <% FOREACH account_sub IN account_subs(session.account) %>
-        <li><a href="/billing/account_sub/<% account_sub.account_sub | uri %>"><% account_sub.name %></a></li>
+        <li><a href="<% prefix | uri %>/billing/account_sub/<% account_sub.account_sub | uri %>"><% account_sub.name %></a></li>
         <% END %>
       </ul>
     </fieldset>
@@ -45,7 +45,7 @@
   <% IF is_sysadmin %>
   <fieldset>
     <legend><% | loc %>Create new account<% END %></legend>
-    <form id="account_form" action="/billing/account" method="post" accept-charset="utf-8" class="ui-widget validate">
+    <form id="account_form" action="<% prefix | uri %>/billing/account" method="post" accept-charset="utf-8" class="ui-widget validate">
       <p class="ui-helper-clearfix">
         <label for="account" class="left"><% | loc %>Account number:<% END %></label>
         <input type="text" name="account" value="<% field.account | html %>" class="required" />

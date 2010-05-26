@@ -3,19 +3,19 @@
 <div class="provisioning">
 <% FOREACH row IN result.rows; SET profile = row.doc.profile %>
   <div class="row <% profile %>">
-    <span class="id <% profile %>"><a href="/provisioning/<% profile | uri %>/<% row.doc.$profile | uri %>"><% row.doc.$profile %></a></span>
+    <span class="id <% profile %>"><a href="<% prefix | uri %>/provisioning/<% profile | uri %>/<% row.doc.$profile | uri %>"><% row.doc.$profile %></a></span>
     <% IF profile == 'endpoint' and row.doc.password %>
-      <span class="registration"><a href="/provisioning/endpoint_location?endpoint=<% row.doc.endpoint | uri %>">Registration status</a></span>
+      <span class="registration"><a href="<% prefix | uri %>/provisioning/endpoint_location?endpoint=<% row.doc.endpoint | uri %>">Registration status</a></span>
     <% END %>
     <% IF profile == 'endpoint' %>
-      <span class="edit"><a href="/provisioning/endpoint/<% row.doc.endpoint %>">Edit</a></span>
+      <span class="edit"><a href="<% prefix | uri %>/provisioning/endpoint/<% row.doc.endpoint %>">Edit</a></span>
     <% END %>
     <% FOREACH d IN row.doc; UNLESS d.key.match('^_|^request|^type') %>
       <div class="entry">
         <span class="key"><% d.key %></span>
         <span class="value">
-          <% IF    d.key == 'endpoint' %><a href="/provisioning/view/endpoint/<% d.value | uri %>"><% d.value %></a>
-          <% ELSIF d.key == 'location' %><a href="/provisioning/view/location/<% d.value | uri %>"><% d.value %></a>
+          <% IF    d.key == 'endpoint' %><a href="<% prefix | uri %>/provisioning/view/endpoint/<% d.value | uri %>"><% d.value %></a>
+          <% ELSIF d.key == 'location' %><a href="<% prefix | uri %>/provisioning/view/location/<% d.value | uri %>"><% d.value %></a>
           <% ELSE %><% d.value %><% END %>
         </span>
       </div>

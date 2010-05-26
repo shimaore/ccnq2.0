@@ -10,11 +10,11 @@
 <% IF session.user_id == field.id %>
 <fieldset>
   <legend><% | loc %>My Profile<% END %></legend>
-<form id="user_profile_form" action="/user_profile" method="POST" class="ui-widget validate" accept-charset="utf-8">
+<form id="user_profile_form" action="<% prefix | uri %>/user_profile" method="POST" class="ui-widget validate" accept-charset="utf-8">
 <% ELSE %>
 <fieldset>
   <legend><% | loc(field.id) %>[_1]'s Profile<% END %></legend>
-<form id="user_profile_form" action="/user_profile/<% field.id | uri %>" method="POST" class="ui-widget validate" accept-charset="utf-8">
+<form id="user_profile_form" action="<% prefix | uri %>/user_profile/<% field.id | uri %>" method="POST" class="ui-widget validate" accept-charset="utf-8">
 <% END %>
   <p class="ui-helper-clearfix">
   <label for="name" class="left"><% | loc %>Name<% END %></label>
@@ -64,7 +64,7 @@
 <% IF is_sysadmin %>
 <fieldset>
   <legend>Manage another User Profile</legend>
-  <form id="select_user_form" action="/user_profile/select" method="post" class="ui-widget" accept-charset="utf-8">
+  <form id="select_user_form" action="<% prefix | uri %>/user_profile/select" method="post" class="ui-widget" accept-charset="utf-8">
     <p class="ui-helper-clearfix">
     <label for="user_id" class="left"><% | loc %>User ID<% END %></label>
     <input type="text" name="user_id" value="<% field.id | html %>" class="required"/>

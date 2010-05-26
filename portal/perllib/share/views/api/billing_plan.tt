@@ -5,7 +5,7 @@
  contain a bit of javascript that will populate DIVs based on the value,
  and conversely submit a value that contains all the DIVs. -->
 
-<script type="text/javascript" src="/js/plan.js"></script>
+<script type="text/javascript" src="<% prefix | uri %>/js/plan.js"></script>
 
 <div id="plan_toolbar">
   <fieldset id="plan_guards">

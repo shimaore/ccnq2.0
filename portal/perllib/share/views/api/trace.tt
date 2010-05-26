@@ -2,7 +2,7 @@
 <% IF is_admin %>
   <fieldset>
     <legend><% | loc %>Server Trace<% END %></legend>
-    <form action="/trace" method="post" accept-charset="utf-8" class="ui-widget validate">
+    <form action="<% prefix | uri %>/trace" method="post" accept-charset="utf-8" class="ui-widget validate">
       <p class="ui-helper-clearfix">
         <label for="node_name" class="left"><% | loc %>Node name:<% END %></label>
         <select name="node_name" class="required">

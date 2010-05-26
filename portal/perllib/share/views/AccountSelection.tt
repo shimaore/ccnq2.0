@@ -2,14 +2,14 @@
 <% USE loc %>
 <fieldset id="AccountSelection"><legend><% | loc %>Account selection<% END %></legend>
 <% IF is_admin %>
-  <form action="/account" method="POST" accept-charset="utf-8" class="ui-widget">
+  <form action="<% prefix | uri %>/account" method="POST" accept-charset="utf-8" class="ui-widget">
     <input type="text" name ="account" value="<% session.account | html %>">
     <input type="submit" value="<% | loc %>Select<% END %>">
   </form>
 <% ELSE %>
 <% IF accounts.size %>
   <% IF accounts.size > 1 %>
-  <form action="/account" method="POST" accept-charset="utf-8" class="ui-widget">
+  <form action="<% prefix | uri %>/account" method="POST" accept-charset="utf-8" class="ui-widget">
     <select name="account">
       <option value=""></option>
       <% FOREACH this IN accounts %>

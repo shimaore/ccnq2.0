@@ -5,14 +5,14 @@
   <fieldset><legend><% | loc %>Review or modify existing request<% END %></legend>
     <ul>
     <% FOREACH row IN result.rows %>
-      <li><a href="/manager/<% row.key %>"><% row.key %></a></li>
+      <li><a href="<% prefix | uri %>/manager/<% row.key %>"><% row.key %></a></li>
     <% END %>
     </ul>
   </fieldset>
   <% END %>
   <% IF is_sysadmin %>
   <fieldset><legend><% | loc %>Create new request<% END %></legend>
-    <form action="/manager" method="POST" accept-charset="utf-8" class="ui-widget validate">
+    <form action="<% prefix | uri %>/manager" method="POST" accept-charset="utf-8" class="ui-widget validate">
       <label for="request_type" class="left"><% | loc %>Request name:<% END %></label>
       <input type="text" name="request_type" value="" class="required" />
       <input type="submit" />
