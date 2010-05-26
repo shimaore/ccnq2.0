@@ -105,7 +105,7 @@ sub submit_number {
   my $endpoint = params->{endpoint};
   return CCNQ::Portal::content unless $endpoint;
 
-  my $endpoint_data = CCNQ::Portal::Inner::Endpoint::get_endpoint($account,$endpoint);
+  my $endpoint_data = CCNQ::Portal::Inner::Util::get_endpoint($account,$endpoint);
 
   my $number = $normalize_number->(params->{number});
   return CCNQ::Portal::content( error => _('Please specify a valid number')_ ) unless $number;
