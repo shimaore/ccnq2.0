@@ -1,21 +1,21 @@
-<ul id="nav" class="ui-widget-content">
+<ul id="nav" class="ui-menu">
 <% IF session.user_id %>
-  <li><a href="<% prefix | uri %>/"><% | loc %>Summary<% END %></a></li>
+  <li class="ui-menu-item"><a href="<% prefix | uri %>/"><% | loc %>Summary<% END %></a></li>
   <% IF is_sysadmin %>
   <% END %>
   <% IF is_admin %>
-  <li><span>Billing</span>
-    <ul>
-      <li><a href="<% prefix | uri %>/billing/account"><% | loc %>Accounts<% END %></a></li>
-      <li><a href="<% prefix | uri %>/billing/plan"><% | loc %>Plans<% END %></a></li>
-      <li><a href="<% prefix | uri %>/rating_table/"><% | loc %>Rating tables<% END %></a></li>
-      <li><a href="<% prefix | uri %>/bucket/"><% |loc %>Buckets<% END %></a></li>
+  <li class="ui-menu-item"><span>Billing</span>
+    <ul class="ui-menu">
+      <li class="ui-menu-item"><a href="<% prefix | uri %>/billing/account"><% | loc %>Accounts<% END %></a></li>
+      <li class="ui-menu-item"><a href="<% prefix | uri %>/billing/plan"><% | loc %>Plans<% END %></a></li>
+      <li class="ui-menu-item"><a href="<% prefix | uri %>/rating_table/"><% | loc %>Rating tables<% END %></a></li>
+      <li class="ui-menu-item"><a href="<% prefix | uri %>/bucket/"><% |loc %>Buckets<% END %></a></li>
     </ul>
   </li>
-  <li><a href="<% prefix | uri %>/trace"><% | loc %>Trace<% END %></a></li>
+  <li class="ui-menu-item"><a href="<% prefix | uri %>/trace"><% | loc %>Trace<% END %></a></li>
   <% local_menu %>
   <% END %>
-  <li><a href="<% prefix | uri %>/user_profile"><% | loc %>My Profile<% END %></a></li>
+  <li class="ui-menu-item"><a href="<% prefix | uri %>/user_profile"><% | loc %>My Profile<% END %></a></li>
 <% ELSE %>
   <!-- public menu -->
 <% END %>
