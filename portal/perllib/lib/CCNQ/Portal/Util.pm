@@ -42,7 +42,10 @@ sub redirect_request {
   my $r = CCNQ::AE::receive(@_);
 
   # Redirect to the request
-  return redirect (vars->{prefix}||'').'/request/'.$r->{request};
+  my $prefix = vars->{prefix};
+  defined $prefix or $prefix = '';
+  my $url = $prefix.'/request/'.$r->{request};
+  return redirect $url;
 }
 
 1;
