@@ -17,7 +17,7 @@
     /* This should be in the site CSS */
     border-color: white;
     background-color: white;
-    color: black;
+    color: #333;
 }
 
 #nav a:hover{
