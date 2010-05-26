@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="<% session.locale %>" xml:lang="<% session.locale %>">
 <head><% USE loc %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title><% | loc %>Portal<% END %></title>
+<title><% | loc %><% title || "Portal" %><% END %></title>
 <link rel="stylesheet" type="text/css" href="<% prefix | uri %>/css/style.css" />
 <link rel="stylesheet" type="text/css" href="<% prefix | uri %>/css/menu.css" />
 <link rel="stylesheet" type="text/css" href="<% prefix | uri %>/css/plan.css" />
@@ -18,7 +18,7 @@
 </head>
 <body>
 <div id="header" class="ui-widget-header">
-  <h1><% | loc %>Portal<% END %></h1>
+  <h1><% | loc %><% title || "Portal" %><% END %></h1>
   <div id="mainmenu"><% INCLUDE menu.tt %></div>
   <div style="clear: both; height: 0px;">&nbsp;</div>
 </div>
