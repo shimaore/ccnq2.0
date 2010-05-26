@@ -91,11 +91,7 @@ post '/billing/account' => sub {
   # Update the information in the API.
   my $cv1 = AE::cv;
   CCNQ::API::api_update('account',$params,$cv1);
-  my $r = CCNQ::AE::receive($cv1);
-  debug($r);
-
-  # Redirect to the request
-  redirect '/request/'.$r->{request};
+  return CCNQ::Portal::Util::redirect_request($cv1);
 };
 
 get '/billing/account_sub/:account_sub' => sub {
@@ -152,10 +148,7 @@ sub handle_account_sub {
   # Update the information in the API.
   my $cv1 = AE::cv;
   CCNQ::API::api_update('account_sub',$params,$cv1);
-  my $r = CCNQ::AE::receive($cv1);
-
-  # Redirect to the request
-  redirect '/request/'.$r->{request};
+  return CCNQ::Portal::Util::redirect_request($cv1);
 }
 
 post '/billing/account_sub/:account_sub' => sub { handle_account_sub() };

@@ -94,9 +94,8 @@ sub new_rating_table {
   if(defined $params->{rating_table}) {
     my $cv = AE::cv;
     CCNQ::API::api_update('table',{ name => $params->{rating_table} },$cv);
-    my $r = CCNQ::AE::receive($cv);
     session rating_table => $params->{rating_table};
-    redirect '/request/'.$r->{request};
+    return CCNQ::Portal::Util::redirect_request($cv);
   } else {
     var template_name => 'api/rating_table/new';
     return CCNQ::Portal::content;
@@ -137,8 +136,6 @@ sub modify_field {
   CCNQ::API::api_update('table_prefix',$fields,$cv);
   my $r = CCNQ::AE::receive($cv);
 
-  # Redirect to the request
-  # redirect '/request/'.$r->{request};
   return CCNQ::Portal::content;
 }
 
@@ -163,8 +160,6 @@ sub new_prefix {
   CCNQ::API::api_update('table_prefix',{ name => $params->{rating_table}, prefix => $params->{prefix} },$cv);
   my $r = CCNQ::AE::receive($cv);
 
-  # Redirect to the request
-  # redirect '/request/'.$r->{request};
   return CCNQ::Portal::content;
 }
 

@@ -65,11 +65,7 @@ post '/trace' => sub {
 
   my $cv1 = AE::cv;
   CCNQ::API::api_query('trace',$params,$cv1);
-  my $r = CCNQ::AE::receive($cv1);
-  debug($r);
-
-  # Redirect to the request
-  redirect '/request/'.$r->{request};
+  return CCNQ::Portal::Util::redirect_request($cv1);
 };
 
 'CCNQ::Portal::Inner::Trace';

@@ -38,4 +38,11 @@ sub neat {
   return $params;
 }
 
+sub redirect_request {
+  my $r = CCNQ::AE::receive(@_);
+
+  # Redirect to the request
+  return redirect vars->{prefix}.'/request/'.$r->{request};
+}
+
 1;

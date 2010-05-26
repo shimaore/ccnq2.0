@@ -117,8 +117,7 @@ sub update {
   if(keys %$billing_params) {
     my $cv = AE::cv;
     CCNQ::API::api_update('user',$billing_params,$cv);
-    my $r = CCNQ::AE::receive($cv);
-    return redirect '/request/'.$r->{request};
+    return CCNQ::Portal::Util::redirect_request($cv);
   }
 
   # Reset the session's locale to (potentially) use the new one.

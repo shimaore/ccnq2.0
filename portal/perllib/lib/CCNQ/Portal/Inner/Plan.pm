@@ -116,11 +116,7 @@ post '/billing/plan/:name' => sub {
   # Update the information in the API.
   my $cv1 = AE::cv;
   CCNQ::API::api_update('plan',$params,$cv1);
-  my $r = CCNQ::AE::receive($cv1);
-  debug($r);
-
-  # Redirect to the request
-  redirect '/request/'.$r->{request};
+  return CCNQ::Portal::Util::redirect_request($cv1);
 };
 
 'CCNQ::Portal::Inner::Plan';
