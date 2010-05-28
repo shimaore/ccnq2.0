@@ -1,6 +1,7 @@
 
 Portal:
 * admins can list accounts (in portal)
+* admins can find number across accounts
 * emergency data
 * code for cfa/cfb
 * import rating tables (bulk)
