@@ -98,7 +98,7 @@ sub parameters {
     # If multiple servers are chained it may be necessary to use different names for the VSF parameter.
     UAC_VSF     => (defined $configuration::uac_vsf && $configuration::uac_vsf ne '') ? $configuration::uac_vsf : 'vsf',
     NODE_ID     => node_id,
-    INV_TIMER   => $configuration::inv_timer || 60,
+    INV_TIMER   => $configuration::inv_timer || 54,
     FORCE_INTERNAL => internal_ip ? 'force_send_socket('.internal_ip.');' : '',
     FORCE_EXTERNAL => external_ip ? 'force_send_socket('.external_ip.');' : '',
   );
