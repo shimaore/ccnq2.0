@@ -70,7 +70,7 @@ sub parameters {
     FR          => 0,
     MPATH       => '/usr/lib/opensips/modules/',
     RADIUS_CONFIG => '',
-    DEBUG       => 3,
+    DEBUG       => 0,
     MP_ALLOWED  => 1,
     MP_ALWAYS   => 0,
     MAX_HOPS    => '10',

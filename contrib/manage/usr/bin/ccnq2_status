@@ -36,7 +36,7 @@ for s in $SERVERS; do
   if ssh $SSH_OPTIONS $s 'cat /etc/resolv.conf' | grep 'nameserver 127.0.0.1' > /dev/null; then echo 'OK'; else echo 'Not using localhost'; fi
   echo -n "OpenSIPS log levels: "
   # ssh $SSH_OPTIONS $s '/usr/sbin/opensipsctl fifo debug'
-  if ssh $SSH_OPTIONS $s '[ -x /usr/sbin/opensipsctl ] && /usr/sbin/opensipsctl fifo debug 3' > /dev/null; then echo 'OK'; else echo 'Not installed/running'; fi
+  if ssh $SSH_OPTIONS $s '[ -x /usr/sbin/opensipsctl ] && /usr/sbin/opensipsctl fifo debug 0' > /dev/null; then echo 'OK'; else echo 'Not installed/running'; fi
   echo -n "FreeSwitch log levels: "
   # ssh $SSH_OPTIONS $s '/opt/freeswitch/bin/fs_cli -p CCNQ -x "console loglevel"'
   # ssh $SSH_OPTIONS $s '/opt/freeswitch/bin/fs_cli -p CCNQ -x "fsctl loglevel"'
