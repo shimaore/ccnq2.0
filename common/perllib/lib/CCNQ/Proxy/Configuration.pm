@@ -6,40 +6,19 @@ use CCNQ::Proxy;
 
 use CCNQ::Proxy::Base;
 
-=pod
-  package configuration; # in /etc/ccn/configuration.pm
-  # OpenSIPS parameters.
-  our $sip_host       = '127.0.0.1'; # or blank for all local interfaces
-  our $sip_port       = '5060';
-  our $sip_challenge  = 'CarrierClass.net'; # or blank for: use domain
-  our $opensips_cfg   = '/etc/opensips/opensips.cfg';
-  our $mpath          = '/usr/lib/opensips/modules/';
-  our $debug          = 3; # Debug level
-  our $accounting     = 'flatstore'; # either '', 'flatstore' or 'radius'; currently flatstore is always enabled by default
-  our $authenticate   = 'db'; # either 'db' or 'radius'
-  our $radius_config  = '/etc/radiusclient/radiusclient.conf'; # Location of the Radius library config file
-  our $mp_allowed     = 1; # Allow Media Proxy?
-  our $mp_always      = 0; # Set to 1 to force media-proxy on all calls. Make sure you have enough media-proxy servers to handle the load, otherwise calls will be rejected or fail.
-  our $node_id        = ''; # Either none (no node-specific routing) or one of the IPs listed in $sip_servers below.
+use constant accounting   => 'flatstore';
+use constant authenticate => 'db';
+use constant db_login     => 'opensips';
+use constant db_password  => 'opensips';
+use constant db_host      => '127.0.0.1';
+use constant db_name      => 'opensips';
+use constant node_id      => '';
 
-  our $max_hops       = '10'; # Maximum number of hops before rejection (loop prevention)
-  our $inv_timer      = 60;
-  1;
-=cut
-
-use constant accounting   => $configuration::accounting   || 'flatstore';
-use constant authenticate => $configuration::authenticate || 'db';
-use constant db_login     => $configuration::db_login     || 'opensips';
-use constant db_password  => $configuration::db_password  || 'opensips';
-use constant db_host      => $configuration::db_host      || '127.0.0.1';
-use constant db_name      => $configuration::db_name      || 'opensips';
-use constant node_id      => $configuration::node_id      || '';
-
-use constant proxy_ip     => $configuration::sip_host       || '';
+use constant proxy_ip     => '';
 use constant::defer internal_ip => sub { CCNQ::Install::internal_ip || '' };
 use constant::defer external_ip => sub { CCNQ::Install::external_ip || '' };
-use constant proxy_port   => $configuration::sip_port       || '5060';
-use constant challenge    => $configuration::sip_challenge  || '';
+use constant proxy_port   => '5060';
+use constant challenge    => '';
 
 use constant opensips_uri => join('','mysql://',db_login,':',db_password,'@',db_host,'/'.db_name);
 use constant dbd_uri      => join('','DBI:mysql:database=',db_name,';host=',db_host); # .';port='.$port
@@ -89,16 +68,16 @@ sub parameters {
     RADIUS_EXTRA   => join(';',@radius_extra),
     NANPA       => 1,
     FR          => 0,
-    MPATH       => defined $configuration::mpath ? $configuration::mpath : '/usr/lib/opensips/modules/',
-    RADIUS_CONFIG => defined $configuration::radius_config ? $configuration::radius_config : '',
-    DEBUG       => defined $configuration::debug ? $configuration::debug : 3,
-    MP_ALLOWED  => defined $configuration::mp_allowed ? $configuration::mp_allowed : 1,
-    MP_ALWAYS   => defined $configuration::mp_always ? $configuration::mp_always : 0,
-    MAX_HOPS    => (defined $configuration::max_hops && $configuration::max_hops ne '') ? $configuration::max_hops : '10',
+    MPATH       => '/usr/lib/opensips/modules/',
+    RADIUS_CONFIG => '',
+    DEBUG       => 3,
+    MP_ALLOWED  => 1,
+    MP_ALWAYS   => 0,
+    MAX_HOPS    => '10',
     # If multiple servers are chained it may be necessary to use different names for the VSF parameter.
-    UAC_VSF     => (defined $configuration::uac_vsf && $configuration::uac_vsf ne '') ? $configuration::uac_vsf : 'vsf',
+    UAC_VSF     => 'vsf',
     NODE_ID     => node_id,
-    INV_TIMER   => $configuration::inv_timer || 54,
+    INV_TIMER   => 54,
     FORCE_INTERNAL => internal_ip ? 'force_send_socket('.internal_ip.');' : '',
     FORCE_EXTERNAL => external_ip ? 'force_send_socket('.external_ip.');' : '',
   );
