@@ -16,6 +16,7 @@ package CCNQ::Actions::mediaproxy::relay;
 use strict; use warnings;
 
 use CCNQ::Util;
+use AnyEvent::DNS;
 
 use Logger::Syslog;
 
@@ -24,13 +25,25 @@ sub _install {
   use CCNQ::MediaProxy;
   CCNQ::MediaProxy::install_default_key('relay');
 
-  my $cluster_fqdn = CCNQ::Install::cluster_fqdn($params->{cluster_name});
+  my $dns_txt = sub {
+    my $dn = CCNQ::Install::catdns(@_);
+    my $cv = AE::cv;
+    AnyEvent::DNS::txt( $dn, $cv );
+    return ($cv->recv);
+  };
+
+  $context->{resolver} = AnyEvent::DNS::resolver;
+
+  my @dispatcher_names = $dns_txt->( 'dispatcher',CCNQ::Install::fqdn );
+  debug("Query TXT dispatcher -> ".join(',',@dispatcher_names));
+
+  my $dispatcher_names = join ' ', @dispatcher_names;
 
   my $config = <<"EOT";
 # start relay configuration
 
 [Relay]
-dispatchers = ${cluster_fqdn}
+dispatchers = ${dispatcher_names}
 passport = None
 ;relay_ip = <default host IP>
 port_range = 40000:41998
