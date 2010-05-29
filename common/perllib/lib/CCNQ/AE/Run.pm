@@ -85,6 +85,7 @@ sub attempt_on_roles_and_functions {
   $params ||= {};
 
   my $rcv = AE::cv;
+  $rcv->begin;
   CCNQ::Install::resolve_roles_and_functions(sub {
     my ($cluster_name,$role,$function) = @_;
 
@@ -114,6 +115,7 @@ sub attempt_on_roles_and_functions {
     debug("Function: $function Action: $action Cluster: $cluster_name Completed");
     $rcv->end;
   });
+  $rcv->end;
   return $rcv;
 }
 
