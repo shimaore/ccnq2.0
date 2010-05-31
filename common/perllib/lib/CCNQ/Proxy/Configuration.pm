@@ -77,7 +77,7 @@ sub parameters {
     # If multiple servers are chained it may be necessary to use different names for the VSF parameter.
     UAC_VSF     => 'vsf',
     NODE_ID     => node_id,
-    INV_TIMER   => 54,
+    INV_TIMER   => 90,
     FORCE_INTERNAL => internal_ip ? 'force_send_socket('.internal_ip.');' : '',
     FORCE_EXTERNAL => external_ip ? 'force_send_socket('.external_ip.');' : '',
   );

@@ -48,7 +48,8 @@ passport = None
 ;relay_ip = <default host IP>
 port_range = 40000:41998
 ;log_level = DEBUG
-stream_timeout = 56
+; stream_timeout should be higher than INV_TIMER (I assume)
+stream_timeout = 100
 ;on_hold_timeout = 7200
 ;dns_check_interval = 60
 ;reconnect_delay = 10
