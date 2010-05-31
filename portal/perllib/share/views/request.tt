@@ -67,7 +67,7 @@
     <% ELSE %>
       <% IF r.request %>
         <% IF r.completed %>
-          <div class="request completed"><% | loc %>Request completed<% END %> <img src="<% prefix %>/images/tango-icon-theme/22x22/status/dialog-information.png"></div>
+          <div class="request completed"><% | loc %>Request completed<% END %> <img src="<% prefix %>/ccnq2/images/tango-icon-theme/22x22/status/dialog-information.png"></div>
         <% ELSE %>
           <div class="request pending"><% | loc %>Request pending<% END %></div>
           <div><a href="<% prefix %>/request/<% r.request | uri %>"><% | loc %>Refresh<% END %></a></div>

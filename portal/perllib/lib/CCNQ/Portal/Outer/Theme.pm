@@ -52,9 +52,36 @@ get '/themes/css/:theme/jquery-ui.css' => sub {
   content_of(path(CCNQ::CCN,'themes','css',vars->{theme},'jquery-ui.css'));
 };
 
-get r('/themes/css/([\w-]+)/images/([\w-]+).png') => sub {
+get r('/themes/css/([\w-]+)/images/([\w-]+)\.png') => sub {
   content_type 'image/png';
   content_of(path(CCNQ::CCN,'themes','css',(splat)[0],'images',(splat)[1].".png"));
+};
+
+=head2 Workaround for "public" documents
+
+Dancer does not support using "prefix" for public documents.
+We catch those by using /ccnq2 as a prefix.
+
+=cut
+
+get r('/ccnq2/css/([\w.-]+)\.css') => sub {
+  content_type 'text/css';
+  content_of(path(CCNQ::CCN,'public','ccnq2','css',(splat)[0].".css"));
+};
+
+get r('/ccnq2/js/([\w.-]+)\.js') => sub {
+  content_type 'text/javascript';
+  content_of(path(CCNQ::CCN,'public','ccnq2','js',(splat)[0].".js"));
+};
+
+get r('/ccnq2/js/localization/([\w.-]+)\.js') => sub {
+  content_type 'text/javascript';
+  content_of(path(CCNQ::CCN,'public','ccnq2','js','localization',(splat)[0].".js"));
+};
+
+get r('/ccnq2/images/tango-icon-theme/22x22/status/([\w-]+)\.png') => sub {
+  content_type 'image/png';
+  content_of(path(CCNQ::CCN,'public','ccnq2','images','tango-icon-theme','22x22','status',(splat)[0].".png"));
 };
 
 1;
