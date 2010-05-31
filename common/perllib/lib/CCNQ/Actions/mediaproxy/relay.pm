@@ -34,7 +34,9 @@ sub _install {
 
   $context->{resolver} = AnyEvent::DNS::resolver;
 
-  my @dispatcher_names = $dns_txt->( 'dispatcher',CCNQ::Install::fqdn );
+  my $cluster_fqdn = CCNQ::Install::cluster_fqdn($params->{cluster_name});
+
+  my @dispatcher_names = $dns_txt->( 'dispatcher', $cluster_fqdn );
   debug("Query TXT dispatcher -> ".join(',',@dispatcher_names));
 
   my $dispatcher_names = join ' ', @dispatcher_names;
