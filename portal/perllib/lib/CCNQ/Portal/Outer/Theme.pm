@@ -68,22 +68,22 @@ use CCNQ::Portal;
 
 get r('/css/([\w.-]+)\.css') => sub {
   content_type 'text/css';
-  content_of(path(CCNQ::Portal::SRC,'public','ccnq2','css',(splat)[0].".css"));
+  content_of(path(CCNQ::Portal::SRC,'public','css',(splat)[0].".css"));
 };
 
 get r('/js/([\w.-]+)\.js') => sub {
   content_type 'text/javascript';
-  content_of(path(CCNQ::Portal::SRC,'public','ccnq2','js',(splat)[0].".js"));
+  content_of(path(CCNQ::Portal::SRC,'public','js',(splat)[0].".js"));
 };
 
 get r('/js/localization/([\w.-]+)\.js') => sub {
   content_type 'text/javascript';
-  content_of(path(CCNQ::Portal::SRC,'public','ccnq2','js','localization',(splat)[0].".js"));
+  content_of(path(CCNQ::Portal::SRC,'public','js','localization',(splat)[0].".js"));
 };
 
 get r('/images/tango-icon-theme/22x22/status/([\w-]+)\.png') => sub {
   content_type 'image/png';
-  content_of(path(CCNQ::Portal::SRC,'public','ccnq2','images','tango-icon-theme','22x22','status',(splat)[0].".png"));
+  content_of(path(CCNQ::Portal::SRC,'public','images','tango-icon-theme','22x22','status',(splat)[0].".png"));
 };
 
 1;
