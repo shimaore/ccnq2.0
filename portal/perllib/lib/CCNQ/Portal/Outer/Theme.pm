@@ -66,22 +66,22 @@ We catch those by using /ccnq2 as a prefix.
 
 use CCNQ::Portal;
 
-get r('/ccnq2/css/([\w.-]+)\.css') => sub {
+get r('/css/([\w.-]+)\.css') => sub {
   content_type 'text/css';
   content_of(path(CCNQ::Portal::SRC,'public','ccnq2','css',(splat)[0].".css"));
 };
 
-get r('/ccnq2/js/([\w.-]+)\.js') => sub {
+get r('/js/([\w.-]+)\.js') => sub {
   content_type 'text/javascript';
   content_of(path(CCNQ::Portal::SRC,'public','ccnq2','js',(splat)[0].".js"));
 };
 
-get r('/ccnq2/js/localization/([\w.-]+)\.js') => sub {
+get r('/js/localization/([\w.-]+)\.js') => sub {
   content_type 'text/javascript';
   content_of(path(CCNQ::Portal::SRC,'public','ccnq2','js','localization',(splat)[0].".js"));
 };
 
-get r('/ccnq2/images/tango-icon-theme/22x22/status/([\w-]+)\.png') => sub {
+get r('/images/tango-icon-theme/22x22/status/([\w-]+)\.png') => sub {
   content_type 'image/png';
   content_of(path(CCNQ::Portal::SRC,'public','ccnq2','images','tango-icon-theme','22x22','status',(splat)[0].".png"));
 };
