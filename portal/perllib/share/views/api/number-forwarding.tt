@@ -1,7 +1,7 @@
 <% USE loc %>
 <% IF field.number %>
   <fieldset class="ui-widget"><legend><% | loc %>Number update<% END %></legend>
-    <form method="post" action="<% prefix | uri %>/number/<% field.number | uri %>" accept-charset="utf-8" class="ui-widget validate">
+    <form method="post" action="<% prefix %>/number/<% field.number | uri %>" accept-charset="utf-8" class="ui-widget validate">
       <p class="ui-helper-clearfix">
         <label for="number" class="left"><% | loc %>Number:<% END %></label>
         <input type="text" readonly name="number" value="<% field.number | html %>" />
@@ -25,7 +25,7 @@
   </fieldset>
 <% ELSE %>
   <fieldset class="ui-widget"><legend><% | loc %>Number update<% END %></legend>
-    <form method="post" action="<% prefix | uri %>/number" accept-charset="utf-8" class="ui-widget validate">
+    <form method="post" action="<% prefix %>/number" accept-charset="utf-8" class="ui-widget validate">
       <p class="ui-helper-clearfix">
         <label for="number" class="left"><% | loc %>Number:<% END %></label>
         <input type="text" name="number" value="<% field.number | html %>" class="required" />

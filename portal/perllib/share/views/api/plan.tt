@@ -5,7 +5,7 @@
 <% IF field.name %>
   <fieldset class="ui-widget-content">
     <legend><% | loc %>Plan details<% END %></legend>
-    <form id="plan_form" action="<% prefix | uri %>/billing/plan/<% field.name | uri %>" method="post" accept-charset="utf-8" class="ui-widget validate">
+    <form id="plan_form" action="<% prefix %>/billing/plan/<% field.name | uri %>" method="post" accept-charset="utf-8" class="ui-widget validate">
       <p class="ui-helper-clearfix">
         <label for="name" class="left"><% | loc %>Plan name:<% END %></label>
         <span><% field.name | html %></span>
@@ -40,7 +40,7 @@
     <legend><% | loc %>Plans<% END %></legend>
     <ul>
       <% FOREACH plan IN get_plans() %>
-      <li><a href="<% prefix | uri %>/billing/plan/<% plan.name | uri %>"><% plan.name | html %></a></li>
+      <li><a href="<% prefix %>/billing/plan/<% plan.name | uri %>"><% plan.name | html %></a></li>
       <% END %>
     </ul>
   </fieldset>
@@ -48,7 +48,7 @@
 <% IF is_sysadmin %>
 <fieldset class="ui-widget-content">
   <legend><% | loc %>Create plan<% END %></legend>
-  <form id="new_plan_form" action="<% prefix | uri %>/billing/plan" method="post" accept-charset="utf-8" class="ui-widget validate">
+  <form id="new_plan_form" action="<% prefix %>/billing/plan" method="post" accept-charset="utf-8" class="ui-widget validate">
     <p class="ui-helper-clearfix">
       <label for="name" class="left"><% | loc %>Plan name:<% END %></label>
       <input type="text" name="name" value="<% field.name | html %>" class="required" />

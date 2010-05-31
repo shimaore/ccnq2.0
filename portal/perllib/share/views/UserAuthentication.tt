@@ -4,11 +4,11 @@
   <div class="logged-in">
     <% | loc(user_name || session.user_id) %>You are logged in as [_1].<% END %>
     |
-    <a href="<% prefix | uri %>/logout"><% | loc %>Logout<% END %></a>
+    <a href="<% prefix %>/logout"><% | loc %>Logout<% END %></a>
   <div>
   <!-- XXX SwitchUser -->
 <% ELSE %>
-  <form action="<% prefix | uri %>/login" method="POST" accept-charset="utf-8" class="ui-widget">
+  <form action="<% prefix %>/login" method="POST" accept-charset="utf-8" class="ui-widget">
     <div class="logged-out">
       <label for="username"><% | loc %>Username<% END %></label>
       <input name="username" type="text" size="10" class="required"/>

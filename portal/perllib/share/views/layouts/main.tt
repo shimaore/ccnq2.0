@@ -3,18 +3,18 @@
 <head><% USE loc %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title><% | loc %><% title || "Portal" %><% END %></title>
-<link rel="stylesheet" type="text/css" href="<% prefix | uri %>/css/style.css" />
-<link rel="stylesheet" type="text/css" href="<% prefix | uri %>/css/menu.css" />
-<link rel="stylesheet" type="text/css" href="<% prefix | uri %>/css/plan.css" />
+<link rel="stylesheet" type="text/css" href="<% prefix %>/css/style.css" />
+<link rel="stylesheet" type="text/css" href="<% prefix %>/css/menu.css" />
+<link rel="stylesheet" type="text/css" href="<% prefix %>/css/plan.css" />
 <!-- jquery + jquery.ui -->
 <!-- local site -->
-<link rel="stylesheet" type="text/css" href="<% prefix | uri %>/themes/css/<% theme %>/jquery-ui.css" />
-<script type="text/javascript" src="<% prefix | uri %>/themes/js/jquery.js"></script>
-<script type="text/javascript" src="<% prefix | uri %>/themes/js/jquery-ui.js"></script>
+<link rel="stylesheet" type="text/css" href="<% prefix %>/themes/css/<% theme %>/jquery-ui.css" />
+<script type="text/javascript" src="<% prefix %>/themes/js/jquery.js"></script>
+<script type="text/javascript" src="<% prefix %>/themes/js/jquery-ui.js"></script>
 <!-- main package -->
-<script type="text/javascript" src="<% prefix | uri %>/js/jquery.validate.min.js"></script>
-<script type="text/javascript" src="<% prefix | uri %>/js/forms.js"></script>
-<script type="text/javascript" src="<% prefix | uri %>/js/localization/messages_<% session.locale %>.js"></script>
+<script type="text/javascript" src="<% prefix %>/js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<% prefix %>/js/forms.js"></script>
+<script type="text/javascript" src="<% prefix %>/js/localization/messages_<% session.locale %>.js"></script>
 <!-- / jquery + jquery.ui -->
 </head>
 <body>

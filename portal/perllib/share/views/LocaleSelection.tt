@@ -2,6 +2,6 @@
 <fieldset id="LocaleSelection"><legend><% | loc %>Language<% END %></legend>
   <!-- XXX use flags -->
   <!-- use a loop -->
-  <% IF session.locale == "en" %><span class="active">en</span><% ELSE %><a href="<% prefix | uri %>/locale/en">en</a><% END %>
-  <% IF session.locale == "fr" %><span class="active">fr</span><% ELSE %><a href="<% prefix | uri %>/locale/fr">fr</a><% END %>
+  <% IF session.locale == "en" %><span class="active">en</span><% ELSE %><a href="<% prefix %>/locale/en">en</a><% END %>
+  <% IF session.locale == "fr" %><span class="active">fr</span><% ELSE %><a href="<% prefix %>/locale/fr">fr</a><% END %>
 </fieldset>

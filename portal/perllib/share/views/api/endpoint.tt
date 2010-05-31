@@ -7,7 +7,7 @@
   <% IF field.username %>
     <fieldset class="ui-widget-content">
       <legend><% | loc %>Endpoint details<% END %></legend>
-      <form action="<% prefix | uri %>/provisioning/endpoint" method="post" accept-charset="utf-8" class="ui-widget validate">
+      <form action="<% prefix %>/provisioning/endpoint" method="post" accept-charset="utf-8" class="ui-widget validate">
         <p class="ui-helper-clearfix">
           <label for="cluster" class="left"><% | loc %>Cluster:<% END %></label>
           <input type="text" readonly name="cluster" value="<% field.cluster | html %>" />
@@ -97,7 +97,7 @@
   <% IF create_generic_endpoint %>
   <fieldset class="ui-widget-content">
     <legend><% | loc %>Create endpoint<% END %></legend>
-    <form id="create_endpoint" action="<% prefix | uri %>/provisioning/endpoint/select" method="post" accept-charset="utf-8" class="ui-widget validate">
+    <form id="create_endpoint" action="<% prefix %>/provisioning/endpoint/select" method="post" accept-charset="utf-8" class="ui-widget validate">
       <p class="ui-helper-clearfix">
         <label for="cluster" class="left"><% | loc %>Cluster:<% END %></label>
         <select name="cluster" class="required">
@@ -130,7 +130,7 @@
   <% IF endpoints && endpoints.size %>
   <fieldset class="ui-widget-content">
     <legend><% | loc %>Modify endpoint<% END %></legend>
-    <form id="retrieve_endpoint" action="<% prefix | uri %>/provisioning/endpoint/select" method="post" accept-charset="utf-8" class="ui-widget">
+    <form id="retrieve_endpoint" action="<% prefix %>/provisioning/endpoint/select" method="post" accept-charset="utf-8" class="ui-widget">
       <p class="ui-helper-clearfix">
         <label for="endpoint" class="left"><% | loc %>Endpoint:<% END %></label>
         <select name="endpoint" class="required">

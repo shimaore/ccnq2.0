@@ -23,7 +23,7 @@
           <span class="sniffer callid">Call-ID: <% current_call_id | html %></a></span>
           <% IF not seen.$current_call_id; SET seen.$current_call_id = 1 %>
           <span>
-          <form action="<% prefix | uri %>/trace" method="post" >
+          <form action="<% prefix %>/trace" method="post" >
             <input type="hidden" name="node_name" value="<% r.node_name | html %>" />
             <input type="hidden" name="call_id" value="<% current_call_id | html %>" />
             <input type="hidden" name="days_ago" value="<% r.params.days_ago | html %>">
@@ -31,7 +31,7 @@
           </form>
           </span>
           <span>
-          <form action="<% prefix | uri %>/trace" method="post" >
+          <form action="<% prefix %>/trace" method="post" >
             <input type="hidden" name="node_name" value="<% r.node_name | html %>" />
             <input type="hidden" name="dump_packets" value="1" />
             <input type="hidden" name="call_id" value="<% current_call_id | html %>" />
@@ -67,10 +67,10 @@
     <% ELSE %>
       <% IF r.request %>
         <% IF r.completed %>
-          <div class="request completed"><% | loc %>Request completed<% END %> <img src="<% prefix | uri %>/images/tango-icon-theme/22x22/status/dialog-information.png"></div>
+          <div class="request completed"><% | loc %>Request completed<% END %> <img src="<% prefix %>/images/tango-icon-theme/22x22/status/dialog-information.png"></div>
         <% ELSE %>
           <div class="request pending"><% | loc %>Request pending<% END %></div>
-          <div><a href="<% prefix | uri %>/request/<% r.request | uri %>"><% | loc %>Refresh<% END %></a></div>
+          <div><a href="<% prefix %>/request/<% r.request | uri %>"><% | loc %>Refresh<% END %></a></div>
           <% IF not do_not_refresh %>
           <script type="text/javascript">var t=setTimeout("location.reload()",4000);</script>
           <% END %>
