@@ -37,9 +37,11 @@
     <% error %>
     </p>
   </div>
+  <div class="ui-helper-clearfix">&nbsp;</div>
 </div>
 <% END %>
 <div id="content" class="ui-widget"><% content %></div>
+<div class="ui-helper-clearfix">&nbsp;</div>
 <div id="footer"><% INCLUDE footer.tt %></div>
 </body>
 </html>
