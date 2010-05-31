@@ -1,5 +1,5 @@
 <% USE loc %>
-<fieldset class="ui-widget-content"><legend><% | loc %>Rating tables<% END %></legend>
+<fieldset class="ui-widget"><legend><% | loc %>Rating tables<% END %></legend>
   <ul>
   <% FOREACH t IN rating_tables %>
     <li><a href="?rating_table=<% t | html %>"><% t | html %></a></li>
@@ -7,6 +7,6 @@
   </ul>
 </form>
 </fieldset>
-<fieldset class="ui-widget-content"><legend><% | loc %>Create new rating table<% END %></legend>
+<fieldset class="ui-widget"><legend><% | loc %>Create new rating table<% END %></legend>
 <a href="new"><%|loc%>Create new rating table<%END%></a>
 </fieldset>

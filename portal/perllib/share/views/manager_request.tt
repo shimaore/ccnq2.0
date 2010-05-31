@@ -1,7 +1,7 @@
 <% USE loc %>
 <% IF session.user_id %>
 <div class="manager">
-  <fieldset class="ui-widget-content"><legend><% | loc %>Code for request <% params.request_type | html %><% END %></legend>
+  <fieldset class="ui-widget"><legend><% | loc %>Code for request <% params.request_type | html %><% END %></legend>
     <form action="<% prefix %>/manager/<% params.request_type | uri %>" method="POST"  accept-charset="utf-8" class="ui-widget validate">
       <textarea name="code" class="required" rows="24" cols="72"><% result.code | html %></textarea>
       <input type="submit" />

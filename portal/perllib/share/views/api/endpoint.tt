@@ -9,7 +9,7 @@
 </div>
 <% ELSE %>
   <% IF field.username %>
-    <fieldset class="ui-widget-content">
+    <fieldset class="ui-widget">
       <legend><% | loc %>Endpoint details<% END %></legend>
       <form action="<% prefix %>/provisioning/endpoint" method="post" accept-charset="utf-8" class="ui-widget validate">
         <p class="ui-helper-clearfix">
@@ -99,7 +99,7 @@
     </fieldset>
   <% ELSE %>
   <% IF create_generic_endpoint %>
-  <fieldset class="ui-widget-content">
+  <fieldset class="ui-widget">
     <legend><% | loc %>Create endpoint<% END %></legend>
     <form id="create_endpoint" action="<% prefix %>/provisioning/endpoint/select" method="post" accept-charset="utf-8" class="ui-widget validate">
       <p class="ui-helper-clearfix">
@@ -132,7 +132,7 @@
   <% END %>
   <% SET endpoints = endpoints_for(session.account) %>
   <% IF endpoints && endpoints.size %>
-  <fieldset class="ui-widget-content">
+  <fieldset class="ui-widget">
     <legend><% | loc %>Modify endpoint<% END %></legend>
     <form id="retrieve_endpoint" action="<% prefix %>/provisioning/endpoint/select" method="post" accept-charset="utf-8" class="ui-widget">
       <p class="ui-helper-clearfix">

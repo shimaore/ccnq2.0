@@ -8,11 +8,11 @@
   </div>
 <% END %>
 <% IF session.user_id == field.id %>
-<fieldset class="ui-widget-content">
+<fieldset class="ui-widget">
   <legend><% | loc %>My Profile<% END %></legend>
 <form id="user_profile_form" action="<% prefix %>/user_profile" method="POST" class="ui-widget validate" accept-charset="utf-8">
 <% ELSE %>
-<fieldset class="ui-widget-content">
+<fieldset class="ui-widget">
   <legend><% | loc(field.id) %>[_1]'s Profile<% END %></legend>
 <form id="user_profile_form" action="<% prefix %>/user_profile/<% field.id | uri %>" method="POST" class="ui-widget validate" accept-charset="utf-8">
 <% END %>
@@ -62,7 +62,7 @@
 </form>
 </fieldset>
 <% IF is_sysadmin %>
-<fieldset class="ui-widget-content">
+<fieldset class="ui-widget">
   <legend>Manage another User Profile</legend>
   <form id="select_user_form" action="<% prefix %>/user_profile/select" method="post" class="ui-widget" accept-charset="utf-8">
     <p class="ui-helper-clearfix">

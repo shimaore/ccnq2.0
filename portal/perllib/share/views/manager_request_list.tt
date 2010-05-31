@@ -2,7 +2,7 @@
 <% IF session.user_id %>
 <div class="manager">
   <% IF result %>
-  <fieldset class="ui-widget-content"><legend><% | loc %>Review or modify existing request<% END %></legend>
+  <fieldset class="ui-widget"><legend><% | loc %>Review or modify existing request<% END %></legend>
     <ul>
     <% FOREACH row IN result.rows %>
       <li><a href="<% prefix %>/manager/<% row.key %>"><% row.key %></a></li>
@@ -11,7 +11,7 @@
   </fieldset>
   <% END %>
   <% IF is_sysadmin %>
-  <fieldset class="ui-widget-content"><legend><% | loc %>Create new request<% END %></legend>
+  <fieldset class="ui-widget"><legend><% | loc %>Create new request<% END %></legend>
     <form action="<% prefix %>/manager" method="POST" accept-charset="utf-8" class="ui-widget validate">
       <label for="request_type" class="left"><% | loc %>Request name:<% END %></label>
       <input type="text" name="request_type" value="" class="required" />

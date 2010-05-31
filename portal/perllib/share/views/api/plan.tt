@@ -3,7 +3,7 @@
 <% | loc %>Please log in.<% END %>
 <% ELSE %>
 <% IF field.name %>
-  <fieldset class="ui-widget-content">
+  <fieldset class="ui-widget">
     <legend><% | loc %>Plan details<% END %></legend>
     <form id="plan_form" action="<% prefix %>/billing/plan/<% field.name | uri %>" method="post" accept-charset="utf-8" class="ui-widget validate">
       <p class="ui-helper-clearfix">
@@ -36,7 +36,7 @@
   </fieldset>
 <% END %>
 <% IF is_sysadmin %>
-  <fieldset class="ui-widget-content">
+  <fieldset class="ui-widget">
     <legend><% | loc %>Plans<% END %></legend>
     <ul>
       <% FOREACH plan IN get_plans() %>
@@ -46,7 +46,7 @@
   </fieldset>
 <% END %>
 <% IF is_sysadmin %>
-<fieldset class="ui-widget-content">
+<fieldset class="ui-widget">
   <legend><% | loc %>Create plan<% END %></legend>
   <form id="new_plan_form" action="<% prefix %>/billing/plan" method="post" accept-charset="utf-8" class="ui-widget validate">
     <p class="ui-helper-clearfix">

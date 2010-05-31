@@ -175,7 +175,7 @@ sub make_form
     $out{end_form}   ||= $cgi->end_form();
   };
 
-  return qq(\n<fieldset class="ui-widget-content"><legend>$out{_legend}</legend>$out{start_form}\n<div>$out{form}</div>\n<div>$out{submit}</div>\n$out{end_form}</fieldset>);
+  return qq(\n<fieldset class="ui-widget"><legend>$out{_legend}</legend>$out{start_form}\n<div>$out{form}</div>\n<div>$out{submit}</div>\n$out{end_form}</fieldset>);
 }
 
 sub pp
