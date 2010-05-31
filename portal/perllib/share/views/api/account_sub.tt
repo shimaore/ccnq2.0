@@ -41,5 +41,7 @@
     </form>
   </fieldset>
 <% ELSE %>
+  <div class="ui-widget">
   <% | loc %>Please select an account.<% END %>
+  </div>
 <% END %>

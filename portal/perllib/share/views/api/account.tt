@@ -60,8 +60,12 @@
     </form>
   </fieldset>
   <% ELSIF session.user_id %>
+    <div class="ui-widget">
     <% | loc %>Please select an account.<% END %>
+    </div>
   <% ELSE %>
+    <div class="ui-widget">
     <% | loc %>Please log in.<% END %>
+    </div>
   <% END %>
 <% END %>

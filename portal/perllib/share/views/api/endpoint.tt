@@ -1,8 +1,12 @@
 <% USE loc %>
 <% IF not session.user_id %>
+<div class="ui-widget">
 <% | loc %>Please log in.<% END %>
+</div>
 <% ELSIF not session.account %>
+<div class="ui-widget">
 <% | loc %>Please select an account.<% END %>
+</div>
 <% ELSE %>
   <% IF field.username %>
     <fieldset class="ui-widget-content">
