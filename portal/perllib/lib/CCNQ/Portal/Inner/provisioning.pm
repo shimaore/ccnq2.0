@@ -20,19 +20,25 @@ use CCNQ::Portal;
 use CCNQ::Portal::I18N;
 use CCNQ::API;
 
+sub to_html {
+  my $cv = shift;
+  var template_name => 'provisioning';
+  $cv and var result => sub { $cv->recv };
+  return CCNQ::Portal::content;
+}
+
 =head1 /provisioning/:view/@id
 
 Generic Provisioning API query, restricted to administrative accounts.
 
 =cut
 
-# View one
-get '/provisioning/view/:view/:id' => sub {
-  var template_name => 'provisioning';
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
-  return CCNQ::Portal::content unless session('account');
+sub _view_id {
+  CCNQ::Portal->current_session->user &&
+  session('account') &&
   # Restrict the generic view to administrators
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_admin;
+  CCNQ::Portal->current_session->user->profile->is_admin
+    or return;
 
   my $account = session('account');
   my $id = params->{id};
@@ -43,15 +49,17 @@ get '/provisioning/view/:view/:id' => sub {
   } else {
     CCNQ::API::provisioning('report',params->{view},$account,$id,$cv);
   }
-  var result => $cv->recv;
-  return CCNQ::Portal::content;
-};
+  return $cv;
+}
 
-sub get_number {
-  var template_name => 'provisioning';
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
-  # Restrict the generic view to administrators
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_admin;
+# View one
+get  '/provisioning/view/:view/:id' => sub { to_html(_view_id) };
+ajax '/provisioning/view/:view/:id' => sub { to_json(_view_id) };
+
+sub _get_number {
+  CCNQ::Portal->current_session->user &&
+  CCNQ::Portal->current_session->user->profile->is_admin
+    or return;
 
   my $cv = AE::cv;
   my $number = params->{number};
@@ -61,24 +69,27 @@ sub get_number {
     $number =~ s/[^\d]+//g;
     CCNQ::API::provisioning('report','all_numbers',$number,$cv);
   }
-  var result => $cv->recv;
-  return CCNQ::Portal::content;
+  return $cv;
 }
 
-get '/provisioning/number'         => \&get_number;
-get '/provisioning/number/:number' => \&get_number;
+get  '/provisioning/number'         => sub { to_html(_get_number) };
+get  '/provisioning/number/:number' => sub { to_html(_get_number) };
+ajax '/provisioning/number'         => sub { to_json(_get_number) };
+ajax '/provisioning/number/:number' => sub { to_json(_get_number) };
 
-get '/provisioning/view/account' => sub {
-  var template_name => 'provisioning';
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
-  return CCNQ::Portal::content unless session('account');
+sub _view_account {
+  CCNQ::Portal->current_session->user &&
+  session('account')
+    or return;
 
   my $account = session('account');
 
   my $cv = AE::cv;
   CCNQ::API::provisioning('report','account',$account,$cv);
-  var result => $cv->recv;
-  return CCNQ::Portal::content;
-};
+  return $cv;
+}
+
+get  '/provisioning/view/account' => sub { to_html(_view_account) };
+ajax '/provisioning/view/account' => sub { to_json(_view_account) };
 
 'CCNQ::Portal::Inner::billing_plan';
