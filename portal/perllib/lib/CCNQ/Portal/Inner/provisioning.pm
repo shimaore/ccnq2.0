@@ -53,11 +53,14 @@ sub get_number {
   # Restrict the generic view to administrators
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_admin;
 
-  my $number = params->{number};
-  $number =~ s/\d+//g;
-
   my $cv = AE::cv;
-  CCNQ::API::provisioning('report','all_numbers',$number,$cv);
+  if($number eq '_all') {
+    CCNQ::API::provisioning('report','all_numbers',$cv);
+  } else {
+    my $number = params->{number};
+    $number =~ s/\d+//g;
+    CCNQ::API::provisioning('report','all_numbers',$number,$cv);
+  }
   var result => $cv->recv;
   return CCNQ::Portal::content;
 }
