@@ -29,6 +29,12 @@
   <fieldset class="ui-widget">
     <legend><% | loc %>System global<% END %></legend>
     <ul>
+      <li>
+        <form action="<% prefix %>/provisioning/number" method="GET">
+          <input type="text" width="16" name="number" />
+          <input type="submit" name="<%|loc%>Find number across all accounts<%END%>" />
+        </form>
+      </li>
       <li><a href="<% prefix %>/manager">Manage Manager Requests (Back-end Business Logic)</a></li>
     </ul>
   </fieldset>

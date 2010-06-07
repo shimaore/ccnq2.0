@@ -47,6 +47,24 @@ get '/provisioning/view/:view/:id' => sub {
   return CCNQ::Portal::content;
 };
 
+sub get_number {
+  var template_name => 'provisioning';
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+  # Restrict the generic view to administrators
+  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_admin;
+
+  my $number = params->{number};
+  $number =~ s/\d+//g;
+
+  my $cv = AE::cv;
+  CCNQ::API::provisioning('report','all_numbers',$number,$cv);
+  var result => $cv->recv;
+  return CCNQ::Portal::content;
+}
+
+get '/provisioning/number'         => get_number;
+get '/provisioning/number/:number' => get_number;
+
 get '/provisioning/view/account' => sub {
   var template_name => 'provisioning';
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
