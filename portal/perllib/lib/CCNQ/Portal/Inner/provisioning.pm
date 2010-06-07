@@ -65,8 +65,8 @@ sub get_number {
   return CCNQ::Portal::content;
 }
 
-get '/provisioning/number'         => get_number;
-get '/provisioning/number/:number' => get_number;
+get '/provisioning/number'         => \&get_number;
+get '/provisioning/number/:number' => \&get_number;
 
 get '/provisioning/view/account' => sub {
   var template_name => 'provisioning';
