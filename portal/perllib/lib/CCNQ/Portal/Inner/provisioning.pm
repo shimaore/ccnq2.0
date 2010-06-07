@@ -54,10 +54,10 @@ sub get_number {
   return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_admin;
 
   my $cv = AE::cv;
+  my $number = params->{number};
   if($number eq '_all') {
     CCNQ::API::provisioning('report','all_numbers',$cv);
   } else {
-    my $number = params->{number};
     $number =~ s/\d+//g;
     CCNQ::API::provisioning('report','all_numbers',$number,$cv);
   }
