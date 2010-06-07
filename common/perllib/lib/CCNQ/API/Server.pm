@@ -281,6 +281,9 @@ use constant _provisioning => __generic(sub {
   if($path =~ m{^/provisioning/(\w+)/(\w+)/(.*)$}) {
     $view = $1.'/'.$2;
     $id   = [map { decode_utf8(uri_unescape($_)) } split(qr|/|,$3)];
+  } elsif($path =~ m{^/provisioning/(\w+)/(\w+)$}) {
+    $view = $1.'/'.$2;
+    $id   = [];
   } else {
     return 404;
   }
