@@ -27,6 +27,13 @@ sub to_html {
   return CCNQ::Portal::content;
 }
 
+sub as_json {
+  my $cv = shift;
+  $cv or send_error();
+  content_type 'text/json';
+  return to_json($cv->recv);
+}
+
 =head1 /provisioning/:view/@id
 
 Generic Provisioning API query, restricted to administrative accounts.
@@ -54,7 +61,7 @@ sub _view_id {
 
 # View one
 get      '/provisioning/view/:view/:id' => sub { to_html(_view_id) };
-get '/json/provisioning/view/:view/:id' => sub { to_json(_view_id->recv) };
+get '/json/provisioning/view/:view/:id' => sub { as_json(_view_id) };
 
 sub _get_number {
   CCNQ::Portal->current_session->user &&
@@ -74,8 +81,8 @@ sub _get_number {
 
 get      '/provisioning/number'         => sub { to_html(_get_number) };
 get      '/provisioning/number/:number' => sub { to_html(_get_number) };
-get '/json/provisioning/number'         => sub { to_json(_get_number->recv) };
-get '/json/provisioning/number/:number' => sub { to_json(_get_number->recv) };
+get '/json/provisioning/number'         => sub { as_json(_get_number) };
+get '/json/provisioning/number/:number' => sub { as_json(_get_number) };
 
 sub _view_account {
   CCNQ::Portal->current_session->user &&
@@ -90,6 +97,6 @@ sub _view_account {
 }
 
 get      '/provisioning/view/account' => sub { to_html(_view_account) };
-get '/json/provisioning/view/account' => sub { to_json(_view_account->recv) };
+get '/json/provisioning/view/account' => sub { as_json(_view_account) };
 
 'CCNQ::Portal::Inner::billing_plan';
