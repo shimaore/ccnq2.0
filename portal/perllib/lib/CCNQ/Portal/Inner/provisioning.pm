@@ -58,7 +58,7 @@ sub get_number {
   if($number eq '_all') {
     CCNQ::API::provisioning('report','all_numbers',$cv);
   } else {
-    $number =~ s/\d+//g;
+    $number =~ s/[^\d]+//g;
     CCNQ::API::provisioning('report','all_numbers',$number,$cv);
   }
   var result => $cv->recv;
