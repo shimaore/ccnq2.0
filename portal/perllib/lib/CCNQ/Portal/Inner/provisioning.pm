@@ -54,7 +54,7 @@ sub _view_id {
 
 # View one
 get      '/provisioning/view/:view/:id' => sub { to_html(_view_id) };
-get '/json/provisioning/view/:view/:id' => sub { to_json(_view_id) };
+get '/json/provisioning/view/:view/:id' => sub { to_json(_view_id->recv) };
 
 sub _get_number {
   CCNQ::Portal->current_session->user &&
@@ -74,8 +74,8 @@ sub _get_number {
 
 get      '/provisioning/number'         => sub { to_html(_get_number) };
 get      '/provisioning/number/:number' => sub { to_html(_get_number) };
-get '/json/provisioning/number'         => sub { to_json(_get_number) };
-get '/json/provisioning/number/:number' => sub { to_json(_get_number) };
+get '/json/provisioning/number'         => sub { to_json(_get_number->recv) };
+get '/json/provisioning/number/:number' => sub { to_json(_get_number->recv) };
 
 sub _view_account {
   CCNQ::Portal->current_session->user &&
@@ -90,6 +90,6 @@ sub _view_account {
 }
 
 get      '/provisioning/view/account' => sub { to_html(_view_account) };
-get '/json/provisioning/view/account' => sub { to_json(_view_account) };
+get '/json/provisioning/view/account' => sub { to_json(_view_account->recv) };
 
 'CCNQ::Portal::Inner::billing_plan';
