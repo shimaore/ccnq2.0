@@ -77,6 +77,13 @@ use constant js_report_locations => <<'JAVASCRIPT';
   }
 JAVASCRIPT
 
+use constant js_report_all_numbers => <<'JAVASCRIPT';
+  function (doc){
+    if(doc.profile == 'number') {
+      emit([doc.number],null)
+    }
+  }
+JAVASCRIPT
 
 use constant provisioning_designs => {
   report => {
@@ -104,6 +111,10 @@ use constant provisioning_designs => {
       },
       location => {
         map => js_report_locations,
+        # no reduce function
+      },
+      all_numbers => {
+        map => js_report_all_numbers,
         # no reduce function
       },
     },
