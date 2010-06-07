@@ -25,9 +25,9 @@
   </div>
 <% END %>
 
-<% IF is_sysadmin %>
+<% IF is_admin %>
   <fieldset class="ui-widget">
-    <legend><% | loc %>System global<% END %></legend>
+    <legend><% | loc %>Administrative toolbox<% END %></legend>
     <ul>
       <li>
         <form action="<% prefix %>/provisioning/number" method="GET">
@@ -37,6 +37,14 @@
         </form>
       </li>
       <li><a href="<% prefix %>/provisioning/number/_all">List all numbers (across all accounts)</a></li>
+    </ul>
+  </fieldset>
+<% END %>
+
+<% IF is_sysadmin %>
+  <fieldset class="ui-widget">
+    <legend><% | loc %>System Administrator Toolbox<% END %></legend>
+    <ul>
       <li><a href="<% prefix %>/manager">Manage Manager Requests (Back-end Business Logic)</a></li>
     </ul>
   </fieldset>
