@@ -26,7 +26,7 @@
 <% ELSE %>
   <% IF session.user_id %>
     <div class="ui-widget">
-    <% | loc %>Please select an account.<% END %>
+    <% | loc %>No results. Maybe you need to select an account?<% END %>
     </div>
   <% ELSE %>
     <div class="ui-widget">
