@@ -31,7 +31,7 @@
     <ul>
       <li>
         <form action="<% prefix %>/provisioning/number" method="GET">
-          <label for="number"><%|loc%>Locate number</label>
+          <label for="number"><%|loc%>Locate number<%END%></label>
           <input type="text" width="16" name="number" />
           <input type="submit" name="<%|loc%>Find number across all accounts<%END%>" />
         </form>
