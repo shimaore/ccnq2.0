@@ -29,7 +29,7 @@ sub to_html {
 
 sub as_json {
   my $cv = shift;
-  $cv or send_error();
+  $cv or return send_error();
   content_type 'text/json';
   return to_json($cv->recv);
 }
