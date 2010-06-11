@@ -2,7 +2,7 @@
   <table>
   <% FOREACH doc IN accounts() %>
     <tr>
-      <th><a href="<% prefix $>/billing/account/<% doc.account | uri %>"><% doc.account | html %></a></th>
+      <th><a href="<% prefix %>/billing/account/<% doc.account | uri %>"><% doc.account | html %></a></th>
       <td><% doc.name | html %></td>
     </tr>
   <% END %>
