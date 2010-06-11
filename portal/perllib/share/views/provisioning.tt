@@ -10,7 +10,7 @@
     <% IF profile == 'endpoint' %>
       <span class="edit"><a href="<% prefix %>/provisioning/endpoint/<% row.doc.endpoint %>">Edit</a></span>
     <% END %>
-    <% FOREACH d IN row.doc; UNLESS d.key.match('^_|^request|^type') %>
+    <% FOREACH d IN row.doc; UNLESS d.key.match('^_|^request|^type|^endpoint_ip') %>
       <div class="entry">
         <span class="key"><% d.key %></span>
         <span class="value">
