@@ -4,7 +4,7 @@
   <tr>
     <td>
       <form action="<% prefix %>/account" method="POST" accept-charset="utf-8" class="ui-widget">
-        <input type="submit" name="account" value="<% session.account | html %>">
+        <input type="submit" name="account" value="<% doc.account | html %>">
       </form>
     </td>
     <td><% doc.name | html %></td>
