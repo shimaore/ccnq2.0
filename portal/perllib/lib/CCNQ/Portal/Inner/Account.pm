@@ -154,4 +154,22 @@ sub handle_account_sub {
 post '/billing/account_sub/:account_sub' => sub { handle_account_sub() };
 post '/billing/account_sub'              => sub { handle_account_sub() };
 
+# List all accounts
+get  '/billing/accounts' => sub {
+  var template_name => 'api/accounts';
+
+  CCNQ::Portal->current_session->user &&
+  CCNQ::Portal->current_session->user->profile->is_admin
+    or return CCNQ::Portal::content;
+
+  my $cv = AE::cv;
+  CCNQ::API::billing('report','accounts','_all_docs',$cv);
+
+  var all_accounts => sub {
+    return CCNQ::AE::receive_docs($cv) || [];
+  };
+
+  return CCNQ::Portal::content;
+};
+
 'CCNQ::Portal::Inner::Account';
