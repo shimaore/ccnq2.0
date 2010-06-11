@@ -36,7 +36,8 @@
           <input type="submit" name="<%|loc%>Find number across all accounts<%END%>" />
         </form>
       </li>
-      <li><a href="<% prefix %>/provisioning/number/_all">List all numbers (across all accounts)</a></li>
+      <li><a href="<% prefix %>/provisioning/number/_all"><%|loc%>List all numbers (across all accounts)<%END%></a></li>
+      <li><a href="<% prefix %>/billing/accounts"><%|loc%>List all accounts<%END%></a></li>
     </ul>
   </fieldset>
 <% END %>
