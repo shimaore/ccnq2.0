@@ -163,7 +163,7 @@ get  '/billing/accounts' => sub {
     or return CCNQ::Portal::content;
 
   my $cv = AE::cv;
-  CCNQ::API::billing('report','accounts','_all_docs',$cv);
+  CCNQ::API::billing('report','accounts',$cv);
 
   var all_accounts => sub {
     return CCNQ::AE::receive_docs($cv) || [];
