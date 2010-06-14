@@ -102,7 +102,7 @@ sub gather_field {
 }
 
 sub endpoint_default {
-  CCNQ::Portal->current_session->user;
+  CCNQ::Portal->current_session->user
     or return CCNQ::Portal::content( error => _('Unauthorized')_ );
   session('account') &&
   session('account') =~ /^[\w-]+$/

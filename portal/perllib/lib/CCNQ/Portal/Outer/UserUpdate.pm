@@ -127,7 +127,7 @@ sub update {
 
 get '/user_profile' => sub {
 
-  CCNQ::Portal->current_session->user &&
+  CCNQ::Portal->current_session->user
     or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
   var template_name => 'user_profile';
