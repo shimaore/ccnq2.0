@@ -50,8 +50,10 @@ sub gather_field {
 
 post '/billing/plan' => sub {
   var template_name => 'api/plan';
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_sysadmin;
+
+  CCNQ::Portal->current_session->user &&
+  CCNQ::Portal->current_session->user->profile->is_sysadmin
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
   my $params = CCNQ::Portal::Util::neat({},qw(name));
   return unless $params->{name} =~ /\S/;
@@ -63,7 +65,9 @@ post '/billing/plan' => sub {
 
 get '/billing/plan' => sub {
   var template_name => 'api/plan';
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+
+  CCNQ::Portal->current_session->user
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
   var get_plans       => \&CCNQ::Portal::Inner::Util::get_plans;
   var get_currencies  => \&CCNQ::Portal::Inner::Util::get_currencies;
@@ -73,7 +77,9 @@ get '/billing/plan' => sub {
 
 get '/billing/plan/:name' => sub {
   var template_name => 'api/plan';
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+
+  CCNQ::Portal->current_session->user
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
   my $params = CCNQ::Portal::Util::neat({},qw(name));
   return unless $params->{name} =~ /\S/;
@@ -85,8 +91,10 @@ get '/billing/plan/:name' => sub {
 
 post '/billing/plan/:name' => sub {
   var template_name => 'api/plan';
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_sysadmin;
+
+  CCNQ::Portal->current_session->user &&
+  CCNQ::Portal->current_session->user->profile->is_sysadmin
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
   my $params = CCNQ::Portal::Util::neat({},qw(
     name

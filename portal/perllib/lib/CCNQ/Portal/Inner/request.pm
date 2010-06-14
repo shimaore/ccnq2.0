@@ -33,7 +33,9 @@ use MIME::Base64;
 
 get '/request/:request_id' => sub {
   var template_name => 'request';
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+
+  CCNQ::Portal->current_session->user
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
   my $request_id = params->{request_id};
   # XXX Authenticate (i.e. check that this user can legitimately access this request.)

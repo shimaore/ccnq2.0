@@ -102,9 +102,11 @@ sub gather_field {
 }
 
 sub endpoint_default {
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
-  return CCNQ::Portal::content unless session('account');
-  return CCNQ::Portal::content unless session('account') =~ /^[\w-]+$/;
+  CCNQ::Portal->current_session->user;
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
+  session('account') &&
+  session('account') =~ /^[\w-]+$/
+    or return CCNQ::Portal::content( error => _('Please select an account')_ );
   gather_field();
   return CCNQ::Portal::content;
 }
@@ -121,11 +123,14 @@ post '/provisioning/endpoint/select'   => sub { generic_endpoint_default };
 
 post '/provisioning/endpoint' => sub {
   var template_name => 'api/endpoint';
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_admin;
+  CCNQ::Portal->current_session->user &&
+  CCNQ::Portal->current_session->user->profile->is_admin
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
+
   # This is how we create new endpoints.
-  return CCNQ::Portal::content unless session('account');
-  return CCNQ::Portal::content unless session('account') =~ /^[\w-]+$/;
+  session('account') &&
+  session('account') =~ /^[\w-]+$/
+    or return CCNQ::Portal::content( error => _('Please select an account')_ );
 
   my $params = clean_params();
 
@@ -152,10 +157,13 @@ post '/provisioning/endpoint' => sub {
 
 get '/provisioning/endpoint_location' => sub {
   var template_name => 'api/endpoint';
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+  CCNQ::Portal->current_session->user
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
+
   # This is how we create new endpoints.
-  return CCNQ::Portal::content unless session('account');
-  return CCNQ::Portal::content unless session('account') =~ /^[\w-]+$/;
+  session('account') &&
+  session('account') =~ /^[\w-]+$/
+    or return CCNQ::Portal::content( error => _('Please select an account')_ );
 
   my $account = session('account');
 

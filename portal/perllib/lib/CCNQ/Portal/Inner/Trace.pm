@@ -40,8 +40,10 @@ sub get_node_names {
 
 get '/trace' => sub {
   var template_name => 'api/trace';
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_admin;
+
+  CCNQ::Portal->current_session->user &&
+  CCNQ::Portal->current_session->user->profile->is_admin
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
   var field => {
     node_names => get_node_names(),
@@ -51,8 +53,10 @@ get '/trace' => sub {
 
 post '/trace' => sub {
   var template_name => 'api/trace';
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_admin;
+
+  CCNQ::Portal->current_session->user &&
+  CCNQ::Portal->current_session->user->profile->is_admin
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
   my $params = CCNQ::Portal::Util::neat({},qw(
     node_name

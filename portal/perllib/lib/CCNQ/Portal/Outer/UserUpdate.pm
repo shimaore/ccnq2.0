@@ -126,23 +126,32 @@ sub update {
 }
 
 get '/user_profile' => sub {
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+
+  CCNQ::Portal->current_session->user &&
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
+
   var template_name => 'user_profile';
   retrieve(CCNQ::Portal->current_session->user->id);
   return CCNQ::Portal::content;
 };
 
 get '/user_profile/:user_id' => sub {
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_admin;
+
+  CCNQ::Portal->current_session->user &&
+  CCNQ::Portal->current_session->user->profile->is_admin
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
+
   var template_name => 'user_profile';
   retrieve(params->{user_id});
   return CCNQ::Portal::content;
 };
 
 post '/user_profile/select' => sub {
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_admin;
+
+  CCNQ::Portal->current_session->user &&
+  CCNQ::Portal->current_session->user->profile->is_admin
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
+
   var template_name => 'user_profile';
   retrieve(params->{user_id});
   return CCNQ::Portal::content;
@@ -150,7 +159,10 @@ post '/user_profile/select' => sub {
 
 # Regular user updates their own profile.
 post '/user_profile' => sub {
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+
+  CCNQ::Portal->current_session->user &&
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
+
   var template_name => 'user_profile';
   update(CCNQ::Portal->current_session->user->id);
   retrieve(CCNQ::Portal->current_session->user->id);
@@ -159,8 +171,11 @@ post '/user_profile' => sub {
 
 # Admin updates another user's profile.
 post '/user_profile/:user_id' => sub {
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_admin;
+
+  CCNQ::Portal->current_session->user &&
+  CCNQ::Portal->current_session->user->profile->is_admin
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
+
   var template_name => 'user_profile';
   update(params->{user_id});
   retrieve(params->{user_id});

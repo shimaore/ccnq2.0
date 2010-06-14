@@ -60,7 +60,9 @@ sub gather_field_sub {
 
 get '/billing/account' => sub {
   var template_name => 'api/account';
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+  CCNQ::Portal->current_session->user
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
+
   if( session('account') && session('account') =~ /^[\w-]+$/ ) {
     gather_field();
   }
@@ -69,14 +71,17 @@ get '/billing/account' => sub {
 
 post '/billing/account' => sub {
   var template_name => 'api/account';
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_admin;
+  CCNQ::Portal->current_session->user &&
+  CCNQ::Portal->current_session->user->profile->is_admin
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
+
   # This is how we create new accounts.
   if(params->{account} && params->{account} =~ /^[\w-]+$/) {
        session account => params->{account};
   }
-  return CCNQ::Portal::content unless session('account');
-  return CCNQ::Portal::content unless session('account') =~ /^[\w-]+$/;
+  session('account') &&
+  session('account') =~ /^[\w-]+$/
+    or return CCNQ::Portal::content( error => _('Please use a valid account number')_ );
 
   my $params = CCNQ::Portal::Util::neat({
     account => session('account')
@@ -96,11 +101,17 @@ post '/billing/account' => sub {
 
 get '/billing/account_sub/:account_sub' => sub {
   var template_name => 'api/account_sub';
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
-  return CCNQ::Portal::content unless session('account');
-  return CCNQ::Portal::content unless session('account') =~ /^[\w-]+$/;
-  return CCNQ::Portal::content unless params->{account_sub};
-  return CCNQ::Portal::content unless params->{account_sub} =~ /^[\w-]+$/;
+
+  CCNQ::Portal->current_session->user
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
+
+  session('account') &&
+  session('account') =~ /^[\w-]+$/
+    or return CCNQ::Portal::content( error => _('Please select an account')_ );
+
+  params->{account_sub} &&
+  params->{account_sub} =~ /^[\w-]+$/
+    or return CCNQ::Portal::content( error => _('Please enter a valid account_sub number')_ );
 
   my $account_sub = params->{account_sub};
 
@@ -111,9 +122,13 @@ get '/billing/account_sub/:account_sub' => sub {
 
 get '/billing/account_sub' => sub {
   var template_name => 'api/account_sub';
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
-  return CCNQ::Portal::content unless session('account');
-  return CCNQ::Portal::content unless session('account') =~ /^[\w-]+$/;
+
+  CCNQ::Portal->current_session->user
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
+
+  session('account') &&
+  session('account') =~ /^[\w-]+$/
+    or return CCNQ::Portal::content( error => _('Please select an account')_ );
 
   if( params->{account_sub} && params->{account_sub} =~ /^[\w-]+$/ ) {
     gather_field_sub(params->{account_sub});
@@ -126,10 +141,14 @@ get '/billing/account_sub' => sub {
 
 sub handle_account_sub {
   var template_name => 'api/account_sub';
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_admin;
-  return CCNQ::Portal::content unless session('account');
-  return CCNQ::Portal::content unless session('account') =~ /^[\w-]+$/;
+
+  CCNQ::Portal->current_session->user &&
+  CCNQ::Portal->current_session->user->profile->is_admin
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
+
+  session('account') &&
+  session('account') =~ /^[\w-]+$/
+    or return CCNQ::Portal::content( error => _('Please select an account')_ );
 
   my $params = CCNQ::Portal::Util::neat({
     account     => session('account'),

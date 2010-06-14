@@ -30,7 +30,7 @@ get  '/bucket/' => sub {
 
   CCNQ::Portal->current_session->user &&
   CCNQ::Portal->current_session->user->profile->is_admin
-    or return CCNQ::Portal::content;
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
   var get_buckets        => \&CCNQ::Portal::Inner::Util::get_buckets;
   var get_currencies     => \&CCNQ::Portal::Inner::Util::get_currencies;
@@ -41,9 +41,9 @@ get  '/bucket/' => sub {
 post '/bucket/' => sub {
   var template_name => 'api/bucket/select';
 
-  CCNQ::Portal->current_session->user                    &&
+  CCNQ::Portal->current_session->user &&
   CCNQ::Portal->current_session->user->profile->is_admin
-    or return CCNQ::Portal::content;
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
   my $params = CCNQ::Portal::Util::neat({},qw(
     name use_account currency increment decimals cap

@@ -47,7 +47,7 @@ post '/bucket/account/' => sub {
   CCNQ::Portal->current_session->user                    &&
   CCNQ::Portal->current_session->user->profile->is_admin &&
   session('account')
-    or var(error=>_('Unauthorized')_), return CCNQ::Portal::content;
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
   my $params = CCNQ::Portal::Util::neat({
     account => session('account'),

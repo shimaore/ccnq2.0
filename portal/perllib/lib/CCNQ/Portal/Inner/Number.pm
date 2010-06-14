@@ -62,8 +62,12 @@ sub _update_number {
 
 sub default {
   my ($category_to_criteria) = @_;
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
-  return CCNQ::Portal::content unless session('account');
+
+  CCNQ::Portal->current_session->user
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
+
+  session('account')
+    or return CCNQ::Portal::content( error => _('Please select an account')_ );
 
   my $account = session('account');
 
@@ -97,8 +101,11 @@ sub get_default {
 sub submit_number {
   my ($api_name,$normalize_number) = @_;
 
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
-  return CCNQ::Portal::content unless session('account');
+  CCNQ::Portal->current_session->user
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
+
+  session('account')
+    or return CCNQ::Portal::content( error => _('Please select an account')_ );
 
   my $account  = session('account');
 
@@ -108,7 +115,8 @@ sub submit_number {
   my $endpoint_data = CCNQ::Portal::Inner::Util::get_endpoint($account,$endpoint);
 
   my $number = $normalize_number->(params->{number});
-  return CCNQ::Portal::content( error => _('Please specify a valid number')_ ) unless $number;
+  $number
+    or return CCNQ::Portal::content( error => _('Please specify a valid number')_ );
 
   my $params = {
     api_name      => $api_name,
@@ -135,11 +143,11 @@ sub submit_default {
 
   var template_name => 'api/number';
 
-  exists(vars->{cluster_to_profiles}->{params->{cluster}}) and
-  exists(vars->{cluster_to_profiles}->{params->{cluster}}->{params->{inbound_username}}) and
+  exists(vars->{cluster_to_profiles}->{params->{cluster}}) &&
+  exists(vars->{cluster_to_profiles}->{params->{cluster}}->{params->{inbound_username}}) &&
   exists(vars->{category_to_criteria}->{params->{category}})
   # and category_to_criteria->{params->{category}}->($endpoint)
-  or return CCNQ::Portal::content( error => _('Invalid parameters')_ );
+    or return CCNQ::Portal::content( error => _('Invalid parameters')_ );
 
   return CCNQ::Portal::Inner::Number::submit_number($category_to_route->{params->{category}},$normalize_number);
 }
@@ -155,7 +163,8 @@ sub get_forwarding {
   my $account = session('account');
 
   my $number = $normalize_number->(params->{number});
-  return CCNQ::Portal::content( error => _('Please specify a valid number')_ ) unless $number;
+  $number
+    or return CCNQ::Portal::content( error => _('Please specify a valid number')_ );
 
   my $number_data = get_number($account,$number);
   var field => $number_data;
@@ -170,7 +179,8 @@ sub submit_forwarding {
   my $account  = session('account');
 
   my $number = $normalize_number->(params->{number});
-  return CCNQ::Portal::content( error => _('Please specify a valid number')_ ) unless $number;
+  $number
+    or return CCNQ::Portal::content( error => _('Please specify a valid number')_ );
 
   my $params = {};
   CCNQ::Portal::Util::neat($params,qw(
@@ -179,7 +189,8 @@ sub submit_forwarding {
   ));
 
   my $forwarding_type = $params->{forwarding_type};
-  return CCNQ::Portal::content unless grep { $forwarding_type eq $_ } qw( none all err );
+  grep { $forwarding_type eq $_ } qw( none all err )
+    or return CCNQ::Portal::content;
 
   my $forwarding_number = $normalize_number->($params->{forwarding_number});
 

@@ -31,7 +31,9 @@ Display the request.
 
 get '/manager' => sub {
   var template_name => 'manager_request_list';
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+
+  CCNQ::Portal->current_session->user
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
   my $cv = AE::cv;
   CCNQ::API::manager_query(undef,$cv);
@@ -43,7 +45,9 @@ get '/manager' => sub {
 
 my $get_query_type = sub {
   var template_name => 'manager_request';
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
+
+  CCNQ::Portal->current_session->user
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
   my $request_type = params->{request_type};
 
@@ -60,8 +64,10 @@ get '/manager/:request_type' => $get_query_type;
 
 post '/manager/:request_type' => sub {
   var template_name => 'manager_request';
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user;
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user->profile->is_sysadmin;
+
+  CCNQ::Portal->current_session->user &&
+  CCNQ::Portal->current_session->user->profile->is_sysadmin
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
   my $params = CCNQ::Portal::Util::neat({},qw(
     request_type

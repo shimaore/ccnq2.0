@@ -68,7 +68,9 @@ sub gather_prefix {
 # ******* Rating-table selection ***********
 
 sub set_rating_table {
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user and CCNQ::Portal->current_session->user->profile->is_admin;
+  CCNQ::Portal->current_session->user &&
+  CCNQ::Portal->current_session->user->profile->is_admin
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
   my $params = CCNQ::Portal::Util::neat({}, qw( rating_table ));
 
@@ -87,7 +89,9 @@ sub set_rating_table {
 }
 
 sub new_rating_table {
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user and CCNQ::Portal->current_session->user->profile->is_admin;
+  CCNQ::Portal->current_session->user &&
+  CCNQ::Portal->current_session->user->profile->is_admin
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
   my $params = CCNQ::Portal::Util::neat({}, qw( rating_table ));
 
@@ -110,7 +114,9 @@ post '/rating_table/new' => \&new_rating_table;
 # ******* Content update ***********
 
 sub modify_field {
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user and CCNQ::Portal->current_session->user->profile->is_admin;
+  CCNQ::Portal->current_session->user &&
+  CCNQ::Portal->current_session->user->profile->is_admin
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
   my $params = CCNQ::Portal::Util::neat({
     rating_table => session('rating_table'),
@@ -140,7 +146,9 @@ sub modify_field {
 }
 
 sub new_prefix {
-  return CCNQ::Portal::content unless CCNQ::Portal->current_session->user and CCNQ::Portal->current_session->user->profile->is_admin;
+  CCNQ::Portal->current_session->user &&
+  CCNQ::Portal->current_session->user->profile->is_admin
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
   my $params = CCNQ::Portal::Util::neat({
     rating_table => session('rating_table'),
