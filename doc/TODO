@@ -1,12 +1,9 @@
 
 Portal:
-* admins can list accounts (in portal)
-* admins can find number across accounts
 * emergency data
 * code for cfa/cfb
 * import rating tables (bulk)
 * address fields for billing
-* themes
 
 Portal internals:
 * generalize form validation: generic Perl validation code + AJAX validation
@@ -33,4 +30,3 @@ Billing:
 * CDR + cost analysis on carrier SBC
   - collect CDRs
   - do rating analysis (private plans)
-
