@@ -59,7 +59,7 @@ sub rate_and_save_cbef {
   rate_cbef($cbef)->cb(sub{
     debug("CCNQ::Billing::Rating::rate_and_save_cbef() rating done");
     my $rated_cbef = CCNQ::AE::receive(@_);
-    return $rcv->send(['Rating failed']) if !$rated_cbef;
+    return $rcv->send() if !$rated_cbef;
 
     debug("CCNQ::Billing::Rating::rate_and_save_cbef() compute taxes");
     $rated_cbef->compute_taxes();
