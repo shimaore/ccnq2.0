@@ -93,7 +93,7 @@ sub process_file {
   my $rating_errors = 0;
   my $rate_and_save_flat_cbef = sub {
     my ($flat_cbef) = @_;
-    if($flat_cbef->{start} =~ /^(\d\d\d\d-\d\d-\d\d) (\d\d:\d\d:\d\d)$/) {
+    if($flat_cbef->{start} =~ /^(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2})$/) {
       $flat_cbef->{start_date} = $1; $flat_cbef->{start_time} = $2;
       $flat_cbef->{start_date} =~ s/[^\d]//g;
       $flat_cbef->{start_time} =~ s/[^\d]//g;
