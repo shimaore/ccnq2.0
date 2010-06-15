@@ -15,7 +15,7 @@ API:
 
 
 Voice:
-* emergency call routing
+* emergency call routing (fr/OS)
 * modify OpenSIPS code so that:
   it strips transport= from RURI
   it strips maddr= from RURI
