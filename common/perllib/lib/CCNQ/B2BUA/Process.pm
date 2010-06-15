@@ -97,14 +97,15 @@ sub process_file {
       $flat_cbef->{start_date} =~ s/[^\d]//g;
       $flat_cbef->{start_time} =~ s/[^\d]//g;
     } else {
-      return "Invalid start timestamp: ".$flat_cbef->{start};
+      debug("Invalid start timestamp: ".$flat_cbef->{start});
+      return;
     }
     my $cv = CCNQ::Billing::Rating::rate_and_save_cbef({
       %$flat_cbef,
       collecting_node => CCNQ::Install::host_name,
     });
-    my $error = CCNQ::AE::receive($cv);
-    return $error;
+    my $doc = CCNQ::AE::receive($cv);
+    return $doc;
   };
 
   read_b2bua($fh,$eh,$rate_and_save_flat_cbef);
