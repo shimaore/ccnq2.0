@@ -79,9 +79,8 @@ sub read_b2bua {
     debug("At line $line") if $line % 1000 == 0;
     my %f = map { /^(\w+)=(.*)$/; $1 => $2 }
             split(/\t/,$input);
-    my $error = $cb->(\%f);
-    if($error) {
-      debug("At line $line: $error (input: $input)");
+    my $doc = $cb->(\%f);
+    if(!$doc) {
       print $eh "$input\n";
     }
   }
