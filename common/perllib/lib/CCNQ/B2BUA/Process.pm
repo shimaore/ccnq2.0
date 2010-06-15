@@ -81,6 +81,7 @@ sub read_b2bua {
             split(/\t/,$input);
     my $error = $cb->(\%f);
     if($error) {
+      debug("At line $line: $error (input: $input)");
       print $eh "$input\n";
     }
   }
@@ -97,7 +98,7 @@ sub process_file {
       $flat_cbef->{start_date} =~ s/[^\d]//g;
       $flat_cbef->{start_time} =~ s/[^\d]//g;
     } else {
-      debug("Invalid start timestamp: ".$flat_cbef->{start});
+      return "Invalid start timestamp: ".$flat_cbef->{start};
     }
     my $cv = CCNQ::Billing::Rating::rate_and_save_cbef({
       %$flat_cbef,
