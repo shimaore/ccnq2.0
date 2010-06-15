@@ -1,5 +1,7 @@
 <% USE loc %>
 <table>
+<tr><th><%|loc%>Prefix<%END%></th>
+</tr>
 <% FOREACH prefix IN rating_table_prefixes %>
 <tr><th><% prefix | html %></th>
   <% FOREACH f IN rating_table_prefix(prefix).pairs; IF not f.key.match('^_') and f.value.defined %>
@@ -29,7 +31,6 @@
 <%END%>
 <tr><th>
   <form action="new_prefix" method="post">
-    <label for="prefix"><% | loc %>prefix<% END %></label>
     <input type="text" name="prefix" class="required"/>
     <input type="submit" value="<% | loc %>New<%END%>"/>
   </form>
