@@ -29,9 +29,13 @@ use AnyEvent;
 use CCNQ::AE;
 
 # Debian's location
+# Note: pre-1.0.6 this was in /opt/freeswitch/log/freeswitch.pid.
 use constant FREESWITCH_PID_FILE => '/opt/freeswitch/run/freeswitch.pid';
 
 # Tell freeswitch to rotate its CDR file
+# Note: if FreeSwitch has not processed any call since it was restarted
+#       the CDR file will not get rotated (even though it might not be
+#       empty).
 sub rotate_cdr {
   my $pid = CCNQ::Util::content_of(FREESWITCH_PID_FILE) or die $!;
   kill(1, $pid) or die $!;
