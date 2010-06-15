@@ -29,7 +29,7 @@ use AnyEvent;
 use CCNQ::AE;
 
 # Debian's location
-use constant FREESWITCH_PID_FILE => '/opt/freeswitch/log/freeswitch.pid';
+use constant FREESWITCH_PID_FILE => '/opt/freeswitch/run/freeswitch.pid';
 
 # Tell freeswitch to rotate its CDR file
 sub rotate_cdr {
