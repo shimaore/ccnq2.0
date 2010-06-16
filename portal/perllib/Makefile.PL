@@ -22,6 +22,8 @@ requires      'MIME::Base64'              => 0;
 requires      'CGI::Untaint'              => 0;
 requires      'CGI::Untaint::email'       => 0;
 
+requires      'Net::LDAP'                 => 0;
+
 ## Portal requirements
 requires      'Locale::Maketext::Lexicon'     => 0;
 requires      'Lingua::EN::Numbers::Ordinate' => 0;
