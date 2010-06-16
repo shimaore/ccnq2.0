@@ -17,6 +17,7 @@
       <li><a href="<% prefix %>/provisioning/view/endpoint/_all"><%|loc%>View All Endpoints<%END%></a></li>
       <li><a href="<% prefix %>/provisioning/view/number/_all"><%|loc%>View All Numbers<%END%></a></li>
       <li><a href="<% prefix %>/bucket/account/"><%|loc%>View Bucket Values<%END%></a></li>
+      <li><a href="<% prefix %>/cdr/"><%|loc%>View Call Detail Records (CDR)<%END%></a></li>
     </ul>
   </fieldset>
 <% ELSE %>
