@@ -195,6 +195,8 @@ sub get_currencies {
 our %event_types = (
   'egress_call'  => 1,
   'ingress_call' => 2,
+  'endpoint_update' => 1000,
+  'endpoint_delete' => 1001,
 );
 
 sub register_event_type {
