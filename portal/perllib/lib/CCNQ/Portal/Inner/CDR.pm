@@ -20,6 +20,7 @@ use CCNQ::Portal;
 use CCNQ::Portal::I18N;
 use CCNQ::API;
 
+use CCNQ::AE;
 use CCNQ::Portal::Inner::Util;
 
 sub as_html {
@@ -33,7 +34,7 @@ sub as_html {
   var account_subs  => \&CCNQ::Portal::Inner::Util::account_subs;
   var event_types   => \&CCNQ::Portal::Inner::Util::event_types;
 
-  $cv and var result => sub { $cv->recv };
+  $cv and var result => sub { CCNQ::AE::receive_docs($cv) };
   return CCNQ::Portal::content;
 }
 
