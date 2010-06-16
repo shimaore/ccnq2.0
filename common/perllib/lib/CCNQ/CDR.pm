@@ -33,10 +33,26 @@ use constant::defer cdr_uri => sub {
 };
 use constant cdr_db => 'cdr';
 
+# All records related to a given account.
+use constant js_report_by_type => <<'JAVASCRIPT';
+  function (doc) {
+    var year  = doc.start_date.substr(0,4);
+    var month = doc.start_date.substr(4,2);
+    var day   = doc.start_date.substr(6,2);
+    var hour  = doc.start_time.substr(0,2);
+    var minu  = doc.start_time.substr(2,2);
+    var seco  = doc.start_time.substr(4,2);
+    emit([doc.account,doc.account_sub,doc.event_type,year,month,day,hour,minu,seco,],null);
+  }
+JAVASCRIPT
+
 use constant cdr_designs => {
   report => {
     language => 'javascript',
     views    => {
+      by_type => {
+        map => js_report_by_type,
+      },
     },
   },
 };

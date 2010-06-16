@@ -135,7 +135,7 @@ sub get_account_bucket {
   return $data;
 }
 
-=head1 Endpoint Utilities 
+=head1 Endpoint Utilities
 
 =cut
 
@@ -188,6 +188,22 @@ sub get_currencies {
   return { 'EUR' => '€', 'USD' => 'US$' };
 }
 
+=head1 CDR Utilities
 
+=cut
+
+our %event_types = (
+  'egress_call'  => 1,
+  'ingress_call' => 2,
+);
+
+sub register_event_type {
+  my ($type,$order) = @_;
+  $event_types{$type} = $order;
+}
+
+sub event_types {
+  return sort { $event_types{$a} <=> $event_types{$b} } keys %event_types;
+}
 
 'CCNQ::Portal::Inner::Util';

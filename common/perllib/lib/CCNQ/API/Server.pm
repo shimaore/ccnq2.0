@@ -332,6 +332,35 @@ use constant _billing => __generic(sub {
   return;
 });
 
+=head2 _cdr
+
+Handles /cdr calls
+
+=cut
+
+use constant _cdr => __generic(sub {
+  my ($httpd, $req, $path) = @_;
+
+  $req->method eq 'GET' or return 501;
+
+  my ($view,$id);
+  if($path =~ m{^/cdr/(\w+)/(\w+)/(.*)$}) {
+    $view = $1.'/'.$2;
+    $id   = [map { decode_utf8(uri_unescape($_)) } split(qr|/|,$3)];
+  } else {
+    return 404;
+  }
+
+  use CCNQ::CDR;
+  CCNQ::CDR::view({
+    view => $view,
+    _id  => $id,
+  })->cb(__view_cb($req));
+
+  $httpd->stop_request;
+  return;
+});
+
 =head2 _rating_table
 
 Handles /rating_table calls.
@@ -495,6 +524,7 @@ sub _session_ready {
     '/rating_table' => sub { $handle_return->(_rating_table,@_) },
     '/bucket'       => sub { $handle_return->(_bucket,@_) },
     '/manager'      => sub { $handle_return->(_manager,@_) },
+    '/cdr'          => sub { $handle_return->(_cdr,@_) },
   );
   return;
 }

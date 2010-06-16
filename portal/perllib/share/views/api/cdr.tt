@@ -1,0 +1,47 @@
+<% USE loc %>
+<% IF result %>
+<fieldset class="ui-widget"><legend><%|loc%>Call Detail Records<%END%></legend>
+  <table>
+  <% SET cols = [ "account", "account_sub", "count", "event_type",
+                  "start_date", "start_time", "from_e164", "to_164",
+                  "duration", "taxable_cost", "tax_amount", "total_cost" ] %>
+  <tr>
+    <% FOREACH c IN cols %><th><% c | html %></th><% END %>
+  </tr>
+  <% FOREACH r IN result %>
+    <tr>
+      <% FOREACH c IN cols %><td><% r.$c | html %></td><% END %>
+    </tr>
+  <% END %>
+  </table>
+<% ELSE %>
+<fieldset class="ui-widget"><legend><%|loc%>CDR Report<%END%></legend>
+  <form action="by_types" method="GET" accept-charset="utf-8" class="ui-widget validate">
+    <p class="ui-helper-clearfix">
+      <label for="account_sub" class="left"><%|loc%>Account sub<%END%></label>
+      <select name="account_sub" class="required">
+        <% FOREACH account_sub IN account_subs(session.account) %>
+        <option value="<% account_sub.account_sub | html %>"><% account_sub.name | html %></option>
+        <% END %>
+      </select>
+    </p>
+    <p class="ui-helper-clearfix">
+      <label for="event_type" class="left"><%|loc%>Event type<%END%></label>
+      <select name="event_type" class="required">
+        <% FOREACH event_type IN event_types() %>
+        <option value="<% event_type | html %>"><%|loc%><% event_type %><%END%></option>
+        <% END %>
+      </select>
+    </p>
+    <p class="ui-helper-clearfix">
+      <label for="year" class="left"><%|loc%>Month or Day to report<%END%></label>
+      <input type="text" name="year"  size="4" value="<%|loc%>YYYY<%END%>" class="required" />
+      <input type="text" name="month" size="2" value="<%|loc%>MM<%END%>"   class="required"/>
+      <input type="text" name="day"   size="2" value="" />
+    </p>
+    <p class="ui-helper-clearfix submit">
+      <input type="submit" value="<%|loc%>View Report<%END%>" />
+    </p>
+  </form>
+</fieldset>
+<% END %>
