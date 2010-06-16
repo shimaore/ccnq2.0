@@ -36,7 +36,7 @@
       <div><a href="<% prefix %>/billing/account_sub"><% | loc %>Create new account sub<% END %></a></div>
       <ul>
         <% FOREACH account_sub IN account_subs(session.account) %>
-        <li><a href="<% prefix %>/billing/account_sub/<% account_sub.account_sub | uri %>"><% account_sub.name %></a></li>
+        <li><a href="<% prefix %>/billing/account_sub/<% account_sub.account_sub | uri %>"><% account_sub.name | html %></a></li>
         <% END %>
       </ul>
     </fieldset>
