@@ -13,10 +13,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#
 # These instructions are for Debian/Lenny.
-
-
-# Here I am assuming you use sudo to gain root access.
+#
+# I assume you use sudo to gain root access.
+#
 
 # * Update apt's sources.list to import the "testing" distribution
 #   (needed for some packages on the API and MediaProxy servers):
@@ -25,13 +26,17 @@
 # Testing packages required by CCNQ2.0 for Erlang/CouchDB, MediaProxy
 deb     http://ftp.us.debian.org/debian/   testing main contrib
 EOT
+
   grep 'testing' /etc/apt/preferences || cat <<'EOT' | sudo tee /etc/apt/preferences > /dev/null
+#
 # Install Debian/Lenny packages by default
+#
 Package: *
 Pin: release a=lenny
 Pin-Priority: 700
-
+#
 # Although testing is available, do not attempt to automatically upgrade to it.
+#
 Package: *
 Pin: release a=testing
 Pin-Priority: -1
@@ -41,8 +46,8 @@ EOT
   sudo aptitude -y dist-upgrade
 
 
-# * Note: I've noticed that Lenny installs a /etc/rsyslog.conf which creates /var/log/user.log, but it never gets cleaned up.
-# I recommend:
+# * Note: I've noticed that Lenny installs a /etc/rsyslog.conf which creates /var/log/user.log,
+# but it never gets cleaned up. I recommend:
 
   sudo mv /etc/rsyslog.conf /etc/rsyslog.conf.bak
   cat <<'EOT' | sudo tee /etc/rsyslog.conf >/dev/null
@@ -66,9 +71,13 @@ EOT
 # * On all servers, install the program:
 #
   sudo aptitude update
-  sudo aptitude -y install ntp monit psmisc libjson-perl libnet-libidn-perl libauthen-sasl-perl libxml-writer-perl libwww-perl libyaml-perl libexpat-dev liblogger-syslog-perl libio-stringy-perl git-core libnet-ssleay-perl build-essential libmodule-install-perl libuniversal-require-perl libdbi-perl liburi-perl libjson-xs-perl libdata-dump-streamer-perl libio-all-perl libdata-dump-perl libtest-deep-perl libclass-inspector-perl libdata-structure-util-perl
+  sudo aptitude -y install ntp monit psmisc build-essential git-core
+  # Perl modules in testing have proper versions (the ones in Lenny might not).
+  sudo aptitude -y install -t testing \
+    libanyevent-perl libasync-interrupt-perl libauthen-sasl-perl libcache-memcached-perl libcgi-untaint-email-perl libcgi-untaint-perl libclass-inspector-perl libcommon-sense-perl libcrypt-cbc-perl libdata-dump-perl libdata-dump-streamer-perl libdata-structure-util-perl libdbi-perl libdigest-hmac-perl libdigest-sha1-perl libemail-valid-perl libexpat-dev libhttp-server-simple-perl libhttp-server-simple-psgi-perl libio-all-perl libio-string-perl libio-stringy-perl libjson-perl libjson-xs-perl liblingua-en-numbers-ordinate-perl liblocale-maketext-lexicon-perl liblogger-syslog-perl libmailtools-perl libmime-types-perl libmodule-install-perl libnet-dns-perl libnet-ip-perl libnet-libidn-perl libnet-ssleay-perl libobject-event-perl libparams-util-perl libstring-crc32-perl libtest-deep-perl libtest-simple-perl libuniversal-require-perl liburi-perl libwww-perl libxml-parser-perl libxml-writer-perl libyaml-perl
+
   # Now add non-Debian Perl modules.
-  # Manual instructions moved to doc/INSTALL.perl
+  # Manual instructions are in doc/INSTALL.perl
   # ------ Equivalent (from our servers): ------------
   ARCH=amd64
   (mkdir /tmp/perl && cd /tmp/perl && \
@@ -260,8 +269,6 @@ SQL
   #     daemon     (for access to the FreeSwitch CLI / FIFO)
   #
 
-  vi /etc/group
-
 # * On the Portal server(s):
 
   # On the web portal server, you should also do:
@@ -286,4 +293,4 @@ SQL
   sed -i -e 's/^{shaper, normal, {maxrate, 1000}}\./{shaper, normal, {maxrate, 1000000}}./' /etc/ejabberd/ejabberd.cfg
 
 
-# These instructions last tested on 2010/03/03
+# These instructions currently need testing.
