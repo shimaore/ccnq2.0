@@ -59,6 +59,7 @@ require_ok( 'CCNQ::Portal::Inner::Number' );
 require_ok( 'CCNQ::Portal::Inner::RatingTable' );
 require_ok( 'CCNQ::Portal::Inner::Bucket' );
 require_ok( 'CCNQ::Portal::Inner::Bucket::Instance' );
+require_ok( 'CCNQ::Portal::Inner::CDR' );
 
 require_ok( 'CCNQ::Portal::Template::Plugin::loc' );
 
