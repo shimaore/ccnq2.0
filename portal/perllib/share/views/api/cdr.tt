@@ -15,6 +15,9 @@
   <% END %>
   </table>
 <% ELSE %>
+<% IF !session.account %>
+<%|loc%>Please select an account.<%END%>
+<% ELSE %>
 <fieldset class="ui-widget"><legend><%|loc%>CDR Report<%END%></legend>
   <form action="by_types" method="GET" accept-charset="utf-8" class="ui-widget validate">
     <p class="ui-helper-clearfix">
@@ -44,4 +47,5 @@
     </p>
   </form>
 </fieldset>
+<% END %>
 <% END %>
