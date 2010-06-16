@@ -46,7 +46,7 @@ sub as_json {
 
 sub _view_id {
   CCNQ::Portal->current_session->user &&
-  session('account') &&
+  session('account')
     or return;
 
   my $day   = params->{day};
