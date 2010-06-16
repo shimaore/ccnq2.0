@@ -8,7 +8,7 @@
   <tr>
     <% FOREACH c IN cols %><th><% c | html %></th><% END %>
   </tr>
-  <% FOREACH r IN result %>
+  <% FOREACH r IN result() %>
     <tr>
       <% FOREACH c IN cols %><td><% r.$c | html %></td><% END %>
     </tr>
