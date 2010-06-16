@@ -19,5 +19,6 @@ use CCNQ::Portal::Inner::Endpoint;
 use CCNQ::Portal::Inner::RatingTable;
 use CCNQ::Portal::Inner::Bucket;
 use CCNQ::Portal::Inner::Bucket::Instance;
+use CCNQ::Portal::Inner::CDR;
 
 'CCNQ::Portal::Content';
