@@ -3,6 +3,7 @@ use inc::Module::Install;
 # Define metadata
 name          'CCNQ-Portal';
 all_from      'lib/CCNQ/Portal.pm';
+author        q{Stephane Alnet <stephane@shimaore.net>};
 license       'gpl';
 
 # Specific dependencies
