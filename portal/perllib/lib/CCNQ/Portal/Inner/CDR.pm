@@ -26,6 +26,8 @@ sub as_html {
   my $cv = shift;
 
   var template_name => 'api/cdr';
+  var account_subs  => \&CCNQ::Portal::Inner::Util::account_subs;
+  var event_types   => \&CCNQ::Portal::Inner::Util::event_types;
 
   $cv and var result => sub { $cv->recv };
   return CCNQ::Portal::content;
@@ -46,9 +48,6 @@ sub _view_id {
   CCNQ::Portal->current_session->user &&
   session('account')
     or return;
-
-  var account_subs  => \&CCNQ::Portal::Inner::Util::account_subs;
-  var event_types   => \&CCNQ::Portal::Inner::Util::event_types;
 
   my $day   = params->{day};
   my @date = ();
