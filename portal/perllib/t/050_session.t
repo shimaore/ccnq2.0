@@ -17,6 +17,8 @@
 use strict; use warnings;
 use Test::More import => ['!pass'];
 
+$ENV{'CCNQ_domain_name'} = 'private.example.net';
+
 use_ok('Dancer');
 set(session => 'Simple');
 
