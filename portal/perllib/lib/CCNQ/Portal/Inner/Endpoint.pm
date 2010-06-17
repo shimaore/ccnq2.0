@@ -19,11 +19,10 @@ use Dancer ':syntax';
 use CCNQ::Portal;
 use CCNQ::Portal::I18N;
 use CCNQ::Portal::Util;
+use CCNQ::Portal::Inner::Util;
 
 use CCNQ::AE;
 use CCNQ::API;
-
-use CCNQ::Portal::Inner::Util;
 
 sub clean_params {
   my $params = {

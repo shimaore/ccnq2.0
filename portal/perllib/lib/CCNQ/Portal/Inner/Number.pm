@@ -19,41 +19,10 @@ use Dancer ':syntax';
 use CCNQ::Portal;
 use CCNQ::Portal::I18N;
 use CCNQ::Portal::Util;
+use CCNQ::Portal::Inner::Util;
 
 use CCNQ::AE;
 use CCNQ::API;
-
-use CCNQ::Portal;
-use CCNQ::Portal::Inner::Endpoint;
-
-# Generic get/update
-
-sub get_number {
-  my ($account,$number) = @_;
-  my $cv = AE::cv;
-  CCNQ::API::provisioning('report','number',$account,$number,$cv);
-  my $numbers = CCNQ::AE::receive($cv);
-  return $numbers->{rows}->[0]->{doc} || {};
-}
-
-sub _update_number {
-  my ($account,$number,$new_data) = @_;
-
-  my $number_data = get_number($account,$number);
-
-  my $params = {
-    %$number_data, # Keep any existing information (this means data must be overwritten)
-    %$new_data,
-  };
-
-  my $api_name = $params->{api_name};
-  return CCNQ::Portal::content unless $api_name;
-
-  # Update the information in the API.
-  my $cv1 = AE::cv;
-  CCNQ::API::api_update($api_name,$params,$cv1);
-  return CCNQ::Portal::Util::redirect_request($cv1);
-}
 
 # Number routing form.
 # This updates:
@@ -135,7 +104,7 @@ sub submit_number {
     inbound_username
   ));
 
-  return _update_number($account,$number,$params);
+  return CCNQ::Portal::Inner::Util::update_number($account,$number,$params);
 }
 
 sub submit_default {
@@ -166,7 +135,7 @@ sub get_forwarding {
   $number
     or return CCNQ::Portal::content( error => _('Please specify a valid number')_ );
 
-  my $number_data = get_number($account,$number);
+  my $number_data = CCNQ::Portal::Inner::Util::get_number($account,$number);
   var field => $number_data;
   return CCNQ::Portal::content;
 }
@@ -200,7 +169,7 @@ sub submit_forwarding {
 
   $params->{forwarding_number} = $forwarding_number;
 
-  return _update_number($account,$number,$params);
+  return CCNQ::Portal::Inner::Util::update_number($account,$number,$params);
 }
 
 1;

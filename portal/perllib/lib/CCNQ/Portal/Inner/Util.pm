@@ -180,6 +180,55 @@ sub get_endpoint {
   return CCNQ::AE::receive_first_doc($cv) || {};
 }
 
+sub update_endpoint {
+  my ($account,$endpoint,$new_data) = @_;
+
+  my $endpoint_data = get_endpoint($account,$endpoint);
+
+  my $params = {
+    %$endpoint_data, # Keep any existing information (this means data must be overwritten)
+    %$new_data,
+  };
+
+  # Update the information in the API.
+  my $cv = AE::cv;
+  CCNQ::API::api_update('endpoint',$params,$cv);
+  return CCNQ::Portal::Util::redirect_request($cv);
+}
+
+=head1 Number Utilities
+
+=cut
+
+sub get_number {
+  my ($account,$number) = @_;
+  my $cv = AE::cv;
+  CCNQ::API::provisioning('report','number',$account,$number,$cv);
+  return CCNQ::AE::receive_first_doc($cv);
+}
+
+sub update_number {
+  my ($account,$number,$new_data) = @_;
+
+  my $number_data = get_number($account,$number);
+
+  my $params = {
+    %$number_data, # Keep any existing information (this means data must be overwritten)
+    %$new_data,
+  };
+
+  my $api_name = $params->{api_name};
+  return CCNQ::Portal::content unless $api_name;
+
+  # Update the information in the API.
+  my $cv = AE::cv;
+  CCNQ::API::api_update($api_name,$params,$cv);
+  return CCNQ::Portal::Util::redirect_request($cv);
+}
+
+
+
+
 =head1 Plan Utilities
 
 =cut
