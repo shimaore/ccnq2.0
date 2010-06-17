@@ -166,11 +166,9 @@ use constant::defer clusters_for_dynamic_endpoints => sub {
 
 sub endpoints_for {
   my $account = shift;
-  my $cv3 = AE::cv;
-  CCNQ::API::provisioning('report','endpoint',$account,$cv3);
-  my $endpoints = CCNQ::AE::receive($cv3);
-  my @endpoints = map { $_->{doc} } @{$endpoints->{rows} || []};
-  return [@endpoints];
+  my $cv = AE::cv;
+  CCNQ::API::provisioning('report','endpoint',$account,$cv);
+  return CCNQ::AE::receive_docs($cv);
 }
 
 sub get_endpoint {
