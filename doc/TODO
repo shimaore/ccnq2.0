@@ -10,10 +10,6 @@ Portal internals:
 * rewrite the Dancer code so that it works under Twiggy (hint: must rewrite portal code to use AnyEvent conventions)
 
 
-API:
-* API: get CDRs
-
-
 Voice:
 * emergency call routing (fr/OS)
 * modify OpenSIPS code so that:
