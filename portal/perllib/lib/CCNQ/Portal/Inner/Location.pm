@@ -30,7 +30,7 @@ sub emergency_location {
 
   my $location = params->{emergency_location};
   my $location_data;
-  $location_data = CCNQ::Portal::Inner::Util::get_location($account,$location)
+  $location_data = CCNQ::Portal::Inner::Util::get_location($params->{account},$location)
     if $location;
 
   $params->{emergency_location_id}      = $location,
