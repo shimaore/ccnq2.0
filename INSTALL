@@ -74,7 +74,7 @@ EOT
   sudo aptitude -y install ntp monit psmisc build-essential git-core
   # Perl modules in testing have proper versions (the ones in Lenny might not).
   sudo aptitude -y install -t testing \
-    libanyevent-perl libasync-interrupt-perl libauthen-sasl-perl libcache-memcached-perl libcgi-untaint-email-perl libcgi-untaint-perl libclass-inspector-perl libcommon-sense-perl libcrypt-cbc-perl libdata-dump-perl libdata-dump-streamer-perl libdata-structure-util-perl libdbi-perl libdigest-hmac-perl libdigest-sha1-perl libemail-valid-perl libexpat-dev libhttp-server-simple-perl libhttp-server-simple-psgi-perl libio-all-perl libio-string-perl libio-stringy-perl libjson-perl libjson-xs-perl liblingua-en-numbers-ordinate-perl liblocale-maketext-lexicon-perl liblogger-syslog-perl libmailtools-perl libmime-types-perl libmodule-install-perl libnet-dns-perl libnet-ip-perl libnet-ldap-perl libnet-libidn-perl libnet-ssleay-perl libobject-event-perl libparams-util-perl libstring-crc32-perl libtest-deep-perl libtest-simple-perl libuniversal-require-perl liburi-perl libwww-perl libxml-parser-perl libxml-writer-perl libyaml-perl
+    libanyevent-perl libasync-interrupt-perl libauthen-sasl-perl libcache-memcached-perl libcgi-untaint-email-perl libcgi-untaint-perl libclass-inspector-perl libcommon-sense-perl libcrypt-cbc-perl libdata-dump-perl libdata-dump-streamer-perl libdata-structure-util-perl libdbi-perl libdigest-hmac-perl libdigest-sha1-perl libemail-valid-perl libexpat-dev libhttp-server-simple-perl libhttp-server-simple-psgi-perl libio-all-perl libio-string-perl libio-stringy-perl libjson-perl libjson-xs-perl liblingua-en-numbers-ordinate-perl liblocale-maketext-lexicon-perl liblogger-syslog-perl libmailtools-perl libmime-types-perl libmodule-install-perl libnet-dns-perl libnet-ip-perl libnet-libidn-perl libnet-ssleay-perl libobject-event-perl libparams-util-perl libstring-crc32-perl libtest-deep-perl libtest-simple-perl libuniversal-require-perl liburi-perl libwww-perl libxml-parser-perl libxml-writer-perl libyaml-perl
 
   # Now add non-Debian Perl modules.
   # Manual instructions are in doc/INSTALL.perl
@@ -272,7 +272,7 @@ SQL
 # * On the Portal server(s):
 
   # On the web portal server, you should also do:
-  sudo aptitude install libtemplate-perl
+  sudo aptitude install libtemplate-perl libnet-ldap-perl libpdf-api2-simple-perl
   sudo aptitude -t testing install libplack-perl # Used by the webserver starter (plackup)
   (cd ~/src/ccnq2.0/portal/perllib && perl Makefile.PL && make && make test && sudo make install)
 
