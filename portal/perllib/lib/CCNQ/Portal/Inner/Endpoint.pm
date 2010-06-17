@@ -20,6 +20,7 @@ use CCNQ::Portal;
 use CCNQ::Portal::I18N;
 use CCNQ::Portal::Util;
 use CCNQ::Portal::Inner::Util;
+use CCNQ::Portal::Inner::Location;
 
 use CCNQ::AE;
 use CCNQ::API;
@@ -147,6 +148,8 @@ post '/provisioning/endpoint' => sub {
     var template_name => 'api/endpoint';
     return CCNQ::Portal::content;
   }
+
+  CCNQ::Portal::Inner::Location::emergency_location($params);
 
   # Update the information in the API.
   my $cv1 = AE::cv;

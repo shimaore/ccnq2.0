@@ -226,6 +226,23 @@ sub update_number {
   return CCNQ::Portal::Util::redirect_request($cv);
 }
 
+=head1 Location Utilities
+
+=cut
+
+sub get_location {
+  my ($account,$location) = @_;
+  my $cv = AE::cv;
+  CCNQ::API::provisioning('report','location',$account,$location,$cv);
+  return CCNQ::AE::receive_first_doc($cv);
+}
+
+sub locations_for {
+  my $account = shift;
+  my $cv = AE::cv;
+  CCNQ::API::provisioning('report','location',$account,$cv);
+  return CCNQ::AE::receive_docs($cv);
+}
 
 
 

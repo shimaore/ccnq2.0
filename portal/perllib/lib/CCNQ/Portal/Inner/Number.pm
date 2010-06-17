@@ -20,6 +20,7 @@ use CCNQ::Portal;
 use CCNQ::Portal::I18N;
 use CCNQ::Portal::Util;
 use CCNQ::Portal::Inner::Util;
+use CCNQ::Portal::Inner::Location;
 
 use CCNQ::AE;
 use CCNQ::API;
@@ -103,6 +104,8 @@ sub submit_number {
   CCNQ::Portal::Util::neat($params,qw(
     inbound_username
   ));
+
+  CCNQ::Portal::Inner::Location::emergency_location($params);
 
   return CCNQ::Portal::Inner::Util::update_number($account,$number,$params);
 }
