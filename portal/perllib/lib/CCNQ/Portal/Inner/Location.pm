@@ -71,8 +71,8 @@ get '/location' => sub {
   CCNQ::Portal->current_session->user
     or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
-  var get_location  = \&CCNQ::Portal::Inner::Util::get_location;
-  var locations_for = \&CCNQ::Portal::Inner::Util::locations_for;
+  var get_location  => \&CCNQ::Portal::Inner::Util::get_location;
+  var locations_for => \&CCNQ::Portal::Inner::Util::locations_for;
 
   return CCNQ::Portal::Content;
 };
