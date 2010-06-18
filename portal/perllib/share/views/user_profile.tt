@@ -36,8 +36,8 @@
   <p class="ui-helper-clearfix">
   <label for="is_admin" class="left"><% | loc %>Is administrator<% END %></label>
   <select name="is_admin" class="required">
-    <option value="0" <% IF !field.is_admin %>selected<% END %>><% | loc %>No<% END %></option>
-    <option value="1" <% IF  field.is_admin %>selected<% END %>><% | loc %>Yes<% END %></option>
+    <option value="0" <% IF not field.is_admin %>selected<% END %>><% | loc %>No<% END %></option>
+    <option value="1" <% IF     field.is_admin %>selected<% END %>><% | loc %>Yes<% END %></option>
   </select>
   </p>
   <p class="ui-helper-clearfix">

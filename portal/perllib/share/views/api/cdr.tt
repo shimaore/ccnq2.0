@@ -15,7 +15,7 @@
   <% END %>
   </table>
 <% ELSE %>
-<% IF !session.account %>
+<% IF not session.account %>
 <%|loc%>Please select an account.<%END%>
 <% ELSE %>
 <fieldset class="ui-widget"><legend><%|loc%>CDR Report<%END%></legend>
