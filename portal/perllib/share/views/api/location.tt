@@ -1,0 +1,51 @@
+<% USE loc %>
+<% IF not session.account %>
+<%|loc%>Please select an account.<%END%>
+<% ELSE %>
+<% IF params.location_id %>
+  <% SET this_location = get_location(params.location_id) %>
+<% ELSE %>
+  <% SET this_location = {} %>
+<% END %>
+<% IF not this_location %>
+<%|loc%>Unknown location, please try again.<%END%>
+<% ELSE %>
+
+  <fieldset class="ui-widget">
+    <legend><%|loc%>Location<%END%></legend>
+    <form method="post" accept-charset="utf-8" class="ui-widget validate">
+      <input type="hidden" name="_id" value="<% this_location._id | html %>" />
+      <p class="ui-helper-clearfix">
+        <label for="" class="left"><%|loc%>Name:<%END%></label>
+        <input type="text" name="name" value="<% this_location.name | html %>" class="required" />
+      </p>
+      <p class="ui-helper-clearfix">
+        <label for="" class="left"><%|loc%>Main number:<%END%></label>
+        <input type="text" name="main_number" value="<% this_location.main_number | html %>" class="required" />
+      </p>
+      <p class="ui-helper-clearfix">
+        <label for="" class="left"><%|loc%>Routing:<%END%></label>
+        <input type="text" name="routing" value="<% this_location.routing | html %>" class="required" />
+      </p>
+      <p class="ui-helper-clearfix submit">
+        <input type="submit" value="<% | loc %>Save<% END %>" />
+      </p>
+    </form>
+  </fieldset>
+
+<% END %>
+
+  <fieldset class="ui-widget">
+    <legend><%|loc%>All locations for this account<%END%></legend>
+    <% SET all_locations = locations_for(session.account) %>
+    <% IF not all_locations %>
+      <%|loc%>None found.<%END%>
+    <% ELSE %>
+    <ul>
+      <% FOREACH r IN all_locations %>
+      <li><a href="?location_id=<% r.id | uri %>"><% r.name | html %>(<% r.main_number | html %>)</a></li>
+      <% END %>
+    </ul>
+  </fieldset>
+
+<% END %>

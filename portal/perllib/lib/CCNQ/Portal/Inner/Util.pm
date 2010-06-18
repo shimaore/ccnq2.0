@@ -242,7 +242,21 @@ sub locations_for {
   return CCNQ::AE::receive_docs($cv);
 }
 
+sub update_location {
+  my ($account,$location,$new_data) = @_;
 
+  my $location_data = get_location($account,$location);
+
+  my $params = {
+    %$location_data, # Keep any existing information (this means data must be overwritten)
+    %$new_data,
+  };
+
+  # Update the information in the API.
+  my $cv = AE::cv;
+  CCNQ::API::api_update('location',$params,$cv);
+  return CCNQ::Portal::Util::redirect_request($cv);
+}
 
 =head1 Plan Utilities
 
