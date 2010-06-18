@@ -74,7 +74,7 @@ get '/location' => sub {
   var get_location  => \&CCNQ::Portal::Inner::Util::get_location;
   var locations_for => \&CCNQ::Portal::Inner::Util::locations_for;
 
-  return CCNQ::Portal::Content;
+  return CCNQ::Portal::content;
 };
 
 post '/location' => sub {
