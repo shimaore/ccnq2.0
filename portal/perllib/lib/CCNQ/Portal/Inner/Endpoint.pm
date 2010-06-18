@@ -119,7 +119,6 @@ sub generic_endpoint_default {
 get '/provisioning/endpoint'           => sub { generic_endpoint_default };
 get '/provisioning/endpoint/:endpoint' => sub { generic_endpoint_default };
 get '/provisioning/endpoint/:cluster/:endpoint' => sub { generic_endpoint_default };
-post '/provisioning/endpoint/select'   => sub { generic_endpoint_default };
 
 post '/provisioning/endpoint' => sub {
   var template_name => 'api/endpoint';

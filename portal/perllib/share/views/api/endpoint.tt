@@ -52,7 +52,7 @@
           <input type="text" name="password" value="<% field.password | html %>" />
         </p>
         <% END %>
-        
+
         <p class="ui-helper-clearfix">
           <label for="dest_domain" class="left"><% | loc %>Destination Domain:<% END %></label>
           <input type="text" name="dest_domain" value="<% field.dest_domain | html %>" />
@@ -101,7 +101,7 @@
   <% IF create_generic_endpoint %>
   <fieldset class="ui-widget">
     <legend><% | loc %>Create endpoint<% END %></legend>
-    <form id="create_endpoint" action="<% prefix %>/provisioning/endpoint/select" method="post" accept-charset="utf-8" class="ui-widget validate">
+    <form id="create_endpoint" action="<% prefix %>/provisioning/endpoint" method="get" accept-charset="utf-8" class="ui-widget validate">
       <p class="ui-helper-clearfix">
         <label for="cluster" class="left"><% | loc %>Cluster:<% END %></label>
         <select name="cluster" class="required">
@@ -134,7 +134,7 @@
   <% IF endpoints && endpoints.size %>
   <fieldset class="ui-widget">
     <legend><% | loc %>Modify endpoint<% END %></legend>
-    <form id="retrieve_endpoint" action="<% prefix %>/provisioning/endpoint/select" method="post" accept-charset="utf-8" class="ui-widget">
+    <form id="retrieve_endpoint" action="<% prefix %>/provisioning/endpoint" method="get" accept-charset="utf-8" class="ui-widget">
       <p class="ui-helper-clearfix">
         <label for="endpoint" class="left"><% | loc %>Endpoint:<% END %></label>
         <select name="endpoint" class="required">
