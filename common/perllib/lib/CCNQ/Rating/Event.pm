@@ -90,6 +90,16 @@ sub new {
   my $this = shift;
   my $class = ref($this) || $this;
   my $self = shift;
+
+  # Minimum content check on the parameter.
+  $self->{account}      &&
+  $self->{account_sub}  &&
+  $self->{start_date}   &&
+  $self->{start_time}   &&
+  $self->{event_type}
+    or return;
+
+  # Valid parameter.
   return bless $self, $class;
 }
 

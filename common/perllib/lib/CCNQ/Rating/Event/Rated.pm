@@ -19,13 +19,6 @@ use base 'CCNQ::Rating::Event';
 
 use Math::BigFloat;
 
-sub new {
-  my $this = shift;
-  my $class = ref($this) || $this;
-  my $self = shift;
-  return bless $self, $class;
-}
-
 # Prevent inserting twice the same CDR by mistake.
 sub id {
   my ($self) = @_;

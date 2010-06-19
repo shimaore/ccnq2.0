@@ -30,6 +30,10 @@ sub rate_cbef {
 
   my $cbef = new CCNQ::Rating::Event($flat_cbef);
   my $rcv = AE::cv;
+
+  # Return immediately on invalid flat_cbef
+  $cbef or do { $rcv->send(), return $rcv };
+
   CCNQ::Rating::Rate::rate_cbef($cbef,$plan)->cb(sub{
     # debug("CCNQ::Rating::rate_cbef() rating done");
 
