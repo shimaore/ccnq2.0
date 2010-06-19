@@ -26,12 +26,12 @@ use Logger::Syslog;
 
 sub rate_cbef {
   my ($flat_cbef,$plan) = @_;
-  debug("CCNQ::Rating::rate_cbef() started");
+  # debug("CCNQ::Rating::rate_cbef() started");
 
   my $cbef = new CCNQ::Rating::Event($flat_cbef);
   my $rcv = AE::cv;
   CCNQ::Rating::Rate::rate_cbef($cbef,$plan)->cb(sub{
-    debug("CCNQ::Rating::rate_cbef() rating done");
+    # debug("CCNQ::Rating::rate_cbef() rating done");
 
     my $rated_cbef = CCNQ::AE::receive(@_);
     $rcv->send($rated_cbef && CCNQ::Rating::Event::Rated->new($rated_cbef));
