@@ -201,7 +201,7 @@ sub update_endpoint {
 sub get_number {
   my ($account,$number) = @_;
   my $cv = AE::cv;
-  CCNQ::API::provisioning('report','number',$account,$number,$cv);
+  CCNQ::API::provisioning('report','number',$account,$number,$cv) || {};
   return CCNQ::AE::receive_first_doc($cv);
 }
 
