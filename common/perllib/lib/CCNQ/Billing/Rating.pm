@@ -36,15 +36,12 @@ use Logger::Syslog;
 sub rate_cbef {
   my ($cbef) = @_;
   my $rcv = AE::cv;
-  # debug("CCNQ::Billing::Rating::rate_cbef() started");
 
   CCNQ::Billing::Account::plan_of($cbef)->cb(sub{
     my $plan = CCNQ::AE::receive(@_);
     if($plan) {
-      # debug("CCNQ::Billing::Rating::rate_cbef() got plan");
       CCNQ::Rating::rate_cbef($cbef,$plan)->cb(sub{$rcv->send(CCNQ::AE::receive(@_))});
     } else {
-      # debug("CCNQ::Billing::Rating::rate_cbef() no plan");
       $rcv->send;
     }
   });
@@ -57,7 +54,6 @@ sub rate_and_save_cbef {
   my ($cbef) = @_;
   my $rcv = AE::cv;
   rate_cbef($cbef)->cb(sub{
-    # debug("CCNQ::Billing::Rating::rate_and_save_cbef() rating done");
     my $rated_cbef = CCNQ::AE::receive(@_);
     return $rcv->send() if !$rated_cbef;
 
@@ -65,7 +61,6 @@ sub rate_and_save_cbef {
     $rated_cbef->compute_taxes();
 
     # Save the new (rated) CBEF...
-    # debug("CCNQ::Billing::Rating::rate_and_save_cbef() save the new (rated) CBEF");
     CCNQ::CDR::insert($rated_cbef)->cb(sub{$rcv->send(CCNQ::AE::receive(@_))});
   });
   return $rcv;
