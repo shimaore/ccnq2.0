@@ -121,8 +121,8 @@ EOT
     $acl_text .= qq(</list>);
 
     # Generate dialplan entries
-    my @egress = $dns_txt->( 'egress',$name,CCNQ::Install::fqdn );
-    debug("b2bua/$b2bua_name: Found egress ".join(',',@egress));
+    my @egress = $dns_txt->( 'egress-target',$name,CCNQ::Install::fqdn );
+    debug("b2bua/$b2bua_name: Found egress-target ".join(',',@egress));
 
     my $egress = shift(@egress) || '';
     $dialplan_text .= <<"EOT";
