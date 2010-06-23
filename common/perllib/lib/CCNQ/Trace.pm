@@ -103,7 +103,23 @@ sub install {
   CCNQ::Util::execute('chmod','ug+rwx',$base_dir);
   CCNQ::Util::execute('chmod','o-rwx', $base_dir);
   CCNQ::Util::execute('chmod','g+s',   $base_dir);
+
+  crontab_update();
   return;
+}
+
+sub crontab_update {
+  # This crontab is installed as the user running the installation
+  # which is the user that runs the dumpcap and the xmpp_agent.
+  my $crontab_line = <<CRON;
+SHELL=/bin/bash
+PATH=/bin:/usr/bin:/usr/local/bin
+20 3 * * *   nice -n 20 /usr/bin/env find /var/log/traces -type f '!' -newermt '10 days ago' -delete
+CRON
+  my $crontab_file = File::Spec->catfile(CCNQ::CCN,'ccnq2_crontab_traces.crontab');
+
+  CCNQ::Util::print_to($crontab_file,$crontab_line);
+  CCNQ::Util::execute(qq(/usr/bin/crontab "${crontab_file}"));
 }
 
 sub run {
