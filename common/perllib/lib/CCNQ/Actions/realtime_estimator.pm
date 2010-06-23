@@ -139,6 +139,62 @@ sub _session_ready {
       $httpd->stop_request;
     },
 
+    '/update' => sub {
+      my ($httpd, $req) = @_;
+
+      debug("realtime_estimator: Processing update");
+
+      use URI;
+      my $url = URI->new($req->url);
+      my $path = $url->path;
+
+      if($path =~ m{^/estimate/(\w+)/(\w+)/(\w+)/(\d+)/(\d+)/([^/]+)/(\d+)/(\d+)$}) {
+        my $orig_cbef = {
+          account                     => $1,
+          account_sub                 => $2,
+          event_type                  => $3,
+          from_e164                   =>$4,
+          to_e164                     => $5,
+
+          call_uuid                   => $6,
+          request_sequence            => $7,
+          duration_since_last_request => $8,
+        };
+      } else {
+        $req->respond([404,'Invalid request']);
+        $httpd->stop_request;
+        return;
+      }
+
+      if($req->method eq 'GET') {
+        # Update the bucket(s), and/or create a CDR.
+        my $flat_cbef = {%$orig_cbef}; # copy
+        $flat_cbef->{event_type} .= "_intermediate";
+        my $rate_cbef = new CCNQ::Rating::Event($flat_cbef);
+
+        # Return immediately on invalid flat_cbef
+        $rate_cbef or do {
+          my $json_content = encode_json({ estimated_duration => 0 });
+          $req->respond([200,'OK',{ 'Content-Type' => 'text/json' },$json_content]);
+        }
+
+        CCNQ::Rating::Rate::rate_cbef($rate_cbef,$plan)->cb(sub{
+          my $rated_cbef = CCNQ::AE::receive(@_);
+
+          # Re-run the estimator to provide data about the remaining of the call.
+          my $response = CCNQ::Rating::Rate::estimate_cbef($orig_cbef);
+          my $json_content = encode_json($response);
+          $req->respond([200,'OK',{ 'Content-Type' => 'text/json' },$json_content]);
+        });
+      } else {
+        $req->respond([501,'Invalid method']);
+        $httpd->stop_request;
+        return;
+      }
+
+      $httpd->stop_request;
+    },
+
   );
   return;
 }
