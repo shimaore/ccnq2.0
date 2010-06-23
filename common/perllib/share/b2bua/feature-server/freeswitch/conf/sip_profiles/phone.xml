@@ -1,5 +1,0 @@
-<X-PRE-PROCESS cmd="set" data="profile_name=phone"/>
-<X-PRE-PROCESS cmd="set" data="external_sip_port=5100"/>
-<X-PRE-PROCESS cmd="include" data="template/public.xml"/>
-<X-PRE-PROCESS cmd="set" data="internal_sip_port=15100"/>
-<!-- need a template here as well -->

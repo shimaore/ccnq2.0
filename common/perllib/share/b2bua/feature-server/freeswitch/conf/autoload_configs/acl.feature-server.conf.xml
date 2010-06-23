@@ -1,9 +1,0 @@
-    <list name="proxies" default="deny">
-    </list>
-
-    <list name="sbc-phone" default="deny">
-      <!-- The following line will break the configuration on purpose
-           to force the configuration by the user. -->
-      Enter the IP addresses of your proxy servers below.
-      <node type="allow" cidr=""/>
-    </list>
