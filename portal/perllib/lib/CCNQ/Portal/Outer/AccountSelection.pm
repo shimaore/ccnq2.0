@@ -40,6 +40,9 @@ sub account {
 
   # "is_admin" profiles can access any account.
   if(CCNQ::Portal->current_session->user->profile->is_admin) {
+    # However they might copy and paste account IDs with extraneous spaces.
+    $account =~ s/^\s+//;
+    $account =~ s/\s+$//;
     session account => $account;
     return session('account');
   }
