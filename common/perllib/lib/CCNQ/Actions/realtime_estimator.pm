@@ -19,16 +19,68 @@ use strict; use warnings;
 
 Provides a REST API to estimate_cbef().
 
-Example valid query:
+=head2 "estimate" query
+
   GET 'http://127.0.0.1:7070/estimate/{account}/{account_sub}/{event_type}/{from_e164}/{to_e164}'
 
-Returns at least the following fields in JSON format:
+    event_type:         (e.g.) "egress_call" (most common)
+
+=head2 "update" query
+
+  GET 'http://127.0.0.1:7070/update/{account}/{account_sub}/{event_type}/{from_e164}/{to_e164}/{call_uuid}/{request_sequence}/{duration_since_last_request}'
+
+    call_uuid:          some UUID for the call
+    request_sequence:   a value that starts at 1 and is incremented for each such request
+          the combination call_uuid + request_sequence allows the server to
+          uniquely identify the request and prevents duplicate submissions
+    duration_since_last_request:
+                        the number of seconds (in call time) since the previous request
+    start_date
+    start_time
+
+=head2 Sequence of calls
+
+Typically, a script will send an "estimate" request at the beginning of the call,
+and an "update" request every N seconds during the call. The "update" requests
+are uniquely identified by the call_uuid and the request_sequence number which
+will take the value 1 at the first N seconds of the call, the value 2 when the call
+duration is 2*N seconds, etc. However the "duration_since_last request" will remain
+approximatively the same, at around N seconds, except for the last "update" message, which
+is sent after the call was hung up to provide the duration of the last segment of the call.
+
+For example, for N=60, and a call that lasts 138 seconds, the messages may be:
+  GET .../estimate/...
+  GET .../update/.../1/60
+  GET .../update/.../2/60
+  GET .../update/.../3/18
+
+However this API does not depend on the inter-call durations being equal, only
+the sequence number is used to identify each request, and the
+"duration_since_last request" parameter is only used to update (depending on the
+plan type) a bucket or a CDR.
+
+=head2 Returned values
+
+Both calls return at least the following fields in JSON format:
 
   {
     estimated_duration => $maximum_call_duration_in_seconds,
     estimated_rate     => $estimated_per_minute_rate_for_the_call,
     estimated_cost     => $estimated_per_call_cost,
+    currency           => $currency_unit (one of 'EUR', 'USD', etc),
   }
+
+They might also return:
+
+    # Prompt the user to confirm the call setup if the estimated_rate is at or above this value
+    warning_rate       => $warning_rate,
+
+    # If a bucket was used (there might be more than one, only the first one is returned).
+    bucket_value       => $bucket_value,
+    bucket_currency    => $bucket_currency
+        if present: one of 'EUR', 'USD', etc;
+        otherwise: bucket_value is measured in seconds
+
 
 =cut
 
