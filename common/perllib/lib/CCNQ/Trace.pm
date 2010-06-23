@@ -109,8 +109,9 @@ sub install {
 }
 
 sub crontab_update {
-  # This crontab is installed as the user running the installation
-  # which is the user that runs the dumpcap and the xmpp_agent.
+  # XXX
+  # This crontab is installed as the user running the installation (root)
+  # which is NOT the user that runs the dumpcap and the xmpp_agent.
   my $crontab_line = <<CRON;
 SHELL=/bin/bash
 PATH=/bin:/usr/bin:/usr/local/bin
