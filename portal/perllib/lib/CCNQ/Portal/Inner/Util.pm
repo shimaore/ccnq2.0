@@ -231,8 +231,8 @@ sub update_number {
 sub get_location {
   my ($account,$location) = @_;
   my $cv = AE::cv;
-  CCNQ::API::provisioning('report','location',$account,$location,$cv) || {};
-  return CCNQ::AE::receive_first_doc($cv);
+  CCNQ::API::provisioning('report','location',$account,$location,$cv);
+  return CCNQ::AE::receive_first_doc($cv) || {};
 }
 
 sub locations_for {
