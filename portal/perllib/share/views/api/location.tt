@@ -46,6 +46,7 @@
       <li><a href="?location_id=<% r.id | uri %>"><% r.name | html %>(<% r.main_number | html %>)</a></li>
       <% END %>
     </ul>
+    <% END %>
   </fieldset>
 
 <% END %>
