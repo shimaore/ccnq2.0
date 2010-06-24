@@ -13,7 +13,7 @@ package CCNQ::Portal::Inner::Util;
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-use strict; use warnings;
+use strict; use warnings; use Carp;
 use utf8;
 
 use CCNQ::Portal;
@@ -35,7 +35,7 @@ use CCNQ::API;
 sub account_subs {
   my ($account) = @_;
 
-  defined($account) or die "account is required";
+  defined($account) or confess "account is required";
 
   my $cv = AE::cv;
   CCNQ::API::billing('report','account_subs',$account,$cv);
@@ -49,8 +49,8 @@ sub account_subs {
 sub account_sub_data {
   my ($account,$account_sub) = @_;
 
-  defined($account) or die "account is required";
-  defined($account_sub) or die "account_sub is required";
+  defined($account) or confess "account is required";
+  defined($account_sub) or confess "account_sub is required";
 
   my $cv = AE::cv;
   CCNQ::API::billing('report','account_subs',$account,$account_sub,$cv);
@@ -62,9 +62,9 @@ sub account_sub_data {
 =cut
 
 sub portal_users {
-  my $account = shift;
+  my ($account) = @_;
 
-  defined($account) or die "account must be defined";
+  defined($account) or confess "account must be defined";
 
   my $cv1 = CCNQ::Portal::db->view('report/portal_users_by_account', {
     startkey => [$account],
@@ -121,8 +121,8 @@ Return the current instance value.
 sub get_account_bucket {
   my ($name,$account,$account_sub) = @_;
 
-  defined($name)    or die "name is required";
-  defined($account) or die "account is required";
+  defined($name)    or confess "name is required";
+  defined($account) or confess "account is required";
   # account_sub is optional (in case the bucket does "use_account").
 
   my $cv = AE::cv;
@@ -165,7 +165,9 @@ use constant::defer clusters_for_dynamic_endpoints => sub {
 };
 
 sub endpoints_for {
-  my $account = shift;
+  my ($account) = @_;
+  defined($account) or confess "account is required";
+
   my $cv = AE::cv;
   CCNQ::API::provisioning('report','endpoint',$account,$cv);
   return CCNQ::AE::receive_docs($cv);
@@ -173,6 +175,8 @@ sub endpoints_for {
 
 sub get_endpoint {
   my ($account,$endpoint) = @_;
+
+
   my $cv = AE::cv;
   CCNQ::API::provisioning('report','endpoint',$account,$endpoint,$cv);
   return CCNQ::AE::receive_first_doc($cv) || {};
@@ -180,6 +184,9 @@ sub get_endpoint {
 
 sub update_endpoint {
   my ($account,$endpoint,$new_data) = @_;
+  defined($account) or confess "account is required";
+  defined($endpoint) or confess "endpoint is required";
+  defined($new_data) or confess "new_data is required";
 
   my $endpoint_data = get_endpoint($account,$endpoint);
 
@@ -200,6 +207,9 @@ sub update_endpoint {
 
 sub get_number {
   my ($account,$number) = @_;
+  defined($account) or confess "account is required";
+  defined($number) or confess "number is required";
+
   my $cv = AE::cv;
   CCNQ::API::provisioning('report','number',$account,$number,$cv);
   return CCNQ::AE::receive_first_doc($cv) || {};
@@ -207,6 +217,9 @@ sub get_number {
 
 sub update_number {
   my ($account,$number,$new_data) = @_;
+  defined($account) or confess "account is required";
+  defined($number) or confess "number is required";
+  defined($new_data) or confess "new_data is required";
 
   my $number_data = get_number($account,$number);
 
@@ -230,13 +243,18 @@ sub update_number {
 
 sub get_location {
   my ($account,$location) = @_;
+  defined($account) or confess "account is required";
+  defined($location) or confess "location is required";
+
   my $cv = AE::cv;
   CCNQ::API::provisioning('report','location',$account,$location,$cv);
   return CCNQ::AE::receive_first_doc($cv) || {};
 }
 
 sub locations_for {
-  my $account = shift;
+  my ($account) = @_;
+  defined($account) or confess "account is required";
+
   my $cv = AE::cv;
   CCNQ::API::provisioning('report','location',$account,$cv);
   return CCNQ::AE::receive_docs($cv);
@@ -244,6 +262,9 @@ sub locations_for {
 
 sub update_location {
   my ($account,$location,$new_data) = @_;
+  defined($account) or confess "account is required";
+  defined($location) or confess "location is required";
+  defined($new_data) or confess "new_data is required";
 
   my $location_data = get_location($account,$location);
 
@@ -279,7 +300,10 @@ our %event_types = (
 
 sub register_event_type {
   my ($type,$order) = @_;
-  $event_types{$type} = $order;
+  defined($type) or confess "type is required";
+  defined($order) && int($order) or confess "order is required";
+
+  $event_types{$type} = int($order);
 }
 
 sub event_types {
