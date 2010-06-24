@@ -104,8 +104,7 @@ sub gather_field {
 sub endpoint_default {
   CCNQ::Portal->current_session->user
     or return CCNQ::Portal::content( error => _('Unauthorized')_ );
-  session('account') &&
-  session('account') =~ /^[\w-]+$/
+  session('account')
     or return CCNQ::Portal::content( error => _('Please select an account')_ );
   gather_field();
   return CCNQ::Portal::content;
@@ -127,8 +126,7 @@ post '/provisioning/endpoint' => sub {
     or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
   # This is how we create new endpoints.
-  session('account') &&
-  session('account') =~ /^[\w-]+$/
+  session('account')
     or return CCNQ::Portal::content( error => _('Please select an account')_ );
 
   my $params = clean_params();
@@ -161,9 +159,7 @@ get '/provisioning/endpoint_location' => sub {
   CCNQ::Portal->current_session->user
     or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
-  # This is how we create new endpoints.
-  session('account') &&
-  session('account') =~ /^[\w-]+$/
+  session('account')
     or return CCNQ::Portal::content( error => _('Please select an account')_ );
 
   my $account = session('account');
@@ -180,7 +176,7 @@ get '/provisioning/endpoint_location' => sub {
   };
 
   my $cv1 = AE::cv;
-  CCNQ::API::api_query('location',$params,$cv1);
+  CCNQ::API::api_query('endpoint_location',$params,$cv1);
   return CCNQ::Portal::Util::redirect_request($cv1);
 };
 

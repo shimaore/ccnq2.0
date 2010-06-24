@@ -1,4 +1,4 @@
-package CCNQ::Manager::Requests::location_query;
+package CCNQ::Manager::Requests::endpoint_location_query;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@ sub run {
   # Return list of activities required to complete this request.
   return (
     {
-      action => 'location/query',
+      action => 'endpoint_location/query',
       cluster_name => $request->{cluster_name},
       params => { map { $_ => $request->{$_} } qw(
           username
@@ -30,4 +30,4 @@ sub run {
   );
 }
 
-'CCNQ::Manager::Requests::location_query';
+'CCNQ::Manager::Requests::endpoint_location_query';

@@ -1,4 +1,4 @@
-package CCNQ::Proxy::location;
+package CCNQ::Proxy::endpoint_location;
 # Copyright (C) 2006, 2007  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -39,7 +39,7 @@ use constant LOCATION_COLUMNS => [qw(
   methods
 )];
 
-use constant LOCATION_SQL_QUERY => 
+use constant LOCATION_SQL_QUERY =>
   'SELECT _columns_ FROM location WHERE username = ? AND domain = ?';
 
 sub do_query {
@@ -56,4 +56,4 @@ sub do_query {
   return $self->do_sql_query(LOCATION_SQL_QUERY,LOCATION_COLUMNS,[$username,$domain]);
 }
 
-'CCNQ::Proxy::location';
+'CCNQ::Proxy::endpoint_location';
