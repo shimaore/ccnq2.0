@@ -3,7 +3,7 @@
 <%|loc%>Please select an account.<%END%>
 <% ELSE %>
 <% IF params.location_id %>
-  <% SET this_location = get_location(params.location_id) %>
+  <% SET this_location = get_location(session.account,params.location_id) %>
 <% ELSE %>
   <% SET this_location = {} %>
 <% END %>
