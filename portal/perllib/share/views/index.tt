@@ -13,6 +13,7 @@
     <ul>
       <li><a href="<% prefix %>/billing/account"><%|loc%>Manage account<%END%></a></li>
       <li><a href="<% prefix %>/provisioning/endpoint"><%|loc%>Manage endpoints<%END%></a></li>
+      <li><a href="<% prefix %>/location"><%|loc%>Manage locations<%END%></a></li>
       <li><a href="<% prefix %>/provisioning/view/account"><%|loc%>Inventory<%END%></a></li>
       <li><a href="<% prefix %>/provisioning/view/endpoint/_all"><%|loc%>View All Endpoints<%END%></a></li>
       <li><a href="<% prefix %>/provisioning/view/number/_all"><%|loc%>View All Numbers<%END%></a></li>
