@@ -280,7 +280,7 @@ SQL
 
 # * If you intent to use the "sip-traces" API:
 
-  sudo aptitude install -t testing tshark
+  sudo aptitude install -t testing tshark ngrep
   sudo groupadd -r wireshark
   sudo adduser `whoami` wireshark
   sudo ccnq2_sip_traces eth0
