@@ -34,7 +34,7 @@ sub emergency_location {
     if $location;
 
   $params->{emergency_location_id}      = $location,
-  $params->{emergency_location_routing} = $location_data->{routing}
+  $params->{emergency_location_routing} = $location_data->{routing_data}
     if $location_data;
 }
 
