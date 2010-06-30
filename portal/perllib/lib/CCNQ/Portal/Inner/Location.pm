@@ -81,10 +81,13 @@ sub clean_params {
   };
 
   CCNQ::Portal::Util::neat($params,qw(
+    location
     name
     main_number
     routing_data
   ));
+
+  $params->{location} ||= join('/',$params->{account},$params->{name})
 };
 
 'CCNQ::Portal::Inner::Location';

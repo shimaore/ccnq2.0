@@ -2,10 +2,10 @@
 <% IF not session.account %>
 <%|loc%>Please select an account.<%END%>
 <% ELSE %>
-<% IF params.location_id %>
-  <% SET this_location = get_location(session.account,params.location_id) %>
+<% IF params.location %>
+  <% SET this_location = get_location(session.account,params.location) %>
 <% ELSE %>
-  <% SET this_location = {} %>
+  <% SET this_location = params %>
 <% END %>
 <% IF not this_location %>
 <%|loc%>Unknown location, please try again.<%END%>
@@ -14,7 +14,7 @@
   <fieldset class="ui-widget">
     <legend><%|loc%>Location<%END%></legend>
     <form method="post" accept-charset="utf-8" class="ui-widget validate">
-      <input type="hidden" name="_id" value="<% this_location._id | html %>" />
+      <input type="hidden" name="location" value="<% this_location.location | html %>" />
       <p class="ui-helper-clearfix">
         <label for="" class="left"><%|loc%>Name:<%END%></label>
         <input type="text" name="name" value="<% this_location.name | html %>" class="required" />
@@ -43,7 +43,7 @@
     <% ELSE %>
     <ul>
       <% FOREACH r IN all_locations %>
-      <li><a href="?location_id=<% r.id | uri %>"><% r.name | html %>(<% r.main_number | html %>)</a></li>
+      <li><a href="?location=<% r.location | uri %>"><% r.name | html %>(<% r.main_number | html %>)</a></li>
       <% END %>
     </ul>
     <% END %>
