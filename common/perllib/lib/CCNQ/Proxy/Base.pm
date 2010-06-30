@@ -80,6 +80,9 @@ sub avp
         number_location => 187, # emergency location data
         inv_timer       => 43,
 
+        # by location
+        location_routing => 110,
+
         # cdr info
         src_type        => 190,
         dst_type        => 191,

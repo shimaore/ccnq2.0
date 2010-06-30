@@ -24,8 +24,9 @@ sub __update {
   # XXX Proper failure mode inside Manager::Request..?
   croak "No account" unless
     defined $request->{account};
-  croak "No account_sub" unless
-    defined $request->{account_sub};
+  # Not required for location.
+  # croak "No account_sub" unless
+  #  defined $request->{account_sub};
   croak "No request type" unless
     defined $request->{type}; # normally auto-populated by node/api
 

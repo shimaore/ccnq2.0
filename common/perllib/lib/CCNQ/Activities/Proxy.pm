@@ -319,5 +319,37 @@ sub endpoint_number_delete {
   );
 }
 
+sub location_update {
+  my $request = shift;
+  # Return list of activities required to complete this request.
+  return (
+    {
+      action => 'location/update',
+      cluster_name => $request->{cluster_name},
+      params => { map { $_ => $request->{$_} } qw(
+          location
+          domain
+          routing_data
+      )}
+    },
+  );
+}
+
+
+sub location_delete {
+  my $request = shift;
+  # Return list of activities required to complete this request.
+  return (
+    {
+      action => 'location/delete',
+      cluster_name => $request->{cluster_name},
+      params => { map { $_ => $request->{$_} } qw(
+          location
+          domain
+      )}
+    },
+  );
+}
+
 
 'CCNQ::Activities::Proxy';
