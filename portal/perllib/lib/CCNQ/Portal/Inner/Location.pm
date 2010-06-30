@@ -65,9 +65,7 @@ following fields are common to all location records:
 
 =cut
 
-get '/location' => sub {
-  var template_name => 'api/location';
-
+sub get_location {
   CCNQ::Portal->current_session->user
     or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
@@ -75,23 +73,7 @@ get '/location' => sub {
   var locations_for => \&CCNQ::Portal::Inner::Util::locations_for;
 
   return CCNQ::Portal::content;
-};
-
-post '/location' => sub {
-  CCNQ::Portal->current_session->user
-    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
-
-  my $account = session('account');
-
-  $account
-    or return CCNQ::Portal::content( error => _('Invalid account')_ );
-
-  # Need: account, location, cluster (the outbound-proxy cluster), domain, routing_data
-
-  my $params = clean_params();
-  # XXX Check params. Normally might get to address verification service.
-  CCNQ::Portal::Inner::Util::update_location($account,params->{_id},$params);
-};
+}
 
 sub clean_params {
   my $params = {
