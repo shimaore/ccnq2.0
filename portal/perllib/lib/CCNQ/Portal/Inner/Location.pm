@@ -87,7 +87,8 @@ sub clean_params {
     routing_data
   ));
 
-  $params->{location} ||= join('/',$params->{account},$params->{name})
+  $params->{location} ||= join('/',$params->{account},$params->{name});
+  return $params;
 };
 
 'CCNQ::Portal::Inner::Location';
