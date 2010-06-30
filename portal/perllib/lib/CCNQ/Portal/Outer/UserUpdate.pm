@@ -113,16 +113,16 @@ sub update {
   # Update the portal-side data
   $user->profile->update($params);
 
+  # Reset the session's locale to (potentially) use the new one.
+  CCNQ::Portal->current_session->force_locale()
+    if $user_id eq CCNQ::Portal->current_session->user->id;
+
   # Update the billing-side data
   if(keys %$billing_params) {
     my $cv = AE::cv;
     CCNQ::API::api_update('user',$billing_params,$cv);
     return CCNQ::Portal::Util::redirect_request($cv);
   }
-
-  # Reset the session's locale to (potentially) use the new one.
-  CCNQ::Portal->current_session->force_locale()
-    if $user_id eq CCNQ::Portal->current_session->user->id;
 }
 
 get '/user_profile' => sub {
