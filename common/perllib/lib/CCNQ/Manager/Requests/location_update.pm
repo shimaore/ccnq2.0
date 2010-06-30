@@ -15,6 +15,10 @@ package CCNQ::Manager::Requests::location_update;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
 
+# This is really only a template.
+# A proper set of emergency-location creation pages should be
+# created per deployment to handle national or local differences.
+
 use CCNQ::Activities::Provisioning;
 use CCNQ::Activities::Proxy;
 use CCNQ::Manager;
