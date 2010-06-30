@@ -86,6 +86,8 @@ post '/location' => sub {
   $account
     or return CCNQ::Portal::content( error => _('Invalid account')_ );
 
+  # Need: account, location, cluster (the outbound-proxy cluster), domain, routing_data
+
   my $params = clean_params();
   # XXX Check params. Normally might get to address verification service.
   CCNQ::Portal::Inner::Util::update_location($account,params->{_id},$params);
@@ -99,9 +101,8 @@ sub clean_params {
   CCNQ::Portal::Util::neat($params,qw(
     name
     main_number
-    routing
+    routing_data
   ));
 };
-
 
 'CCNQ::Portal::Inner::Location';
