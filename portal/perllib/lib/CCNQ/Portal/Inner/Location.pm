@@ -78,17 +78,14 @@ sub get_location {
 sub clean_params {
   my $params = {
     account       => session('account'),
+    location      => $params->{location} || join('/',$params->{account},$params->{name}),
   };
 
   CCNQ::Portal::Util::neat($params,qw(
-    location
     name
     main_number
     routing_data
   ));
-
-  $params->{location} ||= join('/',$params->{account},$params->{name});
-  return $params;
 };
 
 'CCNQ::Portal::Inner::Location';
