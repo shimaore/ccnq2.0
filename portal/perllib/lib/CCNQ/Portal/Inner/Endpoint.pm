@@ -76,6 +76,7 @@ sub gather_field {
 
   var endpoints_for => \&CCNQ::Portal::Inner::Util::endpoints_for;
   var account_subs  => \&CCNQ::Portal::Inner::Util::account_subs;
+  var locations_for => \&CCNQ::Portal::Inner::Util::locations_for;
 
   # Gather data for a specific endpoint if needed
   my $endpoint = params->{endpoint};
