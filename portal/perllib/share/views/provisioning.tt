@@ -10,6 +10,10 @@
     <% IF profile == 'endpoint' %>
       <span class="edit"><a href="<% prefix %>/provisioning/endpoint/<% row.doc.endpoint %>">Edit</a></span>
     <% END %>
+    <% IF profile == 'number' %>
+      <span class="edit"><a href="<% prefix %>/number_forwarding/<% row.doc.number %>">Change Forwarding</a></span>
+      <span class="edit"><a href="<% prefix %>/number_location/<% row.doc.number %>">Change Location</a></span>
+    <% END %>
     <% FOREACH d IN row.doc; UNLESS d.key.match('^_|^request|^type|^endpoint_ip') %>
       <div class="entry">
         <span class="key"><% d.key %></span>
