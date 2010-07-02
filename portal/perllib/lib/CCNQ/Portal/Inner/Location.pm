@@ -25,19 +25,6 @@ use CCNQ::API;
 
 use CCNQ::Portal::Inner::Util;
 
-sub emergency_location {
-  my ($params) = @_;
-
-  my $location = params->{emergency_location};
-  my $location_data;
-  $location_data = CCNQ::Portal::Inner::Util::get_location($params->{account},$location)
-    if $location;
-
-  $params->{emergency_location_id}      = $location,
-  $params->{emergency_location_routing} = $location_data->{routing_data}
-    if $location_data;
-}
-
 =head1 Locations
 
 Locations are stored in the provisioning database, the database which
