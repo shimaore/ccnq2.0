@@ -68,9 +68,15 @@ sub clean_params {
   };
 
   CCNQ::Portal::Util::neat($params,qw(
+    location
     name
     main_number
     routing_data
+
+    address_1
+    address_2
+    city
+    zipcode
   ));
 
   $params->{location} or do {
