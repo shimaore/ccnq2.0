@@ -219,6 +219,7 @@ sub local_number_update {
           outbound_route
           account
           account_sub
+          location
       )}
     },
   );
@@ -265,6 +266,7 @@ sub endpoint_update {
           ignore_caller_outbound_route
           ignore_default_outbound_route
           check_from
+          location
       )}
     },
   );
