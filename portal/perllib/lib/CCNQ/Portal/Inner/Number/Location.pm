@@ -37,6 +37,7 @@ sub gather {
 
   my $number_data = CCNQ::Portal::Inner::Util::get_number($account,$number);
   var field => $number_data;
+  var locations_for => \&CCNQ::Portal::Inner::Util::locations_for;
   return CCNQ::Portal::content;
 }
 
