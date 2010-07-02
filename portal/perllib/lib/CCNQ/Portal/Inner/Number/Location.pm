@@ -24,7 +24,7 @@ use CCNQ::Portal::Inner::Util;
 use CCNQ::AE;
 use CCNQ::API;
 
-sub get {
+sub gather {
   my ($normalize_number) = @_;
 
   var template_name => 'api/number-location';

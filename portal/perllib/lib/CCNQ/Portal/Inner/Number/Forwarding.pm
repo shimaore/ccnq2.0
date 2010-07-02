@@ -27,7 +27,7 @@ use CCNQ::API;
 # Customer-facing forwarding tools
 # Allows for "Never", "Always" and "On Failure".
 
-sub get {
+sub gather {
   my ($normalize_number) = @_;
 
   var template_name => 'api/number-forwarding';

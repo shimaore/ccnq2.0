@@ -98,7 +98,7 @@ sub submit_number {
     cluster       => $endpoint_data->{cluster},
     category      => $endpoint_data->{category},
     number        => $number,
-    location      => $params->{location},
+    location      => params->{location},
   };
 
   CCNQ::Portal::Util::neat($params,qw(
