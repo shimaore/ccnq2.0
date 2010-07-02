@@ -77,6 +77,7 @@ sub insert
     my $account_sub       = $params->{account_sub};
     $account     = undef if $account     eq '';
     $account_sub = undef if $account_sub eq '';
+    my $number_location   = $params->{number_location};
 
     return ()
       unless defined $number   and $number ne ''
@@ -106,6 +107,7 @@ SQL
         $self->_avp_set($number,$domain,'inv_timer',$cfda_timeout),
         $self->_avp_set($number,$domain,'number_account',$account),
         $self->_avp_set($number,$domain,'number_account_sub',$account_sub),
+        $self->_avp_set($number,$domain,'number_location',$number_location),
     );
 }
 
@@ -133,6 +135,7 @@ SQL
         $self->_avp_set($number,$domain,'inv_timer',undef),
         $self->_avp_set($number,$domain,'number_account',undef),
         $self->_avp_set($number,$domain,'number_account_sub',undef),
+        $self->_avp_set($number,$domain,'number_location',undef),
     );
 }
 

@@ -94,6 +94,7 @@ sub insert
     my $ignore_default_outbound_route = $params->{ignore_default_outbound_route};
 
     my $check_from = $params->{check_from};
+    my $user_location = $params->{location};
 
     return ()
       unless defined $username and $username ne ''
@@ -165,6 +166,7 @@ SQL
         $self->_avp_set($username,$domain,'ignore_caller_outbound_route',$ignore_caller_outbound_route?1:undef),
         $self->_avp_set($username,$domain,'ignore_default_outbound_route',$ignore_default_outbound_route?1:undef),
         $self->_avp_set($username,$domain,'check_from',$check_from?1:undef),
+        $self->_avp_set($username,$domain,'user_location',$user_location),
     );
 }
 
@@ -201,6 +203,7 @@ SQL
         $self->_avp_set($username,$domain,'ignore_caller_outbound_route',undef),
         $self->_avp_set($username,$domain,'ignore_default_outbound_route',undef),
         $self->_avp_set($username,$domain,'check_from',undef),
+        $self->_avp_set($username,$domain,'user_location',undef),
     );
 
     if(defined $ip)
