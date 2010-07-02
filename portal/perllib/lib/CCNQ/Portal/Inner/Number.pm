@@ -96,6 +96,7 @@ sub submit_number {
     username      => $endpoint_data->{username},
     username_domain => $endpoint_data->{domain},
     cluster       => $endpoint_data->{cluster},
+    category      => $endpoint_data->{category},
     number        => $number,
     location      => $params->{location},
   };
@@ -119,90 +120,6 @@ sub submit_default {
     or return CCNQ::Portal::content( error => _('Invalid parameters')_ );
 
   return CCNQ::Portal::Inner::Number::submit_number($category_to_route->{params->{category}},$normalize_number);
-}
-
-# Customer-facing forwarding tools
-# Allows for "Never", "Always" and "On Failure".
-
-sub get_forwarding {
-  my ($normalize_number) = @_;
-
-  var template_name => 'api/number-forwarding';
-
-  my $account = session('account');
-
-  my $number = $normalize_number->(params->{number});
-  $number
-    or return CCNQ::Portal::content( error => _('Please specify a valid number')_ );
-
-  my $number_data = CCNQ::Portal::Inner::Util::get_number($account,$number);
-  var field => $number_data;
-  return CCNQ::Portal::content;
-}
-
-sub submit_forwarding {
-  my ($category_to_route,$normalize_number) = @_;
-
-  var template_name => 'api/number-forwarding';
-
-  my $account  = session('account');
-
-  my $number = $normalize_number->(params->{number});
-  $number
-    or return CCNQ::Portal::content( error => _('Please specify a valid number')_ );
-
-  my $params = {};
-  CCNQ::Portal::Util::neat($params,qw(
-    forwarding_type
-    forwarding_number
-  ));
-
-  my $forwarding_type = $params->{forwarding_type};
-  grep { $forwarding_type eq $_ } qw( none all err )
-    or return CCNQ::Portal::content;
-
-  my $forwarding_number = $normalize_number->($params->{forwarding_number});
-
-  # Forwarding number must be provided for all types except "none"/Never.
-  return CCNQ::Portal::content( error => _('Please specify a valid forwarding number')_ )
-    if $forwarding_type ne 'none' and not $forwarding_number;
-
-  $params->{forwarding_number} = $forwarding_number;
-
-  return CCNQ::Portal::Inner::Util::update_number($account,$number,$params);
-}
-
-sub get_location {
-  my ($normalize_number) = @_;
-
-  var template_name => 'api/number-location';
-
-  my $account = session('account');
-
-  my $number = $normalize_number->(params->{number});
-  $number
-    or return CCNQ::Portal::content( error => _('Please specify a valid number')_ );
-
-  my $number_data = CCNQ::Portal::Inner::Util::get_number($account,$number);
-  var field => $number_data;
-  return CCNQ::Portal::content;
-}
-
-sub submit_location {
-  my ($normalize_number) = @_;
-
-  my $account  = session('account');
-
-  my $number = $normalize_number->(params->{number});
-  $number
-    or return CCNQ::Portal::content( error => _('Please specify a valid number')_ );
-
-  my $params = {};
-  CCNQ::Portal::Util::neat($params,qw(
-    location
-  ));
-
-  return CCNQ::Portal::Inner::Util::update_number($account,$number,$params);
 }
 
 1;
