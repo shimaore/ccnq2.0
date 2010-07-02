@@ -43,7 +43,7 @@
     <% ELSE %>
     <ul>
       <% FOREACH r IN all_locations %>
-      <li><a href="?location=<% r.location | uri %>"><% r.name | html %>(<% r.main_number | html %>)</a></li>
+      <li><a href="?location=<% r.location | uri %>"><% r.name | html %> (<% r.main_number | html %>)</a></li>
       <% END %>
     </ul>
     <% END %>
