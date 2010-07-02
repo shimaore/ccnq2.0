@@ -52,6 +52,8 @@ sub clean_params {
     ignore_default_outbound_route
     check_from
 
+    location
+
   ));
 }
 
@@ -146,8 +148,6 @@ post '/provisioning/endpoint' => sub {
     var template_name => 'api/endpoint';
     return CCNQ::Portal::content;
   }
-
-  CCNQ::Portal::Inner::Location::emergency_location($params);
 
   # Update the information in the API.
   my $cv1 = AE::cv;
