@@ -54,9 +54,7 @@ sub default {
     $endpoints = [ grep { $selector->($_) } @$endpoints ];
   }
 
-  var field => {
-    available_endpoints => $endpoints,
-  };
+  var available_endpoints => $endpoints;
   var category => $category;
   var cluster  => $cluster;
 
