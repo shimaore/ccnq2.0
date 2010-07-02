@@ -5,16 +5,8 @@ Portal:
 * import rating tables (bulk)
 * address fields for billing
 
-Portal internals:
-* generalize form validation: generic Perl validation code + AJAX validation
-* rewrite the Dancer code so that it works under Twiggy (hint: must rewrite portal code to use AnyEvent conventions)
-
-
 Voice:
 * emergency call routing (fr/OS)
-* modify OpenSIPS code so that:
-  it strips transport= from RURI
-  it strips maddr= from RURI
 * FS code for feature-server / redirection server
 * FS code for prepaid (realtime_estimator)
 
@@ -22,7 +14,20 @@ Voice:
 Billing:
 * daily crontab (e.g. import number of DIDs for partial month counts)
   .. e.g.: generate a CDR for number of numbers / endpoints / locations per account_sub ?
-* end-of-month processing (including partial days)
+* end-of-period processing (including partial days)
+
+---- Lower priority items ----
+
+Portal internals:
+* generalize form validation: generic Perl validation code + AJAX validation
+* rewrite the Dancer code so that it works under Twiggy (hint: must rewrite portal code to use AnyEvent conventions)
+
+Voice:
+* modify OpenSIPS code so that:
+  it strips transport= from RURI
+  it strips maddr= from RURI
+
+Billing:
 * CDR + cost analysis on carrier SBC
   - collect CDRs
   - do rating analysis (private plans)
