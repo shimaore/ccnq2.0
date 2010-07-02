@@ -37,8 +37,9 @@
         <action application="set" data="progress_timeout=12"/>
         <action application="set" data="ccnq_account=${regex(${sip_req_params}|account=([^;]*)|%1)}"/>
         <action application="set" data="ccnq_account_sub=${regex(${sip_req_params}|account_sub=([^;]*)|%1)}"/>
+        <action application="set" data="ccnq_location=${regex(${sip_req_params}|location=([^;]*)|%1)}"/>
         <action application="set" data="effective_caller_id_number=${ccnq_from_e164}"/>
-        <action application="bridge" data="sofia/sbc-$${profile_name}/${ccnq_to_e164}@$${egress_target}"/>
+        <action application="bridge" data="sofia/sbc-$${profile_name}/${ccnq_to_e164}@$${egress_target};location=${ccnq_location}"/>
       </condition>
     </extension>
 
