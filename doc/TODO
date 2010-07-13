@@ -1,12 +1,12 @@
 
 Portal:
-* emergency data
 * code for cfa/cfb
 * bulk import/update rating tables
 * address fields for billing
 * plan creation tool
 * available numbers ("numbers bank")
 * intermediate admin level (FDN federation)
+* Unify menus (and better "Summary" page)
 
 Voice:
 * emergency call routing (fr/OS)
