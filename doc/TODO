@@ -24,6 +24,9 @@ Billing:
 
 ---- Lower priority items ----
 
+Portal:
+* when selecting an item after a global search, account is not set and causes application error
+
 Portal internals:
 * generalize form validation: generic Perl validation code + AJAX validation
 * rewrite the Dancer code so that it works under Twiggy (hint: must rewrite portal code to use AnyEvent conventions)
