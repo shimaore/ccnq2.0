@@ -1,2 +1,2 @@
 <X-PRE-PROCESS cmd="set" data="global_codec_prefs=PCMU@8000h@20i"/>
-<X-PRE-PROCESS cmd="include" data="template/sbc-media-sbc.xml"/>
+<X-PRE-PROCESS cmd="include" data="sbc-media-sbc.xml"/>

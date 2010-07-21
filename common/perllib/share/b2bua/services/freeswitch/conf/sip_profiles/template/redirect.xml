@@ -1,1 +1,1 @@
-<X-PRE-PROCESS cmd="include" data="template/sbc-nomedia-sbc.xml"/>
+<X-PRE-PROCESS cmd="include" data="sbc-nomedia-sbc.xml"/>
