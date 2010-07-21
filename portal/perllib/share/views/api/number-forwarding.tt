@@ -16,7 +16,7 @@
       </p>
       <p class="ui-helper-clearfix">
         <label for="forwarding_number" class="left"><% | loc %>Forward to:<% END %></label>
-        <input type="text" readonly name="forwarding_number" value="<% field.forwarding_number | html %>" />
+        <input type="text" name="forwarding_number" value="<% field.forwarding_number | html %>" />
       </p>
       <p class="ui-helper-clearfix submit">
         <input type="submit" value="<% | loc %>Save<% END %>" />
