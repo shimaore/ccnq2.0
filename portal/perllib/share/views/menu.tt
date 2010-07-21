@@ -2,20 +2,69 @@
 <% IF session.user_id %>
   <li><a href="<% prefix %>/"><% | loc %>Summary<% END %></a></li>
   <% IF is_sysadmin %>
+  <li><span><%|loc>SysAdmin<%END%></span>
+    <ul>
+      <li><a href="<% prefix %>/manager"><%|loc%>Manage Manager Requests (Back-end Business Logic)<%END%</a></li>
+    </ul>
+  </li>
   <% END %>
   <% IF is_admin %>
-  <li><span>Billing</span>
+  <li><a href="<% prefix %>/trace"><% | loc %>Trace<% END %></a></li>
+  <li><span><%|loc%>Billing<%END%></span>
     <ul>
-      <li><a href="<% prefix %>/billing/account"><% | loc %>Accounts<% END %></a></li>
       <li><a href="<% prefix %>/billing/plan"><% | loc %>Plans<% END %></a></li>
       <li><a href="<% prefix %>/rating_table/"><% | loc %>Rating tables<% END %></a></li>
       <li><a href="<% prefix %>/bucket/"><% |loc %>Buckets<% END %></a></li>
     </ul>
   </li>
-  <li><a href="<% prefix %>/trace"><% | loc %>Trace<% END %></a></li>
-  <% local_menu %>
   <% END %>
+  <li><span><%|loc%>Accounts</span>
+    <ul>
+      <% IF is_admin %>
+      <li><a href="<% prefix %>/billing/accounts"><%|loc%>List all accounts<%END%></a></li>
+      <%END%>
+      <% IF session.account %>
+      <li><span><%|loc(session.account)%>Account [_1]<%END%></span></li>
+      <li><a href="<% prefix %>/billing/account"><%|loc%>Manage<%END%></a></li>
+      <li><a href="<% prefix %>/bucket/account/"><%|loc%>Bucket Values<%END%></a></li>
+      <li><a href="<% prefix %>/cdr/"><%|loc%>Call Detail Records (CDR)<%END%></a></li>
+      <li><a href="<% prefix %>/provisioning/view/account"><%|loc%>Inventory<%END%></a></li>
+      <% END %>
+    </ul>
+  </li>
+  <li><span><%|loc%>Locations<%END%></span>
+    <ul>
+      <% IF session.account %>
+      <li><a href="<% prefix %>/provisioning/view/location/_all"><%|loc%>View all<%END%></a></li>
+      <li><a href="<% prefix %>/location"><%|loc%>Manage<%END%></a></li>
+      <% END %>
+    </ul>
+  </li>
+  <li><span>Endpoints</span>
+    <ul>
+      <% IF session.account %>
+      <li><a href="<% prefix %>/provisioning/view/endpoint/_all"><%|loc%>View all<%END%></a></li>
+      <li><a href="<% prefix %>/provisioning/endpoint"><%|loc%>Manage<%END%></a></li>
+      <% local_endpoints_menu %>
+      <% END %>
+    </ul>
+  </li>
+  <li><span>Numbers</span>
+    <ul>
+      <% IF is_admin %>
+      <li><a href="<% prefix %>/provisioning/number/_all"><%|loc%>List all numbers (across all accounts)<%END%></a></li>
+      <% END %>
+      <% IF session.account %>
+      <li><span><%|loc(session.account)%>Account [_1]<%END%></span></li>
+      <li><a href="<% prefix %>/provisioning/view/number/_all"><%|loc%>View all<%END%></a></li>
+      <!-- <li><a href="<% prefix %>/number">Redirection</a></li> -->
+      <% local_numbers_menu %>
+      <% END %>
+    </ul>
+  </li>
+  <% local_menu %>
   <li><a href="<% prefix %>/user_profile"><% | loc %>My Profile<% END %></a></li>
+
 <% ELSE %>
   <!-- public menu -->
 <% END %>
