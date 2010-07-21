@@ -4,7 +4,7 @@
   <% IF is_sysadmin %>
   <li><span><%|loc%>SysAdmin<%END%></span>
     <ul>
-      <li><a href="<% prefix %>/manager"><%|loc%>Manage Manager Requests (Back-end Business Logic)<%END%</a></li>
+      <li><a href="<% prefix %>/manager"><%|loc%>Manage Manager Requests (Back-end Business Logic)<%END%></a></li>
     </ul>
   </li>
   <% END %>
