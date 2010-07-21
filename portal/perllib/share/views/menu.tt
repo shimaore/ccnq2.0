@@ -2,7 +2,7 @@
 <% IF session.user_id %>
   <li><a href="<% prefix %>/"><% | loc %>Summary<% END %></a></li>
   <% IF is_sysadmin %>
-  <li><span><%|loc>SysAdmin<%END%></span>
+  <li><span><%|loc%>SysAdmin<%END%></span>
     <ul>
       <li><a href="<% prefix %>/manager"><%|loc%>Manage Manager Requests (Back-end Business Logic)<%END%</a></li>
     </ul>
