@@ -4,7 +4,7 @@
   <% IF is_sysadmin %>
   <li><span><%|loc%>SysAdmin<%END%></span>
     <ul>
-      <li><a href="<% prefix %>/manager"><%|loc%>Manage Manager Requests (Back-end Business Logic)<%END%></a></li>
+      <li><a href="<% prefix %>/manager"><%|loc%>Manager Requests (Back-end Business Logic)<%END%></a></li>
     </ul>
   </li>
   <% END %>
@@ -35,6 +35,7 @@
   <li><span><%|loc%>Locations<%END%></span>
     <ul>
       <% IF session.account %>
+      <li><span><%|loc(session.account)%>Account [_1]<%END%></span></li>
       <li><a href="<% prefix %>/provisioning/view/location/_all"><%|loc%>View all<%END%></a></li>
       <li><a href="<% prefix %>/location"><%|loc%>Manage<%END%></a></li>
       <% END %>
@@ -43,6 +44,7 @@
   <li><span><%|loc%>Endpoints<%END%></span>
     <ul>
       <% IF session.account %>
+      <li><span><%|loc(session.account)%>Account [_1]<%END%></span></li>
       <li><a href="<% prefix %>/provisioning/view/endpoint/_all"><%|loc%>View all<%END%></a></li>
       <li><a href="<% prefix %>/provisioning/endpoint"><%|loc%>Manage<%END%></a></li>
       <% local_endpoints_menu %>
@@ -52,7 +54,7 @@
   <li><span><%|loc%>Numbers<%END%></span>
     <ul>
       <% IF is_admin %>
-      <li><a href="<% prefix %>/provisioning/number/_all"><%|loc%>List all numbers (across all accounts)<%END%></a></li>
+      <li><a href="<% prefix %>/provisioning/number/_all"><%|loc%>All numbers (across all accounts)<%END%></a></li>
       <% END %>
       <% IF session.account %>
       <li><span><%|loc(session.account)%>Account [_1]<%END%></span></li>
