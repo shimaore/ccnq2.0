@@ -1,9 +1,12 @@
 
 Portal:
-* emergency data
 * code for cfa/cfb
-* import rating tables (bulk)
+* bulk import/update rating tables
 * address fields for billing
+* plan creation tool
+* available numbers ("numbers bank")
+* intermediate admin level (FDN federation)
+* Unify menus (and better "Summary" page)
 
 Voice:
 * emergency call routing (fr/OS)
@@ -14,7 +17,10 @@ Voice:
 Billing:
 * daily crontab (e.g. import number of DIDs for partial month counts)
   .. e.g.: generate a CDR for number of numbers / endpoints / locations per account_sub ?
-* end-of-period processing (including partial days)
+* end-of-period processing
+  .. including partial days
+  .. including PDF bills generation
+* payment API
 
 ---- Lower priority items ----
 
