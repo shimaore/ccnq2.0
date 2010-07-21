@@ -1,1 +1,3 @@
+<X-PRE-PROCESS cmd="set" data="external_sip_port=$${sip_port}">
+<X-PRE-PROCESS cmd="set" data="external_sip_ip=$${sip_ip}">
 <X-PRE-PROCESS cmd="include" data="sbc-nomedia-sbc.xml"/>
