@@ -17,10 +17,12 @@
       </condition>
     </extension>
 
-    <extension name="egress-112">
-      <condition field="destination_number" expression="^(112)$">
+    <extension name="egress-emergency">
+      <condition field="destination_number" expression="^(112|15|17|18|119|115|116000)$">
+        <action application="set" data="ccnq_called=$1"/>
         <action application="set" data="progress_timeout=12"/>
-        <action application="bridge" data="sofia/sbc-$${profile_name}/$1@$${egress_target}"/>
+        <action application="set" data="ccnq_routing=${regex(${sip_req_params}|routing=([^;]*)|%1)}"/>
+        <action application="bridge" data="sofia/sbc-$${profile_name}/9*${ccnq_called}*${ccnq_routing}@$${egress_target}"/>
       </condition>
     </extension>
 
