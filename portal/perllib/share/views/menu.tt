@@ -57,7 +57,6 @@
       <% IF session.account %>
       <li><span><%|loc(session.account)%>Account [_1]<%END%></span></li>
       <li><a href="<% prefix %>/provisioning/view/number/_all"><%|loc%>View all<%END%></a></li>
-      <li><a href="<% prefix %>/number"><%|loc%>Redirection<%END%></a></li>
       <% local_numbers_menu %>
       <% END %>
     </ul>
