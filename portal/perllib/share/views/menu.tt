@@ -18,7 +18,7 @@
     </ul>
   </li>
   <% END %>
-  <li><span><%|loc%>Accounts</span>
+  <li><span><%|loc%>Accounts<%END%></span>
     <ul>
       <% IF is_admin %>
       <li><a href="<% prefix %>/billing/accounts"><%|loc%>List all accounts<%END%></a></li>
@@ -40,7 +40,7 @@
       <% END %>
     </ul>
   </li>
-  <li><span>Endpoints</span>
+  <li><span><%|loc%>Endpoints<%END%></span>
     <ul>
       <% IF session.account %>
       <li><a href="<% prefix %>/provisioning/view/endpoint/_all"><%|loc%>View all<%END%></a></li>
@@ -49,7 +49,7 @@
       <% END %>
     </ul>
   </li>
-  <li><span>Numbers</span>
+  <li><span><%|loc%>Numbers<%END%></span>
     <ul>
       <% IF is_admin %>
       <li><a href="<% prefix %>/provisioning/number/_all"><%|loc%>List all numbers (across all accounts)<%END%></a></li>
