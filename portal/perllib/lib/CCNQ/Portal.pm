@@ -93,6 +93,7 @@ Provides the default content for this portal's site.
 =cut
 
 sub content { site->default_content->(@_) }
+sub normalize_number { site->normalize_number->(@_) }
 
 
 our $session;
