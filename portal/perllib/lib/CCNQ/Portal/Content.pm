@@ -20,5 +20,7 @@ use CCNQ::Portal::Inner::RatingTable;
 use CCNQ::Portal::Inner::Bucket;
 use CCNQ::Portal::Inner::Bucket::Instance;
 use CCNQ::Portal::Inner::CDR;
+use CCNQ::Portal::Inner::Number::Forwarding;
+use CCNQ::Portal::Inner::Number::Location;
 
 'CCNQ::Portal::Content';
