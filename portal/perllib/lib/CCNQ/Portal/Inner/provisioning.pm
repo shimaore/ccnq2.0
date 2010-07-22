@@ -73,7 +73,7 @@ sub _get_number {
   if($number eq '_all') {
     CCNQ::API::provisioning('report','all_numbers',$cv);
   } else {
-    $number =~ s/[^\d]+//g;
+    $number = CCNQ::Portal::normalize_number($number);
     CCNQ::API::provisioning('report','all_numbers',$number,$cv);
   }
   return $cv;
