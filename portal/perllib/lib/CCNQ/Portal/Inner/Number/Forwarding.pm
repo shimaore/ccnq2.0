@@ -27,7 +27,7 @@ use CCNQ::API;
 # Customer-facing forwarding tools
 # Allows for "Never", "Always" and "On Failure".
 
-sub gather {
+get  '/number_forwarding/:number' => sub {
   my $normalize_number = \&CCNQ::Portal::normalize_number;
 
   var template_name => 'api/number-forwarding';
@@ -41,9 +41,9 @@ sub gather {
   my $number_data = CCNQ::Portal::Inner::Util::get_number($account,$number);
   var field => $number_data;
   return CCNQ::Portal::content;
-}
+};
 
-sub submit {
+post '/number_forwarding/:number' => sub {
   my $normalize_number = \&CCNQ::Portal::normalize_number;
 
   var template_name => 'api/number-forwarding';
@@ -73,9 +73,6 @@ sub submit {
   $params->{forwarding_number} = $forwarding_number;
 
   return CCNQ::Portal::Inner::Util::update_number($account,$number,$params);
-}
-
-get  '/number_forwarding/:number' => sub { gather() };
-post '/number_forwarding/:number' => sub { submit() };
+};
 
 'CCNQ::Portal::Inner::Number::Forwarding';
