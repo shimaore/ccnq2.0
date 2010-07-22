@@ -25,7 +25,7 @@ use CCNQ::AE;
 use CCNQ::API;
 
 sub gather {
-  my ($normalize_number) = @_;
+  my $normalize_number = \&CCNQ::Portal::normalize_number;
 
   var template_name => 'api/number-location';
 
@@ -42,7 +42,7 @@ sub gather {
 }
 
 sub submit {
-  my ($normalize_number) = @_;
+  my $normalize_number = \&CCNQ::Portal::normalize_number;
 
   my $account  = session('account');
 
@@ -58,4 +58,7 @@ sub submit {
   return CCNQ::Portal::Inner::Util::update_number($account,$number,$params);
 }
 
-'CCNQ::Portal::Inner::Number::Location'
+get  '/number_location/:number' => sub { gather() };
+post '/number_location/:number' => sub { submit() };
+
+'CCNQ::Portal::Inner::Number::Location';

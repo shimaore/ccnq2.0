@@ -67,7 +67,8 @@ sub get_default {
 }
 
 sub submit_number {
-  my ($api_name,$normalize_number) = @_;
+  my ($api_name) = @_;
+  my $normalize_number = \&CCNQ::Portal::normalize_number;
 
   CCNQ::Portal->current_session->user
     or return CCNQ::Portal::content( error => _('Unauthorized')_ );
@@ -109,7 +110,7 @@ sub submit_number {
 }
 
 sub submit_default {
-  my ($category_to_route,$normalize_number) = @_;
+  my ($category_to_route) = @_;
 
   var template_name => 'api/number';
 
@@ -119,7 +120,7 @@ sub submit_default {
   # and category_to_criteria->{params->{category}}->($endpoint)
     or return CCNQ::Portal::content( error => _('Invalid parameters')_ );
 
-  return CCNQ::Portal::Inner::Number::submit_number($category_to_route->{params->{category}},$normalize_number);
+  return CCNQ::Portal::Inner::Number::submit_number($category_to_route->{params->{category}});
 }
 
 1;

@@ -22,6 +22,8 @@ use strict; use warnings;
 
   default_locale
   security (AAA) -- which AAA method to use, etc.
+  default_content
+  normalize_number
 
 =cut
 
@@ -42,6 +44,10 @@ sub security {
 
 sub default_content {
   return $_[0]->{default_content};
+}
+
+sub normalize_number {
+  return $_[0]->{normalize_number};
 }
 
 1;
