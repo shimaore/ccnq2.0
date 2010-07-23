@@ -46,6 +46,8 @@ sub default_content {
   return $_[0]->{default_content};
 }
 
+use CCNQ::Portal::Locale::Number;
+
 sub normalize_number {
   my $self = shift;
   $self->{number_locale} or die "No number locale";
