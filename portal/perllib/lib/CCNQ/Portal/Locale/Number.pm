@@ -16,7 +16,7 @@ package CCNQ::Portal::Locale::Number;
 use strict; use warnings;
 
 use constant normalize_number => {
-  us => sub {
+  nanp => sub {
     my $n = shift;
     return undef if !defined($n);
     $n =~ s/[^+\d]//g;
