@@ -11,6 +11,10 @@
         <label for="name" class="left"><% | loc %>Account name:<% END %></label>
         <input type="text" name="name" value="<% field.name | html %>" class="required"/>
       </p>
+      <p class="ui-helper-clearfix">
+        <label for="name" class="left"><% | loc %>Billing country:<% END %></label>
+        <input type="text" name="name" value="<% field.country | html %>" size="2" maxlength="2" class="required"/>
+      </p>
       <p class="ui-helper-clearfix submit">
       <input id="account_form_submit" type="submit" value="<% | loc %>Save<% END %>" />
       </p>
@@ -53,6 +57,10 @@
       <p class="ui-helper-clearfix">
         <label for="name" class="left"><% | loc %>Account name:<% END %></label>
         <input type="text" name="name" value="<% field.name | html %>" class="required"/>
+      </p>
+      <p class="ui-helper-clearfix">
+        <label for="name" class="left"><% | loc %>Billing country:<% END %></label>
+        <input type="text" name="name" value="<% field.country | html %>" size="2" maxlength="2" class="required"/>
       </p>
       <p class="ui-helper-clearfix submit">
       <input type="submit" value="<% | loc %>Save<% END %>" />
