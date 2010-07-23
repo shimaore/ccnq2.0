@@ -35,12 +35,11 @@ sub gather_field {
   my $cv2 = AE::cv;
   CCNQ::API::billing('report','accounts',$account,$cv2);
   my $account_billing_data = CCNQ::AE::receive_first_doc($cv2)
-    || { country => CCNQ::Portal->site->billing_country };
+    || { billing_country => CCNQ::Portal->site->billing_country };
 
   var field => {
-    name    => $account_billing_data->{name},
+    %$account_billing_data,
     account => $account,
-    country => $account_billing_data->{country},
   };
 }
 
@@ -89,7 +88,8 @@ post '/billing/account' => sub {
     account => session('account')
   },qw(
     name
-    country
+    billing_country
+    billing_cycle
   ));
 
   # Update the information in the portal.

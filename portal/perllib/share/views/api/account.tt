@@ -13,7 +13,7 @@
       </p>
       <p class="ui-helper-clearfix">
         <label for="name" class="left"><% | loc %>Billing country:<% END %></label>
-        <input type="text" name="country" value="<% field.country | html %>" size="2" maxlength="2" class="required"/>
+        <input type="text" name="billing_country" value="<% field.billing_country | html %>" size="2" maxlength="2" class="required"/>
       </p>
       <p class="ui-helper-clearfix submit">
       <input id="account_form_submit" type="submit" value="<% | loc %>Save<% END %>" />
@@ -60,7 +60,7 @@
       </p>
       <p class="ui-helper-clearfix">
         <label for="name" class="left"><% | loc %>Billing country:<% END %></label>
-        <input type="text" name="country" value="<% field.country | html %>" size="2" maxlength="2" class="required"/>
+        <input type="text" name="billing_country" value="<% field.billing_country | html %>" size="2" maxlength="2" class="required"/>
       </p>
       <p class="ui-helper-clearfix submit">
       <input type="submit" value="<% | loc %>Save<% END %>" />

@@ -47,7 +47,7 @@ get '/billing/account_address' => sub {
   var account_address_format => $address_parser->format();
 
   # Retrieve the account's specific address data.
-  var address => $address_parser->display($data->{address});
+  var address => $address_parser->display($data->{billing_address});
   return CCNQ::Portal::content;
 
 };
@@ -71,7 +71,7 @@ post '/billing/account_address' => sub {
   my $new_address = $address_parser->storage(params);
   ref($new_address) or return CCNQ::Portal::content( error => _($new_address)_ );
 
-  $data->{address} = $new_address;
+  $data->{billing_address} = $new_address;
 
   # Save the new account information.
   my $cv2 = AE::cv;

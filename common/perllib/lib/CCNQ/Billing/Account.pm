@@ -32,8 +32,9 @@ An account record must contain at least:
 
   account: this account's ID
   name: this account's name
-  country: this account's billing country
-  address: other elements of the account's billing address (as provided by Geo::PostalAddress)
+  billing_country: this account's billing country
+  billing_address: other elements of the account's billing address (as provided by Geo::PostalAddress)
+  billing_cycle: the day (in month) where invoices are created for this account (for monthly billing cycles)
 
 =cut
 
