@@ -9,6 +9,7 @@ use CCNQ::Portal::Outer::Theme;
 
 use CCNQ::Portal::Inner::default;
 use CCNQ::Portal::Inner::Account;
+use CCNQ::Portal::Inner::BillingAddress;
 use CCNQ::Portal::Inner::Plan;
 use CCNQ::Portal::Inner::billing_plan;
 use CCNQ::Portal::Inner::provisioning;
