@@ -39,7 +39,7 @@ get '/billing/account_address' => sub {
   my $cv = AE::cv;
   CCNQ::API::billing('report','accounts',session('account'),$cv);
   my $data = CCNQ::AE::receive_first_doc($cv) || {};
-  var account_billing_data = $data;
+  var account_billing_data => $data;
 
   # Gather the names of fields for the specific country.
   my $address_parser = Geo::PostalAddress->new(uc($data->{country}));
