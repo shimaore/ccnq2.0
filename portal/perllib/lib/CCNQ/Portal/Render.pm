@@ -22,9 +22,6 @@ use Encode;
 use CCNQ;
 use CCNQ::Portal;
 
-var ccnq_version => $CCNQ::VERSION;
-var ccnq_portal_version => $CCNQ::Portal::VERSION;
-
 set appdir => CCNQ::Portal::SRC;
 set views  => path(CCNQ::Portal::SRC, 'views');
 set public => path(CCNQ::Portal::SRC, 'public');
@@ -104,6 +101,9 @@ Returns the HTML content for the default site, with the specified error message.
 use constant default_content => sub {
   my %p = @_;
   var error => $p{error} if $p{error};
+
+  var ccnq_version => $CCNQ::VERSION;
+  var ccnq_portal_version => $CCNQ::Portal::VERSION;
 
   my $template_name = vars->{template_name} || DEFAULT_TEMPLATE_NAME;
 
