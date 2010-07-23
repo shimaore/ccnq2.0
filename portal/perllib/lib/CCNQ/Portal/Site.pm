@@ -48,7 +48,8 @@ sub default_content {
 
 sub normalize_number {
   my $self = shift;
-  $self->{normalize_number} ||= CCNQ::Portal::Locale::Number::normalize_number->{$self->{number_locale};
+  $self->{number_locale} or die "No number locale";
+  $self->{normalize_number} ||= CCNQ::Portal::Locale::Number::normalize_number->{$self->{number_locale}};
   return $self->{normalize_number} or die "Unsupported area: $self->{number_locale}";
 }
 
