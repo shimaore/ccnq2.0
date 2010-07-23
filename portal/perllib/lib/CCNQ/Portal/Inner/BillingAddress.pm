@@ -47,7 +47,8 @@ get '/billing/account_address' => sub {
   var account_address_format => $address_parser->format();
 
   # Retrieve the account's specific address data.
-  var address => $address_parser->display($data->{billing_address});
+  var address => $address_parser->display($data->{billing_address})
+    if $data->{billing_address};
   return CCNQ::Portal::content;
 
 };
