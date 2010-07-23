@@ -70,7 +70,7 @@ post '/billing/account_address' => sub {
   # Update the address if the one that was submitted is valid.
   my $address_parser = Geo::PostalAddress->new(uc($data->{billing_country}));
   $address_parser or return CCNQ::Portal::content( error => _('Please correct the billing country code')_ );
-  my $new_address = $address_parser->storage(params);
+  my $new_address = $address_parser->storage({params});
   ref($new_address) or return CCNQ::Portal::content( error => _($new_address)_ );
 
   $data->{billing_address} = $new_address;
