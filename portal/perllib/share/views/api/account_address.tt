@@ -1,16 +1,14 @@
 <% USE loc %>
 <fieldset>
   <legend><%|loc%>Account Billing Address<%END%></legend>
-  <% SET per_line = 1 %>
   <legend><%|loc%>Billing Address<%END%></legend>
   <form method="POST">
   <% FOREACH f IN account_address_format %>
     <% IF f.0 %>
+      <p class="ui-helper-clearfix">
       <label for="name" class="left"><% | loc %><% f.0 %><% END %></label>
-      <input type="text" name="<% f.0 %>" size="<% f.1 %>" value="<% account_billing_data.$f | html %>" />
-      <% IF per_line <= 1 %><br/><%ELSE%><% SET per_line = per_line - 1 %><%END%>
-    <% ELSE %>
-      <% SET per_line = f %>
+      <input type="text" name="<% f.0 %>" size="<% f.1 %>" value="<% address.$f | html %>" />
+      </p>
     <% END %>
   <% END %>
   <% IF is_admin %>
