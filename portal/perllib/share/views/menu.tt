@@ -26,7 +26,7 @@
       <% IF session.account %>
       <li><span><%|loc(session.account)%>Account [_1]<%END%></span></li>
       <li><a href="<% prefix %>/billing/account"><%|loc%>Manage<%END%></a></li>
-      <li><a href="<% prefix %>/billing/account_address"><%|loc>Billing Address<%END%></a></li>
+      <li><a href="<% prefix %>/billing/account_address"><%|loc%>Billing Address<%END%></a></li>
       <li><a href="<% prefix %>/bucket/account/"><%|loc%>Bucket Values<%END%></a></li>
       <li><a href="<% prefix %>/cdr/"><%|loc%>Call Detail Records (CDR)<%END%></a></li>
       <li><a href="<% prefix %>/provisioning/view/account"><%|loc%>Inventory<%END%></a></li>
