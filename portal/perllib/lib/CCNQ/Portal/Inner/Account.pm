@@ -34,7 +34,8 @@ sub gather_field {
 
   my $cv2 = AE::cv;
   CCNQ::API::billing('report','accounts',$account,$cv2);
-  my $account_billing_data = CCNQ::AE::receive_first_doc($cv2) || {};
+  my $account_billing_data = CCNQ::AE::receive_first_doc($cv2)
+    || { country => CCNQ::Portal->site->billing_country };
 
   var field => {
     name    => $account_billing_data->{name},

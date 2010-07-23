@@ -43,6 +43,7 @@ get '/billing/account_address' => sub {
 
   # Gather the names of fields for the specific country.
   my $address_parser = Geo::PostalAddress->new(uc($data->{country}));
+  $address_parser or return CCNQ::Portal::content( error => _('Please correct the billing country code')_ );
   var account_address_format => $address_parser->format();
 
   # Retrieve the account's specific address data.
