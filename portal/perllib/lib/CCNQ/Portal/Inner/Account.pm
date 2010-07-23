@@ -52,8 +52,7 @@ sub gather_field_sub {
   my $account_sub_billing_data = CCNQ::Portal::Inner::Util::account_sub_data($account,$account_sub) || {};
 
   var field => {
-    name    => $account_sub_billing_data->{name},
-    plan    => $account_sub_billing_data->{plan},
+    %$account_sub_billing_data,
     account => $account,
     account_sub => $account_sub,
   };
