@@ -22,6 +22,9 @@ use Encode;
 use CCNQ;
 use CCNQ::Portal;
 
+var ccnq_version => $CCNQ::VERSION;
+var ccnq_portal_version => $CCNQ::Portal::VERSION;
+
 set appdir => CCNQ::Portal::SRC;
 set views  => path(CCNQ::Portal::SRC, 'views');
 set public => path(CCNQ::Portal::SRC, 'public');
