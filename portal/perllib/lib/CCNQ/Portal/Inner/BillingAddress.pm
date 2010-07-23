@@ -37,7 +37,7 @@ get '/billing/account_address' => sub {
 
   # Retrieve the account's data.
   my $cv = AE::cv;
-  CCNQ::API::billing('report','accounts',$account,$cv);
+  CCNQ::API::billing('report','accounts',session('account'),$cv);
   my $data = CCNQ::AE::receive_first_doc($cv) || {};
   var account_billing_data = $data;
 
@@ -62,7 +62,7 @@ post '/billing/account_address' => sub {
 
   # Retrieve the account's data.
   my $cv = AE::cv;
-  CCNQ::API::billing('report','accounts',$account,$cv);
+  CCNQ::API::billing('report','accounts',session('account'),$cv);
   my $data = CCNQ::AE::receive_first_doc($cv) || {};
 
   # Update the address if the one that was submitted is valid.
