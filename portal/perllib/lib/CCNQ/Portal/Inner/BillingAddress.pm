@@ -42,7 +42,7 @@ get '/billing/account_address' => sub {
   var account_billing_data => $data;
 
   # Gather the names of fields for the specific country.
-  my $address_parser = Geo::PostalAddress->new(uc($data->{country}));
+  my $address_parser = Geo::PostalAddress->new(uc($data->{billing_country}));
   $address_parser or return CCNQ::Portal::content( error => _('Please correct the billing country code')_ );
   var account_address_format => $address_parser->format();
 
@@ -67,7 +67,7 @@ post '/billing/account_address' => sub {
   my $data = CCNQ::AE::receive_first_doc($cv) || {};
 
   # Update the address if the one that was submitted is valid.
-  my $address_parser = Geo::PostalAddress->new(uc($data->{country}));
+  my $address_parser = Geo::PostalAddress->new(uc($data->{billing_country}));
   $address_parser or return CCNQ::Portal::content( error => _('Please correct the billing country code')_ );
   my $new_address = $address_parser->storage(params);
   ref($new_address) or return CCNQ::Portal::content( error => _($new_address)_ );
