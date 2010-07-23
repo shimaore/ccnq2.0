@@ -29,8 +29,7 @@ requires      'Locale::Maketext::Lexicon'     => 0;
 requires      'Lingua::EN::Numbers::Ordinate' => 0;
 requires      'Lingua::FR::Numbers'           => 0;
 requires      'Lingua::FR::Numbers::Ordinate' => 0;
-## Proxy requirements
-# requires      'DBI' => 0;
+requires      'Geo::PostalAddress'            => 0;
 
 test_requires 'Test::More' => '0.94';
 # Required to test with Dancer::Session::Cookies.

@@ -55,4 +55,8 @@ sub normalize_number {
   return $self->{normalize_number} or die "Unsupported area: $self->{number_locale}";
 }
 
+sub billing_country {
+  return $_[0]->{billing_country};
+}
+
 1;

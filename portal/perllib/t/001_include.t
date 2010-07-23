@@ -48,6 +48,7 @@ require_ok( 'CCNQ::Portal::Outer::Theme' );
 require_ok( 'CCNQ::Portal::Outer::Widget' );
 
 require_ok( 'CCNQ::Portal::Inner::Account' );
+require_ok( 'CCNQ::Portal::Inner::BillingAddress' );
 require_ok( 'CCNQ::Portal::Inner::Plan' );
 require_ok( 'CCNQ::Portal::Inner::billing_plan' );
 require_ok( 'CCNQ::Portal::Inner::provisioning' );

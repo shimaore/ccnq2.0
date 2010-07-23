@@ -32,6 +32,8 @@ An account record must contain at least:
 
   account: this account's ID
   name: this account's name
+  country: this account's billing country
+  address: other elements of the account's billing address (as provided by Geo::PostalAddress)
 
 =cut
 

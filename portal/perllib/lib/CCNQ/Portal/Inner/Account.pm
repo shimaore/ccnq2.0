@@ -39,6 +39,7 @@ sub gather_field {
   var field => {
     name    => $account_billing_data->{name},
     account => $account,
+    country => $account_billing_data->{country},
   };
 }
 
@@ -87,6 +88,7 @@ post '/billing/account' => sub {
     account => session('account')
   },qw(
     name
+    country
   ));
 
   # Update the information in the portal.
