@@ -44,12 +44,17 @@ get '/themes/js/jquery-ui.js' => sub {
 
 get '/themes/css/:theme/jquery-ui.css' => sub {
   content_type 'text/css';
-  content_of(path(CCNQ::CCN,'themes','css',vars->{theme},'jquery-ui.css'));
+  content_of(path(CCNQ::CCN,'themes','css',params{theme},'jquery-ui.css'));
 };
 
 get '/themes/css/:theme/jquery-ui.css' => sub {
   content_type 'text/css';
-  content_of(path(CCNQ::CCN,'themes','css',vars->{theme},'jquery-ui.css'));
+  content_of(path(CCNQ::CCN,'themes','css',params{theme},'jquery-ui.css'));
+};
+
+get '/themes/css/:theme/style.css' => sub {
+  content_type 'text/css';
+  content_of(path(CCNQ::CCN,'themes','css',params{theme},'style.css'));
 };
 
 get r('/themes/css/([\w-]+)/images/([\w-]+)\.png') => sub {
