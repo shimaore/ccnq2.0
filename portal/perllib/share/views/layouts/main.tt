@@ -10,6 +10,7 @@
 <!-- local site -->
 <link rel="stylesheet" type="text/css" href="<% prefix %>/themes/css/<% jquery_ui_theme %>/jquery-ui.css" />
 <link rel="stylesheet" type="text/css" href="<% prefix %>/themes/css/<% site_theme %>/style.css" />
+<link rel="icon" type="image/gif" href="<% prefix %>/themes/css/<% site_theme %>/favicon.ico" />
 <script type="text/javascript" src="<% prefix %>/themes/js/jquery.js"></script>
 <script type="text/javascript" src="<% prefix %>/themes/js/jquery-ui.js"></script>
 <!-- main package -->
