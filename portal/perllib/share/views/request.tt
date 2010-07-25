@@ -1,12 +1,13 @@
 <% USE loc %>
 <% IF session.user_id %>
-<div class="request">
+<div class="request ui-accordion-header">
 <% SET refresh = 1 %>
 <% FOREACH row IN result.rows %>
   <% SET r = row.doc %>
   <% IF r.status %>
     <% IF r.status == 'failed' %><% SET refresh = 0 %><% END %>
-    <div class="status <% r.status %>">Node <% r.response.from %>: <% r.status | loc %> <!-- <% r.response.error.join(", ") | html %> --></div>
+    <div class="status <% r.status %>">Node <% r.response.from %>: <% r.status | loc %></div>
+    <!-- <% r.response.error.join(", ") | html %> -->
     <% IF r.action == "trace" && r.response.result.rows %>
       <% last_call_id = '' %>
       <% FOREACH s IN r.response.result.rows %>
@@ -23,6 +24,7 @@
           <span class="sniffer timestamp"><% varname = 'frame.time' %><% s.$varname | html %></span>
           <span class="sniffer callid">Call-ID: <% current_call_id | html %></a></span>
           <% IF not seen.$current_call_id; SET seen.$current_call_id = 1 %>
+          |
           <span>
           <form action="<% prefix %>/trace" method="post" >
             <input type="hidden" name="node_name" value="<% r.node_name | html %>" />
@@ -31,6 +33,7 @@
             <input type="submit" value="<% | loc %>View<% END %>">
           </form>
           </span>
+          |
           <span>
           <form action="<% prefix %>/trace" method="post" >
             <input type="hidden" name="node_name" value="<% r.node_name | html %>" />
@@ -49,7 +52,7 @@
           <% END %>
           <span class="sniffer method"><% varname = 'sip.Method' %><% s.$varname | html %></span>
           <span class="sniffer status"><% varname = 'sip.Status-Code' %><% s.$varname |html %></span><br/>
-          <span class="sniffer from_addr">From: <% varname = 'sip.From' %><% s.$varname | html %></span>
+          <span class="sniffer from_addr">From: <% varname = 'sip.From' %><% s.$varname | html %></span><br/>
           <span class="sniffer to_addr">To: <% varname = 'sip.To' %><% s.$varname | html %></span>
         </div>
       <% END %>
@@ -68,21 +71,21 @@
     <% ELSE %>
       <% IF r.request %>
         <% IF r.completed %>
-          <div class="request completed"><% | loc %>Request completed<% END %> <img src="<% prefix %>/images/tango-icon-theme/22x22/status/dialog-information.png"></div>
+          <div class="request completed ui-accordion-header"><% | loc %>Request completed<% END %> <img src="<% prefix %>/images/tango-icon-theme/22x22/status/dialog-information.png"></div>
         <% ELSE %>
-          <div class="request pending"><% | loc %>Request pending<% END %></div>
-          <div><a href="<% prefix %>/request/<% r.request | uri %>"><% | loc %>Refresh<% END %></a></div>
-          <% IF refresh %>
-          <script type="text/javascript">var t=setTimeout("location.reload()",4000);</script>
-          <% END %>
+          <div class="request pending ui-accordion-header"><% | loc %>Request pending<% END %></div>
         <% END %>
       <% ELSE %>
-        <div class="request"><% | loc %>Pending<% END %></div>
+        <div class="request ui-accordion-header"><% | loc %>Data unavailable<% END %></div>
       <% END %>
     <% END %>
   <% END %>
 <% END %>
 </div>
+<% IF refresh %>
+<noscript><div><a href="<% prefix %>/request/<% r.request | uri %>"><% | loc %>Refresh<% END %></a></div></noscript>
+<script type="text/javascript">var t=setTimeout("location.reload()",4000);</script>
+<% END %>
 <% ELSE %>
   <% | loc %>Please log in.<% END %>
 <% END %>
