@@ -148,3 +148,6 @@ div.activity {
   display: inline-block;
   width: 35%;
 }
+.entry form {
+  display: inline;
+}
