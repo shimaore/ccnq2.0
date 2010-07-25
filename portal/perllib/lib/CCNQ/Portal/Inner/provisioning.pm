@@ -34,7 +34,7 @@ sub as_json {
   return to_json($cv->recv);
 }
 
-=head1 /provisioning/:view/@id
+=head1 /provisioning/view/:view/@id
 
 Generic Provisioning API query, restricted to administrative accounts.
 
