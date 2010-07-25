@@ -5,7 +5,7 @@
 <% FOREACH row IN result.rows %>
   <% SET r = row.doc %>
   <% IF r.status %>
-    <% IF r.status == 'failed' %><% SET refresh = 0 %><% END %>
+    <% IF r.status == 'failed' %><% SET refresh = 0 %> <span class="ui-icon ui-icon-alert"><% END %>
     <div class="status <% r.status %>">Node <% r.response.from %>: <% r.status | loc %></div>
     <!-- <% r.response.error.join(", ") | html %> -->
     <% IF r.action == "trace" && r.response.result.rows %>
@@ -71,7 +71,7 @@
     <% ELSE %>
       <% IF r.request %>
         <% IF r.completed %>
-          <div class="request completed"><% | loc %>Request completed<% END %> <img src="<% prefix %>/images/tango-icon-theme/22x22/status/dialog-information.png"></div>
+          <div class="request completed"><% | loc %>Request completed<% END %> <span class="ui-icon ui-icon-info"></div>
           <% SET refresh = 0 %>
         <% ELSE %>
           <div class="request pending"><% | loc %>Request pending<% END %></div>
