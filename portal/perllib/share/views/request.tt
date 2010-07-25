@@ -8,7 +8,8 @@
   <% SET progress = 0 %>
   <% SET total = 0 %>
   <% IF r.status %>
-    <% SET rank = r.rank; IF not activities.$rank; SET activies.$rank = 1; SET progress = progress + 1; END %>
+    <% SET rank = r.rank %>
+    <% IF not activities.$rank %><% SET activies.$rank = 1 %><% SET progress = progress + 1 %><% END %>
     <% IF r.status == 'failed' %><% SET refresh = 0 %> <span class="ui-icon ui-icon-alert" /><% END %>
     <div class="status <% r.status %>">Node <% r.response.from %>: <% r.status | loc %></div>
     <!-- <% r.response.error.join(", ") | html %> -->
