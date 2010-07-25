@@ -76,14 +76,14 @@
     <% ELSE %>
       <% IF r.request %>
         <% IF r.completed %>
-          <div class="request completed ui-state-highlight"><span class="ui-icon ui-icon-lightbulb" /><% | loc %>Request completed<% END %></div>
+          <div class="request completed ui-state-highlight ui-corner-all"><p><span class="ui-icon ui-icon-lightbulb" /><% | loc %>Request completed<% END %></p></div>
           <% SET refresh = 0 %>
         <% ELSE %>
           <div class="request progressbar"></div>
-          <div class="request pending ui-state-highlight"><% | loc %>Request pending<% END %></div>
+          <div class="request pending ui-state-highlight ui-corner-all"><p><% | loc %>Request pending<% END %></p></div>
         <% END %>
       <% ELSE %>
-        <div class="request ui-state-error"><% | loc %>Data unavailable<% END %></div>
+        <div class="request ui-state-error ui-corner-all"><p><span class="ui-icon ui-icon-alert"<% | loc %>Data unavailable<% END %></p></div>
       <% END %>
     <% END %>
   <% END %>
