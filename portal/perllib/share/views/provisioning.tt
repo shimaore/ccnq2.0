@@ -2,7 +2,7 @@
 <% IF session.user_id and result %>
 <div class="provisioning">
 <% FOREACH row IN result.rows; SET profile = row.doc.profile %>
-  <h3 class="row_header <% profile %>"><a href="#"><% row.doc.$profile %></a></h3>
+  <h3 class="row_header <% profile %>"><a href="<% prefix %>/provisioning/<% profile | uri %>/<% row.doc.$profile | uri %>"><% row.doc.$profile %></a></h3>
   <div class="row_content <% profile %>">
     <div>
     <a href="<% prefix %>/provisioning/<% profile | uri %>/<% row.doc.$profile | uri %>"><% row.doc.$profile %></a>
