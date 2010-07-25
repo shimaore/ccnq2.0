@@ -1,10 +1,11 @@
 <% USE loc %>
 <% IF session.user_id %>
 <div class="request">
+<% SET refresh = 1 %>
 <% FOREACH row IN result.rows %>
   <% SET r = row.doc %>
   <% IF r.status %>
-    <% IF r.status == 'failed' %><% SET do_not_refresh = 1 %><% END %>
+    <% IF r.status == 'failed' %><% SET refresh = 0 %><% END %>
     <div class="status <% r.status %>">Node <% r.response.from %>: <% r.status | loc %> <!-- <% r.response.error.join(", ") | html %> --></div>
     <% IF r.action == "trace" && r.response.result.rows %>
       <% last_call_id = '' %>
@@ -71,7 +72,7 @@
         <% ELSE %>
           <div class="request pending"><% | loc %>Request pending<% END %></div>
           <div><a href="<% prefix %>/request/<% r.request | uri %>"><% | loc %>Refresh<% END %></a></div>
-          <% IF not do_not_refresh %>
+          <% IF refresh %>
           <script type="text/javascript">var t=setTimeout("location.reload()",4000);</script>
           <% END %>
         <% END %>
