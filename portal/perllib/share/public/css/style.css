@@ -117,37 +117,14 @@ div.status {
 }
 
 /* Reports */
-div.row {
-  color: black;
-  border: 2px solid #999;
-  background-color: white;
-}
-div.row a {
-  color: black;
-}
-div.row h3 span {
-  display: inline;
-}
-div.row.endpoint {
+.endpoint {
   border-color: blue;
 }
-div.row.number {
+.number {
   border-color: green;
 }
-div.row.location {
+.location {
   border-color: red;
-}
-div.row .id  {
-  font-weight: bold;
-}
-div.endpoint .id a {
-  color: blue;
-}
-div.number .id a {
-  color: green;
-}
-div.location .id a {
-  color: red;
 }
 .entry {
   margin-left: 20px;
@@ -155,7 +132,4 @@ div.location .id a {
 .entry .key {
   font-weight: bold;
   width: 120px;
-}
-div.row .entry a {
-  color: black;
 }
