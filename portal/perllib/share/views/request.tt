@@ -2,14 +2,14 @@
 <% IF session.user_id %>
 <div class="requests ui-corner-all">
 <% SET refresh = 1 %>
+<% SET activities = [] %>
+<% SET progress = 0 %>
+<% SET total = 0 %>
 <% FOREACH row IN result.rows %>
   <% SET r = row.doc %>
-  <% SET activities = [] %>
-  <% SET progress = 0 %>
-  <% SET total = 0 %>
   <% IF r.status %>
     <% SET rank = r.rank %>
-    <% IF not activities.$rank %><% SET activies.$rank = 1 %><% SET progress = progress + 1 %><% END %>
+    <% IF not activities.$rank %><% SET activities.$rank = 1 %><% SET progress = progress + 1 %><% END %>
     <% IF r.status == 'failed' %><% SET refresh = 0 %> <span class="ui-icon ui-icon-alert" /><% END %>
     <div class="status <% r.status %>">Node <% r.response.from %>: <% r.status | loc %></div>
     <!-- <% r.response.error.join(", ") | html %> -->
@@ -88,13 +88,13 @@
       <% END %>
     <% END %>
   <% END %>
-  <script type="text/javascript">$(".request.progressbar").progressbar({ value: <% progress / total * 100 %> });</script>
 <% END %>
 </div>
 <% IF refresh %>
 <noscript><div><a href="<% prefix %>/request/<% r.request | uri %>"><% | loc %>Refresh<% END %></a></div></noscript>
 <script type="text/javascript">var t=setTimeout("location.reload()",4000);</script>
 <% END %>
+<script type="text/javascript">$(".request.progressbar").progressbar({ value: <% progress %> / <% total %> * 100 });</script>
 <% ELSE %>
   <% | loc %>Please log in.<% END %>
 <% END %>
