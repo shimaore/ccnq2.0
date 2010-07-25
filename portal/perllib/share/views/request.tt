@@ -72,6 +72,7 @@
       <% IF r.request %>
         <% IF r.completed %>
           <div class="request completed ui-accordion-header"><% | loc %>Request completed<% END %> <img src="<% prefix %>/images/tango-icon-theme/22x22/status/dialog-information.png"></div>
+          <% SET refresh = 0 %>
         <% ELSE %>
           <div class="request pending ui-accordion-header"><% | loc %>Request pending<% END %></div>
         <% END %>
