@@ -1,6 +1,6 @@
 <% USE loc %>
 <% IF session.user_id %>
-<div class="request">
+<div class="requests ui-widget-overlay ui-widget-shadow">
 <% SET refresh = 1 %>
 <% FOREACH row IN result.rows %>
   <% SET r = row.doc %>
