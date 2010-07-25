@@ -120,6 +120,15 @@ div.activity {
   padding-left: 2em;
   padding-top: 4px;
 }
+.request .ui-icon {
+  float: left;
+}
+.request {
+  width: auto;
+}
+.request.progressbar {
+  width: 200px;
+}
 
 /* Reports */
 .endpoint {
