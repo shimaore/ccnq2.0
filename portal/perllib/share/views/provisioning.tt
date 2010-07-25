@@ -6,19 +6,20 @@
     <h3>
     <span class="id <% profile %>"><a href="<% prefix %>/provisioning/<% profile | uri %>/<% row.doc.$profile | uri %>"><% row.doc.$profile %></a></span>
     <% IF profile == 'endpoint' and row.doc.password %>
-      <span class="registration"><a href="<% prefix %>/provisioning/endpoint_location?endpoint=<% row.doc.endpoint | uri %>">Registration status</a></span>
+      <span class="registration"><a href="<% prefix %>/provisioning/endpoint_location?endpoint=<% row.doc.endpoint | uri %>"><%|loc%>Registration status<%END%></a></span>
     <% END %>
     <% IF profile == 'endpoint' %>
-      <span class="edit"><a href="<% prefix %>/provisioning/endpoint/<% row.doc.endpoint %>">Edit</a></span>
+      <span class="edit"><a href="<% prefix %>/provisioning/endpoint/<% row.doc.endpoint %>"><%|loc%>Edit<%END%></a></span>
     <% END %>
     <% IF profile == 'number' %>
-      <span class="edit"><a href="<% prefix %>/number_forwarding/<% row.doc.number %>">Change Forwarding</a></span>
-      <span class="edit"><a href="<% prefix %>/number_location/<% row.doc.number %>">Change Location</a></span>
+      <span class="edit"><a href="<% prefix %>/number_forwarding/<% row.doc.number %>"><%|loc%>Change Forwarding<%END%></a></span>
+      <span class="edit"><a href="<% prefix %>/number_location/<% row.doc.number %>"><%|loc%>Change Location<%END%></a></span>
     <% END %>
     </h3>
+    <div>
     <% FOREACH d IN row.doc; UNLESS d.key.match('^_|^request|^type|^endpoint_ip') %>
       <div class="entry">
-        <span class="key"><% d.key %></span>
+        <span class="key"><%|loc%><% d.key %><%END%></span>
         <span class="value">
           <% IF    d.key == 'endpoint' %><a href="<% prefix %>/provisioning/view/endpoint/<% d.value | uri %>"><% d.value %></a>
           <% ELSIF d.key == 'location' %><a href="<% prefix %>/provisioning/view/location/<% d.value | uri %>"><% d.value %></a>
@@ -26,6 +27,7 @@
         </span>
       </div>
     <% END; END %>
+    </div>
   </div>
 <% END %>
 </div>

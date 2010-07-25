@@ -125,6 +125,9 @@ div.row {
 div.row a {
   color: black;
 }
+div.row h3 span {
+  display: inline;
+}
 div.row.endpoint {
   border-color: blue;
 }
