@@ -23,6 +23,10 @@
         <span class="value">
           <% IF    d.key == 'endpoint' %><a href="<% prefix %>/provisioning/view/endpoint/<% d.value | uri %>"><% d.value %></a>
           <% ELSIF d.key == 'location' %><a href="<% prefix %>/provisioning/view/location/<% d.value | uri %>"><% d.value %></a>
+          <% ELSIF d.key == 'account' %>
+            <form action="/account" method="POST" accept-charset="utf-8" class="ui-widget">
+              <input type="submit" name="account" value="<% d.value | html %>">
+            </form>
           <% ELSE %><% d.value %><% END %>
         </span>
       </div>
