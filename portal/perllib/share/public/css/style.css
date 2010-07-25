@@ -149,11 +149,12 @@ div.number .id a {
 div.location .id a {
   color: red;
 }
-div.entry {
+.entry {
   margin-left: 20px;
 }
-div.entry .key {
+.entry .key {
   font-weight: bold;
+  width: 120px;
 }
 div.row .entry a {
   color: black;

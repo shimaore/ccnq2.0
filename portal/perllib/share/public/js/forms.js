@@ -1,5 +1,5 @@
 $(document).ready(function() {
         $("form.validate").validate();
 
-        $("div.row").accordion();
+        $("div.provisioning").accordion();
 });

@@ -2,8 +2,7 @@
 <% IF session.user_id and result %>
 <div class="provisioning">
 <% FOREACH row IN result.rows; SET profile = row.doc.profile %>
-  <div class="row <% profile %>">
-    <div class="row_header">
+  <h3 class="row_header <% profile %>">
     <span class="id <% profile %>"><a href="<% prefix %>/provisioning/<% profile | uri %>/<% row.doc.$profile | uri %>"><% row.doc.$profile %></a></span>
     <% IF profile == 'endpoint' and row.doc.password %>
       <span class="registration"><a href="<% prefix %>/provisioning/endpoint_location?endpoint=<% row.doc.endpoint | uri %>"><%|loc%>Registration status<%END%></a></span>
@@ -15,8 +14,8 @@
       <span class="edit"><a href="<% prefix %>/number_forwarding/<% row.doc.number %>"><%|loc%>Change Forwarding<%END%></a></span>
       <span class="edit"><a href="<% prefix %>/number_location/<% row.doc.number %>"><%|loc%>Change Location<%END%></a></span>
     <% END %>
-    </div>
-    <div class="row_content">
+  </h3>
+  <div class="row_content <% profile %>">
     <% FOREACH d IN row.doc; UNLESS d.key.match('^_|^request|^type|^endpoint_ip') %>
       <div class="entry">
         <span class="key"><%|loc%><% d.key %><%END%></span>
@@ -27,7 +26,6 @@
         </span>
       </div>
     <% END; END %>
-    </div>
   </div>
 <% END %>
 </div>
