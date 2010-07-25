@@ -6,9 +6,10 @@
   <% SET r = row.doc %>
   <% SET activities = [] %>
   <% SET progress = 0 %>
+  <% SET total = 0 %>
   <% IF r.status %>
     <% SET rank = r.rank; IF not activities.$rank; SET activies.$rank = 1; SET progress = progress + 1; END %>
-    <% IF r.status == 'failed' %><% SET refresh = 0 %> <span class="ui-icon ui-icon-alert"><% END %>
+    <% IF r.status == 'failed' %><% SET refresh = 0 %> <span class="ui-icon ui-icon-alert" /><% END %>
     <div class="status <% r.status %>">Node <% r.response.from %>: <% r.status | loc %></div>
     <!-- <% r.response.error.join(", ") | html %> -->
     <% IF r.action == "trace" && r.response.result.rows %>
@@ -71,10 +72,11 @@
   <% ELSE %>
     <% IF r.activity %>
       <div class="activity rank<% r.activity_rank %>"><% | loc(r.activity_rank+1) %>Step [_1]:<% END %> <% r.action | loc %></div>
+      <% SET total = total + 1 %>
     <% ELSE %>
       <% IF r.request %>
         <% IF r.completed %>
-          <div class="request completed ui-state-highlight"><span class="ui-icon ui-icon-lightbulb"><% | loc %>Request completed<% END %></div>
+          <div class="request completed ui-state-highlight"><span class="ui-icon ui-icon-lightbulb" /><% | loc %>Request completed<% END %></div>
           <% SET refresh = 0 %>
         <% ELSE %>
           <div class="request progressbar"></div>
@@ -85,7 +87,7 @@
       <% END %>
     <% END %>
   <% END %>
-  <script type="text/javascript">$(".request.progressbar").progressbar({ value: <% progress %> });</script>
+  <script type="text/javascript">$(".request.progressbar").progressbar({ value: <% progress / total * 100 %> });</script>
 <% END %>
 </div>
 <% IF refresh %>
