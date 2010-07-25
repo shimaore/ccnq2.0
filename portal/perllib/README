@@ -51,3 +51,14 @@ scheme looks as follows:
   for submission
     client --- outer_layer --- inner_layer <-> API (core)
 
+
+--- Design Constraints ---
+
+- The user-facing portal only requires HTTP to work. Javascript is
+  available (for example for user-side validation before submittal) but
+  never required.
+- Javascript may be required for administrative tasks.
+- I18N, accessibility, and user-experience are important.
+
+(Basically the goal is to provide an accesible portal that can be used
+by any user. It won't necessarily be the prettiest one or the best one.)
