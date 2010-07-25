@@ -115,6 +115,9 @@ div.status {
   display: inline;
   padding-left: 4em;
 }
+div.activity {
+  padding-left: 2em;
+}
 
 /* Reports */
 .endpoint {
