@@ -91,7 +91,7 @@ use constant js_report_count => <<'JAVASCRIPT';
   }
 JAVASCRIPT
 
-use constant js_reduce_sum <<'JAVASCRIPT';
+use constant js_reduce_sum => <<'JAVASCRIPT';
   function(keys, values, rereduce) {
     var sum = 0;
     for(var i in values) {
@@ -136,7 +136,7 @@ use constant provisioning_designs => {
       count => {
         map => js_report_count,
         reduce => js_reduce_sum,
-      }
+      },
     },
   },
 };
