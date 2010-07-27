@@ -1,12 +1,13 @@
 <% USE loc %>
 <% IF session.user_id %>
 <div class="requests ui-corner-all">
-<% SET refresh = 1 %>
+<% SET refresh = 0 %>
 <% SET activities = [] %>
 <% SET progress = 0 %>
 <% SET total = 0 %>
 <% FOREACH row IN result.rows %>
   <% SET r = row.doc %>
+  <% SET refresh = r.request %>
   <% IF r.status %>
     <% SET rank = r.rank %>
     <% IF not activities.$rank %><% SET activities.$rank = 1 %><% SET progress = progress + 1 %><% END %>
@@ -91,7 +92,7 @@
 <% END %>
 </div>
 <% IF refresh %>
-<noscript><div><a href="<% prefix %>/request/<% r.request | uri %>"><% | loc %>Refresh<% END %></a></div></noscript>
+<noscript><div><a href="<% prefix %>/request/<% refresh | uri %>"><% | loc %>Refresh<% END %></a></div></noscript>
 <script type="text/javascript">var t=setTimeout("location.reload()",4000);</script>
 <% END %>
 <script type="text/javascript">$(".request.progressbar").progressbar({ value: <% progress %> / <% total %> * 100 });</script>
