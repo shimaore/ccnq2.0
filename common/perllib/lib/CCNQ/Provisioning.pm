@@ -85,6 +85,22 @@ use constant js_report_all_numbers => <<'JAVASCRIPT';
   }
 JAVASCRIPT
 
+use constant js_report_count => <<'JAVASCRIPT';
+  function (doc){
+    emit([doc.account,doc.account_sub,doc.profile,doc.type],1);
+  }
+JAVASCRIPT
+
+use constant js_reduce_sum <<'JAVASCRIPT';
+  function(keys, values, rereduce) {
+    var sum = 0;
+    for(var i in values) {
+      sum += values[i];
+    }
+    return sum;
+  }
+JAVASCRIPT
+
 use constant provisioning_designs => {
   report => {
     language => 'javascript',
@@ -117,6 +133,10 @@ use constant provisioning_designs => {
         map => js_report_all_numbers,
         # no reduce function
       },
+      count => {
+        map => js_report_count,
+        reduce => js_reduce_sum,
+      }
     },
   },
 };
