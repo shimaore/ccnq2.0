@@ -18,7 +18,7 @@
     </extension>
 
     <extension name="egress-emergency">
-      <condition field="destination_number" expression="^(112|15|17|18|119|115|116000)$">
+      <condition field="destination_number" expression="^(112|15|17|18|119|115|116000|19)$">
         <action application="set" data="ccnq_called=$1"/>
         <action application="set" data="progress_timeout=12"/>
         <action application="set" data="ccnq_routing=${regex(${sip_req_params}|routing=([^;]*)|%1)}"/>
