@@ -7,7 +7,6 @@
 <% SET total = 0 %>
 <% FOREACH row IN result.rows %>
   <% SET r = row.doc %>
-  <% SET refresh = r.request %>
   <% IF r.status %>
     <% SET rank = r.rank %>
     <% IF not activities.$rank %><% SET activities.$rank = 1 %><% SET progress = progress + 1 %><% END %>
@@ -83,6 +82,7 @@
         <% ELSE %>
           <div class="request progressbar"></div>
           <div class="request pending ui-state-highlight ui-corner-all"><p><% | loc %>Request pending<% END %></p></div>
+          <% SET refresh = r.request %>
         <% END %>
       <% ELSE %>
         <div class="request ui-state-error ui-corner-all"><p><span class="ui-icon ui-icon-alert"></span><% | loc %>Data unavailable<% END %></p></div>
