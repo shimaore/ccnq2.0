@@ -62,7 +62,7 @@ post '/number_forwarding/:number' => sub {
 
   my $forwarding_type = $params->{forwarding_type};
   grep { $forwarding_type eq $_ } qw( none all err )
-    or return CCNQ::Portal::content;
+    or return CCNQ::Portal::content( error => _('Invalid option')_ );
 
   my $forwarding_number = $normalize_number->($params->{forwarding_number});
 
