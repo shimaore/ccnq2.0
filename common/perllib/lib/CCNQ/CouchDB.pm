@@ -298,8 +298,8 @@ sub view_cv {
   }
 
   $view->cb(sub{
-    my $view = CCNQ::AE::receive(@_);
-    $rcv->send($view);
+    my $data = CCNQ::AE::receive(@_);
+    $rcv->send($data);
   });
   return $rcv;
 }
