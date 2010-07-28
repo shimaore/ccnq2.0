@@ -139,7 +139,7 @@
         <expression><![CDATA[<sip:(.*)@(.*)>]]></expression>
         <action application="set" data="refer_user=$1"/>
         <action application="set" data="refer_domain=$2"/>
-        <action application="bridge" data="sofia/internal-$${profile_name}/${refer_user}@${refer_domain}"/>
+        <action application="bridge" data="sofia/internal-$${profile_name}/${refer_user}@$${egress_target};source=${ingress_target}"/>
       </condition>
     </extension>
   </context>
