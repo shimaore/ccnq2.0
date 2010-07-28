@@ -49,6 +49,24 @@ sub content_of {
   return $result;
 }
 
+=head2 lines_of($filename)
+
+    Read all lines from the file and returns them as an arrayref.
+
+=cut
+
+sub lines_of {
+  open(my $fh, '<', $_[0]) or error("$_[0]: $!"), return undef;
+  my @lines = ();
+  while(<$fh>) {
+    chomp;
+    push @lines, $_;
+  }
+  close($fh) or error("$_[0]: $!"), return undef;
+  return [@lines];
+}
+
+
 =head2 print_to($filename,$content)
 
 Saves the $content to the specified $filename.
