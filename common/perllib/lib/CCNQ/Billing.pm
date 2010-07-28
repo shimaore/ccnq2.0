@@ -98,6 +98,14 @@ use constant js_report_buckets => <<'JAVASCRIPT';
   }
 JAVASCRIPT
 
+use constant js_report_bill_cycle => <<'JAVASCRIPT';
+  function (doc) {
+    if(doc.profile == 'account' && doc.bill_cycle) {
+      emit([doc.bill_cycle],doc.account);
+    }
+  }
+JAVASCRIPT
+
 use constant billing_designs => {
   report => {
     language => 'javascript',
@@ -122,7 +130,10 @@ use constant billing_designs => {
       },
       buckets => {
         map => js_report_buckets,
-      }
+      },
+      bill_cycle => {
+        map => js_report_bill_cycle,
+      },
     },
   },
 };

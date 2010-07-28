@@ -42,7 +42,13 @@ use constant js_report_by_type => <<'JAVASCRIPT';
     var hour  = doc.start_time.substr(0,2);
     var minu  = doc.start_time.substr(2,2);
     var seco  = doc.start_time.substr(4,2);
-    emit([doc.account,doc.account_sub,doc.event_type,year,month,day,hour,minu,seco,],null);
+    emit([doc.account,doc.account_sub,doc.event_type,year,month,day,hour,minu,seco],null);
+  }
+JAVASCRIPT
+
+use constant js_report_invoicing => <<'JAVASCRIPT';
+  function (doc) {
+    emit([doc.account,doc.start_date,doc.account_sub,doc.event_type],null);
   }
 JAVASCRIPT
 
@@ -52,6 +58,9 @@ use constant cdr_designs => {
     views    => {
       by_type => {
         map => js_report_by_type,
+      },
+      invoicing => {
+        map => js_report_invoicing,
       },
     },
   },

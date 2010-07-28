@@ -20,6 +20,7 @@ use Test::More;
 require_ok( 'CCNQ' );
 
 require_ok( 'CCNQ::Object' );
+require_ok( 'CCNQ::MathContainer' );
 require_ok( 'AnyEvent::Watchdog::Util' );
 
 require_ok( 'CCNQ::B2BUA' );
@@ -44,6 +45,11 @@ require_ok( 'CCNQ::Billing::User' );
 require_ok( 'CCNQ::CDR' );
 require_ok( 'CCNQ::CouchDB' );
 require_ok( 'CCNQ::CouchDB::CodeStore' );
+require_ok( 'CCNQ::Invoicing' );
+require_ok( 'CCNQ::Invoicing::Record' );
+require_ok( 'CCNQ::Invoicing::Counts' );
+require_ok( 'CCNQ::Invoicing::Summarize' );
+require_ok( 'CCNQ::Invoicing::Daily' );
 require_ok( 'CCNQ::Manager' );
 require_ok( 'CCNQ::Manager::CodeStore' );
 require_ok( 'CCNQ::MediaProxy' );
@@ -103,6 +109,7 @@ require_ok( 'CCNQ::Actions::db::provisioning' );
 require_ok( 'CCNQ::Actions::db::billing' );
 require_ok( 'CCNQ::Actions::db::bucket' );
 require_ok( 'CCNQ::Actions::db::cdr' );
+require_ok( 'CCNQ::Actions::db::invoicing' );
 require_ok( 'CCNQ::Actions::proxy::base' );
 require_ok( 'CCNQ::Actions::proxy::inbound_proxy' );
 require_ok( 'CCNQ::Actions::proxy::outbound_proxy' );

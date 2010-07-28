@@ -50,6 +50,8 @@ sub us_state {
 
 package CCNQ::Rating::Event;
 
+use base CCNQ::MathContainer;
+
 =pod
 
 Common Billing Element Format (CBEF)
@@ -101,28 +103,6 @@ sub new {
 
   # Valid parameter.
   return bless $self, $class;
-}
-
-use Scalar::Util qw(blessed);
-use Data::Structure::Util qw(unbless);
-
-sub cleanup {
-  my $self = shift;
-
-  # Remove all the fields that start with _
-  if(!defined($self)) {
-    return undef;
-  }
-  if(blessed($self) =~ /^Math::Big/) {
-    return unbless($self->bstr());
-  }
-  if(UNIVERSAL::isa($self, "ARRAY")) {
-    return [map { cleanup($_) } @{$self}];
-  }
-  if(UNIVERSAL::isa($self, "HASH")) {
-    return { map { $_ => cleanup($self->{$_}) } grep { /^[^_]/ } keys %{$self} };
-  }
-  return "$self";
 }
 
 sub to {
