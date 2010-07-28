@@ -1,5 +1,4 @@
 
-* Test fr/OS call routing (to close)
 
 Portal:
 * bulk import/update rating tables
@@ -10,14 +9,11 @@ Portal:
 * Unify menus (and better "Summary" page)
 
 Voice:
-* emergency call routing (fr/OS)
-* FS code for feature-server / redirection server
 * FS code for prepaid (realtime_estimator)
 
 
 Billing:
 * daily crontab (e.g. import number of DIDs for partial month counts)
-  .. e.g.: generate a CDR for number of numbers / endpoints / locations per account_sub ?
 * end-of-period processing
   .. including partial days
   .. including PDF bills generation
