@@ -23,7 +23,7 @@ sub _install {
 }
 
 # Only one instance is needed per system.
-my $billing_room_done = 0;
+our $billing_room_done = 0;
 
 sub _session_ready {
   my ($params,$context) = @_;

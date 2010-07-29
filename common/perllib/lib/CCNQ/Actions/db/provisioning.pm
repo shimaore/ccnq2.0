@@ -22,8 +22,14 @@ sub _install {
   return CCNQ::Provisioning::install();
 }
 
+our $provisioning_room_done = 0;
+
 sub _session_ready {
   my ($params,$context) = @_;
+
+  return if $provisioning_room_done;
+  $provisioning_room_done = 1;
+
   use CCNQ::XMPPAgent;
   CCNQ::XMPPAgent::_join_room($context,CCNQ::Provisioning::provisioning_cluster_jid);
   return;
