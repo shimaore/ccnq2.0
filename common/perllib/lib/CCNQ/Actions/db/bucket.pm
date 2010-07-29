@@ -18,14 +18,20 @@ use strict; use warnings;
 use CCNQ::Rating::Bucket::DB;
 use CCNQ::Billing::Bucket;
 
+use CCNQ::XMPPAgent;
+
 sub _install {
   return CCNQ::Rating::Bucket::DB::install(@_);
 }
 
 sub _session_ready {
   my ($params,$context) = @_;
-  use CCNQ::XMPPAgent;
-  CCNQ::XMPPAgent::_join_room($context,CCNQ::Billing::Bucket::bucket_cluster_jid);
+
+  my $dest = CCNQ::Billing::Bucket::bucket_cluster_jid;
+  return if exists $context->{joined_muc}->{$dest};
+  $context->{joined_muc}->{$dest} = 0;
+
+  CCNQ::XMPPAgent::_join_room($context,$dest);
   return;
 }
 

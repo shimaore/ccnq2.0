@@ -18,14 +18,20 @@ use strict; use warnings;
 use CCNQ::CDR;
 use CCNQ::Rating::Event::Rated;
 
+use CCNQ::XMPPAgent;
+
 sub _install {
   return CCNQ::CDR::install(@_);
 }
 
 sub _session_ready {
   my ($params,$context) = @_;
-  use CCNQ::XMPPAgent;
-  CCNQ::XMPPAgent::_join_room($context,CCNQ::CDR::cdr_cluster_jid);
+
+  my $dest = CCNQ::CDR::cdr_cluster_jid;
+  return if exists $context->{joined_muc}->{$dest};
+  $context->{joined_muc}->{$dest} = 0;
+
+  CCNQ::XMPPAgent::_join_room($context,$dest);
   return;
 }
 

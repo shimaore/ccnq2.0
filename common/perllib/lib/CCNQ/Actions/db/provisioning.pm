@@ -17,6 +17,8 @@ use strict; use warnings;
 
 use CCNQ::Provisioning;
 
+use CCNQ::XMPPAgent;
+
 sub _install {
   my ($params,$context) = @_;
   return CCNQ::Provisioning::install();
@@ -29,7 +31,6 @@ sub _session_ready {
   return if exists $context->{joined_muc}->{$dest};
   $context->{joined_muc}->{$dest} = 0;
 
-  use CCNQ::XMPPAgent;
   CCNQ::XMPPAgent::_join_room($context,$dest);
   return;
 }

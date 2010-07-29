@@ -18,6 +18,8 @@ use Logger::Syslog;
 
 use CCNQ::Billing;
 
+use CCNQ::XMPPAgent;
+
 sub _install {
   return CCNQ::Billing::install(@_);
 }
@@ -29,7 +31,6 @@ sub _session_ready {
   return if exists $context->{joined_muc}->{$dest};
   $context->{joined_muc}->{$dest} = 0;
 
-  use CCNQ::XMPPAgent;
   CCNQ::XMPPAgent::_join_room($context,$dest);
   return;
 }
