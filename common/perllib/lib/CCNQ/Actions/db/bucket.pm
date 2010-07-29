@@ -29,7 +29,7 @@ sub _session_ready {
 
   my $dest = CCNQ::Billing::Bucket::bucket_cluster_jid;
   return if exists $context->{joined_muc}->{$dest};
-  $context->{joined_muc}->{$dest} = 0;
+  $context->{joined_muc}->{$dest} ||= 0;
 
   CCNQ::XMPPAgent::_join_room($context,$dest);
   return;
