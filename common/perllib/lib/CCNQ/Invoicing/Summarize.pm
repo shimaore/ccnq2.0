@@ -16,87 +16,147 @@ package CCNQ::Invoicing::Summarize;
 
 use strict; use warnings;
 
+use bignum;
+use DateTime;
+use DateTime::Duration;
+
 use AnyEvent;
 use AnyEvent::CouchDB;
 
 use CCNQ::CDR;
 
 sub compute {
-  my ($view,$account,$bill_cycle,$year,$month,$end_date) = @_;
+  my ($view,$account,$start_dt,$end_dt) = @_;
 
-  my $by_event = CCNQ::Invoicing::Record->new;
-  my $by_sub   = CCNQ::Invoicing::Record->new;
+  my $duration = $end_dt - $start_dt;
+  my $days = $duration->in_units('days');
+  debug("This period had $days days.");
+
+  my $by_event = CCNQ::MathContainer->new;
+  my $by_sub   = CCNQ::MathContainer->new;
   my $summary  = CCNQ::Invoicing::Record->new;
 
-  $view->cb(sub {
-    my $r = CCNQ::AE::receive(@_);
-    my $cbef = $r->{doc};
-    # Add each CDR per-category.
+  my $counts   = {};
+
+  my $cv = AE::cv;
+  $cv->begin;
+
+  # Add each CDR per-category
+  my $add_cdr = sub {
+    my ($cbef) = @_;
+
+    # Add each CDR per category.
     my $account_sub = $cbef->{account_sub};
     my $event_type  = $cbef->{event_type};
-    $by_event->{$account_sub}->{$event_type} = add_cdr(
-      $by_event->{$account_sub}->{$event_type} || {},
-      $cbef,
-    );
-    $by_sub->{$account_sub} = add_cdr(
-      $by_sub->{$account_sub} || {},
-      $cbef,
-    );
-    $summary = add_cdr( $summary, $cbef );
-  });
+    if($event_type =~ /^daily_count_(.*)$/) {
+      my $type = $1;
+      $counts->{$account_sub}->{$type} += $cbef->{count};
+    } else {
+      $by_event->{$account_sub}->{$event_type} ||=
+        CCNQ::Invoicing::Record->new;
+      $by_sub->{$account_sub} ||=
+        CCNQ::Invoicing::Record->new;
 
-  # Store the resulting data in the "invoices" database.
-
-  my $id = join('/',$account,$end_date);
-
-  my $data = {
-    _id     => $id,
-    account => $account,
-    # The date at which the invoice was generated. (Bill date)
-    billed  => $end_date,
-    # The period for which the invoice was generated. (Start date)
-    year    => $year,
-    month   => $month,
-    day     => $bill_cycle,
-    summary => $summary->cleanup,
-    by_sub  => $by_sub->cleanup,
-    by_event=> $by_event->cleanup,
-    # More details: use the CDRs themselves.
+      $by_event->{$account_sub}->{$event_type}->add_cdr($cbef);
+      $by_sub  ->{$account_sub}                 ->add_cdr($cbef);
+      $summary                                    ->add_cdr($cbef);
+    }
   };
 
-  CCNQ::Invoicing::insert($data)->cb(sub {
-    CCNQ::AE::Receive(@_);
+  # Create new CDRs for the daily counts
+  my $compute_counts = sub {
+
+    while( my ($account_sub,$r) = each %$counts ) {
+
+      while( my ($type,$count) = each %$r ) {
+
+        # Create CDR for the total of the monthly counts.
+        my $units = $count / $days;
+
+        my $flat_cbef = CCNQ::Rating::Event->new({
+          start_date  => $start_dt->ymd(''),
+          start_time  => '000000',
+          account     => $account,
+          account_sub => $account_sub,
+          event_type  => 'count_'.$type,
+          count       => $units,
+
+          collecting_node => CCNQ::Install::host_name,
+        });
+
+        my $cv = CCNQ::Billing::Rating::rate_and_save_cbef($flat_cbef);
+        my $cbef = CCNQ::AE::receive($cv);
+
+        $add_cdr->($cbef);
+
+      }
+    }
+  };
+
+  $view->cb(sub {
+    my $rows = CCNQ::AE::receive_rows(@_);
+
+    # Count daily events, and accumulate other CDRs.
+    for my $r (@{$rows->{rows}}) {
+      my $cbef = $r->{doc};
+      $add_cdr->($cbef);
+    }
+
+    # Rating for daily counts
+    $compute_counts->();
+
+    # Store the resulting data in the "invoicing" database.
+
+    my $id = join('/',$account,$start_dt->year,$start_dt->month);
+
+    my $data = {
+      _id     => $id,
+      account => $account,
+
+      # The date at which the invoice was generated. (Bill date)
+      billed  => $end_dt->ymd(''),
+
+      # The period for which the invoice was generated. (Start date)
+      year    => $start_dt->year,
+      month   => $start_dt->month,
+      day     => $start_dt->day,
+
+      summary => $summary ->cleanup,
+      by_sub  => $by_sub  ->cleanup,
+      by_event=> $by_event->cleanup,
+      # More details: use the CDRs themselves.
+    };
+
+    CCNQ::Invoicing::insert($data)->cb(sub {
+      CCNQ::AE::Receive(@_);
+      $cv->end;
+    });
   });
-  return;
+
+  return $cv;
 }
 
 sub monthly {
-  my ($account_billing_data,$bill_cycle,$year,$month) = @_;
-
-  # Include top-of-bill information
-
-  my $account = $account_billing_data->{account};
+  my ($account_billing_data,$end_dt) = @_;
 
   # Select all the CDRs that have been created since the last bill run.
-  # This means: CDR from (year,month-1,bill_cycle) until yesterday.
+  my $account = $account_billing_data->{account};
 
-  my $end_date   = sprintf('%04d%02d%02d',$year,$month,$bill_cycle);
   # Last month, same day of the month.
-  $month --;
-  $month > 0 or ($month,$year) = (12,$year-1);
-  my $start_date = sprintf('%04d%02d%02d',$year,$month,$bill_cycle);
+  my $every = DateTime::Duration->new( months => 1 );
+  my $start_dt = $end_dt - $every;
 
   my $couch = couch(CCNQ::CDR::cdr_uri);
   my $db = $couch->db(CCNQ::CDR::cdr_db);
 
   my $options = {
-    startkey     => [$account,$start_date],
-    endkey       => [$account,$end_date],
+    startkey     => [$account,$start_dt->ymd('')],
+    endkey       => [$account,$end_dt  ->ymd('')],
     include_docs => "true",
   };
 
   my $view = $db->view('invoicing',$options);
-  compute($view,$account,$bill_cycle,$year,$month,$end_date);
+  return compute($view,$account,$start_dt,$end_dt);
 }
 
 1;

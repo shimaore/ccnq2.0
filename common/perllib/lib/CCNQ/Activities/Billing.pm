@@ -33,10 +33,10 @@ sub partial_day {
         timestamp   => $time,
         account     => $request->{account},
         account_sub => $request->{account_sub},
-        event_type  => $event_type,
+        event_type  => 'route_'.$event_type,
       }
     },
-  );  
+  );
 }
 
 'CCNQ::Activities::Billing';

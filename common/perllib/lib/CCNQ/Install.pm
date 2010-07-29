@@ -189,7 +189,7 @@ use constant roles_to_functions => {
   'mediaproxy-relay'            => [qw( mediaproxy/relay mediaproxy monit node )],
   'bucket-db'                   => [qw( db/bucket )],
   'cdr-db'                      => [qw( db/cdr )],
-  'invoicing'                   => [qw( db/invoicing )],
+  'invoicing'                   => [qw( db/billing db/invoicing )],
   'manager'                     => [qw( manager monit node )],
   # Pick one of "api" or "portal" for any given server.
   'api'                         => [qw( node/api db/provisioning db/billing )],

@@ -16,11 +16,15 @@ package CCNQ::Invoicing::Daily;
 
 use strict; use warnings;
 
+use DateTime;
+
 use CCNQ::Install;
 use CCNQ::AE;
 
 use CCNQ::Invoicing::Counts;
 use CCNQ::Invoicing::Summarize;
+
+use CCNQ::Billing;
 
 =head1 CCNQ::Invoicing::Daily
 
@@ -33,35 +37,31 @@ on that day.
 =cut
 
 sub run {
-  my @now = localtime();
-  $now[5] += 1900;
-  $now[4] += 1;
-
-  my $year  = $now[5];
-  my $month = $now[4];
-  my $day   = $now[3];
+  my $now = DateTime->now;
 
   # Do both account/account_sub/profile and account/account_sub/profile/type.
-  my $date = sprintf('%04d%02d%02d',$year,$month,$day);
+  my $date = $now->ymd('');
   CCNQ::Invoicing::Counts::daily_cdr($date,3);
   CCNQ::Invoicing::Counts::daily_cdr($date,4);
 
   # Run the bill.
-  bill_run($day,$year,$month,\&CCNQ::Invoicing::Summarize::monthly);
+  bill_run( $now,
+            \&CCNQ::Invoicing::Summarize::monthly );
 }
 
 sub bill_run {
-  my ($bill_cycle,$year,$month,$cb) = @_;
-  # For each account which has its billing_cycle today...
+  my ($date,$cb) = @_;
 
-  use CCNQ::Billing;
+  # For each account which has its billing_cycle today...
   CCNQ::Billing::billing_view({
-    view => 'bill_cycle',
-    _id  => [$bill_cycle],
+    view => 'billing_cycle',
+    _id  => [$date->day],
   })->cb(sub {
     my $r = CCNQ::AE::receive(@_);
 
-    $cb->($r->{doc},$bill_cycle,$year,$month);
+    my $cv = $cb->($r->{doc},$date);
+    # Block until this account is processed
+    CCNQ::AE::receive($cv);
   });
 }
 

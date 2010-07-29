@@ -39,6 +39,8 @@ sub daily_cdr {
 
   # $date        is a YYYYMMDD date (today)
   # $group_level should be either 3 or 4
+  #    group_level = 3 means only the profile (location,endpoint,number,..) is used.
+  #    group_level = 4 means the "type" is also used.
 
   # Run the view
   my $couch = couch(CCNQ::Provisioning::provisioning_uri);

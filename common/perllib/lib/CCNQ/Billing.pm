@@ -98,10 +98,10 @@ use constant js_report_buckets => <<'JAVASCRIPT';
   }
 JAVASCRIPT
 
-use constant js_report_bill_cycle => <<'JAVASCRIPT';
+use constant js_report_billing_cycle => <<'JAVASCRIPT';
   function (doc) {
-    if(doc.profile == 'account' && doc.bill_cycle) {
-      emit([doc.bill_cycle],doc.account);
+    if(doc.profile == 'account' && doc.billing_cycle) {
+      emit([doc.billing_cycle],doc.account);
     }
   }
 JAVASCRIPT
@@ -131,8 +131,8 @@ use constant billing_designs => {
       buckets => {
         map => js_report_buckets,
       },
-      bill_cycle => {
-        map => js_report_bill_cycle,
+      billing_cycle => {
+        map => js_report_billing_cycle,
       },
     },
   },
