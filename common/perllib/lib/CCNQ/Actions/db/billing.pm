@@ -27,10 +27,10 @@ sub _session_ready {
 
   my $dest = CCNQ::Billing::billing_cluster_jid;
   return if exists $context->{joined_muc}->{$dest};
+  $context->{joined_muc}->{$dest} = 0;
 
   use CCNQ::XMPPAgent;
   CCNQ::XMPPAgent::_join_room($context,$dest);
-  $context->{joined_muc}->{$dest} = 0;
   return;
 }
 
