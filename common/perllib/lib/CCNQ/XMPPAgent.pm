@@ -78,10 +78,12 @@ sub send_muc_message {
     debug("send_muc_message(): queuing for dest=$dest");
     $context->{pending_muc}->{$dest} ||= [];
     push @{$context->{pending_muc}->{$dest}}, { body => $body };
-    unless exists $context->{joined_muc}->{$dest} {
+
+    exists $context->{joined_muc}->{$dest} or do {
       $context->{joined_muc}->{$dest} ||= 0;
       _join_room($context,$dest) ;
-    }
+    };
+
     return ['warning','Message queued'];
   }
 }
