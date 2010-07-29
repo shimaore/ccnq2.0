@@ -18,6 +18,7 @@ use strict; use warnings;
 use CCNQ::Invoicing;
 
 sub _install {
+  CCNQ::Invoicing::crontab_update();
   return CCNQ::Invoicing::install(@_);
 }
 
