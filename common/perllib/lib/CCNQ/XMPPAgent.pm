@@ -416,6 +416,7 @@ sub start {
       my $con = shift;
       my ($error) = @_;
       error("xmpp error: " . $error->string);
+      $program->end;
     },
     connect => sub {
       my $con = shift;
