@@ -22,8 +22,16 @@ sub _install {
   return CCNQ::Billing::install(@_);
 }
 
+# Only one instance is needed per system.
+my $billing_room_done = 0;
+
 sub _session_ready {
   my ($params,$context) = @_;
+
+  return if $billing_room_done;
+
+  $billing_room_done = 1;
+
   use CCNQ::XMPPAgent;
   CCNQ::XMPPAgent::_join_room($context,CCNQ::Billing::billing_cluster_jid);
   return;
