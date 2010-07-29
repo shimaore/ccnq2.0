@@ -7,7 +7,7 @@ author        q{Stephane Alnet <stephane@shimaore.net>};
 license       'gpl';
 
 # Specific dependencies
-requires      'CCNQ'                      => '0.050';
+requires      'CCNQ'                      => '0.052';
 
 requires      'File::ShareDir'            => '1.01';
 requires      'File::Spec'                => 0; # '3.2501'
