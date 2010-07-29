@@ -57,8 +57,7 @@ sub run {
   $program->recv;
   undef $program;
 
-  info("$program_name restarting");
-  sleep(seconds_before_restarting);
-  run($program_name);
+  error("$program_name ended");
 }
+
 run(PROGRAM_NAME);

@@ -234,13 +234,13 @@ sub resolve_roles {
 sub resolve_roles_and_functions {
   my $cb = shift;
   for my $cluster_name (@{cluster_names()}) {
-    debug("resolve_roles_and_functions: cluster $cluster_name");
+    debug("resolve_roles_and_functions: > cluster $cluster_name");
     my @roles = resolve_roles($cluster_name);
     my %functions = ();
     for my $role (@roles) {
-      debug("resolve_roles_and_functions: cluster $cluster_name role $role");
+      debug("resolve_roles_and_functions: cluster $cluster_name > role $role");
       for my $function (@{roles_to_functions()->{$role}}) {
-        debug("resolve_roles_and_functions: cluster $cluster_name role $role function $function");
+        debug("resolve_roles_and_functions: cluster $cluster_name role $role > function $function");
         $cb->($cluster_name,$role,$function);
       }
     }
