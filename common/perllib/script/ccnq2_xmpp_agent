@@ -19,6 +19,8 @@ use strict; use warnings;
 use AnyEvent;
 use AnyEvent::Watchdog autorestart => 1, heartbeat => 30;
 
+use CCNQ::AE;
+
 use CCNQ::Install;
 use CCNQ::XMPPAgent;
 
@@ -54,7 +56,7 @@ sub run {
   });
 
   info("$program_name started");
-  $program->recv;
+  CCNQ::AE::receive($program);
   undef $program;
 
   error("$program_name ended");
