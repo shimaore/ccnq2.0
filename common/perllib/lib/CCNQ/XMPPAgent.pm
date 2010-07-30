@@ -430,7 +430,7 @@ sub start {
     disconnect => sub {
       my $con = shift;
       my ($host,$port,$message) = @_;
-      debug("disconnected from ${host}:${port}: ${message}");
+      error("disconnected from ${host}:${port}: ${message}");
       $program->end;
     },
 
