@@ -361,7 +361,7 @@ sub join_cluster_room {
 sub start {
   my ($cluster_name,$role,$function,$program) = @_;
 
-  debug("Starting XMPPAgent for function $function");
+  debug("($cluster_name,$role,$function) Starting XMPPAgent");
 
   # AnyEvent says:
   # *** The EV module is recommended for even better performance, unless you
@@ -379,7 +379,7 @@ sub start {
   my $resource = $function.'_'.$cluster_name;
   my $password = CCNQ::Install::make_password(CCNQ::Install::xmpp_tag);
 
-  debug("Creating XMPP Connection for ${username}\@${domain}/${resource} using password $password.");
+  debug("($cluster_name,$role,$function) Creating XMPP Connection for ${username}\@${domain}/${resource} using password $password.");
 
   my $con =
      AnyEvent::XMPP::IM::Connection->new (
