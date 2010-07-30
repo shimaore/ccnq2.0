@@ -50,7 +50,7 @@ sub us_state {
 
 package CCNQ::Rating::Event;
 
-use base CCNQ::MathContainer;
+use base qw( CCNQ::MathContainer );
 
 =pod
 
