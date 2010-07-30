@@ -420,7 +420,7 @@ sub start {
       my $con = shift;
       my ($error) = @_;
       error("xmpp error: " . $error->string);
-      # $program->end;
+      $program->end;
     },
     connect => sub {
       my $con = shift;
@@ -448,7 +448,7 @@ sub start {
     session_error => sub {
       my $con = shift;
       my ($error) = @_;
-      error("session_error");
+      error("session_error: " . $error->string);
       $program->end;
     },
     presence_update => sub {
@@ -523,7 +523,7 @@ sub start {
     },
   );
 
-  info("Trying to connect...");
+  info("Connecting ($cluster_name,$role,$function)");
   $con->connect ();
 }
 
