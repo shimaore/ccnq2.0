@@ -24,18 +24,6 @@ sub update_number {
   my $self = shift;
   my ($request,$name,@tasks) = @_;
 
-  my $customer_proxy_name   = $request->{cluster} or die "Missing cluster";
-
-  my $ingress_sbc_name = $request->{inbound_username} or die "Missing inbound_username";
-
-  my $e164_number   = $request->{number}      or die "Missing number";
-
-  my $endpoint_ip   = $request->{endpoint_ip} or die "Missing endpoint_ip";
-  my $endpoint_name = $request->{username}    or die "Missing username";
-
-  my $account       = $request->{account}     or die "Missing account";
-  my $account_sub   = $request->{account_sub} or die "Missing account_sub";
-
   # Return list of activities required to complete this request.
   return (
 
