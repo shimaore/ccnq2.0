@@ -76,9 +76,11 @@ require_ok( 'CCNQ::Proxy::inbound' );
 require_ok( 'CCNQ::Proxy::local_number' );
 require_ok( 'CCNQ::Proxy::location' );
 
+require_ok( 'CCNQ::Activities' );
 require_ok( 'CCNQ::Activities::Billing' );
 require_ok( 'CCNQ::Activities::Proxy' );
 require_ok( 'CCNQ::Activities::Provisioning' );
+require_ok( 'CCNQ::Activities::Number' );
 
 require_ok( 'CCNQ::SQL' );
 require_ok( 'CCNQ::SQL::Base' );
