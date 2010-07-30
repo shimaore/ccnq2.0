@@ -419,25 +419,25 @@ sub start {
     error => sub {
       my $con = shift;
       my ($error) = @_;
-      error("xmpp error: " . $error->string);
+      error("($cluster_name,$role,$function) xmpp error: " . $error->string);
       $program->end;
     },
     connect => sub {
       my $con = shift;
       my ($host,$port) = @_;
-      debug("connected to ${host}:${port}");
+      debug("($cluster_name,$role,$function) Connected to ${host}:${port}");
     },
     disconnect => sub {
       my $con = shift;
       my ($host,$port,$message) = @_;
-      error("disconnected from ${host}:${port}: ${message}");
+      error("($cluster_name,$role,$function) Disconnected from ${host}:${port}: ${message}");
       $program->end;
     },
 
     # AnyEvent::XMPP::IM::Connection
     session_ready => sub {
       my $con = shift;
-      debug("Connected as " . $con->jid . " in function $context->{function}");
+      debug("($cluster_name,$role,$function) Connected as " . $con->jid . " in function $context->{function}");
       $con->send_presence("present");
       # my ($user, $host, $res) = split_jid ($con->jid);
       if($session_ready_sub) {
@@ -448,7 +448,7 @@ sub start {
     session_error => sub {
       my $con = shift;
       my ($error) = @_;
-      error("session_error: " . $error->string);
+      error("($cluster_name,$role,$function) session_error: " . $error->string);
       $program->end;
     },
     presence_update => sub {
@@ -459,25 +459,25 @@ sub start {
     presence_error => sub {
       my $con = shift;
       my ($error) = @_;
-      error("presence_error: " . $error->string);
+      error("($cluster_name,$role,$function) presence_error: " . $error->string);
     },
     message => sub {
       my $con = shift;
       my ($msg) = @_;
-      debug($context->{username}.'/'.$context->{resource}.": IM Message from: " . $msg->from . "; body: " . $msg->any_body);
+      debug("($cluster_name,$role,$function) " . $context->{username}.'/'.$context->{resource}.": IM Message from: " . $msg->from . "; body: " . $msg->any_body);
       my $cv = handle_message($context,$msg);
       $program->cb($cv) if $cv;
     },
     message_error => sub {
       my $con = shift;
       my ($error) = @_;
-      error("message_error: " . $error->string);
+      error("($cluster_name,$role,$function) message_error: " . $error->string);
     },
 
     # PubSub-specific
     pubsub_recv => sub {
       my ($con) = @_;
-      debug("pubsub_recv");
+      debug("($cluster_name,$role,$function) pubsub_recv");
     },
 
   );
@@ -489,41 +489,41 @@ sub start {
     enter => sub {
       my $muc = shift;
       my ($room,$user) = @_;
-      debug($user->nick . " (me) entered ".$room->jid);
+      debug("($cluster_name,$role,$function) ".$user->nick . " (me) entered ".$room->jid);
       _joined_muc($context,$room->jid);
     },
     leave => sub {
       my $muc = shift;
       my ($room,$user) = @_;
-      debug($user->nick . " (me) left ".$room->jid);
+      debug("($cluster_name,$role,$function) ".$user->nick . " (me) left ".$room->jid);
       _left_muc($context,$room->jid);
     },
     presence => sub {
       my $muc = shift;
       my ($room,$user) = @_;
-      debug("presence");
+      debug("($cluster_name,$role,$function) presence");
     },
     join => sub {
       my $muc = shift;
       my ($room,$user) = @_;
-      debug($user->nick . " joined ".$room->jid);
+      debug("($cluster_name,$role,$function) ".$user->nick . " joined ".$room->jid);
     },
     part => sub {
       my $muc = shift;
       my ($room,$user) = @_;
-      debug($user->nick . " left ".$room->jid);
+      debug("($cluster_name,$role,$function) ".$user->nick . " left ".$room->jid);
     },
     message => sub {
       my $muc = shift;
       my ($room,$msg,$is_echo) = @_;
-      debug($context->{username}.'/'.$context->{resource}.": in room: " . $room->jid . ", MUC message from: " . $msg->from . "; body: " . $msg->any_body);
+      debug("($cluster_name,$role,$function) ".$context->{username}.'/'.$context->{resource}.": in room: " . $room->jid . ", MUC message from: " . $msg->from . "; body: " . $msg->any_body);
       # my ($user, $host, $res) = split_jid ($msg->to);
       my $cv = handle_message($context,$msg);
       $program->cb($cv) if $cv;
     },
   );
 
-  info("Connecting ($cluster_name,$role,$function)");
+  info("($cluster_name,$role,$function) Connecting");
   $con->connect ();
 }
 
