@@ -60,6 +60,7 @@ sub run {
   undef $program;
 
   error("$program_name ended");
+  sleep(seconds_before_restarting);
 }
 
 run(PROGRAM_NAME);
