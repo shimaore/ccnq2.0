@@ -14,7 +14,7 @@ package CCNQ::Portal::Outer::Widget;
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
-use base 'Exporter';
+use base qw( Exporter );
 use vars '@EXPORT_OK';
 our @EXPORT_OK = qw( &if_ok );
 

@@ -15,7 +15,7 @@ package CCNQ::I18N;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
 
-use base 'Locale::Maketext';
+use base qw( Locale::Maketext );
 use File::ShareDir;
 use File::Spec;
 

@@ -7,7 +7,7 @@ use AnyEvent::HTTPD::Util;
 
 use CCNQ::HTTPD::HTTPConnection;
 
-use base qw/AnyEvent::HTTPD/;
+use base qw( AnyEvent::HTTPD );
 
 use Logger::Syslog;
 

@@ -15,7 +15,7 @@ package CCNQ::Rating::Event::Rated;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
 
-use base 'CCNQ::Rating::Event';
+use base qw( CCNQ::Rating::Event );
 
 use Math::BigFloat;
 
