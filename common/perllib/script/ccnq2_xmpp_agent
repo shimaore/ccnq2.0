@@ -19,14 +19,14 @@ use strict; use warnings;
 use AnyEvent::Watchdog autorestart => 1, heartbeat => 30;
 use AnyEvent;
 
-# use CCNQ::AE;
+use CCNQ::AE;
 
 use CCNQ::Install;
 use CCNQ::XMPPAgent;
 
 use Logger::Syslog;
 
-use constant seconds_before_restarting => 2;
+use constant seconds_before_restarting => 5;
 use constant PROGRAM_NAME => 'ccnq2_xmpp_agent';
 
 # This start all the proper agents
@@ -56,9 +56,7 @@ sub run {
   });
 
   info("$program_name started");
-  # CCNQ::AE::receive($program);
-  eval { $program->recv; };
-  error($@) if $@;
+  CCNQ::AE::receive($program);
   undef $program;
 
   error("$program_name ended");
