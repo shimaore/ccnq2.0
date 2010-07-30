@@ -57,7 +57,7 @@ sub run {
 
   info("$program_name started");
   # CCNQ::AE::receive($program);
-  eval { $program->recv; }
+  eval { $program->recv; };
   error($@) if $@;
   undef $program;
 
