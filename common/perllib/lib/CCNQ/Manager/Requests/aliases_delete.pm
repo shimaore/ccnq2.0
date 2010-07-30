@@ -15,6 +15,6 @@ package CCNQ::Manager::Requests::aliases_delete;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use CCNQ::Activities::Proxy;
-*run = \&CCNQ::Activities::Proxy::aliases_delete;
+sub run { CCNQ::Activities::Proxy->aliases_delete }
 
 'CCNQ::Manager::Requests::aliases_delete';

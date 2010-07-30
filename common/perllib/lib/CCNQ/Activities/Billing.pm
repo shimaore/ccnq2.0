@@ -17,23 +17,41 @@ use strict; use warnings;
 
 use CCNQ::CDR;
 
+use DateTime;
+
 sub partial_day {
   my ($request,$event_type) = @_;
-  my $now = time();
-  my @now = localtime($now);
-  my $date = sprintf('%04d%02d%02d',$now[5]+1900,$now[4]+1,$now[3]);
-  my $time = sprintf('%02d%02d%02d',$now[2],$now[1],$now[0]);
+  my $now = DateTime->now( time_zone => 'local' );
   return (
     {
       action       => 'billing_entry',
       cluster_name => CCNQ::CDR::CDR_CLUSTER_NAME,
       params => {
-        start_date  => $date,
-        start_time  => $time,
-        timestamp   => $time,
+        start_date  => $now->ymd(''),
+        start_time  => $now->hms(''),
+        timestamp   => $now->epoch,
         account     => $request->{account},
         account_sub => $request->{account_sub},
         event_type  => 'route_'.$event_type,
+      }
+    },
+  );
+}
+
+sub final_day {
+  my ($request,$event_type) = @_;
+  my $now = DateTime->now( time_zone => 'local' );
+  return (
+    {
+      action       => 'billing_entry',
+      cluster_name => CCNQ::CDR::CDR_CLUSTER_NAME,
+      params => {
+        start_date  => $now->ymd(''),
+        start_time  => $now->hms(''),
+        timestamp   => $now->epoch,
+        account     => $request->{account},
+        account_sub => $request->{account_sub},
+        event_type  => 'unroute_'.$event_type,
       }
     },
   );

@@ -17,6 +17,7 @@ package CCNQ::Activities::Proxy;
 
 
 sub aliases_update {
+  my $self = shift;
   my $request = shift;
   # Return list of activities required to complete this request.
   return (
@@ -34,6 +35,7 @@ sub aliases_update {
 }
 
 sub aliases_delete {
+  my $self = shift;
   my $request = shift;
   # Return list of activities required to complete this request.
   return (
@@ -49,6 +51,7 @@ sub aliases_delete {
 }
 
 sub domain_update {
+  my $self = shift;
   my $request = shift;
   # Return list of activities required to complete this request.
   return (
@@ -63,6 +66,7 @@ sub domain_update {
 }
 
 sub domain_delete {
+  my $self = shift;
   my $request = shift;
   # Return list of activities required to complete this request.
   return (
@@ -77,6 +81,7 @@ sub domain_delete {
 }
 
 sub dr_gateway_update {
+  my $self = shift;
   my $request = shift;
   # Return list of activities required to complete this request.
   return (
@@ -103,6 +108,7 @@ sub dr_gateway_update {
 }
 
 sub dr_gateway_delete {
+  my $self = shift;
   my $request = shift;
   # Return list of activities required to complete this request.
   return (
@@ -121,6 +127,7 @@ sub dr_gateway_delete {
 }
 
 sub dr_rule_update {
+  my $self = shift;
   my $request = shift;
   # Return list of activities required to complete this request.
   return (
@@ -143,6 +150,7 @@ sub dr_rule_update {
 }
 
 sub dr_rule_delete {
+  my $self = shift;
   my $request = shift;
   # Return list of activities required to complete this request.
   return (
@@ -163,6 +171,7 @@ sub dr_rule_delete {
 }
 
 sub inbound_update {
+  my $self = shift;
   my $request = shift;
   # Return list of activities required to complete this request.
   return (
@@ -182,6 +191,7 @@ sub inbound_update {
 
 
 sub inbound_delete {
+  my $self = shift;
   my $request = shift;
   # Return list of activities required to complete this request.
   return (
@@ -200,6 +210,7 @@ sub inbound_delete {
 }
 
 sub local_number_update {
+  my $self = shift;
   my $request = shift;
   # Return list of activities required to complete this request.
   return (
@@ -227,6 +238,7 @@ sub local_number_update {
 
 
 sub local_number_delete {
+  my $self = shift;
   my $request = shift;
   # Return list of activities required to complete this request.
   return (
@@ -242,6 +254,7 @@ sub local_number_delete {
 }
 
 sub endpoint_update {
+  my $self = shift;
   my $request = shift;
   # Return list of activities required to complete this request.
   return (
@@ -274,6 +287,7 @@ sub endpoint_update {
 
 
 sub endpoint_delete {
+  my $self = shift;
   my $request = shift;
   # Return list of activities required to complete this request.
   return (
@@ -290,6 +304,7 @@ sub endpoint_delete {
 }
 
 sub endpoint_number_update {
+  my $self = shift;
   my $request = shift;
   # Return list of activities required to complete this request.
   return (
@@ -306,6 +321,7 @@ sub endpoint_number_update {
 }
 
 sub endpoint_number_delete {
+  my $self = shift;
   my $request = shift;
   # Return list of activities required to complete this request.
   return (
@@ -322,6 +338,7 @@ sub endpoint_number_delete {
 }
 
 sub location_update {
+  my $self = shift;
   my $request = shift;
   # Return list of activities required to complete this request.
   return (
@@ -339,6 +356,7 @@ sub location_update {
 
 
 sub location_delete {
+  my $self = shift;
   my $request = shift;
   # Return list of activities required to complete this request.
   return (

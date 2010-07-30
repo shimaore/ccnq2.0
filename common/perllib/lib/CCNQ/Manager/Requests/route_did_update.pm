@@ -43,12 +43,12 @@ sub run {
 
     # 2. Route the DID back into the system (onnet-onnet) using the loop on the outbound-proxy
     # (do this one early so that we bill for the first day as soon as service is available).
-    CCNQ::Activities::Proxy::dr_gateway_update( {
+    CCNQ::Activities::Proxy->dr_gateway_update( {
       cluster_name => $request->{outbound_proxy_name},
       id => '1000',
       target => CCNQ::Install::cluster_fqdn($request->{inbound_proxy_name})
     } ),
-    CCNQ::Activities::Proxy::dr_rule_update( {
+    CCNQ::Activities::Proxy->dr_rule_update( {
       cluster_name => $request->{outbound_proxy_name},
       outbound_route => 0,
       description => ["Loop for [_1]",$request->{number}],
@@ -58,7 +58,7 @@ sub run {
     } ),
 
     # 3. Route the inbound DID through the inbound-proxy
-    CCNQ::Activities::Proxy::local_number_update( {
+    CCNQ::Activities::Proxy->local_number_update( {
         %{$request},
         cluster_name => $request->{inbound_proxy_name},
         domain => CCNQ::Install::cluster_fqdn($request->{inbound_proxy_name}),
@@ -67,7 +67,7 @@ sub run {
     } ),
 
     # 4. Route the inbound DID through the customer-side proxy
-    CCNQ::Activities::Proxy::local_number_update ( {
+    CCNQ::Activities::Proxy->local_number_update ( {
       %{$request},
       cluster_name => $request->{customer_proxy_name},
       number => $request->{number}, # Or with transform

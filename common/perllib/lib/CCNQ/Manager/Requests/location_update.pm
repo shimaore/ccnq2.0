@@ -36,7 +36,7 @@ sub run {
 
   return (
     CCNQ::Activities::Provisioning::update_location($request),
-    CCNQ::Activities::Proxy::location_update({%$request, cluster_name => $request->{cluster}}),
+    CCNQ::Activities::Proxy->location_update({%$request, cluster_name => $request->{cluster}}),
     CCNQ::Manager::request_completed(),
   );
 }

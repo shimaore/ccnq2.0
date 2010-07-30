@@ -15,6 +15,6 @@ package CCNQ::Manager::Requests::dr_gateway_update;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use CCNQ::Activities::Proxy;
-*run = \&CCNQ::Activities::Proxy::dr_gateway_update;
+sub run { CCNQ::Activities::Proxy->dr_gateway_update }
 
 'CCNQ::Manager::Requests::dr_gateway_update';

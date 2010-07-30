@@ -23,7 +23,7 @@ sub run {
   my $request = shift;
   # Return list of activities required to complete this request.
   return (
-    CCNQ::Activities::Proxy::endpoint_delete($request),
+    CCNQ::Activities::Proxy->endpoint_delete($request),
     CCNQ::Manager::request_completed(),
   );
 }

@@ -15,6 +15,6 @@ package CCNQ::Manager::Requests::inbound_update;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use CCNQ::Activities::Proxy;
-*run = \&CCNQ::Activities::Proxy::inbound_update;
+sub run { CCNQ::Activities::Proxy->inbound_update }
 
 'CCNQ::Manager::Requests::inbound_update';

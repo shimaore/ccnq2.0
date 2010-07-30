@@ -15,6 +15,6 @@ package CCNQ::Manager::Requests::dr_gateway_delete;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use CCNQ::Activities::Proxy;
-*run = \&CCNQ::Activities::Proxy::dr_gateway_delete;
+sub run { CCNQ::Activities::Proxy->dr_gateway_delete }
 
 'CCNQ::Manager::Requests::dr_gateway_delete';

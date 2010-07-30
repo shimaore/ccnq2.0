@@ -15,6 +15,6 @@ package CCNQ::Manager::Requests::local_number_delete;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use CCNQ::Activities::Proxy;
-*run = \&CCNQ::Activities::Proxy::local_number_delete;
+sub run { CCNQ::Activities::Proxy->local_number_delete }
 
 'CCNQ::Manager::Requests::local_number_delete';
