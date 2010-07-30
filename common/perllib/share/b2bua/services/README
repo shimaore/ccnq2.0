@@ -14,3 +14,5 @@ signaling-server-with-media: provides targets for various (media) feature:
 
 redirect: provides call forwarding feature:
   (number)     send a new call out towards that number (used for the call forwarding portal services)
+
+redirect-with-media: same as redirect, but with media pinned in the server

@@ -1,0 +1,4 @@
+<X-PRE-PROCESS cmd="set" data="global_codec_prefs=PCMU@8000h@20i"/>
+<X-PRE-PROCESS cmd="set" data="external_sip_port=$${sip_port}">
+<X-PRE-PROCESS cmd="set" data="external_sip_ip=$${sip_ip}">
+<X-PRE-PROCESS cmd="include" data="sbc-media-sbc.xml"/>
