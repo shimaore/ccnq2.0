@@ -36,7 +36,6 @@ sub outbound_loopback_update {
   return (
     # Route the DID back into the system (onnet-onnet) using the loop on the outbound-proxy
     # (do this one early so that we bill for the first day as soon as service is available).
-    # At Sotel we use target ID=8 on the outbound-proxy (in outbound_route 0) for this purpose.
     CCNQ::Activities::Proxy->dr_rule_update( {
       cluster_name        => $self->OUTBOUND_PROXY_NAME,
       outbound_route      => 0,
@@ -54,7 +53,6 @@ sub outbound_loopback_delete {
   return (
     # Route the DID back into the system (onnet-onnet) using the loop on the outbound-proxy
     # (do this one early so that we bill for the first day as soon as service is available).
-    # At Sotel we use target ID=8 on the outbound-proxy (in outbound_route 0) for this purpose.
     CCNQ::Activities::Proxy->dr_rule_delete( {
       cluster_name        => $self->OUTBOUND_PROXY_NAME,
       outbound_route      => 0,
@@ -164,7 +162,7 @@ sub update_route {
 
     # 4. Route the inbound DID through the customer-side proxy
     CCNQ::Activities::Proxy->local_number_update ({
-      %{Sotel::Activities->forwarding($request)},
+      %{$self->forwarding($request)},
       cluster_name        => $customer_proxy_name,
       number              => $national_number,
       domain              => CCNQ::Install::cluster_fqdn($customer_proxy_name),
