@@ -21,13 +21,14 @@ use CCNQ::Activities::Billing;
 use CCNQ::Activities::Number;
 use CCNQ::Manager;
 
+use Carp;
 
-sub INBOUND_PROXY_NAME   { die }
-sub OUTBOUND_PROXY_NAME  { die }
+sub INBOUND_PROXY_NAME   { croak }
+sub OUTBOUND_PROXY_NAME  { croak }
 
 sub FORWARDING_SBC_NAME  { CCNQ::Install::cluster_fqdn('forwarding-sbc') }
 
-sub outbound_loopback_target { die }
+sub outbound_loopback_target { croak }
 
 sub outbound_loopback_update {
   my $self = shift;
@@ -100,13 +101,13 @@ sub update_number {
   my ($request,$name,@tasks) = @_;
 
   my $e164_number       = $request->{number}
-    or die "Missing number";
+    or croak "Missing number";
   my $ingress_sbc_name = $request->{inbound_username}
-    or die "Missing inbound_username";
+    or croak "Missing inbound_username";
   my $account            = $request->{account}
-    or die "Missing account";
+    or croak "Missing account";
   my $account_sub       = $request->{account_sub}
-    or die "Missing account_sub";
+    or croak "Missing account_sub";
 
   return CCNQ::Activities::Number->update_number($request,$name,
 
@@ -126,13 +127,13 @@ sub delete_number {
   my ($request,$name,@tasks) = @_;
 
   my $e164_number       = $request->{number}
-    or die "Missing number";
+    or croak "Missing number";
   my $ingress_sbc_name = $request->{inbound_username}
-    or die "Missing inbound_username";
+    or croak "Missing inbound_username";
   my $account            = $request->{account}
-    or die "Missing account";
+    or croak "Missing account";
   my $account_sub       = $request->{account_sub}
-    or die "Missing account_sub";
+    or croak "Missing account_sub";
 
   return CCNQ::Activities::Number->delete_number($request,$name,
 
@@ -152,10 +153,10 @@ sub update_route {
   my ($request,$name,$national_number,@tasks) = @_;
 
   my $customer_proxy_name  = $request->{cluster}
-    or die "Missing cluster";
+    or croak "Missing cluster";
   my $username_domain = $request->{username_domain} || CCNQ::Install::cluster_fqdn($customer_proxy_name);
   my $endpoint_name = $request->{username}
-    or die "Missing username";
+    or croak "Missing username";
 
   # Return list of activities required to complete this request.
   return $self->update_number($request,$name,
@@ -180,10 +181,10 @@ sub delete_route {
   my ($request,$name,$national_number,@tasks) = @_;
 
   my $customer_proxy_name  = $request->{cluster}
-    or die "Missing cluster";
+    or croak "Missing cluster";
   my $username_domain = $request->{username_domain} || CCNQ::Install::cluster_fqdn($customer_proxy_name);
   my $endpoint_name = $request->{username}
-    or die "Missing username";
+    or croak "Missing username";
 
   # Return list of activities required to complete this request.
   return $self->delete_number($request,$name,
