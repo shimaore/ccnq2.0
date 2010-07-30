@@ -16,8 +16,8 @@
 
 use strict; use warnings;
 
-use AnyEvent;
 use AnyEvent::Watchdog autorestart => 1, heartbeat => 30;
+use AnyEvent;
 
 use CCNQ::AE;
 
@@ -61,6 +61,7 @@ sub run {
 
   error("$program_name ended");
   sleep(seconds_before_restarting);
+  AnyEvent::Watchdog::Util::restart;
 }
 
 run(PROGRAM_NAME);
