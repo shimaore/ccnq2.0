@@ -26,7 +26,7 @@ use CCNQ::XMPPAgent;
 
 use Logger::Syslog;
 
-use constant seconds_before_restarting => 20;
+use constant seconds_before_restarting => 5;
 use constant PROGRAM_NAME => 'ccnq2_xmpp_agent';
 
 # This start all the proper agents

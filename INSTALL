@@ -291,6 +291,8 @@ SQL
   sudo aptitude -y install -t testing ejabberd
   #   On ejabberd I change the "default" shaper to accept much higher rates:
   sed -i -e 's/^{shaper, normal, {maxrate, 1000}}\./{shaper, normal, {maxrate, 1000000}}./' /etc/ejabberd/ejabberd.cfg
+  #   Also, some clients might have more than 10 connections at a time.
+  sed -i -e 's/^{access, max_user_sessions, \[{10, all}\]}\./{access, max_user_sessions, [{20, all}]}./' /etc/ejabberd/ejabberd.cfg
 
 
 # These instructions currently need testing.
