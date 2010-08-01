@@ -36,12 +36,6 @@ get '/billing/billing_plan' => sub {
 
 use JSON;
 
-sub as_json {
-  my $cv = shift;
-  $cv or return send_error();
-  return to_json($cv->recv);
-}
-
 get '/json/billing/billing_plan' => sub {
   my ($plan_name) = @_;
 
