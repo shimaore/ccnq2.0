@@ -50,7 +50,51 @@
         <input type="text" name="p1" size="2"/>
       </p>
     </div>
-    <!-- etc ..-->
+    <div class="ui-widget-content plan-guard">
+      <input type="hidden" name="p0" value="to_country">
+      <p>To country in
+        <select name="p1">
+          <% FOREACH t IN all_tables %>
+          <option value="<% t %>"><% t %></option>
+          <% END %>
+        </select>
+      </p>
+    </div>
+    <div class="ui-widget-content plan-guard">
+      <input type="hidden" name="p0" value="from_country">
+      <p>From country in
+        <select name="p1">
+          <% FOREACH t IN all_tables %>
+          <option value="<% t %>"><% t %></option>
+          <% END %>
+        </select>
+      </p>
+    </div>
+
+    <div class="ui-widget-content plan-guard">
+      <input type="hidden" name="p0" value="zero_duration">
+      <p>Zero duration</p>
+    </div>
+    <div class="ui-widget-content plan-guard">
+      <input type="hidden" name="p0" value="non_zero_duration">
+      <p>Non-zero duration</p>
+    </div>
+
+    <div class="ui-widget-content plan-guard">
+      <input type="hidden" name="p0" value="shorter_than">
+      <p>Shorter than
+        <input type="text" name="p1" size="5"/>
+      </p>
+    </div>
+
+    <div class="ui-widget-content plan-guard">
+      <input type="hidden" name="p0" value="zero_count">
+      <p>Zero count</p>
+    </div>
+    <div class="ui-widget-content plan-guard">
+      <input type="hidden" name="p0" value="non_zero_count">
+      <p>Non-zero count</p>
+    </div>
 
   </fieldset>
 
@@ -75,8 +119,8 @@
       <input type="hidden" name="p0" value="use_amount_from_bucket"/>
       <p>Use amount from bucket
         <select>
-          <% FOREACH b IN get_buckets %>
-          <option value="<% b %>"><% b %></option>
+          <% FOREACH bucket IN get_buckets() %>
+          <option value="<% bucket.name | html %>"><% bucket.name | html %> (<% bucket.currency | html %>)</option>
           <% END %>
         </select>
       </p>
