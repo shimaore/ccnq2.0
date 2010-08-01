@@ -19,10 +19,17 @@ use Dancer ':syntax';
 use CCNQ::Portal;
 use CCNQ::Portal::I18N;
 
+use CCNQ::AE;
+use CCNQ::Rating::Table;
+
 get '/billing/billing_plan' => sub {
   var template_name => 'api/billing_plan';
   return unless CCNQ::Portal->current_session->user;
   return unless CCNQ::Portal->current_session->user->profile->is_admin;
+
+  var all_tables  => sub { CCNQ::AE::Receive(CCNQ::Billing::Table::all_tables) };
+  var get_buckets => \&CCNQ::Portal::Inner::Util::get_buckets;
+
   return CCNQ::Portal::content;
 };
 

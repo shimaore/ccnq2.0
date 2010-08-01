@@ -14,9 +14,11 @@
       <input type="hidden" name="p0" value="event_type_is">
       <p>Event type is
         <select name="p1">
-          <option value="call">Call</option>
-          <option value="sms">SMS</option>
-          <option value="port">Port</option>
+          <option value="ingress_call"  ><%|loc%>Ingress Call<%END%></option>
+          <option value="egress_call"   ><%|loc%>Egress Call<%END%></option>
+          <option value="count_endpoint"><%|loc%>Endpoints<%END%></option>
+          <option value="count_location"><%|loc%>Locations<%END%></option>
+          <option value="count_numbers" ><%|loc%>Numbers<%END%></option>
         </select>
       </p>
     </div>
@@ -39,21 +41,13 @@
     <div class="ui-widget-content plan-guard">
       <input type="hidden" name="p0" value="to_country">
       <p>To country
-        <select name="p1">
-          <option value="fr">France</option>
-          <option value="us">U.S.A.</option>
-          <option value="..">...</option>
-        </select>
+        <input type="text" name="p1" size="2"/>
       </p>
     </div>
     <div class="ui-widget-content plan-guard">
       <input type="hidden" name="p0" value="from_country">
       <p>From country
-        <select name="p1">
-          <option value="fr">France</option>
-          <option value="us">U.S.A.</option>
-          <option value="..">...</option>
-        </select>
+        <input type="text" name="p1" size="2"/>
       </p>
     </div>
     <!-- etc ..-->
@@ -72,42 +66,81 @@
     </div>
     <div class="ui-widget-content plan-action">
       <input type="hidden" name="p0" value="use_minutes_from_bucket"/>
-      <p>Use minutes from bucket<select></select></p>
+      <p>Use minutes from bucket
+        <select>
+        </select>
+      </p>
     </div>
     <div class="ui-widget-content plan-action">
       <input type="hidden" name="p0" value="use_amount_from_bucket"/>
-      <p>Use amount from bucket<select></select></p>
+      <p>Use amount from bucket
+        <select>
+          <% FOREACH b IN get_buckets %>
+          <option value="<% b %>"><% b %></option>
+          <% END %>
+        </select>
+      </p>
     </div>
     <div class="ui-widget-content plan-action">
       <input type="hidden" name="p0" value="set_periods_values"/>
-      <p>Initial duration:<input/></p>
-      <p>Increment duration:<input/></p>
+      <p>Initial duration:
+        <input type="text" name="p1" size="5"/>
+      </p>
+      <p>Increment duration:
+        <input type="text" name="p2" size="5"/>
+      </p>
     </div>
     <div class="ui-widget-content plan-action">
       <input type="hidden" name="p0" value="set_periods_table_to_e164"/>
-      <p>set_periods_table_to_e164:<select></select></p>
+      <p>Set Initial duration and increment based on Destination Number
+        <select name="p1">
+          <% FOREACH t IN all_tables %>
+          <option value="<% t %>"><% t %></option>
+          <% END %>
+        </select>
+      </p>
     </div>
     <div class="ui-widget-content plan-action">
       <input type="hidden" name="p0" value="add_count_cost"/>
-      <p>add_count_cost:<input/></p>
+      <p>Per-item cost:
+        <input name="p1" size="8"/>
+      </p>
     </div>
     <div class="ui-widget-content plan-action">
       <input type="hidden" name="p0" value="add_count_cost_table_to_e164"/>
-      <p>add_count_cost_table_to_e164:<select></select></p>
+      <p>Per-item cost based on Destination Number:
+        <select name="p1">
+          <% FOREACH t IN all_tables %>
+          <option value="<% t %>"><% t %></option>
+          <% END %>
+        </select>
+      </p>
     </div>
     <div class="ui-widget-content plan-action">
       <input type="hidden" name="p0" value="add_duration_rate"/>
-      <p>add_duration_rate:<input /></p>
+      <p>Rate per minute:
+        <input name="p1" size="8"/>
+      </p>
     </div>
     <div class="ui-widget-content plan-action">
       <input type="hidden" name="p0" value="add_duration_rate_table_to_e164"/>
-      <p>add_duration_rate_table_to_e164:<select></select></p>
+      <p>Rate per minute based on Destination Number:
+        <select name="p1">
+          <% FOREACH t IN all_tables %>
+          <option value="<% t %>"><% t %></option>
+          <% END %>
+        </select>
+      </p>
     </div>
     <div class="ui-widget-content plan-action">
       <input type="hidden" name="p0" value="add_jurisdiction"/>
-      <p>add_jurisdiction</p>
-      <p>name: <input /></p>
-      <p>percentage <input /></p>
+      <p>Taxes and fees</p>
+      <p>Jurisdiction name:
+        <input name="p1" size="20"/>
+      </p>
+      <p>Percentage:
+        <input name="p2" size="6"/>
+      </p>
     </div>
     <!-- etc -->
   </fieldset>
