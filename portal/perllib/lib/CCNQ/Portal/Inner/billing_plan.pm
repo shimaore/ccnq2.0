@@ -28,7 +28,7 @@ get '/billing/billing_plan' => sub {
   return unless CCNQ::Portal->current_session->user;
   return unless CCNQ::Portal->current_session->user->profile->is_admin;
 
-  var all_tables  => sub { CCNQ::AE::Receive(CCNQ::Billing::Table::all_tables) };
+  var all_tables  => sub { CCNQ::AE::receive(CCNQ::Billing::Table::all_tables) };
   var get_buckets => \&CCNQ::Portal::Inner::Util::get_buckets;
 
   return CCNQ::Portal::content;
