@@ -40,7 +40,7 @@
     <legend><% | loc %>Plans<% END %></legend>
     <ul>
       <% FOREACH plan IN get_plans() %>
-      <li><a href="<% prefix %>/billing/plan/<% plan.name | uri %>"><% plan.name | html %></a></li>
+      <li><a href="<% prefix %>/billing/plan/<% plan.name | uri %>"><% plan.name | html %></a> (<a href="<% prefix %>/json/billing/billing_plan/<% plan.name | uri %>"><%|loc%>(JSON)<%END%></a></li>
       <% END %>
     </ul>
   </fieldset>

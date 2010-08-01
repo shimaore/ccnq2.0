@@ -34,6 +34,28 @@ get '/billing/billing_plan' => sub {
   return CCNQ::Portal::content;
 };
 
-# XXX post ...
+use JSON;
+
+sub as_json {
+  my $cv = shift;
+  $cv or return send_error();
+  return to_json($cv->recv);
+}
+
+get '/json/billing/billing_plan' => sub {
+  my ($plan_name) = @_;
+
+  my $cv = AE::cv;
+  CCNQ::API::billing('report','plans',$plan_name,$cv);
+  my $plan_data = CCNQ::AE::receive_first_doc($cv) || { name => $plan_name, decimals => 2 };
+
+  content_type 'text/json';
+  return to_json($plan_data);
+};
+
+post '/json/billing/billing_plan' => sub {
+  content_type 'text/json';
+  return to_json({ ok => 'true' });
+};
 
 'CCNQ::Portal::Inner::billing_plan';
