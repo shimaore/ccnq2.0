@@ -20,7 +20,8 @@ use CCNQ::Portal;
 use CCNQ::Portal::I18N;
 
 use CCNQ::AE;
-use CCNQ::Rating::Table;
+use CCNQ::Billing::Table;
+use CCNQ::Portal::Inner::Util;
 
 get '/billing/billing_plan' => sub {
   var template_name => 'api/billing_plan';
