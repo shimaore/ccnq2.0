@@ -136,7 +136,7 @@
     </div>
     <div class="ui-widget-content plan-action">
       <input type="hidden" name="p0" value="set_periods_table_to_e164"/>
-      <p>Set Initial duration and increment based on Destination Number
+      <p>Initial duration and increment based on Destination Number
         <select name="p1">
           <% FOREACH t IN all_tables %>
           <option value="<% t %>"><% t %></option>
@@ -180,10 +180,10 @@
       <input type="hidden" name="p0" value="add_jurisdiction"/>
       <p>Taxes and fees</p>
       <p>Jurisdiction name:
-        <input name="p1" size="20"/>
+        <input name="p1" size="18"/>
       </p>
       <p>Percentage:
-        <input name="p2" size="6"/>
+        <input name="p2" size="6"/>%
       </p>
     </div>
     <!-- etc -->
