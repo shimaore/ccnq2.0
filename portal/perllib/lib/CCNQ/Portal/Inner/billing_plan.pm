@@ -34,8 +34,6 @@ get '/billing/billing_plan' => sub {
   return CCNQ::Portal::content;
 };
 
-use JSON;
-
 get '/json/billing/billing_plan' => sub {
   my ($plan_name) = @_;
 
