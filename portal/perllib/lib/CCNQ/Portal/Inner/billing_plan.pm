@@ -23,7 +23,7 @@ use CCNQ::AE;
 use CCNQ::Billing::Table;
 use CCNQ::Portal::Inner::Util;
 
-get '/billing/billing_plan' => sub {
+get '/billing/billing_plan/:plan_name' => sub {
   var template_name => 'api/billing_plan';
   return unless CCNQ::Portal->current_session->user;
   return unless CCNQ::Portal->current_session->user->profile->is_admin;
@@ -35,7 +35,7 @@ get '/billing/billing_plan' => sub {
 };
 
 get '/json/billing/billing_plan' => sub {
-  my ($plan_name) = @_;
+  my $plan_name = params->{plan_name};
 
   my $cv = AE::cv;
   CCNQ::API::billing('report','plans',$plan_name,$cv);
