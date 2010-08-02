@@ -96,10 +96,13 @@ sub _install  {
 
     debug("b2bua/$b2bua_name: Creating configuration for name $name / profile $profile.");
 
+    my ($ip) = $dns_a->( 'ip',$name,CCNQ::Install::fqdn );
+    $ip ||= $stick_ip;
+
     my $port = $dns_txt->( 'port',$name,CCNQ::Install::fqdn );
     debug("Query TXT port -> $port") if defined $port;
 
-    next unless defined($port) && defined($stick_ip);
+    next unless defined($port) && defined($ip);
 
     debug("b2bua/$b2bua_name: Found port $port");
 
@@ -107,7 +110,7 @@ sub _install  {
     $sip_profile_text .= <<"EOT";
       <X-PRE-PROCESS cmd="set" data="profile_name=${name}"/>
       <X-PRE-PROCESS cmd="set" data="sip_port=${port}"/>
-      <X-PRE-PROCESS cmd="set" data="sip_ip=${stick_ip}"/>
+      <X-PRE-PROCESS cmd="set" data="sip_ip=${ip}"/>
       <X-PRE-PROCESS cmd="include" data="template/${profile_template}.xml"/>
 
 EOT
@@ -128,7 +131,7 @@ EOT
     $dialplan_text .= <<"EOT";
       <X-PRE-PROCESS cmd="set" data="profile_name=${name}"/>
       <X-PRE-PROCESS cmd="set" data="external_sip_port=${port}"/>
-      <X-PRE-PROCESS cmd="set" data="external_sip_ip=${stick_ip}"/>
+      <X-PRE-PROCESS cmd="set" data="external_sip_ip=${ip}"/>
       <X-PRE-PROCESS cmd="set" data="egress_target=${egress}"/>
       <X-PRE-PROCESS cmd="include" data="template/${dialplan_template}.xml"/>
 
