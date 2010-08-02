@@ -32,7 +32,7 @@ sub cleanup {
   if(!defined($self)) {
     return undef;
   }
-  if(blessed($self) =~ /^Math::Big/) {
+  if(blessed($self) && blessed($self) =~ /^Math::Big/) {
     return unbless($self->bstr());
   }
   if(UNIVERSAL::isa($self, "ARRAY")) {
