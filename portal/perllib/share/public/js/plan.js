@@ -29,7 +29,7 @@ $(function() {
   });
 
   /* Load the data from the server */
-  $.getJSON('/json/billing/billing_plan?name='+plan_name_uri, function(data){
+  $.getJSON('/json/billing/billing_plan?plan_name='+plan_name_uri, function(data){
     var step;
     /* Remove all child nodes */
     $("#plan").empty();

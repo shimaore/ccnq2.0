@@ -1,7 +1,7 @@
 <% USE loc %>
 <div id="plan-manager">
 
-<h1 id="plan_name"><% params.plan_name %></h1>
+<h1 id="plan_name"><% params.plan_name | html %></h1>
 <script type="text/javascript">var plan_name_uri = "<% params.plan_name | uri %>"</script>
 <script type="text/javascript" src="<% prefix %>/js/plan.js"></script>
 
