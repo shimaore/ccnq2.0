@@ -206,8 +206,8 @@
     </li>
     -->
   </ul>
-  <div id="add_step"><%|loc%>Add step<%END%></div>
-  <div id="submit_steps"><%|loc%>Save<%END%></div>
+  <div id="add_step" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-circle-plus"></span><%|loc%>Add step<%END%></div>
+  <div id="submit_steps" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-check"></span><%|loc%>Save<%END%></div>
 </div>
 
 <div id="trash">
