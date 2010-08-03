@@ -28,4 +28,47 @@ $(function() {
     placeholder: 'ui-state-highlight'
   });
 
+  /* Load the data from the server */
+  $.getJSON('/json/billing/billing_plan?name='+plan_name_uri, function(data){
+    var step;
+    /* Remove all child nodes */
+    $("#plan").empty();
+
+    var guards_holder  = '<div class="step-guard ui-widget-header"><p>Guards</p><ul class="items"></ul></div>';
+    var actions_holder = '<div class="step-action ui-widget-header"><p>Actions</p><ul class="items"></ul></div>';
+    var step_holder    = '<li>'+guards_holder+actions_holder+'</li>';
+
+    for (step in data.rating_steps) {
+      $("#plan").append(step_holder);
+      var guard;
+      for (guard  in step.guards) {
+        /* each guard is an array: [ name, p0, p1, .. ] */
+        var name = guard.shift();
+
+        /* Copy the template for this name */
+        $("#name").clone().appendTo("#plan > li:last-child > .step-guard > ul");
+
+        /* Populate the parameters */
+        var i;
+        for (i=0;i<guard.length;i++) {
+          $("#plan > li:last-child > .step-guard > ul input,select[name=p"+i+"]").val(guard[i]);
+        }
+      }
+      var action;
+      for (action in step.actions) {
+        /* each action is an array: [ name, p0, p1, .. ] */
+        var name = action.shift();
+
+        /* Copy the template for this name */
+        $("#name").clone().appendTo("#plan > li:last-child > .step-action > ul");
+
+        /* Populate the parameters */
+        var i;
+        for (i=0;i<guard.length;i++) {
+          $("#plan > li:last-child > .step-action > ul input,select[name=p"+i+"]").val(guard[i]);
+        }
+      }
+    }
+  });
+
 });

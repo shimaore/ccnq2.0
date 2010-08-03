@@ -25,6 +25,7 @@
       </p>
       <p class="ui-helper-clearfix">
         <label for="rating_steps" class="left"><% | loc %>Rating steps (JSON):<% END %></label>
+        <a href="<% prefix %>/billing/billing_plan/<% field.name | uri %>">Edit</a>
         <textarea name="rating_steps" class="required" rows="24" cols="72"><% field.rating_steps | html %></textarea>
       </p>
       <% IF is_sysadmin %>

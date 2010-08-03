@@ -30,6 +30,7 @@ get '/billing/billing_plan/:plan_name' => sub {
 
   var all_tables  => sub { CCNQ::AE::receive(CCNQ::Billing::Table::all_tables) };
   var get_buckets => \&CCNQ::Portal::Inner::Util::get_buckets;
+  var get_currencies  => \&CCNQ::Portal::Inner::Util::get_currencies;
 
   return CCNQ::Portal::content;
 };
@@ -47,6 +48,7 @@ get '/json/billing/billing_plan' => sub {
 
 post '/json/billing/billing_plan' => sub {
   content_type 'text/json';
+  # XXX save data
   return to_json({ ok => 'true' });
 };
 

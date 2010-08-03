@@ -1,16 +1,14 @@
 <% USE loc %>
 <div id="plan-manager">
 
-<!-- This is currently only a demo. Eventually this page should
- contain a bit of javascript that will populate DIVs based on the value,
- and conversely submit a value that contains all the DIVs. -->
-
+<h1 id="plan_name"><% params.plan_name %></h1>
+<script type="text/javascript">var plan_name_uri = "<% params.plan_name | uri %>"</script>
 <script type="text/javascript" src="<% prefix %>/js/plan.js"></script>
 
 <div id="plan_toolbar">
   <fieldset id="plan_guards">
     <legend>Guards</legend>
-    <div class="ui-widget-content plan-guard">
+    <div class="ui-widget-content plan-guard" id="event_type_is">
       <input type="hidden" name="p0" value="event_type_is">
       <p>Event type is
         <select name="p1">
@@ -22,35 +20,35 @@
         </select>
       </p>
     </div>
-    <div class="ui-widget-content plan-guard">
+    <div class="ui-widget-content plan-guard" id="national_call">
       <input type="hidden" name="p0" value="national_call">
       <p>National</p>
     </div>
-    <div class="ui-widget-content plan-guard">
+    <div class="ui-widget-content plan-guard" id="international_call">
       <input type="hidden" name="p0" value="international_call">
       <p>International</p>
     </div>
-    <div class="ui-widget-content plan-guard">
+    <div class="ui-widget-content plan-guard" id="us_inter_state">
       <input type="hidden" name="p0" value="us_inter_state">
       <p>U.S. Interstate</p>
     </div>
-    <div class="ui-widget-content plan-guard">
+    <div class="ui-widget-content plan-guard" id="us_intra_state">
       <input type="hidden" name="p0" value="us_intra_state">
       <p>U.S. Intrastate</p>
     </div>
-    <div class="ui-widget-content plan-guard">
+    <div class="ui-widget-content plan-guard" id="to_country">
       <input type="hidden" name="p0" value="to_country">
       <p>To country
         <input type="text" name="p1" size="2"/>
       </p>
     </div>
-    <div class="ui-widget-content plan-guard">
+    <div class="ui-widget-content plan-guard" id="from_country">
       <input type="hidden" name="p0" value="from_country">
       <p>From country
         <input type="text" name="p1" size="2"/>
       </p>
     </div>
-    <div class="ui-widget-content plan-guard">
+    <div class="ui-widget-content plan-guard" id="to_country">
       <input type="hidden" name="p0" value="to_country">
       <p>To country in
         <select name="p1">
@@ -60,7 +58,7 @@
         </select>
       </p>
     </div>
-    <div class="ui-widget-content plan-guard">
+    <div class="ui-widget-content plan-guard" id="from_country">
       <input type="hidden" name="p0" value="from_country">
       <p>From country in
         <select name="p1">
@@ -71,27 +69,27 @@
       </p>
     </div>
 
-    <div class="ui-widget-content plan-guard">
+    <div class="ui-widget-content plan-guard" id="zero_duration">
       <input type="hidden" name="p0" value="zero_duration">
       <p>Zero duration</p>
     </div>
-    <div class="ui-widget-content plan-guard">
+    <div class="ui-widget-content plan-guard" id="non_zero_duration">
       <input type="hidden" name="p0" value="non_zero_duration">
       <p>Non-zero duration</p>
     </div>
 
-    <div class="ui-widget-content plan-guard">
+    <div class="ui-widget-content plan-guard" id="shorter_than">
       <input type="hidden" name="p0" value="shorter_than">
       <p>Shorter than
         <input type="text" name="p1" size="5"/>
       </p>
     </div>
 
-    <div class="ui-widget-content plan-guard">
+    <div class="ui-widget-content plan-guard" id="zero_count">
       <input type="hidden" name="p0" value="zero_count">
       <p>Zero count</p>
     </div>
-    <div class="ui-widget-content plan-guard">
+    <div class="ui-widget-content plan-guard" id="non_zero_count">
       <input type="hidden" name="p0" value="non_zero_count">
       <p>Non-zero count</p>
     </div>
@@ -100,22 +98,22 @@
 
   <fieldset id="plan_actions">
     <legend>Actions</legend>
-    <div class="ui-widget-content plan-action">
+    <div class="ui-widget-content plan-action" id="is_billable">
       <input type="hidden" name="p0" value="is_billable"/>
       <p>Is billable</p>
     </div>
-    <div class="ui-widget-content plan-action">
+    <div class="ui-widget-content plan-action" id="is_non_billable">
       <input type="hidden" name="p0" value="is_non_billable"/>
       <p>Is non-billable</p>
     </div>
-    <div class="ui-widget-content plan-action">
+    <div class="ui-widget-content plan-action" id="use_minutes_from_bucket">
       <input type="hidden" name="p0" value="use_minutes_from_bucket"/>
       <p>Use minutes from bucket
         <select>
         </select>
       </p>
     </div>
-    <div class="ui-widget-content plan-action">
+    <div class="ui-widget-content plan-action" id="use_amount_from_bucket">
       <input type="hidden" name="p0" value="use_amount_from_bucket"/>
       <p>Use amount from bucket
         <select>
@@ -125,7 +123,7 @@
         </select>
       </p>
     </div>
-    <div class="ui-widget-content plan-action">
+    <div class="ui-widget-content plan-action" id="set_periods_values">
       <input type="hidden" name="p0" value="set_periods_values"/>
       <p>Initial duration:
         <input type="text" name="p1" size="5"/>
@@ -134,7 +132,7 @@
         <input type="text" name="p2" size="5"/>
       </p>
     </div>
-    <div class="ui-widget-content plan-action">
+    <div class="ui-widget-content plan-action" id="set_periods_table_to_e164">
       <input type="hidden" name="p0" value="set_periods_table_to_e164"/>
       <p>Initial duration and increment based on Destination Number
         <select name="p1">
@@ -144,13 +142,13 @@
         </select>
       </p>
     </div>
-    <div class="ui-widget-content plan-action">
+    <div class="ui-widget-content plan-action" id="add_count_cost">
       <input type="hidden" name="p0" value="add_count_cost"/>
       <p>Per-item cost:
         <input name="p1" size="8"/>
       </p>
     </div>
-    <div class="ui-widget-content plan-action">
+    <div class="ui-widget-content plan-action" id="add_count_cost_table_to_e164">
       <input type="hidden" name="p0" value="add_count_cost_table_to_e164"/>
       <p>Per-item cost based on Destination Number:
         <select name="p1">
@@ -160,13 +158,13 @@
         </select>
       </p>
     </div>
-    <div class="ui-widget-content plan-action">
+    <div class="ui-widget-content plan-action" id="add_duration_rate">
       <input type="hidden" name="p0" value="add_duration_rate"/>
       <p>Rate per minute:
         <input name="p1" size="8"/>
       </p>
     </div>
-    <div class="ui-widget-content plan-action">
+    <div class="ui-widget-content plan-action" id="add_duration_rate_table_to_e164">
       <input type="hidden" name="p0" value="add_duration_rate_table_to_e164"/>
       <p>Rate per minute based on Destination Number:
         <select name="p1">
@@ -176,7 +174,7 @@
         </select>
       </p>
     </div>
-    <div class="ui-widget-content plan-action">
+    <div class="ui-widget-content plan-action" id="add_jurisdiction">
       <input type="hidden" name="p0" value="add_jurisdiction"/>
       <p>Taxes and fees</p>
       <p>Jurisdiction name:
@@ -203,10 +201,13 @@
       <div class="step-action ui-widget-header"><p>Actions</p><ul class="items"></ul></div>
     </li>
   </ul>
+  <!-- XXX Add step -->
 </div>
 
 <div id="trash">
 </div>
+
+<!-- XXX Submit changes -->
 
 <div class="ui-helper-clearfix">&nbsp;</div>
 
