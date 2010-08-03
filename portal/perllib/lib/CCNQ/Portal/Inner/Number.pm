@@ -123,4 +123,19 @@ sub submit_default {
   return CCNQ::Portal::Inner::Number::submit_number($category_to_route->{params->{category}});
 }
 
+post '/delete_number/:number' => sub {
+  my $number = params->{number};
+  my $account = session('account');
+
+  my $number_data = get_number($account,$number);
+
+  my $api_name = $number_data->{api_name};
+  return CCNQ::Portal::content unless $api_name;
+
+  # Submit in the API.
+  my $cv = AE::cv;
+  CCNQ::API::api_delete($api_name,$number_data,$cv);
+  return CCNQ::Portal::Util::redirect_request($cv);
+};
+
 1;
