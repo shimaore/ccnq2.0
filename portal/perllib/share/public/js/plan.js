@@ -39,7 +39,7 @@ $(function() {
   var prefix     = $("#prefix").val();
   var plan_name  = $("#plan_name").val();
 
-  var step_header    = '<div class="step-header ui-widget-header">Step</div>'+remove_span;
+  var step_header    = '<div class="step-header ui-widget-header">'+remove_span+'Step</div>';
   var guards_holder  = '<div class="step-guard ui-widget"><p>Guards</p><ul class="items"></ul></div>';
   var actions_holder = '<div class="step-action ui-widget"><p>Actions</p><ul class="items"></ul></div>';
   var step_holder    = '<li>'+step_header+guards_holder+actions_holder+'</li>';
