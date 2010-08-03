@@ -62,8 +62,8 @@ $(function() {
       for (guard_i  in step.guards) {
         var guard = step.guards[guard_i];
 
-        /* each guard is an array: [ name, p0, p1, .. ] */
-        var name = guard.shift();
+        /* each guard is an array: [ name, p1, p2, .. ] */
+        var name = guard[0];
 
         $(guard_selector).append("<li></li>");
 
@@ -72,7 +72,7 @@ $(function() {
 
         /* Populate the parameters */
         for (i in guard) {
-          var selector = guard_selector + " > li:last-child input,select[name='p"+(i+1)+"']";
+          var selector = guard_selector + " > li:last-child input,select[name='p"+i+"']";
           $(selector).val(guard[i]);
         }
       }
@@ -81,8 +81,8 @@ $(function() {
       for (action_i in step.actions) {
         var action = step.actions[action_i];
 
-        /* each action is an array: [ name, p0, p1, .. ] */
-        var name = action.shift();
+        /* each action is an array: [ name, p1, p2, .. ] */
+        var name = action[0];
 
         $(action_selector).append("<li></li>");
 
@@ -92,7 +92,7 @@ $(function() {
         /* Populate the parameters */
         var i;
         for (i in action) {
-          var selector = action_selector+" > li:last-child input,select[name='p"+(i+1)+"']";
+          var selector = action_selector+" > li:last-child input,select[name='p"+i+"']";
           $(selector).val(action[i]);
         }
       }
