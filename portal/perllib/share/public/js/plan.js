@@ -37,7 +37,7 @@ $(function() {
   var prefix     = $("#prefix").val();
   var plan_name  = $("#plan_name").val();
 
-  var remote_button  = '<span class="remove"><span title="Remove" class="ui-icon ui-icon-circle-minus"></span></span>';
+  var remove_button  = '<span class="remove"><span title="Remove" class="ui-icon ui-icon-circle-minus"></span></span>';
   var step_header    = '<div class="step-header ui-widget-header">'+remove_button+' Step</div>';
   var guards_holder  = '<div class="step-guard ui-widget-header"><p>Guards</p><ul class="items"></ul></div>';
   var actions_holder = '<div class="step-action ui-widget-header"><p>Actions</p><ul class="items"></ul></div>';
