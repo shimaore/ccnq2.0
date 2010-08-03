@@ -37,6 +37,9 @@ $(function() {
   var actions_holder = '<div class="step-action ui-widget-header"><p>Actions</p><ul class="items"></ul></div>';
   var step_holder    = '<li>'+guards_holder+actions_holder+'</li>';
 
+  var guard_selector  = "#plan > li:last-child > .step-guard  > ul";
+  var action_selector = "#plan > li:last-child > .step-action > ul";
+
   /* Load the data from the server */
   $.getJSON( prefix+'/json/billing/billing_plan', { plan_name: plan_name }, function(data){
 
@@ -56,8 +59,10 @@ $(function() {
         /* each guard is an array: [ name, p0, p1, .. ] */
         var name = guard.shift();
 
+        $(guard_selector).append("<li></li>");
+
         /* Copy the template for this name */
-        $("#"+name).clone().appendTo("#plan > li:last-child > .step-guard > ul");
+        $("#"+name).clone().appendTo(guard_selector+" > li");
 
         /* Populate the parameters */
         for (i in guard) {
@@ -73,8 +78,10 @@ $(function() {
         /* each action is an array: [ name, p0, p1, .. ] */
         var name = action.shift();
 
+        $(action_selector).append("<li></li>");
+
         /* Copy the template for this name */
-        $("#"+name).clone().appendTo("#plan > li:last-child > .step-action > ul");
+        $("#"+name).clone().appendTo(action_selector+" > li");
 
         /* Populate the parameters */
         var i;
