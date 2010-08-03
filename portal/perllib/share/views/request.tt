@@ -80,8 +80,12 @@
           <div class="request completed ui-state-highlight ui-corner-all"><p><span class="ui-icon ui-icon-lightbulb"></span><% | loc %>Request completed<% END %></p></div>
           <% SET refresh = 0 %>
         <% ELSE %>
-          <div class="request progressbar"></div>
-          <div class="request pending ui-state-highlight ui-corner-all"><p><% | loc %>Request pending<% END %></p></div>
+          <div class="request pending ui-state-highlight ui-corner-all">
+          <p>
+            <% | loc %>Request pending<% END %>
+            <div class="request progressbar"></div>
+          </p>
+          </div>
           <% SET refresh = r.request %>
         <% END %>
       <% ELSE %>

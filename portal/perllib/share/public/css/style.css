@@ -128,6 +128,7 @@ div.activity {
 }
 .request.progressbar {
   width: 200px;
+  display: inline;
 }
 
 /* Reports */
