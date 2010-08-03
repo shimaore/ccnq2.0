@@ -21,7 +21,7 @@ $(function() {
       hoverClass: 'ui-state-hover',
       drop: function(event, ui) {
         var d = ui['draggable'];
-        $(this).children('ul').append('<li>'+remove_span+d.html()'</li>');
+        $(this).children('ul').append('<li>'+remove_span+d.html()+'</li>');
       }
     });
 
