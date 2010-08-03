@@ -108,21 +108,21 @@ $(function() {
       var actions = [];
 
       /* Collect the guards and their parameters */
-      $(this).children().filter(".step-guard > ul > li").each(function(guard_i){
+      $(".step-guard > ul > li",this).each(function(guard_i){
         guards[guard_i] = [];
         var i;
         for(i=0;i<=2;i++) {
-          var v = $(this).children.filter("[name='p"+i+"']");
-          if(v) guards[guard_i][i] = v;
+          var v = $("[name='p"+i+"']",this);
+          if(v) guards[guard_i][i] = v.val();
         }
       });
       /* Collect the actions and their parameters */
-      $(this).children().filter(".step-action > ul > li").each(function(action_i){
+      $(".step-action > ul > li",this).each(function(action_i){
         actions[action_i] = [];
         var i;
         for(i=0;i<=2;i++) {
-          var v = $(this).children.filter("[name='p"+i+"']");
-          if(v) actions[action_i][i] = v;
+          var v = $("[name='p"+i+"']",this);
+          if(v) actions[action_i][i] = v.val();
         }
       });
       /* Skip any node that has no actions (it's OK to not have guards) */
