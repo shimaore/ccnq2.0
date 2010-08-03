@@ -51,7 +51,8 @@ $(function() {
         /* Populate the parameters */
         var i;
         for (i=0;i<guard.length;i++) {
-          $("#plan > li:last-child > .step-guard > ul input,select[name=p"+i+"]").val(guard[i]);
+          var selector = "#plan > li:last-child > .step-guard > ul input,select[name='p"+i+"']";
+          $(selector).val(guard[i]);
         }
       }
       var action;
@@ -65,7 +66,8 @@ $(function() {
         /* Populate the parameters */
         var i;
         for (i=0;i<guard.length;i++) {
-          $("#plan > li:last-child > .step-action > ul input,select[name=p"+i+"]").val(guard[i]);
+          var selector = "#plan > li:last-child > .step-action > ul input,select[name='p"+i+"']";
+          $(selector).val(guard[i]);
         }
       }
     }
