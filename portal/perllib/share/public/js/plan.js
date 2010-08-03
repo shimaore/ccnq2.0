@@ -68,11 +68,11 @@ $(function() {
         $(guard_selector).append("<li></li>");
 
         /* Copy the template for this name */
-        $("#"+name).clone().children().appendTo(guard_selector+" > li");
+        $("#"+name).clone().children().appendTo(guard_selector+" > li:last-child");
 
         /* Populate the parameters */
         for (i in guard) {
-          var selector = "#plan > li:last-child > .step-guard > ul input,select[name='p"+i+"']";
+          var selector = "#plan > li:last-child > .step-guard > ul > li:last-child input,select[name='p"+i+"']";
           $(selector).val(guard[i]);
         }
       }
@@ -87,12 +87,12 @@ $(function() {
         $(action_selector).append("<li></li>");
 
         /* Copy the template for this name */
-        $("#"+name).clone().children().appendTo(action_selector+" > li");
+        $("#"+name).clone().children().appendTo(action_selector+" > li:last-child");
 
         /* Populate the parameters */
         var i;
         for (i in action) {
-          var selector = "#plan > li:last-child > .step-action > ul input,select[name='p"+i+"']";
+          var selector = "#plan > li:last-child > .step-action > ul > li:last-child input,select[name='p"+i+"']";
           $(selector).val(action[i]);
         }
       }
