@@ -24,8 +24,9 @@
         <input type="text" name="decimals" value="<% field.decimals | html %>" class="required digits" />
       </p>
       <p class="ui-helper-clearfix">
-        <label for="rating_steps" class="left"><% | loc %>Rating steps (JSON):<% END %></label>
+        <label for="rating_steps" class="left"><% | loc %>Rating steps (JSON):<% END %>
         <a href="<% prefix %>/billing/billing_plan/<% field.name | uri %>">Edit</a>
+        </label>
         <textarea name="rating_steps" class="required" rows="24" cols="72"><% field.rating_steps | html %></textarea>
       </p>
       <% IF is_sysadmin %>
@@ -41,7 +42,7 @@
     <legend><% | loc %>Plans<% END %></legend>
     <ul>
       <% FOREACH plan IN get_plans() %>
-      <li><a href="<% prefix %>/billing/plan/<% plan.name | uri %>"><% plan.name | html %></a> (<a href="<% prefix %>/billing/billing_plan/<% plan.name | uri %>"><%|loc%>JSON<%END%>)</a></li>
+      <li><a href="<% prefix %>/billing/plan/<% plan.name | uri %>"><% plan.name | html %></a> (<a href="<% prefix %>/billing/billing_plan/<% plan.name | uri %>"><%|loc%>Edit<%END%>)</a></li>
       <% END %>
     </ul>
   </fieldset>
