@@ -2,6 +2,8 @@ $(function() {
   $(".plan-guard").draggable({ revert: true });
   $(".plan-action").draggable({ revert: true });
 
+  var remove_span = '<span title="Remove" class="remove ui-icon ui-icon-circle-minus">(remove)</span>';
+
   var set_class = function() {
     $(".step-guard").droppable({
       accept: '.plan-guard',
@@ -9,7 +11,7 @@ $(function() {
       hoverClass: 'ui-state-hover',
       drop: function(event, ui) {
         var d = ui['draggable'];
-        $(this).children('ul').append('<li>'+d.html()+'</li>');
+        $(this).children('ul').append('<li>'+remove_span+d.html()+'</li>');
       }
     });
 
@@ -19,7 +21,7 @@ $(function() {
       hoverClass: 'ui-state-hover',
       drop: function(event, ui) {
         var d = ui['draggable'];
-        $(this).children('ul').append('<li>'+d.html()+'</li>');
+        $(this).children('ul').append('<li>'+remove_span+d.html()'</li>');
       }
     });
 
@@ -37,8 +39,7 @@ $(function() {
   var prefix     = $("#prefix").val();
   var plan_name  = $("#plan_name").val();
 
-  var remove_button  = '<div class="remove ui-widget"><span title="Remove" class="ui-icon ui-icon-circle-minus"></span> Remove</div>';
-  var step_header    = '<div class="step-header ui-widget-header">Step</div>'+remove_button;
+  var step_header    = '<div class="step-header ui-widget-header">Step</div>'+remove_span;
   var guards_holder  = '<div class="step-guard ui-widget"><p>Guards</p><ul class="items"></ul></div>';
   var actions_holder = '<div class="step-action ui-widget"><p>Actions</p><ul class="items"></ul></div>';
   var step_holder    = '<li>'+step_header+guards_holder+actions_holder+'</li>';
@@ -65,7 +66,7 @@ $(function() {
         /* each guard is an array: [ name, p1, p2, .. ] */
         var name = guard[0];
 
-        $(guard_selector).append('<li><span title="Remove" class="remove ui-icon ui-icon-circle-minus">(remove)</span></li>');
+        $(guard_selector).append('<li>'+remove_span+'</li>');
 
         /* Copy the template for this name */
         $("#"+name).clone().children().appendTo(guard_selector+" > li:last-child");
@@ -87,7 +88,7 @@ $(function() {
         /* each action is an array: [ name, p1, p2, .. ] */
         var name = action[0];
 
-        $(action_selector).append("<li></li>");
+        $(action_selector).append('<li>'+remove_span+'</li>');
 
         /* Copy the template for this name */
         $("#"+name).clone().children().appendTo(action_selector+" > li:last-child");
