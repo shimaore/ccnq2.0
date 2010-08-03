@@ -6,7 +6,7 @@ $(function() {
     $(this).closest("fieldset").find("div").toggle();
   });
 
-  var remove_span = '<span title="Remove" class="remove ui-icon ui-icon-circle-minus">(remove)</span>';
+  var remove_span = '<span title="Remove" class="remove ui-icon ui-icon-trash">(remove)</span>';
 
   var set_remove = function() {
     $("#plan .remove").click(function(ev){
