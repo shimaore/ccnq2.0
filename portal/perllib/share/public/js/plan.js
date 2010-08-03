@@ -38,7 +38,8 @@ $(function() {
     var actions_holder = '<div class="step-action ui-widget-header"><p>Actions</p><ul class="items"></ul></div>';
     var step_holder    = '<li>'+guards_holder+actions_holder+'</li>';
 
-    for (step in data.rating_steps || []) {
+    var rating_steps = data.rating_steps || [];
+    for (step in rating_steps) {
       $("#plan").append(step_holder);
       var guard;
       for (guard  in step.guards) {
