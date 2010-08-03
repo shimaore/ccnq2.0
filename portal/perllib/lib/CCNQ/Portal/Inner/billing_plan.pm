@@ -37,18 +37,26 @@ get '/billing/billing_plan/:plan_name' => sub {
 
 get '/json/billing/billing_plan' => sub {
   my $plan_name = params->{plan_name};
+  content_type 'text/json';
 
   my $cv = AE::cv;
   CCNQ::API::billing('report','plans',$plan_name,$cv);
   my $plan_data = CCNQ::AE::receive_first_doc($cv) || { name => $plan_name, decimals => 2 };
 
-  content_type 'text/json';
   return to_json($plan_data);
 };
 
 post '/json/billing/billing_plan' => sub {
+  my $plan_name    = params->{plan_name};
+  my $rating_steps = params->{rating_steps};
   content_type 'text/json';
-  # XXX save data
+
+  $plan_name or
+    return to_json({ error => 'no plan_name' });
+  $rating_steps or
+    return to_json({ error => 'no rating_steps' });
+
+  # XXX save data. we need to get the original plan, and replace its "rating_steps" with the parameters we got.
   return to_json({ ok => 'true' });
 };
 

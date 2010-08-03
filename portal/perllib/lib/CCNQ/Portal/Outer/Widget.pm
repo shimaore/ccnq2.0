@@ -35,7 +35,7 @@ sub throw_error {
 =pod
 sub _in {
   ...
-  
+
   my $untainter = CGI::Untaint->new($receiver->Vars);
   my $response = $self->in($untainter);
 }
