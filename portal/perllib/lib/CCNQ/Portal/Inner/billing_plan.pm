@@ -72,8 +72,19 @@ post '/json/billing/billing_plan' => sub {
   $rating_steps or
     return to_json({ error => 'no rating_steps' });
 
-  # XXX save data. we need to get the original plan, and replace its "rating_steps" with the parameters we got.
-  return to_json({ ok => 'true' });
+  $rating_steps = from_json($rating_steps) or
+    return to_json({ error => 'not JSON' });
+
+  my $cv = AE::cv;
+  CCNQ::API::billing('report','plans',$plan_name,$cv);
+  my $plan_data = CCNQ::AE::receive_first_doc($cv) || { name => $plan_name, decimals => 2 };
+
+  $plan_data->{rating_steps} = $rating_steps;
+
+  my $cv1 = AE::cv;
+  CCNQ::API::api_update('plan',$plan_data,$cv1);
+  my $r = CCNQ::AE::receive($cv1);
+  return to_json({ ok => 'true', request => $r->{request} });
 };
 
 'CCNQ::Portal::Inner::billing_plan';

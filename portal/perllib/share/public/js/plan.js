@@ -141,6 +141,9 @@ $(function() {
 
     $.post( prefix+'/json/billing/billing_plan', { plan_name: plan_name, rating_steps: rating_steps }, function(data){
       /* we will get { ok: "true" } iff everything went OK */
+      if(data.ok) {
+        $("#history").append('(<a href="'+prefix+'/request/'+data.request+'">Check</a>) ');
+      }
     });
   });
 });
