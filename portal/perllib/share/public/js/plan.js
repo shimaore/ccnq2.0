@@ -28,8 +28,11 @@ $(function() {
     placeholder: 'ui-state-highlight'
   });
 
+  var prefix     = $("#prefix").val();
+  var plan_name  = $("#plan_name").val();
+
   /* Load the data from the server */
-  $.getJSON('/json/billing/billing_plan?plan_name='+plan_name_uri, function(data){
+  $.getJSON( prefix+'/json/billing/billing_plan', { plan_name: plan_name_uri }, function(data){
     var step;
     /* Remove all child nodes */
     $("#plan").empty();
@@ -38,7 +41,7 @@ $(function() {
     var actions_holder = '<div class="step-action ui-widget-header"><p>Actions</p><ul class="items"></ul></div>';
     var step_holder    = '<li>'+guards_holder+actions_holder+'</li>';
 
-    var rating_steps = data.rating_steps || [];
+    var rating_steps = data.rating_steps;
     for (step in rating_steps) {
       $("#plan").append(step_holder);
       var guard;
@@ -74,4 +77,16 @@ $(function() {
     }
   });
 
+  $("#add_step").click(function(ev){
+     $("#plan").append(step_holder);
+  });
+
+  $("#submit_steps").click(function(ev){
+    /* XXX collect nodes */
+    var rating_steps = [];
+
+    $.post( prefix+'/json/billing/billing_plan', { plan_name: plan_name, rating_steps: rating_steps }, function(data){
+      /* we will get { ok: "true" } iff everything went OK */
+    });
+  });
 });
