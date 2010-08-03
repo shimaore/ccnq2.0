@@ -50,12 +50,7 @@ $(function() {
     for (step_i in data.rating_steps) {
       var step = data.rating_steps[step_i];
 
-      $("#plan").append(
-        '<li id="step'+step_i+'">'+
-          '<p>Step '+(step_i+1)+'</p>'+
-          step_holder+
-        '</li>'
-      );
+      $("#plan").append('<li>'+step_holder+'</li>');
 
       var guard_i;
       for (guard_i  in step.guards) {
