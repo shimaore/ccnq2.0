@@ -112,8 +112,8 @@ $(function() {
         guards[guard_i] = [];
         var i;
         for(i=0;i<=2;i++) {
-          var v = $("[name='p"+i+"']",this);
-          if(v) guards[guard_i][i] = v.val();
+          var v = $("[name='p"+i+"']",this).val();
+          if(v) guards[guard_i][i] = v;
         }
       });
       /* Collect the actions and their parameters */
@@ -121,8 +121,8 @@ $(function() {
         actions[action_i] = [];
         var i;
         for(i=0;i<=2;i++) {
-          var v = $("[name='p"+i+"']",this);
-          if(v) actions[action_i][i] = v.val();
+          var v = $("[name='p"+i+"']",this).val();
+          if(v) actions[action_i][i] = v;
         }
       });
       /* Skip any node that has no actions (it's OK to not have guards) */
