@@ -37,15 +37,20 @@ $(function() {
 
   /* Load the data from the server */
   $.getJSON( prefix+'/json/billing/billing_plan', { plan_name: plan_name }, function(data){
-    var step;
+
     /* Remove all child nodes */
     $("#plan").empty();
 
-    var rating_steps = data.rating_steps;
-    for (step in rating_steps) {
+    var step_i;
+    for (step_i in data.rating_steps) {
+      var step = rating_steps[step_i];
+
       $("#plan").append(step_holder);
-      var guard;
-      for (guard  in step.guards) {
+
+      var guard_i;
+      for (guard_i  in step.guards) {
+        var guard = step.guards[i];
+
         /* each guard is an array: [ name, p0, p1, .. ] */
         var name = guard.shift();
 
@@ -53,14 +58,16 @@ $(function() {
         $("#name").clone().appendTo("#plan > li:last-child > .step-guard > ul");
 
         /* Populate the parameters */
-        var i;
-        for (i=0;i<guard.length;i++) {
+        for (i in guard) {
           var selector = "#plan > li:last-child > .step-guard > ul input,select[name='p"+i+"']";
           $(selector).val(guard[i]);
         }
       }
-      var action;
-      for (action in step.actions) {
+
+      var action_i;
+      for (action_i in step.actions) {
+        var action = step.actions[action_i];
+
         /* each action is an array: [ name, p0, p1, .. ] */
         var name = action.shift();
 
@@ -69,9 +76,9 @@ $(function() {
 
         /* Populate the parameters */
         var i;
-        for (i=0;i<guard.length;i++) {
+        for (i in action) {
           var selector = "#plan > li:last-child > .step-action > ul input,select[name='p"+i+"']";
-          $(selector).val(guard[i]);
+          $(selector).val(action[i]);
         }
       }
     }
