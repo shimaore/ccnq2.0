@@ -100,7 +100,7 @@ $(function() {
   });
 
   $("#add_step").click(function(ev){
-     $("#plan").append(step_holder);
+     $("#plan").append('<li>'+step_holder+'</li>');
   });
 
   $("#submit_steps").click(function(ev){
