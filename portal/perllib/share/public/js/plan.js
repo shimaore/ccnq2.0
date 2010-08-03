@@ -28,14 +28,19 @@ $(function() {
     $("#plan").sortable({
       placeholder: 'ui-state-highlight'
     });
+
+    $(".step-header .remove").click(function(ev){
+      $(this).closest("li").remove();
+    });
   };
 
   var prefix     = $("#prefix").val();
   var plan_name  = $("#plan_name").val();
 
+  var step_header    = '<div class="step-header ui-widget-header"><p>Step</p> <span title="Remove" class="remove ui-state-default ui-corner-all"><span class="ui-icon ui-icon-circle-minus"></span></span>';
   var guards_holder  = '<div class="step-guard ui-widget-header"><p>Guards</p><ul class="items"></ul></div>';
   var actions_holder = '<div class="step-action ui-widget-header"><p>Actions</p><ul class="items"></ul></div>';
-  var step_holder    = guards_holder+actions_holder;
+  var step_holder    = '<li>'+step_header+guards_holder+actions_holder+'</li>';
 
   var guard_selector  = "#plan > li:last-child > .step-guard  > ul";
   var action_selector = "#plan > li:last-child > .step-action > ul";
@@ -50,7 +55,7 @@ $(function() {
     for (step_i in data.rating_steps) {
       var step = data.rating_steps[step_i];
 
-      $("#plan").append('<li>'+step_holder+'</li>');
+      $("#plan").append(step_holder);
 
       var guard_i;
       for (guard_i  in step.guards) {
@@ -95,7 +100,7 @@ $(function() {
   });
 
   $("#add_step").click(function(ev){
-     $("#plan").append('<li>'+step_holder+'</li>');
+     $("#plan").append(step_holder);
      set_class();
   });
 
