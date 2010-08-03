@@ -111,17 +111,18 @@
     </div>
     <div class="ui-widget-content plan-action" id="use_minutes_from_bucket">
       <input type="hidden" name="p0" value="use_minutes_from_bucket"/>
-      <p>Use minutes from bucket
-        <select>
+        <select name="p1">
+          <% FOREACH bucket IN get_buckets() %>
+          <% IF NOT bucket.currency %><option value="<% bucket.name | html %>"><% bucket.name | html %></option><%END%>
+          <% END %>
         </select>
-      </p>
     </div>
     <div class="ui-widget-content plan-action" id="use_amount_from_bucket">
       <input type="hidden" name="p0" value="use_amount_from_bucket"/>
       <p>Use amount from bucket
-        <select>
+        <select name="p1">
           <% FOREACH bucket IN get_buckets() %>
-          <option value="<% bucket.name | html %>"><% bucket.name | html %> (<% bucket.currency | html %>)</option>
+          <% IF bucket.currency %><option value="<% bucket.name | html %>"><% bucket.name | html %> (<% bucket.currency | html %>)</option><%END%>
           <% END %>
         </select>
       </p>
