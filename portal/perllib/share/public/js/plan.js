@@ -32,7 +32,7 @@ $(function() {
   var plan_name  = $("#plan_name").val();
 
   /* Load the data from the server */
-  $.getJSON( prefix+'/json/billing/billing_plan', { plan_name: plan_name_uri }, function(data){
+  $.getJSON( prefix+'/json/billing/billing_plan', { plan_name: plan_name }, function(data){
     var step;
     /* Remove all child nodes */
     $("#plan").empty();
