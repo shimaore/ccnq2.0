@@ -100,8 +100,36 @@ $(function() {
   });
 
   $("#submit_steps").click(function(ev){
-    /* XXX collect nodes */
     var rating_steps = [];
+
+    /* For each step ... */
+    $("#plan > li").each(function(step_i){
+      var guards  = [];
+      var actions = [];
+
+      /* Collect the guards and their parameters */
+      $(this).children().filter(".step-guard > ul > li").each(function(guard_i){
+        guards[guard_i] = [];
+        var i;
+        for(i=0;i<=2;i++) {
+          var v = $(this).children.filter("[name='p"+i+"']");
+          if(v) guards[guard_i][i] = v;
+        }
+      });
+      /* Collect the actions and their parameters */
+      $(this).children().filter(".step-action > ul > li").each(function(action_i){
+        actions[action_i] = [];
+        var i;
+        for(i=0;i<=2;i++) {
+          var v = $(this).children.filter("[name='p"+i+"']");
+          if(v) actions[action_i][i] = v;
+        }
+      });
+      /* Skip any node that has no actions (it's OK to not have guards) */
+      if(actions.length) {
+        rating_steps[step_i] = { guards: guards, actions: actions };
+      }
+    });
 
     $.post( prefix+'/json/billing/billing_plan', { plan_name: plan_name, rating_steps: rating_steps }, function(data){
       /* we will get { ok: "true" } iff everything went OK */
