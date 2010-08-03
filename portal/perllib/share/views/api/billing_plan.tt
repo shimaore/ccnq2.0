@@ -3,8 +3,8 @@
 
 <h1 id="plan_name"><% params.plan_name | html %></h1>
 
-<input id="plan_name" value="<% params.plan_name | html %>" />
-<input id="prefix"    value="<% prefix | html %>" />
+<input type="hidden" "id="plan_name" value="<% plan_name | html %>" />
+<input type="hidden" "id="prefix"    value="<% prefix | html %>" />
 <script type="text/javascript" src="<% prefix %>/js/plan.js"></script>
 
 <div id="plan_toolbar">

@@ -24,6 +24,12 @@ use CCNQ::Billing::Table;
 use CCNQ::Portal::Inner::Util;
 
 get '/billing/billing_plan/:plan_name' => sub {
+  my $params = CCNQ::Portal::Util::neat({},qw(plan_name));
+  my $plan_name = $params->{plan_name};
+
+  $plan_name =~ /\S/ or
+    return CCNQ::Portal::content( error => _('no plan_name')_ );
+
   var template_name => 'api/billing_plan';
   return unless CCNQ::Portal->current_session->user;
   return unless CCNQ::Portal->current_session->user->profile->is_admin;
@@ -32,12 +38,19 @@ get '/billing/billing_plan/:plan_name' => sub {
   var get_buckets => \&CCNQ::Portal::Inner::Util::get_buckets;
   var get_currencies  => \&CCNQ::Portal::Inner::Util::get_currencies;
 
+  var plan_name => $plan_name;
+
   return CCNQ::Portal::content;
 };
 
 get '/json/billing/billing_plan' => sub {
-  my $plan_name = params->{plan_name};
+  my $params = CCNQ::Portal::Util::neat({},qw(plan_name));
+  my $plan_name = $params->{plan_name};
+
   content_type 'text/json';
+
+  $plan_name =~ /\S/ or
+    return to_json({ error => 'no plan_name' });
 
   my $cv = AE::cv;
   CCNQ::API::billing('report','plans',$plan_name,$cv);
@@ -47,12 +60,15 @@ get '/json/billing/billing_plan' => sub {
 };
 
 post '/json/billing/billing_plan' => sub {
-  my $plan_name    = params->{plan_name};
-  my $rating_steps = params->{rating_steps};
+  my $params = CCNQ::Portal::Util::neat({},qw(plan_name rating_steps));
+  my $plan_name    = $params->{plan_name};
+  my $rating_steps = $params->{rating_steps};
+
   content_type 'text/json';
 
-  $plan_name or
+  $plan_name =~ /\S/ or
     return to_json({ error => 'no plan_name' });
+
   $rating_steps or
     return to_json({ error => 'no rating_steps' });
 
