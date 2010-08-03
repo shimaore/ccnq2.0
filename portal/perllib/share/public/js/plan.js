@@ -49,7 +49,7 @@ $(function() {
 
       var guard_i;
       for (guard_i  in step.guards) {
-        var guard = step.guards[i];
+        var guard = step.guards[guard_i];
 
         /* each guard is an array: [ name, p0, p1, .. ] */
         var name = guard.shift();
