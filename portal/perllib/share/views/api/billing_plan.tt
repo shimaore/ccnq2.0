@@ -192,6 +192,7 @@
 
 <div id="plan_workspace">
   <ul id="plan">
+    <!--
     <li id="step0">
       <p>Step 1</p>
       <div class="step-guard ui-widget-header"><p>Guards</p><ul class="items"></ul></div>
@@ -202,6 +203,7 @@
       <div class="step-guard ui-widget-header"><p>Guards</p><ul class="items"></ul></div>
       <div class="step-action ui-widget-header"><p>Actions</p><ul class="items"></ul></div>
     </li>
+    -->
   </ul>
   <div id="add_step"><%|loc%>Add step<%END%></div>
   <div id="submit_steps"><%|loc%>Save<%END%></div>

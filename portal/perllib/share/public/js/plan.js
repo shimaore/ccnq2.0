@@ -2,7 +2,7 @@ $(function() {
   $(".plan-guard").draggable({ revert: true });
   $(".plan-action").draggable({ revert: true });
 
-  var set_class = function {
+  var set_class = function() {
     $(".step-guard").droppable({
       accept: '.plan-guard',
       activeClass: 'ui-state-hover',
