@@ -2,21 +2,18 @@
 
 Portal:
 * bulk import/update rating tables
-* address fields for billing
 * plan creation tool
 * available numbers ("numbers bank") -- note: allow to delete numbers from the bank
 * intermediate admin level (FDN federation)
-* Unify menus (and better "Summary" page)
+* better "Summary" page
+* address fields for billing
+* PDF (branded) invoice generation
 
 Voice:
-* FS code for prepaid (realtime_estimator)
-
+* FS lua code for prepaid (uses realtime_estimator)
+* re-code CNAM client in lua
 
 Billing:
-* daily crontab (e.g. import number of DIDs for partial month counts)
-* end-of-period processing
-  .. including partial days
-  .. including PDF bills generation
 * payment API
 
 ---- Lower priority items ----
