@@ -3,6 +3,7 @@
 
 <h1><% plan_name | html %></h1>
 
+<script type="text/javascript" src="<% prefix %>/js/json2.min.js"></script>
 <input type="hidden" "id="plan_name" value="<% plan_name | html %>" />
 <input type="hidden" "id="prefix"    value="<% prefix | html %>" />
 <script type="text/javascript" src="<% prefix %>/js/plan.js"></script>
