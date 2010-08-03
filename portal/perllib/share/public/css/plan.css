@@ -28,7 +28,12 @@
 }
 
 #plan .remove {
-  background-color: red;
+  margin-left: 2px;
+  margin-right: 0.5em;
   display: inline;
   float: right;
+}
+
+#plan li {
+  list-style-type: none;
 }
