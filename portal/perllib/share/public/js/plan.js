@@ -57,7 +57,7 @@ $(function() {
         var name = guard.shift();
 
         /* Copy the template for this name */
-        $("#name").clone().appendTo("#plan > li:last-child > .step-guard > ul");
+        $("#"+name).clone().appendTo("#plan > li:last-child > .step-guard > ul");
 
         /* Populate the parameters */
         for (i in guard) {
@@ -74,7 +74,7 @@ $(function() {
         var name = action.shift();
 
         /* Copy the template for this name */
-        $("#name").clone().appendTo("#plan > li:last-child > .step-action > ul");
+        $("#"+name).clone().appendTo("#plan > li:last-child > .step-action > ul");
 
         /* Populate the parameters */
         var i;
