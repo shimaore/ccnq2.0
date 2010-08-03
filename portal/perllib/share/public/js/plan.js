@@ -29,7 +29,7 @@ $(function() {
       placeholder: 'ui-state-highlight'
     });
 
-    $(".step-header .remove").click(function(ev){
+    $("#plan .remove").click(function(ev){
       $(this).closest("li").remove();
     });
   };
