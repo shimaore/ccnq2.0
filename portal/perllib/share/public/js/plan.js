@@ -43,7 +43,7 @@ $(function() {
 
     var step_i;
     for (step_i in data.rating_steps) {
-      var step = rating_steps[step_i];
+      var step = data.rating_steps[step_i];
 
       $("#plan").append(step_holder);
 
