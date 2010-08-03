@@ -43,8 +43,8 @@ $(function() {
   var actions_holder = '<div class="step-action ui-widget-header"><p>Actions</p><ul class="items"></ul></div>';
   var step_holder    = '<li>'+step_header+guards_holder+actions_holder+'</li>';
 
-  var guard_selector  = "#plan > li:last-child > .step-guard  > ul";
-  var action_selector = "#plan > li:last-child > .step-action > ul";
+  var guard_selector  = "#plan > li:last-child > .step-guard  > ul > li:last-child";
+  var action_selector = "#plan > li:last-child > .step-action > ul > li:last-child";
 
   /* Load the data from the server */
   $.getJSON( prefix+'/json/billing/billing_plan', { plan_name: plan_name }, function(data){
@@ -68,11 +68,11 @@ $(function() {
         $(guard_selector).append("<li></li>");
 
         /* Copy the template for this name */
-        $("#"+name).clone().children().appendTo(guard_selector+" > li:last-child");
+        $("#"+name).clone().children().appendTo(guard_selector);
 
         /* Populate the parameters */
         for (i in guard) {
-          var selector = "#plan > li:last-child > .step-guard > ul > li:last-child input,select[name='p"+i+"']";
+          var selector = guard_selector + " input,select[name='p"+(i+1)+"']";
           $(selector).val(guard[i]);
         }
       }
@@ -87,12 +87,12 @@ $(function() {
         $(action_selector).append("<li></li>");
 
         /* Copy the template for this name */
-        $("#"+name).clone().children().appendTo(action_selector+" > li:last-child");
+        $("#"+name).clone().children().appendTo(action_selector);
 
         /* Populate the parameters */
         var i;
         for (i in action) {
-          var selector = "#plan > li:last-child > .step-action > ul > li:last-child input,select[name='p"+i+"']";
+          var selector = action_selector+" input,select[name='p"+(i+1)+"']";
           $(selector).val(action[i]);
         }
       }
