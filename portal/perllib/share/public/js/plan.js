@@ -65,7 +65,7 @@ $(function() {
         /* each guard is an array: [ name, p1, p2, .. ] */
         var name = guard[0];
 
-        $(guard_selector).append("<li></li>");
+        $(guard_selector).append('<li><span title="Remove" class="remove ui-icon ui-icon-circle-minus">(remove)</span></li>'');
 
         /* Copy the template for this name */
         $("#"+name).clone().children().appendTo(guard_selector+" > li:last-child");
