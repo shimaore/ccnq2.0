@@ -76,7 +76,9 @@ sub clean_params {
     address_1
     address_2
     city
-    zipcode
+    postal_code
+    state
+    country
   ));
 
   $params->{location} or do {
