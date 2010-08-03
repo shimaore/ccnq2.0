@@ -4,6 +4,12 @@ $(function() {
 
   var remove_span = '<span title="Remove" class="remove ui-icon ui-icon-circle-minus">(remove)</span>';
 
+  var set_remove = function() {
+    $("#plan .remove").click(function(ev){
+      $(this).closest("li").remove();
+    });
+  }
+
   var set_class = function() {
     $(".step-guard").droppable({
       accept: '.plan-guard',
@@ -12,7 +18,7 @@ $(function() {
       drop: function(event, ui) {
         var d = ui['draggable'];
         $(this).children('ul').append('<li>'+remove_span+d.html()+'</li>');
-        set_class();
+        set_remove();
       }
     });
 
@@ -23,7 +29,7 @@ $(function() {
       drop: function(event, ui) {
         var d = ui['draggable'];
         $(this).children('ul').append('<li>'+remove_span+d.html()+'</li>');
-        set_class();
+        set_remove();
       }
     });
 
@@ -33,9 +39,7 @@ $(function() {
       placeholder: 'ui-state-highlight'
     });
 
-    $("#plan .remove").click(function(ev){
-      $(this).closest("li").remove();
-    });
+    set_remove();
   };
 
   var prefix     = $("#prefix").val();
