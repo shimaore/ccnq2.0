@@ -37,10 +37,10 @@ $(function() {
   var prefix     = $("#prefix").val();
   var plan_name  = $("#plan_name").val();
 
-  var remove_button  = '<div class="remove ui-widget-header"><span title="Remove" class="ui-icon ui-icon-circle-minus"></span> Remove</div>';
+  var remove_button  = '<div class="remove ui-widget"><span title="Remove" class="ui-icon ui-icon-circle-minus"></span> Remove</div>';
   var step_header    = '<div class="step-header ui-widget-header">Step</div>'+remove_button;
-  var guards_holder  = '<div class="step-guard ui-widget-header"><p>Guards</p><ul class="items"></ul></div>';
-  var actions_holder = '<div class="step-action ui-widget-header"><p>Actions</p><ul class="items"></ul></div>';
+  var guards_holder  = '<div class="step-guard ui-widget"><p>Guards</p><ul class="items"></ul></div>';
+  var actions_holder = '<div class="step-action ui-widget"><p>Actions</p><ul class="items"></ul></div>';
   var step_holder    = '<li>'+step_header+guards_holder+actions_holder+'</li>';
 
   var guard_selector  = "#plan > li:last-child > .step-guard  > ul";
