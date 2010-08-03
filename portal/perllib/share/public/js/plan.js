@@ -31,15 +31,15 @@ $(function() {
   var prefix     = $("#prefix").val();
   var plan_name  = $("#plan_name").val();
 
+  var guards_holder  = '<div class="step-guard ui-widget-header"><p>Guards</p><ul class="items"></ul></div>';
+  var actions_holder = '<div class="step-action ui-widget-header"><p>Actions</p><ul class="items"></ul></div>';
+  var step_holder    = '<li>'+guards_holder+actions_holder+'</li>';
+
   /* Load the data from the server */
   $.getJSON( prefix+'/json/billing/billing_plan', { plan_name: plan_name }, function(data){
     var step;
     /* Remove all child nodes */
     $("#plan").empty();
-
-    var guards_holder  = '<div class="step-guard ui-widget-header"><p>Guards</p><ul class="items"></ul></div>';
-    var actions_holder = '<div class="step-action ui-widget-header"><p>Actions</p><ul class="items"></ul></div>';
-    var step_holder    = '<li>'+guards_holder+actions_holder+'</li>';
 
     var rating_steps = data.rating_steps;
     for (step in rating_steps) {

@@ -1,7 +1,7 @@
 <% USE loc %>
 <div id="plan-manager">
 
-<h1 id="plan_name"><% params.plan_name | html %></h1>
+<h1 id="plan_name"><% plan_name | html %></h1>
 
 <input type="hidden" "id="plan_name" value="<% plan_name | html %>" />
 <input type="hidden" "id="prefix"    value="<% prefix | html %>" />

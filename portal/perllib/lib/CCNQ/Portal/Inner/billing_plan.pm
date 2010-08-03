@@ -27,7 +27,7 @@ get '/billing/billing_plan/:plan_name' => sub {
   my $params = CCNQ::Portal::Util::neat({},qw(plan_name));
   my $plan_name = $params->{plan_name};
 
-  $plan_name =~ /\S/ or
+  $plan_name && $plan_name =~ /\S/ or
     return CCNQ::Portal::content( error => _('no plan_name')_ );
 
   var template_name => 'api/billing_plan';
@@ -49,7 +49,7 @@ get '/json/billing/billing_plan' => sub {
 
   content_type 'text/json';
 
-  $plan_name =~ /\S/ or
+  $plan_name && $plan_name =~ /\S/ or
     return to_json({ error => 'no plan_name' });
 
   my $cv = AE::cv;
@@ -66,7 +66,7 @@ post '/json/billing/billing_plan' => sub {
 
   content_type 'text/json';
 
-  $plan_name =~ /\S/ or
+  $plan_name && $plan_name =~ /\S/ or
     return to_json({ error => 'no plan_name' });
 
   $rating_steps or
