@@ -35,7 +35,7 @@ $(function() {
 
   var guards_holder  = '<div class="step-guard ui-widget-header"><p>Guards</p><ul class="items"></ul></div>';
   var actions_holder = '<div class="step-action ui-widget-header"><p>Actions</p><ul class="items"></ul></div>';
-  var step_holder    = '<li>'+guards_holder+actions_holder+'</li>';
+  var step_holder    = guards_holder+actions_holder;
 
   var guard_selector  = "#plan > li:last-child > .step-guard  > ul";
   var action_selector = "#plan > li:last-child > .step-action > ul";
@@ -50,7 +50,12 @@ $(function() {
     for (step_i in data.rating_steps) {
       var step = data.rating_steps[step_i];
 
-      $("#plan").append(step_holder);
+      $("#plan").append(
+        '<li id="step'+step_i+'">'+
+          '<p>Step '+(step_i+1)+'</p>'+
+          step_holder+
+        '</li>'
+      );
 
       var guard_i;
       for (guard_i  in step.guards) {
