@@ -2,6 +2,10 @@ $(function() {
   $(".plan-guard").draggable({ revert: true });
   $(".plan-action").draggable({ revert: true });
 
+  $("#plan_toolbar legend").click(function(ev){
+    $(this).closest("fieldset").find("div").toggle();
+  });
+
   var remove_span = '<span title="Remove" class="remove ui-icon ui-icon-circle-minus">(remove)</span>';
 
   var set_remove = function() {
