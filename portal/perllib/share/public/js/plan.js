@@ -67,7 +67,7 @@ $(function() {
         $(guard_selector).append("<li></li>");
 
         /* Copy the template for this name */
-        $("#"+name).clone().appendTo(guard_selector+" > li");
+        $("#"+name).clone().children().appendTo(guard_selector+" > li");
 
         /* Populate the parameters */
         for (i in guard) {
@@ -86,7 +86,7 @@ $(function() {
         $(action_selector).append("<li></li>");
 
         /* Copy the template for this name */
-        $("#"+name).clone().appendTo(action_selector+" > li");
+        $("#"+name).clone().children().appendTo(action_selector+" > li");
 
         /* Populate the parameters */
         var i;
@@ -101,6 +101,7 @@ $(function() {
 
   $("#add_step").click(function(ev){
      $("#plan").append('<li>'+step_holder+'</li>');
+     set_class();
   });
 
   $("#submit_steps").click(function(ev){
