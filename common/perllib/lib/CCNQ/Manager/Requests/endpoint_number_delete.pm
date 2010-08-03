@@ -15,6 +15,6 @@ package CCNQ::Manager::Requests::endpoint_number_delete;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use CCNQ::Activities::Proxy;
-sub run { CCNQ::Activities::Proxy->endpoint_number_delete }
+sub run { CCNQ::Activities::Proxy->endpoint_number_delete(@_) }
 
 'CCNQ::Manager::Requests::endpoint_number_delete';

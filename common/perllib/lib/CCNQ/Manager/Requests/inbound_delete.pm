@@ -15,6 +15,6 @@ package CCNQ::Manager::Requests::inbound_delete;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use CCNQ::Activities::Proxy;
-sub run { CCNQ::Activities::Proxy->inbound_delete }
+sub run { CCNQ::Activities::Proxy->inbound_delete(@_) }
 
 'CCNQ::Manager::Requests::inbound_delete';

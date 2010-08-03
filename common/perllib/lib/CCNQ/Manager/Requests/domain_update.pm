@@ -15,6 +15,6 @@ package CCNQ::Manager::Requests::domain_update;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use CCNQ::Activities::Proxy;
-sub run { CCNQ::Activities::Proxy->domain_update }
+sub run { CCNQ::Activities::Proxy->domain_update(@_) }
 
 'CCNQ::Manager::Requests::domain_update';
