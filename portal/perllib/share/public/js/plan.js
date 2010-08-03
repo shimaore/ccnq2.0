@@ -72,7 +72,10 @@ $(function() {
 
         /* Populate the parameters */
         for (i in guard) {
-          var selector = guard_selector + " > li:last-child input,select[name='p"+i+"']";
+          var selector;
+          selector = guard_selector + " > li:last-child input[name='p"+i+"']";
+          $(selector).val(guard[i]);
+          selector = guard_selector + " > li:last-child select[name='p"+i+"']";
           $(selector).val(guard[i]);
         }
       }
@@ -92,7 +95,10 @@ $(function() {
         /* Populate the parameters */
         var i;
         for (i in action) {
-          var selector = action_selector+" > li:last-child input,select[name='p"+i+"']";
+          var selector;
+          selector = action_selector + " > li:last-child input[name='p"+i+"']";
+          $(selector).val(action[i]);
+          selector = action_selector + " > li:last-child select[name='p"+i+"']";
           $(selector).val(action[i]);
         }
       }
