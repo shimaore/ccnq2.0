@@ -13,7 +13,7 @@ Voice:
 * re-code CNAM client in lua
 
 Billing:
-* payment API
+* (payment API)
 
 ---- Lower priority items ----
 
