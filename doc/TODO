@@ -2,7 +2,6 @@
 
 Portal:
 * bulk import/update rating tables
-* plan creation tool
 * available numbers ("numbers bank") -- note: allow to delete numbers from the bank
 * intermediate admin level (FDN federation)
 * better "Summary" page
