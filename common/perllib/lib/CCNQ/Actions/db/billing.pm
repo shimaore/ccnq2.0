@@ -86,6 +86,10 @@ sub update_table_prefix {
   return CCNQ::Billing::Table::update_prefix(shift->{params});
 }
 
+sub update_table_prefix_bulk {
+  return CCNQ::Billing::Table::update_prefix_bulk(shift->{params});
+}
+
 sub delete_table_prefix {
   return CCNQ::Billing::Table::delete_prefix(shift->{params});
 }

@@ -65,6 +65,12 @@ sub update_prefix {
   return CCNQ::CouchDB::update_cv(CCNQ::Billing::billing_uri,_db_name($name),$params);
 }
 
+sub update_prefix_bulk {
+  my ($params) = @_;
+  my $name       = delete $params->{name};
+  return CCNQ::CouchDB::update_bulk_cv(CCNQ::Billing::billing_uri,_db_name($name),$params);
+}
+
 sub delete_prefix {
   my ($params) = @_;
   my $name       = delete $params->{name};

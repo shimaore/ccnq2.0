@@ -150,6 +150,7 @@ require_ok( 'CCNQ::Manager::Requests::bucket_update' );
 require_ok( 'CCNQ::Manager::Requests::plan_update' );
 require_ok( 'CCNQ::Manager::Requests::user_update' );
 require_ok( 'CCNQ::Manager::Requests::table_prefix_update' );
+require_ok( 'CCNQ::Manager::Requests::table_prefix_bulk_update' );
 require_ok( 'CCNQ::Manager::Requests::table_prefix_delete' );
 require_ok( 'CCNQ::Manager::Requests::table_update' );
 

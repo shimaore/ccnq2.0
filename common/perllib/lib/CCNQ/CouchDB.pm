@@ -151,6 +151,60 @@ sub update_cv {
   return $rcv;
 }
 
+=head2 update_bulk_cv($server_uri,$db_name,\%params)
+
+Creates or modify multiple records.
+
+\%params->{docs} must contain the new documents. If a document contains
+a key "_deleted", then that document will be deleted (rather than updated
+or created).
+
+Return a condvar that will indicates the number of successfully updated
+documents.
+
+=cut
+
+sub update_bulk_cv {
+  my ($uri,$db_name,$params) = @_;
+  debug("CCNQ::CouchDB::update_cv(".CCNQ::AE::ppp(@_).")");
+
+  my $rcv = AE::cv;
+
+  unless($params->{docs}) {
+    die "docs not provided";
+  }
+
+  # Insert / Update / Delete CouchDB records
+  my $couch = couch($uri);
+  my $couch_db = $couch->db($db_name);
+
+  for my $new_data (@{$params->{docs}}) {
+    my $id = $new_data->{_id};
+
+    $rcv->begin;
+
+    $couch_db->open_doc($id)->cb(sub{
+      my $doc = CCNQ::AE::receive(@_);
+      if($doc) {
+        for my $key (grep { !/^_/ } keys %{$new_data}) {
+          $doc->{$key} = $new_data->{$key};
+        }
+      } else {
+        $doc = $new_data;
+      }
+      my $op;
+      if(delete $new_data->{_deleted}) {
+        $op = $couch_db->remove_doc($doc);
+      } else {
+        $op = $couch_db->save_doc($doc);
+      }
+      $op->cb(sub{ CCNQ::AE::receive(@_); $rcv->end });
+    });
+  }
+
+  return $rcv;
+}
+
 =head2 update_key_cv($server_uri,$db_name,\%params)
 
 Returns a condvar which will return the values saved.
