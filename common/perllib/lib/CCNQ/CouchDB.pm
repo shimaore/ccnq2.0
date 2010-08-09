@@ -114,6 +114,8 @@ semantics, do a delete() then an update().
 
 =head2 update_cv($server_uri,$db_name,\%params)
 
+Creates or modify a record based on the _id value in \%params.
+
 Returns a condvar which will return the values saved.
 
 =cut
@@ -132,21 +134,23 @@ sub update_cv {
   my $couch = couch($uri);
   my $couch_db = $couch->db($db_name);
 
-  use Logger::Syslog; use CCNQ::AE;
   $couch_db->open_doc($params->{_id})->cb(sub{
     my $doc = CCNQ::AE::receive(@_);
     if($doc) {
       # If the record exists, only updates the specified fields.
-      for my $key (grep { !/^(_id|_rev)$/ } keys %{$params}) {
+      # Also remove any field whose name starts with "_":
+      # "[A]ny top-level fields within a JSON document containing a name
+      # that starts with a _ prefix are reserved for use by CouchDB itself."
+      for my $key (grep { !/^_/ } keys %{$params}) {
         $doc->{$key} = $params->{$key};
       }
       debug("CCNQ::CouchDB::update_cv: updating document");
-      $couch_db->save_doc($doc)->cb(sub{ CCNQ::AE::receive(@_); $rcv->send($doc) });
     } else {
       # Assume missing document
+      $doc = $params;
       debug("CCNQ::CouchDB::update_cv: creating document");
-      $couch_db->save_doc($params)->cb(sub{ CCNQ::AE::receive(@_); $rcv->send($params) });
     }
+    $couch_db->save_doc($doc)->cb(sub{ CCNQ::AE::receive(@_); $rcv->send($doc) });
   });
   return $rcv;
 }
@@ -207,7 +211,16 @@ sub update_bulk_cv {
 
 =head2 update_key_cv($server_uri,$db_name,\%params)
 
+Modifies a single value in a hash field.
+
 Returns a condvar which will return the values saved.
+
+\%params contains:
+  _id     The ID for the record to be updated.
+  field   The field in the record that needs to be updated.
+          This field must contain a hash.
+  key     The key (in the field referenced above) which needs to be modified.
+  value   The new value assigned to that key.
 
 =cut
 
