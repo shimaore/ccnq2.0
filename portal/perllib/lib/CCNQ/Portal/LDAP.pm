@@ -16,21 +16,20 @@ package CCNQ::Portal::LDAP;
 use strict; use warnings;
 
 use CCNQ;
+use CCNQ::Util;
 
 use Net::LDAP;
 
 use Logger::Syslog;
 
-#
-## Open a link to the LDAP store
-#
-sub get_ldap
-{
-  my ($ldap_uri,$ldap_bind) = @_;
-  open(my $pass_fh, '<', CCNQ::CCN.'/ldap.pass') or error($!);
-  my $ldap_password = <$pass_fh>;
-  chomp $ldap_password;
-  close($pass_fh) or error($!);
+sub _get_ldap {
+  my $self = shift;
+  my ($ldap_pass_file) = @_;
+
+  my $ldap_uri       = $self->ldap_uri;
+  my $ldap_bind      = $self->ldap_bind;
+  my $ldap_password =
+    CCNQ::Util::first_line_of(CCNQ::CCN.'/'.$ldap_pass_file);
 
   my $ldap = Net::LDAP->new( $ldap_uri, timeout => 5 ) or error($!);
   my $mesg = $ldap->bind( $ldap_bind, password => $ldap_password );
@@ -40,7 +39,12 @@ sub get_ldap
 
 sub get_sn
 {
-  my ($ldap,$ldap_base,$email) = @_;
+  my $self = shift;
+  my ($email) = @_;
+
+  my $ldap       = $self->get_ldap();
+  my $ldap_base = $self->ldap_base();
+
   my $mesg = $ldap->search(
     base => $ldap_base,
     scope => 'one',
