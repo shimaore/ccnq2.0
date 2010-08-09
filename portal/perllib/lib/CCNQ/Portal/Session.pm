@@ -47,8 +47,8 @@ sub force_locale {
 
 sub update {
   my $self = shift;
-  # XXX Should be configurable, and able to say "+15m".
-  session expires => (time() + 15 * 60);
+  # XXX Should be configurable, and able to say "+30m".
+  session expires => (time() + 30 * 60);
 }
 
 sub end {
