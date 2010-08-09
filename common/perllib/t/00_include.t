@@ -139,6 +139,8 @@ require_ok( 'CCNQ::Manager::Requests::inbound_delete' );
 require_ok( 'CCNQ::Manager::Requests::inbound_update' );
 require_ok( 'CCNQ::Manager::Requests::local_number_delete' );
 require_ok( 'CCNQ::Manager::Requests::local_number_update' );
+require_ok( 'CCNQ::Manager::Requests::number_bank_delete' );
+require_ok( 'CCNQ::Manager::Requests::number_bank_update' );
 
 require_ok( 'CCNQ::Manager::Requests::node_status_query' );
 require_ok( 'CCNQ::Manager::Requests::route_did_update' );

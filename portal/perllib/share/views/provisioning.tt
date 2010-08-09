@@ -16,6 +16,7 @@
     <% ELSIF profile == 'number' %>
       | <span class="edit"><a href="<% prefix %>/number_forwarding/<% row.doc.number %>"><%|loc%>Change Forwarding<%END%></a></span>
       | <span class="edit"><a href="<% prefix %>/number_location/<% row.doc.number %>"><%|loc%>Change Location<%END%></a></span>
+      | <span class="edit"><a href="<% prefix %>/number/bank/return/<% row.doc.number %>"><%|loc%>Delete<%END%></a></span>
     <% END %>
     </div>
     <% FOREACH d IN row.doc; UNLESS d.key.match('^_|^request|^type|^endpoint_ip') %>

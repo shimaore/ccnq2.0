@@ -21,9 +21,9 @@ use CCNQ::Provisioning;
 sub __update {
   my $request = shift;
 
-  # XXX Proper failure mode inside Manager::Request..?
-  croak "No account" unless
-    defined $request->{account};
+  # Not required for number bank.
+  # croak "No account" unless
+  #  defined $request->{account};
   # Not required for location.
   # croak "No account_sub" unless
   #  defined $request->{account_sub};

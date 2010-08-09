@@ -87,7 +87,10 @@ sub submit_number {
   $number
     or return CCNQ::Portal::content( error => _('Please specify a valid number')_ );
 
-  my $params = {
+  my $params = CCNQ::Portal::Inner::Util::get_number($account,$number);
+
+  $params = {
+    %$params,
     api_name      => $api_name,
     account       => $endpoint_data->{account},
     account_sub   => $endpoint_data->{account_sub},
@@ -120,7 +123,7 @@ sub submit_default {
   # and category_to_criteria->{params->{category}}->($endpoint)
     or return CCNQ::Portal::content( error => _('Invalid parameters')_ );
 
-  return CCNQ::Portal::Inner::Number::submit_number($category_to_route->{params->{category}});
+  return submit_number($category_to_route->{params->{category}});
 }
 
 1;

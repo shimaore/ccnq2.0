@@ -41,20 +41,69 @@ sub update_number {
   );
 }
 
+sub is_bare_record {
+  my $self = shift;
+  my ($doc) = @_;
+
+  # The condition must match the one defined in js_number_bank in CCNQ::Provisioning.
+  return $doc->{profile} eq 'number' && !$doc->{account} && !$doc->{endpoint};
+}
+
+sub bare_record {
+  my $self = shift;
+  my ($doc) = @_;
+
+#  # This is a version where we know what we need to keep. (But we don't.)
+#  my @fields = qw( fields-to-keep );
+#  my $bare_number = {};
+#  @{$bare_number}{@fields} = @{$doc}{@fields};
+#  return $bare_number;
+
+  # Make a copy
+  my $bare_number = {%$doc};
+
+  # Delete account, endpoint, etc.
+  delete @$bare_number {qw(
+    account
+    endpoint
+    location
+
+    domain
+    username
+    username_domain
+    cfa
+    cfnr
+    cfb
+    cfda
+    cfda_timeout
+    outbound_route
+  )};
+
+  return $bare_number;
+}
+
+=head2 delete_number
+
+  Return a provisionned number to the numbers bank.
+
+=cut
+
 sub delete_number {
   my $self = shift;
   my ($request,$name,@tasks) = @_;
 
+  my $bare_number = $self->bare_record($request);
+
   # Return list of activities required to complete this request.
   return (
-
-    # 1. Save the entire request in the provisioning database
-    CCNQ::Activities::Provisioning::delete_number($request),
 
     @tasks,
 
     # 5. Add billing entry
     CCNQ::Activities::Billing::final_day($request,$name),
+
+    # 1. Return the number to the bank.
+    CCNQ::Activities::Provisioning::update_number($bare_number),
 
     # 6. Mark completed
     CCNQ::Manager::request_completed(),

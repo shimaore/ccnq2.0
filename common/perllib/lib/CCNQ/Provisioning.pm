@@ -101,6 +101,25 @@ use constant js_reduce_sum => <<'JAVASCRIPT';
   }
 JAVASCRIPT
 
+# Numbers bank: Make sure the selection criteria match those in
+# CCNQ::Activities::Number.
+
+use constant js_number_bank => <<'JAVASCRIPT';
+  function (doc){
+    if(doc.profile == "number" && !doc.endpoint && !doc.account) {
+      emit([doc.number],null);
+    }
+  }
+JAVASCRIPT
+
+use constant js_number_bank_by_type => <<'JAVASCRIPT';
+  function (doc){
+    if(doc.profile == "number" && !doc.endpoint && !doc.account && doc.number_type) {
+      emit([doc.number_type,doc.number],null);
+    }
+  }
+JAVASCRIPT
+
 use constant provisioning_designs => {
   report => {
     language => 'javascript',
@@ -136,6 +155,14 @@ use constant provisioning_designs => {
       count => {
         map => js_report_count,
         reduce => js_reduce_sum,
+      },
+      number_bank => {
+        map => js_number_bank,
+        # no reduce function
+      },
+      number_bank_by_type => {
+        map => js_number_bank_by_type,
+        # no reduce function
       },
     },
   },
