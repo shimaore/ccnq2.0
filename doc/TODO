@@ -1,16 +1,31 @@
 
+Portal:
+* PDF (branded) invoice generation
+  due: 2010/08
+  * address fields for billing
+
+Voice:
+* "dumb" SBC
+   due: 2010/08
 
 Portal:
-* bulk import/update rating tables
-* available numbers ("numbers bank") -- note: allow to delete numbers from the bank
-* intermediate admin level (FDN federation)
-* better "Summary" page
-* address fields for billing
-* PDF (branded) invoice generation
+* available numbers ("numbers bank")
+  due: 2010/09
 
 Voice:
 * FS lua code for prepaid (uses realtime_estimator)
+   due: 2010/10
+
+Voice:
 * re-code CNAM client in lua
+
+Portal:
+* intermediate admin level (FDN federation)
+  due: 2010/12
+
+Portal:
+* better "Summary" page
+* bulk import/update rating tables
 
 Billing:
 * (payment API)
