@@ -211,7 +211,7 @@ get '/numbers/bank/return/:number' => sub {
 
   my $account = session('account');
 
-  my $number_data = get_number($account,$number);
+  my $number_data = CCNQ::Portal::Inner::Util::get_number($account,$number);
   $number_data
     or return CCNQ::Portal::content( error => _('No such number')_ );
 
