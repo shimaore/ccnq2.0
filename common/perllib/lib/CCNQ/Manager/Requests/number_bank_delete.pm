@@ -15,6 +15,6 @@ package CCNQ::Manager::Requests::number_bank_delete;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use CCNQ::Activities::Provisioning;
-sub run { CCNQ::Activities::Provisioning->number_delete(@_) }
+sub run { CCNQ::Activities::Provisioning->delete_number(@_) }
 
 'CCNQ::Manager::Requests::number_bank_delete';
