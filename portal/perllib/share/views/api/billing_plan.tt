@@ -51,9 +51,9 @@
         <input type="text" name="p1" size="2"/>
       </p>
     </div>
-    <div class="ui-widget-content plan-guard" id="to_country">
-      <input type="hidden" name="p0" value="to_country">
-      <p>To country in
+    <div class="ui-widget-content plan-guard" id="to_table">
+      <input type="hidden" name="p0" value="to_table">
+      <p>To in
         <select name="p1">
           <% FOREACH t IN all_tables %>
           <option value="<% t %>"><% t %></option>
@@ -61,9 +61,9 @@
         </select>
       </p>
     </div>
-    <div class="ui-widget-content plan-guard" id="from_country">
-      <input type="hidden" name="p0" value="from_country">
-      <p>From country in
+    <div class="ui-widget-content plan-guard" id="from_table">
+      <input type="hidden" name="p0" value="from_table">
+      <p>From in
         <select name="p1">
           <% FOREACH t IN all_tables %>
           <option value="<% t %>"><% t %></option>
