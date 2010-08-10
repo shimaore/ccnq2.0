@@ -3,7 +3,7 @@
 <ul>
   <% FOREACH row IN result.rows; SET n = row.doc; %>
   <li>
-    <form method="POST" enctype="multipart/form-data">
+    <form method="POST" action="modify">
       <input type="text" readonly name="number" value="<% n.number | html %>" />
       <select name="number_type">
         <% FOREACH t IN number_types %>
@@ -12,7 +12,7 @@
       </select>
       <input type="submit" value="<%|loc%>Save<%END%>">
     </form>
-    <form method="DELETE" enctype="multipart/form-data">
+    <form method="POST" action="delete">
       <input type="hidden" name="number" value="<% n.number | html %>" />
       <input type="submit" value="<%|loc%>Delete<%END%>">
     </form>
@@ -22,7 +22,7 @@
 </fieldset>
 
 <fieldset><legend><%|loc%>Create new number<%END%></legend>
-    <form method="PUT" enctype="multipart/form-data">
+    <form method="POST" action="create">
       <input type="text" class="required" name="number" />
       <select name="number_type" class="required">
         <% FOREACH t IN number_types %>

@@ -98,7 +98,7 @@ get  '/json/numbers/bank' => sub { as_json _get_bank_numbers };
 
 =cut
 
-put '/numbers/bank' => sub {
+post '/numbers/bank/create' => sub {
   CCNQ::Portal->current_session->user
   && CCNQ::Portal->current_session->user->profile->is_admin
     or return;
@@ -133,7 +133,7 @@ put '/numbers/bank' => sub {
 
 =cut
 
-post '/numbers/bank/create' => sub {
+post '/numbers/bank/modify' => sub {
   CCNQ::Portal->current_session->user
   && CCNQ::Portal->current_session->user->profile->is_admin
     or return;
@@ -168,7 +168,7 @@ post '/numbers/bank/create' => sub {
 
 =cut
 
-del '/numbers/bank' => sub {
+post '/numbers/bank/delete' => sub {
   CCNQ::Portal->current_session->user
   && CCNQ::Portal->current_session->user->profile->is_admin
     or return;
