@@ -20,6 +20,10 @@
     color: #333;
 }
 
+#nav .separator {
+    background-color: #ddd;
+}
+
 #nav a:hover{
     /* This should be in the site CSS */
     background-color: #888;
@@ -45,8 +49,8 @@
 }
 
 #nav ul ul{
-	top:auto;
-	z-index: 2;
+    top:auto;
+    z-index: 2;
 }
 
 #nav li ul ul {
