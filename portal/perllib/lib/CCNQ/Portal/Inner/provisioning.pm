@@ -25,7 +25,7 @@ use CCNQ::AE;
 sub to_html {
   my $cv = shift;
   var template_name => 'provisioning';
-  $cv and var result => sub { CCN:AE::receive_docs($cv) };
+  $cv and var result => sub { CCNQ::AE::receive_docs($cv) };
   return CCNQ::Portal::content;
 }
 
