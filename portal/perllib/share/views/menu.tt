@@ -56,9 +56,9 @@
     <ul>
       <% IF is_admin %>
       <li><a href="<% prefix %>/provisioning/number/_all"><%|loc%>All numbers (across all accounts)<%END%></a></li>
-      <li><a href="<% prefix %>/numbers/bank/"><%|loc%>Available Numbers<%END%></a></li>
       <li><span><form action="<% prefix %>/provisioning/number" method="GET">
           <input type="text" size="16" name="number" /></form></span></li>
+      <li><a href="<% prefix %>/numbers/bank/"><%|loc%>Available Numbers<%END%></a></li>
       <% END %>
       <% IF session.account %>
       <li><span><%|loc(session.account)%>Account [_1]<%END%></span></li>
