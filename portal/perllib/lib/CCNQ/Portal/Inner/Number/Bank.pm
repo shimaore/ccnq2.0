@@ -89,8 +89,8 @@ sub _get_bank_numbers {
   return $cv;
 }
 
-get       '/numbers/bank' => sub { to_html _get_bank_numbers };
-get  '/json/numbers/bank' => sub { as_json _get_bank_numbers };
+get       '/numbers/bank/' => sub { to_html _get_bank_numbers };
+get  '/json/numbers/bank/' => sub { as_json _get_bank_numbers };
 
 =head2 PUT /numbers/bank?number=...
 
