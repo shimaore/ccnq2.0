@@ -39,7 +39,7 @@
         <form action="<% prefix %>/provisioning/number" method="GET">
           <label for="number"><%|loc%>Locate number<%END%></label>
           <input type="text" width="16" name="number" />
-          <input type="submit" name="<%|loc%>Find number across all accounts<%END%>" />
+          <input type="submit" value="<%|loc%>Find number across all accounts<%END%>" />
         </form>
       </li>
       <li><a href="<% prefix %>/provisioning/number/_all"><%|loc%>List all numbers (across all accounts)<%END%></a></li>
