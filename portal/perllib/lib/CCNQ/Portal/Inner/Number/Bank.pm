@@ -22,27 +22,10 @@ use CCNQ::Portal::Util;
 use CCNQ::Portal::Inner::Util;
 
 use CCNQ::Activities::Number;
+use CCNQ::Portal::Inner::Number;
 
 use CCNQ::AE;
 use CCNQ::API;
-
-our $number_types;
-
-sub register_number_types {
-  my $self = shift;
-  my ($new_types) = @_;
-  $number_types ||= {};
-  $number_types = {
-    %$number_types,
-    %$new_types,
-  };
-  return;
-}
-
-sub registered_number_types {
-  my $self = shift;
-  return $number_types;
-}
 
 =head1 CCNQ::Portal::Inner::Number::Bank
 
@@ -74,7 +57,7 @@ provisioning.)
 sub to_html {
   my $cv = shift;
   var template_name => 'api/number-bank';
-  var number_types => CCNQ::Portal::Inner::Number::Bank->registered_number_types;
+  var number_types => CCNQ::Portal::Inner::Number->registered_number_types;
   $cv and var result => sub { $cv->recv };
   return CCNQ::Portal::content;
 }

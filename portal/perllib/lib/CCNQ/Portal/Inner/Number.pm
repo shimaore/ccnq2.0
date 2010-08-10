@@ -21,6 +21,24 @@ use CCNQ::Portal::I18N;
 use CCNQ::Portal::Util;
 use CCNQ::Portal::Inner::Util;
 
+our $number_types;
+
+sub register_number_types {
+  my $self = shift;
+  my ($new_types) = @_;
+  $number_types ||= {};
+  $number_types = {
+    %$number_types,
+    %$new_types,
+  };
+  return;
+}
+
+sub registered_number_types {
+  my $self = shift;
+  return $number_types;
+}
+
 use CCNQ::AE;
 use CCNQ::API;
 
