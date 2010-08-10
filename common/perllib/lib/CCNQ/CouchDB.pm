@@ -283,6 +283,10 @@ sub delete_cv {
 
   $couch_db->open_doc($params->{_id})->cb(sub{
     my $doc = CCNQ::AE::receive(@_);
+    if(!$doc) {
+      $rcv->send;
+      return;
+    }
     $couch_db->remove_doc($doc)->cb(sub{ CCNQ::AE::receive(@_); $rcv->send($doc) });
   });
   return $rcv;
