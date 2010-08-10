@@ -12,7 +12,7 @@
         <select name="number_alt" class="required">
           <option value=""></option>
           <% FOREACH n IN numbers_for(session.account) %>
-          <option <% IF n.number == field.number %>selected<% END %> value="<% n.number | html %>"><% n.number | html %></option>
+          <option <% IF n.number == field.number %>selected<% END %> value="<% n.number | html %>"><% n.number | html %> (<% n.endpoint %>)</option>
           <% END %>
           <% FOREACH n IN available_numbers %>
           <option <% IF n.number == field.number %>selected<% END %> value="<% n.number | html %>"><% n.number | html %> (<% n.number_type %>)</option>
