@@ -1,0 +1,26 @@
+<% USE loc %>
+<fieldset><legend><%|loc%>Available Numbers<%END%></legend>
+<ul>
+  <% FOREACH n IN result %>
+  <li>
+    <form method="PUT">
+      <input type="text" readonly name="number" value="<% n.number | html %>" />
+      <select name="number_type">
+        <% FOREACH t IN number_types %>
+        <option <% IF n.number_type == t.key %>selected<% END %> value="<% t.key | html %>" ><% t.value | html %></option>
+        <% END %>
+      </select>
+      <input type="submit" value="<%|loc%>Save<%END%>">
+    </form>
+    <form method="DELETE">
+      <input type="hidden" name="number" value="<% n.number | html %>" />
+      <input type="submit" value="<%|loc%>Delete<%END%>">
+    </form>
+  </li>
+  <% END %>
+</ul>
+</fieldset>
+
+<fieldset><legend><%|loc%>Create new number<%END%></legend>
+<form>
+</form>

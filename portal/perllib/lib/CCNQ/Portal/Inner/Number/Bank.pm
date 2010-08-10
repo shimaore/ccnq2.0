@@ -1,4 +1,4 @@
-package CCNQ::Portal::Inner::Number;
+package CCNQ::Portal::Inner::Number::Bank;
 # Copyright (C) 2010  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -25,6 +25,23 @@ use CCNQ::Activities::Number;
 
 use CCNQ::AE;
 use CCNQ::API;
+
+our $number_types = {};
+
+sub register_number_types {
+  my $self = shift;
+  my ($new_types) = @_;
+  $number_types = {
+    %$number_types,
+    %$new_types,
+  };
+  return;
+}
+
+sub registered_number_types {
+  my $self = shift;
+  return $number_types;
+}
 
 =head1 CCNQ::Portal::Inner::Number::Bank
 
@@ -55,7 +72,8 @@ provisioning.)
 
 sub to_html {
   my $cv = shift;
-  var template_name => 'api/number_bank';
+  var template_name => 'api/number-bank';
+  var number_types => CCNQ::Portal::Inner::Number::Bank->registered_number_types;
   $cv and var result => sub { $cv->recv };
   return CCNQ::Portal::content;
 }
@@ -87,8 +105,8 @@ sub _get_bank_numbers {
   return $cv;
 }
 
-get       '/numbers/bank/available' => sub { to_html _get_bank_numbers };
-get  '/json/numbers/bank/available' => sub { as_json _get_bank_numbers };
+get       '/numbers/bank' => sub { to_html _get_bank_numbers };
+get  '/json/numbers/bank' => sub { as_json _get_bank_numbers };
 
 =head2 PUT /numbers/bank?number=...
 
