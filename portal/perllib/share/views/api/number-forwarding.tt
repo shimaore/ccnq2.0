@@ -4,7 +4,7 @@
     <form method="post" action="" accept-charset="utf-8" class="ui-widget validate">
       <p class="ui-helper-clearfix">
         <label for="number" class="left"><% | loc %>Number:<% END %></label>
-        <input type="text" readonly name="number" value="<% field.number | html %>" />
+        <input type="text" readonly name="number" value="<% field.number | html %>" size="16" />
       </p>
       <p class="ui-helper-clearfix">
         <label for="forwarding_type" class="left"><% | loc %>Call Forwarding:<% END %></label>
