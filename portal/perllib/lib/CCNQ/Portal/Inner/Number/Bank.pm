@@ -103,7 +103,7 @@ post '/numbers/bank/create' => sub {
   && CCNQ::Portal->current_session->user->profile->is_admin
     or return;
 
-  my $number = CCNQ::Portal::normalize_number->(params->{number});
+  my $number = CCNQ::Portal::normalize_number(params->{number});
   $number
     or return CCNQ::Portal::content( error => _('Please specify a valid number')_ );
 
@@ -138,7 +138,7 @@ post '/numbers/bank/modify' => sub {
   && CCNQ::Portal->current_session->user->profile->is_admin
     or return;
 
-  my $number = CCNQ::Portal::normalize_number->(params->{number});
+  my $number = CCNQ::Portal::normalize_number(params->{number});
   $number
     or return CCNQ::Portal::content( error => _('Please specify a valid number')_ );
 
@@ -173,7 +173,7 @@ post '/numbers/bank/delete' => sub {
   && CCNQ::Portal->current_session->user->profile->is_admin
     or return;
 
-  my $number = CCNQ::Portal::normalize_number->(params->{number});
+  my $number = CCNQ::Portal::normalize_number(params->{number});
   $number
     or return CCNQ::Portal::content( error => _('Please specify a valid number')_ );
 
@@ -200,7 +200,7 @@ post '/numbers/bank/return/:number' => sub {
   CCNQ::Portal->current_session->user
     or return;
 
-  my $number = CCNQ::Portal::normalize_number->(params->{number});
+  my $number = CCNQ::Portal::normalize_number(params->{number});
   $number
     or return CCNQ::Portal::content( error => _('Please specify a valid number')_ );
 
