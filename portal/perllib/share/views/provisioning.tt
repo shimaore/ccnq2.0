@@ -14,8 +14,10 @@
     <% ELSIF profile == 'location' %>
       | <span class="edit"><a href="<% prefix %>/location?location=<% r.location | uri %>"><%|loc%>Edit<%END%></a></span>
     <% ELSIF profile == 'number' %>
+      <% IF r.account %>
       | <span class="edit"><a href="<% prefix %>/number_forwarding/<% r.number %>"><%|loc%>Change Forwarding<%END%></a></span>
       | <span class="edit"><a href="<% prefix %>/number_location/<% r.number %>"><%|loc%>Change Location<%END%></a></span>
+      <% END %>
       | <span class="edit"><a href="<% prefix %>/number/bank/return/<% r.number %>"><%|loc%>Delete<%END%></a></span>
     <% END %>
     </div>

@@ -71,7 +71,7 @@ sub default {
     $endpoints = [ grep { $selector->($_) } @$endpoints ];
   }
 
-  CCNQ::Portal->current_session->user->is_admin
+  CCNQ::Portal->current_session->user->profile->is_admin
     and var available_numbers => sub {
       my $cv = AE::cv;
       CCNQ::API::provisioning('report','number_bank',$cv);
@@ -116,7 +116,7 @@ sub submit_number {
   my $params = CCNQ::Portal::Inner::Util::get_number($account,$number);
 
   # Validate that the number is in this account.
-  $params->{account} || CCNQ::Portal->current_session->user->is_admin
+  $params->{account} || CCNQ::Portal->current_session->user->profile->is_admin
     or return CCNQ::Portal::content( error => _('Invalid parameter')_ );
 
   $params = {
