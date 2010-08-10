@@ -44,9 +44,7 @@ Generic Provisioning API query, restricted to administrative accounts.
 
 sub _view_id {
   CCNQ::Portal->current_session->user &&
-  session('account') &&
-  # Restrict the generic view to administrators
-  CCNQ::Portal->current_session->user->profile->is_admin
+  session('account')
     or return;
 
   my $account = session('account');
