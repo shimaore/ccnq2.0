@@ -113,7 +113,7 @@ post '/numbers/bank/create' => sub {
   $number_data
     and return CCNQ::Portal::content( error => _('This number already exists. Please delete it first.')_ );
 
-  my $params = CCNQ::Portal::Util::neat({}, grep { !/^_/ } keys params);
+  my $params = CCNQ::Portal::Util::neat({}, grep { !/^_/ } keys %{ params });
 
   # Extra fields might be available: number_type, country, ratecenter, etc.
   $params = {
