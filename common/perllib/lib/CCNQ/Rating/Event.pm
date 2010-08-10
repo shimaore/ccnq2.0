@@ -107,13 +107,13 @@ sub new {
 
 sub to {
   my ($self) = @_;
-  $self->{_to} ||= new Rating::Event::Number($self->{to_e164});
+  $self->{_to} ||= new CCNQ::Rating::Event::Number($self->{to_e164});
   return $self->{_to};
 }
 
 sub from {
   my ($self) = @_;
-  $self->{_from} ||= new Rating::Event::Number($self->{from_e164});
+  $self->{_from} ||= new CCNQ::Rating::Event::Number($self->{from_e164});
   return $self->{_from};
 }
 
