@@ -3,7 +3,7 @@
 <fieldset id="AccountSelection"><legend><% | loc %>Account selection<% END %></legend>
 <% IF is_admin %>
   <form action="<% prefix %>/account" method="POST" accept-charset="utf-8" class="ui-widget">
-    <input type="text" name ="account" value="<% session.account | html %>" width="16">
+    <input type="text" name ="account" value="<% session.account | html %>" size="16">
     <input type="submit" value="<% | loc %>Select<% END %>">
   </form>
 <% ELSE %>
