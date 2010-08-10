@@ -39,7 +39,7 @@
     z-index: 1;
 }
 
-#nav li ul a, #nav li ul span {
+#nav li ul a, #nav li ul span, #nav li ul form {
     width:12em;
     float:left;
 }
