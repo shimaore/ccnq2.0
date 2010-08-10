@@ -201,7 +201,7 @@ post '/numbers/bank/delete' => sub {
 
 =cut
 
-post '/numbers/bank/return/:number' => sub {
+get '/numbers/bank/return/:number' => sub {
   CCNQ::Portal->current_session->user
     or return;
 
