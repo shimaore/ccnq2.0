@@ -46,7 +46,7 @@ sub is_bare_record {
   my ($doc) = @_;
 
   # The condition must match the one defined in js_number_bank in CCNQ::Provisioning.
-  return $doc->{profile} eq 'number' && !$doc->{account} && !$doc->{endpoint};
+  return $doc->{profile} && $doc->{profile} eq 'number' && !$doc->{account} && !$doc->{endpoint};
 }
 
 sub bare_record {

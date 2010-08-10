@@ -117,7 +117,7 @@ post '/numbers/bank/create' => sub {
 
   # Extra fields might be available: number_type, country, ratecenter, etc.
   $params = {
-    CCNQ::Portal::Util::neat({}, grep { !/^_/ } keys %$params ),
+    %{ CCNQ::Portal::Util::neat({}, grep { !/^_/ } keys %$params ) },
     number => $number,
     profile => 'number',
   };
