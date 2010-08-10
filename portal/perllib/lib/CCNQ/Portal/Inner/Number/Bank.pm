@@ -26,11 +26,12 @@ use CCNQ::Activities::Number;
 use CCNQ::AE;
 use CCNQ::API;
 
-our $number_types = {};
+our $number_types;
 
 sub register_number_types {
   my $self = shift;
   my ($new_types) = @_;
+  $number_types ||= {};
   $number_types = {
     %$number_types,
     %$new_types,
