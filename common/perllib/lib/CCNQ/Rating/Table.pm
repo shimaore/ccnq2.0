@@ -21,10 +21,9 @@ use strict; use warnings;
 use AnyEvent;
 use CCNQ::AE;
 use AnyEvent::CouchDB;
+use Logger::Syslog;
 
 use CCNQ::Trie;
-
-use Carp;
 
 =head1 new($name)
 
@@ -68,6 +67,8 @@ sub load {
       $self->{trie} = CCNQ::Trie->new(
         map { $_->{key} } @{$all_docs->{rows}}
       );
+    } else {
+      error('Failed to load '.$self->name);
     }
     $rcv->send;
   });
