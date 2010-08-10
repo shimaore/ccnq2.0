@@ -117,6 +117,7 @@ post '/numbers/bank/create' => sub {
   my $params = {
     params,
     number => $number,
+    profile => 'number',
   };
 
   CCNQ::Activities::Number->is_bare_record($params)
@@ -152,6 +153,7 @@ post '/numbers/bank/modify' => sub {
     %$number_data,
     params,
     number => $number,
+    profile => 'number',
   };
 
   CCNQ::Activities::Number->is_bare_record($params)
