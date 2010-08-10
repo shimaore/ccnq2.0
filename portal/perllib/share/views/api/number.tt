@@ -9,11 +9,20 @@
       <p class="ui-helper-clearfix">
         <label for="number" class="left"><% | loc %>Number:<% END %></label>
         <input type="text" name="number" value="<% field.number | html %>" class="required digits"/>
+        <select name="number_alt" class="required">
+          <option value=""></option>
+          <% FOREACH n IN numbers_for(session.account) %>
+          <option <% IF n.number == field.number %>selected<% END %> value="<% n.number | html %>"><% n.number | html %></option>
+          <% END %>
+          <% FOREACH n IN available_numbers %>
+          <option <% IF n.number == field.number %>selected<% END %> value="<% n.number | html %>"><% n.number | html %> (<% n.number_type %>)</option>
+          <% END %>
+        </select>
       </p>
       <p class="ui-helper-clearfix">
         <label for="endpoint" class="left"><% | loc %>Endpoint:<% END %></label>
         <select name="endpoint" class="required">
-          <% FOREACH endpoint IN available_endpoints; IF endpoint.cluster == cluster %>
+          <% FOREACH endpoint IN endpoints_for(session.account); IF endpoint.cluster == cluster %>
             <% IF endpoint.endpoint == field.endpoint %>
               <option value="<% endpoint.endpoint | html %>" selected><% endpoint.username | html %> (<% endpoint.ip | html %>)</option>
             <% ELSE %>

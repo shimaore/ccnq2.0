@@ -61,6 +61,8 @@ sub default {
   my $category = params->{category};
   my $cluster  = params->{cluster};
 
+  my $endpoints = CCNQ::Portal::Inner::Util::endpoints_for($account);
+
   if( $category and
       $category_to_criteria and
       $category_to_criteria->{$category} )
@@ -69,7 +71,13 @@ sub default {
     $endpoints = [ grep { $selector->($_) } @$endpoints ];
   }
 
-  var available_endpoints => $endpoints;
+  CCNQ::Portal->current_session->user->is_admin
+    and var available_numbers => sub {
+      my $cv = AE::cv;
+      CCNQ::API::provisioning('report','number_bank',$cv);
+      return CCNQ::AE::receive_docs($cv);
+    };
+
   var category => $category;
   var cluster  => $cluster;
   var numbers_for   => \&CCNQ::Portal::Inner::Util::numbers_for;
@@ -101,11 +109,15 @@ sub submit_number {
 
   my $endpoint_data = CCNQ::Portal::Inner::Util::get_endpoint($account,$endpoint);
 
-  my $number = $normalize_number->(params->{number});
+  my $number = $normalize_number->(params->{number_alt} || params->{number});
   $number
     or return CCNQ::Portal::content( error => _('Please specify a valid number')_ );
 
   my $params = CCNQ::Portal::Inner::Util::get_number($account,$number);
+
+  # Validate that the number is in this account.
+  $params->{account} || CCNQ::Portal->current_session->user->is_admin
+    or return CCNQ::Portal::content( error => _('Invalid parameter')_ );
 
   $params = {
     %$params,

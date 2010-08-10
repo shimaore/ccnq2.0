@@ -215,6 +215,15 @@ sub get_number {
   return CCNQ::AE::receive_first_doc($cv) || {};
 }
 
+sub numbers_for {
+  my ($account) = @_;
+  defined($account) or confess "account is required";
+
+  my $cv = AE::cv;
+  CCNQ::API::provisioning('report','number',$account,$cv);
+  return CCNQ::AE::receive_docs($cv);
+}
+
 sub update_number {
   my ($account,$number,$new_data) = @_;
   defined($account) or confess "account is required";
