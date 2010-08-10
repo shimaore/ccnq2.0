@@ -1,7 +1,7 @@
 <% USE loc %>
 <fieldset><legend><%|loc%>Available Numbers<%END%></legend>
 <ul>
-  <% FOREACH row IN result.rows; SET n = row.doc; %>
+  <% FOREACH n IN result %>
   <li>
     <form method="POST" action="modify">
       <input type="text" readonly name="number" value="<% n.number | html %>" />

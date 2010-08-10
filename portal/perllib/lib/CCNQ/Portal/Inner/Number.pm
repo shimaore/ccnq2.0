@@ -58,8 +58,6 @@ sub default {
 
   my $account = session('account');
 
-  my $endpoints = CCNQ::Portal::Inner::Util::endpoints_for($account);
-
   my $category = params->{category};
   my $cluster  = params->{cluster};
 
@@ -74,6 +72,8 @@ sub default {
   var available_endpoints => $endpoints;
   var category => $category;
   var cluster  => $cluster;
+  var numbers_for   => \&CCNQ::Portal::Inner::Util::numbers_for;
+  var endpoints_for => \&CCNQ::Portal::Inner::Util::endpoints_for;
   var locations_for => \&CCNQ::Portal::Inner::Util::locations_for;
 
   return CCNQ::Portal::content;

@@ -58,7 +58,7 @@ sub to_html {
   my $cv = shift;
   var template_name => 'api/number-bank';
   var number_types => CCNQ::Portal::Inner::Number->registered_number_types;
-  $cv and var result => sub { CCNQ::AE::receive($cv) };
+  $cv and var result => sub { CCNQ::AE::receive_docs($cv) };
   return CCNQ::Portal::content;
 }
 

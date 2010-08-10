@@ -42,9 +42,9 @@ get '/request/:request_id' => sub {
 
   my $cv = AE::cv;
   CCNQ::API::request($request_id,$cv);
-  my $res = CCNQ::AE::receive($cv);
+  my $res = CCNQ::AE::receive_docs($cv);
 
-  my $pcap = $res->{rows}->[2]->{doc}->{response}->{result}->{pcap};
+  my $pcap = $res->[2]->{response}->{result}->{pcap};
   if($pcap) {
     content_type 'binary/appplication';
     header 'Content-Disposition' => qq(attachment; filename="trace.pcap");

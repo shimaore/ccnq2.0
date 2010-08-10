@@ -5,8 +5,7 @@
 <% SET activities = [] %>
 <% SET progress = 0 %>
 <% SET total = 0 %>
-<% FOREACH row IN result.rows %>
-  <% SET r = row.doc %>
+<% FOREACH r IN result %>
   <% IF r.status %>
     <% SET rank = r.rank %>
     <% IF not activities.$rank %><% SET activities.$rank = 1 %><% SET progress = progress + 1 %><% END %>

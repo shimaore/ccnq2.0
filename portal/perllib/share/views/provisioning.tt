@@ -1,25 +1,25 @@
 <% USE loc %>
 <% IF session.user_id and result %>
 <div class="provisioning">
-<% FOREACH row IN result.rows; SET profile = row.doc.profile %>
-  <h3 class="row_header <% profile %>"><a href="<% prefix %>/provisioning/<% profile | uri %>/<% row.doc.$profile | uri %>"><% row.doc.$profile %></a></h3>
+<% FOREACH r IN result; SET profile = r.profile %>
+  <h3 class="row_header <% profile %>"><a href="<% prefix %>/provisioning/<% profile | uri %>/<% r.$profile | uri %>"><% r.$profile %></a></h3>
   <div class="row_content <% profile %>">
     <div>
-    <a href="<% prefix %>/provisioning/view/<% profile | uri %>/<% row.doc.$profile | uri %>">View</a>
-    <% IF profile == 'endpoint' and row.doc.password %>
-      | <span class="registration"><a href="<% prefix %>/provisioning/endpoint_location?endpoint=<% row.doc.endpoint | uri %>"><%|loc%>Registration status<%END%></a></span>
+    <a href="<% prefix %>/provisioning/view/<% profile | uri %>/<% r.$profile | uri %>">View</a>
+    <% IF profile == 'endpoint' and r.password %>
+      | <span class="registration"><a href="<% prefix %>/provisioning/endpoint_location?endpoint=<% r.endpoint | uri %>"><%|loc%>Registration status<%END%></a></span>
     <% END %>
     <% IF profile == 'endpoint' %>
-      | <span class="edit"><a href="<% prefix %>/provisioning/endpoint/<% row.doc.endpoint %>"><%|loc%>Edit<%END%></a></span>
+      | <span class="edit"><a href="<% prefix %>/provisioning/endpoint/<% r.endpoint %>"><%|loc%>Edit<%END%></a></span>
     <% ELSIF profile == 'location' %>
-      | <span class="edit"><a href="<% prefix %>/location?location=<% row.doc.location | uri %>"><%|loc%>Edit<%END%></a></span>
+      | <span class="edit"><a href="<% prefix %>/location?location=<% r.location | uri %>"><%|loc%>Edit<%END%></a></span>
     <% ELSIF profile == 'number' %>
-      | <span class="edit"><a href="<% prefix %>/number_forwarding/<% row.doc.number %>"><%|loc%>Change Forwarding<%END%></a></span>
-      | <span class="edit"><a href="<% prefix %>/number_location/<% row.doc.number %>"><%|loc%>Change Location<%END%></a></span>
-      | <span class="edit"><a href="<% prefix %>/number/bank/return/<% row.doc.number %>"><%|loc%>Delete<%END%></a></span>
+      | <span class="edit"><a href="<% prefix %>/number_forwarding/<% r.number %>"><%|loc%>Change Forwarding<%END%></a></span>
+      | <span class="edit"><a href="<% prefix %>/number_location/<% r.number %>"><%|loc%>Change Location<%END%></a></span>
+      | <span class="edit"><a href="<% prefix %>/number/bank/return/<% r.number %>"><%|loc%>Delete<%END%></a></span>
     <% END %>
     </div>
-    <% FOREACH d IN row.doc; UNLESS d.key.match('^_|^request|^type|^endpoint_ip') %>
+    <% FOREACH d IN r; UNLESS d.key.match('^_|^request|^type|^endpoint_ip') %>
       <div class="entry">
         <span class="key"><%|loc%><% d.key %><%END%></span>
         <span class="value">

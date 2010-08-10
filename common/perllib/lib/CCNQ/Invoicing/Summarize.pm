@@ -94,11 +94,10 @@ sub compute {
   };
 
   $view->cb(sub {
-    my $rows = CCNQ::AE::receive_rows(@_);
+    my $docs = CCNQ::AE::receive_docs(@_);
 
     # Count daily events, and accumulate other CDRs.
-    for my $r (@{$rows->{rows}}) {
-      my $cbef = $r->{doc};
+    for my $cbef (@$docs) {
       $add_cdr->($cbef);
     }
 
