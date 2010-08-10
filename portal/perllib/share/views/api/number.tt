@@ -8,8 +8,8 @@
     <form action="<% prefix %>/number/<% cluster %>/<% category %>" method="post" accept-charset="utf-8" class="ui-widget validate">
       <p class="ui-helper-clearfix">
         <label for="number" class="left"><% | loc %>Number:<% END %></label>
-        <input type="text" name="number" value="<% field.number | html %>" class="required digits"/>
-        <select name="number_alt" class="required">
+        <input type="text" name="number" value="<% field.number | html %>" class="digits"/>
+        <select name="number_alt">
           <option value=""></option>
           <% FOREACH n IN numbers_for(session.account) %>
           <option <% IF n.number == field.number %>selected<% END %> value="<% n.number | html %>"><% n.number | html %> (<% n.endpoint %>)</option>
