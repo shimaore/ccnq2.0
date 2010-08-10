@@ -18,6 +18,8 @@ use strict; use warnings;
 use CCNQ::Rating::Bucket;
 use CCNQ::Rating::Table;
 
+use Logger::Syslog;
+
 use AnyEvent;
 use CCNQ::AE;
 
