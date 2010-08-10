@@ -40,6 +40,7 @@ sub account {
 
   # "is_admin" profiles can access any account.
   if(CCNQ::Portal->current_session->user->profile->is_admin) {
+    defined $account or $account = '';
     # However they might copy and paste account IDs with extraneous spaces.
     $account =~ s/^\s+//;
     $account =~ s/\s+$//;
@@ -56,7 +57,7 @@ sub account {
   } elsif($#{$accounts} > 0) {
     if(defined($account)) {
       session account => $account
-        if defined $accounts && defined $account
+        if defined $accounts
         && grep { $_ eq $account } @{$accounts};
     } else {
       session account => $accounts->[0];
