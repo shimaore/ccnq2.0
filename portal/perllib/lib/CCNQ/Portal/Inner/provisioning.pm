@@ -76,6 +76,7 @@ sub _get_number {
     CCNQ::API::provisioning('report','all_numbers',$cv);
   } else {
     $number = CCNQ::Portal::normalize_number($number);
+    $number or return;
     CCNQ::API::provisioning('report','all_numbers',$number,$cv);
   }
   return $cv;
