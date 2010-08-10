@@ -144,11 +144,11 @@ sub update_cv {
       for my $key (grep { !/^_/ } keys %{$params}) {
         $doc->{$key} = $params->{$key};
       }
-      debug("CCNQ::CouchDB::update_cv: updating document");
+      debug("CCNQ::CouchDB::update_cv: updating document: ".CCNQ::AE::ppp($doc));
     } else {
       # Assume missing document
       $doc = $params;
-      debug("CCNQ::CouchDB::update_cv: creating document");
+      debug("CCNQ::CouchDB::update_cv: creating document: ".CCNQ::AE::ppp($doc));
     }
     $couch_db->save_doc($doc)->cb(sub{ CCNQ::AE::receive(@_); $rcv->send($doc) });
   });
