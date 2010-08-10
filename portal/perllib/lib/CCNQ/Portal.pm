@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use 5.008;
 
-our $VERSION = '0.053';
+our $VERSION = '0.054';
 
 use strict; use warnings;
 

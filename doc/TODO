@@ -8,10 +8,6 @@ Voice:
 * "dumb" SBC
    due: 2010/08
 
-Portal:
-* available numbers ("numbers bank")
-  due: 2010/09
-
 Voice:
 * FS lua code for prepaid (uses realtime_estimator)
    due: 2010/10
