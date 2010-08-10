@@ -65,12 +65,19 @@ sub bare_record {
   # Delete account, endpoint, etc.
   delete @$bare_number {qw(
     account
+    account_sub
     endpoint
     location
+    api_name
 
+    category
+    register
+
+    cluster
     domain
     username
     username_domain
+    inbound_username
     cfa
     cfnr
     cfb
