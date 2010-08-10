@@ -23,5 +23,6 @@ use CCNQ::Portal::Inner::Bucket::Instance;
 use CCNQ::Portal::Inner::CDR;
 use CCNQ::Portal::Inner::Number::Forwarding;
 use CCNQ::Portal::Inner::Number::Location;
+use CCNQ::Portal::Inner::Number::Bank;
 
 'CCNQ::Portal::Content';
