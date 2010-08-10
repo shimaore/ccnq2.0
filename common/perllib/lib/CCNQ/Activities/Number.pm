@@ -102,6 +102,8 @@ sub delete_number {
     # 5. Add billing entry
     CCNQ::Activities::Billing::final_day($request,$name),
 
+    CCNQ::Activities::Provisioning::delete_number($request),
+
     # 1. Return the number to the bank.
     CCNQ::Activities::Provisioning::update_number($bare_number),
 
