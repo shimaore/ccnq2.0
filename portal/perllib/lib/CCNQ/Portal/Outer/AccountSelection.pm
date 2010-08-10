@@ -54,9 +54,13 @@ sub account {
     # Only one account is available, no need to "select" this one -- enforce it.
     session account => $accounts->[0];
   } elsif($#{$accounts} > 0) {
-    session account => $account
-      if defined $accounts && defined $account
-      && grep { $_ eq $account } @{$accounts};
+    if(defined($account)) {
+      session account => $account
+        if defined $accounts && defined $account
+        && grep { $_ eq $account } @{$accounts};
+    } else {
+      session account => $accounts->[0];
+    }
   }
   return session('account');
 }

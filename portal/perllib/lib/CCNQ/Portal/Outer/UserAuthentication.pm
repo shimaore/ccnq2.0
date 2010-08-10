@@ -26,6 +26,7 @@ post '/login' => sub {
     CCNQ::Portal->site->security->authenticate(scalar(params),CCNQ::Portal->current_session),
     sub {
       CCNQ::Portal->current_session->start_userid(shift);
+      CCNQ::Portal::Outer::AccountSelection::account();
     });
     return CCNQ::Portal::content;
 };
