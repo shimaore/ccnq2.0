@@ -126,23 +126,23 @@ EOT
   # Install OpenSIPS (note: we provide "amd64" and "i386"-type Debian packages only)
   cd ~/src
   OPENSIPS=1.5.3-0
-  sudo aptitude install libmysqlclient15off mysql-client
+  sudo aptitude install -y libmysqlclient15off mysql-client
   wget http://opensource.sotelips.net/~stephane/${ARCH}/opensips_${OPENSIPS}_${ARCH}.deb
   wget http://opensource.sotelips.net/~stephane/${ARCH}/opensips-mysql-module_${OPENSIPS}_${ARCH}.deb
   sudo dpkg -i opensips_${OPENSIPS}_${ARCH}.deb
   sudo dpkg -i opensips-mysql-module_${OPENSIPS}_${ARCH}.deb
 
-  sudo aptitude install mysql-server
-  # (leave the MySQL root password empty)
+  sudo aptitude install -y mysql-server
+  # (leave the MySQL root password empty -- you'll be asked four times)
   # Also I do:
   sudo aptitude --purge remove portmap fam
-  sudo aptitude install postfix
+  sudo aptitude install -y postfix
 
 
   # Install MediaProxy dispatcher (if using MediaProxy)
-  sudo aptitude install python python-support libnetfilter-conntrack1 python-cjson python-twisted-core python-twisted-names python-zopeinterface
+  sudo aptitude install -y python python-support libnetfilter-conntrack1 python-cjson python-twisted-core python-twisted-names python-zopeinterface
   # Versions required for mediaproxy-common include python-application (>= 1.1.5) and python-gnutls (>= 1.1.8) which are not in Debian/Lenny
-  sudo aptitude install python-application/testing python-gnutls/testing
+  sudo aptitude install -y python-application/testing python-gnutls/testing
   cd ~/src
   MEDIAPROXY=2.4.2
   ARCH=amd64
@@ -203,6 +203,17 @@ EOT
   # (This is required so that xmpp_agent.pl can get access to the FreeSwitch CLI and FIFO.)
   # The following command adds the current user to group "daemon":
   sudo adduser `whoami` daemon
+
+# * If you intent to use the "sip-traces" API:
+
+  sudo aptitude install -t testing libpam-runtime   # dependency issue as of 2010/08
+  sudo aptitude install -y -t testing tshark ngrep
+  sudo groupadd -r wireshark
+  sudo adduser `whoami` wireshark
+  sudo ccnq2_sip_traces eth0 &
+  sudo ccnq2_sip_traces eth1 &
+
+  # (I'm working on a proper installer and /etc/init.d script.)
 
 # * Finally:
 
@@ -277,15 +288,6 @@ SQL
   (cd ~/src/ccnq2.0/portal/perllib && perl Makefile.PL && make && make test && sudo make install)
 
   sudo aptitude install memcached unzip
-
-# * If you intent to use the "sip-traces" API:
-
-  sudo aptitude install -t testing tshark ngrep
-  sudo groupadd -r wireshark
-  sudo adduser `whoami` wireshark
-  sudo ccnq2_sip_traces eth0
-
-  # (I'm working on a proper installer and /etc/init.d script.)
 
 # * Jabber server configuration:
   sudo aptitude -y install -t testing ejabberd
