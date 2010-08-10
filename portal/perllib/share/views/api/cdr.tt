@@ -6,7 +6,7 @@
                   "start_date", "start_time", "from_e164", "to_e164",
                   "duration", "taxable_cost", "tax_amount", "total_cost" ] %>
   <tr>
-    <% FOREACH c IN cols %><th><% c | html %></th><% END %>
+    <% FOREACH c IN cols %><th><% c | loc %></th><% END %>
   </tr>
   <% FOREACH r IN result() %>
     <tr>
@@ -31,9 +31,16 @@
     <p class="ui-helper-clearfix">
       <label for="event_type" class="left"><%|loc%>Event type<%END%></label>
       <select name="event_type" class="required">
+          <option value="ingress_call"  ><%|loc%>Ingress Call<%END%></option>
+          <option value="egress_call"   ><%|loc%>Egress Call<%END%></option>
+          <option value="count_endpoint"><%|loc%>Endpoints<%END%></option>
+          <option value="count_location"><%|loc%>Locations<%END%></option>
+          <option value="count_numbers" ><%|loc%>Numbers<%END%></option>
+<!--
         <% FOREACH event_type IN event_types() %>
         <option value="<% event_type | html %>"><%|loc%><% event_type %><%END%></option>
         <% END %>
+-->
       </select>
     </p>
     <p class="ui-helper-clearfix">
