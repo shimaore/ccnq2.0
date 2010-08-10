@@ -136,20 +136,19 @@ sub update_cv {
 
   $couch_db->open_doc($params->{_id})->cb(sub{
     my $doc = CCNQ::AE::receive(@_);
-    if($doc) {
-      # If the record exists, only updates the specified fields.
-      # Also remove any field whose name starts with "_":
-      # "[A]ny top-level fields within a JSON document containing a name
-      # that starts with a _ prefix are reserved for use by CouchDB itself."
-      for my $key (grep { !/^_/ } keys %{$params}) {
-        $doc->{$key} = $params->{$key};
-      }
-      debug("CCNQ::CouchDB::update_cv: updating document: ".CCNQ::AE::ppp($doc));
-    } else {
-      # Assume missing document
-      $doc = $params;
-      debug("CCNQ::CouchDB::update_cv: creating document: ".CCNQ::AE::ppp($doc));
+    if(!$doc) {
+      $doc = { _id => $params->{_id} };
     }
+
+    # Only updates the specified fields, except any field whose name starts
+    # with "_".
+    # "[A]ny top-level fields within a JSON document containing a name
+    # that starts with a _ prefix are reserved for use by CouchDB itself."
+    for my $key (grep { !/^_/ } keys %{$params}) {
+      $doc->{$key} = $params->{$key};
+    }
+
+    debug("CCNQ::CouchDB::update_cv: saving document: ".CCNQ::AE::ppp($doc));
     $couch_db->save_doc($doc)->cb(sub{ CCNQ::AE::receive(@_); $rcv->send($doc) });
   });
   return $rcv;
@@ -189,13 +188,13 @@ sub update_bulk_cv {
 
     $couch_db->open_doc($id)->cb(sub{
       my $doc = CCNQ::AE::receive(@_);
-      if($doc) {
-        for my $key (grep { !/^_/ } keys %{$new_data}) {
-          $doc->{$key} = $new_data->{$key};
-        }
-      } else {
-        $doc = $new_data;
+      if(!$doc) {
+        $doc = { _id => $id };
       }
+      for my $key (grep { !/^_/ } keys %{$new_data}) {
+        $doc->{$key} = $new_data->{$key};
+      }
+
       my $op;
       if(delete $new_data->{_deleted}) {
         $op = $couch_db->remove_doc($doc);
