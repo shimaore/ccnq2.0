@@ -3,7 +3,7 @@
 <ul>
   <% FOREACH row IN result.rows; SET n = row.doc; %>
   <li>
-    <form method="PUT">
+    <form method="POST">
       <input type="text" readonly name="number" value="<% n.number | html %>" />
       <select name="number_type">
         <% FOREACH t IN number_types %>
@@ -22,5 +22,13 @@
 </fieldset>
 
 <fieldset><legend><%|loc%>Create new number<%END%></legend>
-<form>
-</form>
+    <form method="PUT">
+      <input type="text" class="required" name="number" />
+      <select name="number_type" class="required">
+        <% FOREACH t IN number_types %>
+        <option <% IF n.number_type == t.key %>selected<% END %> value="<% t.key | html %>" ><% t.value | html %></option>
+        <% END %>
+      </select>
+      <input type="submit" value="<%|loc%>Save<%END%>">
+    </form>
+</fieldset>
