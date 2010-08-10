@@ -13,6 +13,8 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+use strict; use warnings;
+
 
 package CCNQ::Rating::Event::Number;
 
@@ -32,18 +34,19 @@ sub e164 {
 }
 
 sub location {
+  my $self = shift;
   $self->{location} = e164_to_location->lookup($self->e164)
     if !exists($self->{location});
   return $self->{location};
 }
 
 sub country {
-  my ($self) = @_;
+  my $self = shift;
   return $self->location && $self->location->{country};
 }
 
 sub us_state {
-  my ($self) = @_;
+  my $self = shift;
   return $self->location && $self->location->{us_state};
 }
 
