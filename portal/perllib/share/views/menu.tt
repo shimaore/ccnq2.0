@@ -58,7 +58,7 @@
       <li><a href="<% prefix %>/provisioning/number/_all"><%|loc%>All numbers (across all accounts)<%END%></a></li>
       <li><a href="<% prefix %>/numbers/bank/"><%|loc%>Available Numbers<%END%></a></li>
       <li><form action="<% prefix %>/provisioning/number" method="GET">
-          <input type="text" size="16" name="number" /><input type="submit" value="&rarr;" /></form></li>
+          <input type="text" size="16" name="number" /></form></li>
       <% END %>
       <% IF session.account %>
       <li><span><%|loc(session.account)%>Account [_1]<%END%></span></li>

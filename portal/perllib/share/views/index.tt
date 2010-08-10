@@ -32,29 +32,9 @@
 <% END %>
 
 <% IF is_admin %>
-  <fieldset class="ui-widget">
-    <legend><% | loc %>Administrative toolbox<% END %></legend>
-    <ul>
-      <li>
-        <form action="<% prefix %>/provisioning/number" method="GET">
-          <label for="number"><%|loc%>Locate number<%END%></label>
-          <input type="text" size="16" name="number" />
-          <input type="submit" value="<%|loc%>Find number across all accounts<%END%>" />
-        </form>
-      </li>
-      <li><a href="<% prefix %>/provisioning/number/_all"><%|loc%>List all numbers (across all accounts)<%END%></a></li>
-      <li><a href="<% prefix %>/billing/accounts"><%|loc%>List all accounts<%END%></a></li>
-    </ul>
-  </fieldset>
 <% END %>
 
 <% IF is_sysadmin %>
-  <fieldset class="ui-widget">
-    <legend><% | loc %>System Administrator Toolbox<% END %></legend>
-    <ul>
-      <li><a href="<% prefix %>/manager">Manage Manager Requests (Back-end Business Logic)</a></li>
-    </ul>
-  </fieldset>
 <% END %>
 <!-- /Inner -->
 <% ELSE %>
