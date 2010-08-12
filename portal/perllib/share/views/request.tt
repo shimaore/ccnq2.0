@@ -89,6 +89,7 @@
         <% END %>
       <% ELSE %>
         <div class="request ui-state-error ui-corner-all"><p><span class="ui-icon ui-icon-alert"></span><% | loc %>Data unavailable<% END %></p></div>
+        <% SET refresh = 0 %>
       <% END %>
     <% END %>
   <% END %>
