@@ -21,9 +21,9 @@ use strict; use warnings;
 sub new {
     my $this = shift;
     my $class = ref($this) || $this;
-    my $self = {};
+    my $self = shift || {};
     bless $self, $class;
-    $self->_init(@_);
+    $self->init(@_);
     return $self;
 }
 

@@ -19,12 +19,12 @@ use strict; use warnings;
 
 use base qw(CCNQ::SQL::Base);
 
-sub _init
+sub init
 {
     my $self = shift;
     my $challenge = pop;
     $self->{challenge} = $challenge;
-    $self->SUPER::_init(@_);
+    $self->SUPER::init(@_);
 }
 
 sub list_of_servers

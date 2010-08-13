@@ -18,7 +18,7 @@ use strict; use warnings;
 
 use base qw(CCNQ::Object);
 
-sub _init
+sub init
 {
     my $self = shift;
     my ($db) = @_;
