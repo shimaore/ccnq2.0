@@ -15,6 +15,10 @@
         <label for="name" class="left"><% | loc %>Billing country:<% END %></label>
         <input type="text" name="billing_country" value="<% field.billing_country | html %>" size="2" maxlength="2" class="required"/>
       </p>
+      <p class="ui-helper-clearfix">
+        <label for="billing_cycle" class="left"><% | loc %>Billing cycle:<% END %></label>
+        <input type="text" name="billing_cycle" value="<% field.billing_cycle | html %>" size="2" maxlength="2" class="digits required"/>
+      </p>
       <p class="ui-helper-clearfix submit">
       <input id="account_form_submit" type="submit" value="<% | loc %>Save<% END %>" />
       </p>

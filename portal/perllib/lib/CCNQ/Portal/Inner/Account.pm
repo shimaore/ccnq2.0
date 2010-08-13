@@ -91,6 +91,11 @@ post '/billing/account' => sub {
     billing_cycle
   ));
 
+  int($params->{billing_cycle}) &&
+  $params->{billing_cycle} >= 1 &&
+  $params->{billing_cycle} <= 28
+    or return CCNQ::Portal::content( error => _('Billing cycle must be between 1 and 28')_ );
+
   # Update the information in the portal.
   # N/A -- no native account-related information is stored in the portal.
   # ("portal_accounts" is a property of the portal user.)
