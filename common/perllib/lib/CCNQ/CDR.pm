@@ -52,6 +52,14 @@ use constant js_report_invoicing => <<'JAVASCRIPT';
   }
 JAVASCRIPT
 
+use constant js_report_monthly_by_sub => <<'JAVASCRIPT';
+  function (doc) {
+    var year  = doc.start_date.substr(0,4);
+    var month = doc.start_date.substr(4,2);
+    emit([doc.account,year,month,doc.account_sub,doc.event_type,day,hour,minu,seco],null);
+  }
+JAVASCRIPT
+
 use constant cdr_designs => {
   report => {
     language => 'javascript',
@@ -62,6 +70,9 @@ use constant cdr_designs => {
       invoicing => {
         map => js_report_invoicing,
       },
+      monthly_by_sub => {
+        map => js_report_monthly_by_sub,
+      }
     },
   },
 };
