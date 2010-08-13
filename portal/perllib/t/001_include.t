@@ -70,5 +70,9 @@ require_ok( 'CCNQ::Portal::Template::Plugin::loc' );
 
 require_ok( 'CCNQ::Portal::Content' );
 
+require_ok( 'CCNQ::Invoice' );
+require_ok( 'CCNQ::Invoice::Text' );
+require_ok( 'CCNQ::Invoice::PDF' );
+
 done_testing();
 1;
