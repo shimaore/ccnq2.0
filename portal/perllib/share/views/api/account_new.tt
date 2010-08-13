@@ -1,0 +1,27 @@
+<% USE loc %>
+<% IF is_sysadmin %>
+<fieldset class="ui-widget">
+  <legend><% | loc %>Create new account<% END %></legend>
+  <form id="account_form" action="<% prefix %>/billing/account" method="post" accept-charset="utf-8" class="ui-widget validate">
+    <p class="ui-helper-clearfix">
+      <label for="account" class="left"><% | loc %>Account number:<% END %></label>
+      <input type="text" name="account" class="required" />
+    </p>
+    <p class="ui-helper-clearfix">
+      <label for="name" class="left"><% | loc %>Account name:<% END %></label>
+      <input type="text" name="name" class="required"/>
+    </p>
+    <p class="ui-helper-clearfix">
+      <label for="billing_country" class="left"><% | loc %>Billing country:<% END %></label>
+      <input type="text" name="billing_country" size="2" maxlength="2" class="required"/>
+    </p>
+    <p class="ui-helper-clearfix">
+      <label for="billing_cycle" class="left"><% | loc %>Billing cycle:<% END %></label>
+      <input type="text" name="billing_cycle" size="2" maxlength="2" class="digits required"/>
+    </p>
+    <p class="ui-helper-clearfix submit">
+    <input type="submit" value="<% | loc %>Save<% END %>" />
+    </p>
+  </form>
+</fieldset>
+<% END %>
