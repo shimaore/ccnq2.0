@@ -198,4 +198,15 @@ get  '/billing/accounts' => sub {
   return CCNQ::Portal::content;
 };
 
+# Create new account
+get '/billing/account/new' => sub {
+  var template_name => 'api/account_new';
+
+  CCNQ::Portal->current_session->user &&
+  CCNQ::Portal->current_session->user->profile->is_admin
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
+
+  return CCNQ::Portal::content;
+};
+
 'CCNQ::Portal::Inner::Account';
