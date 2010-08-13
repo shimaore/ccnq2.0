@@ -12,7 +12,7 @@
         <input type="text" name="name" value="<% field.name | html %>" class="required"/>
       </p>
       <p class="ui-helper-clearfix">
-        <label for="name" class="left"><% | loc %>Billing country:<% END %></label>
+        <label for="billing_country" class="left"><% | loc %>Billing country:<% END %></label>
         <input type="text" name="billing_country" value="<% field.billing_country | html %>" size="2" maxlength="2" class="required"/>
       </p>
       <p class="ui-helper-clearfix">
