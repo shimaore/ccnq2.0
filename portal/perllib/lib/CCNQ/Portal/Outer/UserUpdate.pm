@@ -35,6 +35,8 @@ sub retrieve {
 
   my $cv = AE::cv;
   CCNQ::API::billing('report','users',$user_id,$cv);
+  # XXX replace with:
+  #  $billing_user_data = CCNQ::AE::receive_first_doc($cv);
   my $r = CCNQ::AE::receive($cv);
   my $billing_user_data = $r->{rows}->[0]->{doc} || {};
 

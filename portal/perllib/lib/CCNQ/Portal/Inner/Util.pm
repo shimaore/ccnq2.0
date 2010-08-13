@@ -73,6 +73,25 @@ sub portal_users {
   return CCNQ::AE::receive_ids($cv1);
 }
 
+=head2 user_can_access_billing_for($account)
+
+=cut
+
+sub user_can_access_billing_for {
+  my ($account) = @_;
+
+  CCNQ::Portal->current_session->user->is_admin
+    and return 1;
+
+  my $user_id = CCNQ::Portal->current_session->user->id;
+
+  my $cv = AE::cv;
+  CCNQ::API::billing('report','users',$user_id,$cv);
+  my $billing_user_data = CCNQ::AE::receive_first_doc($cv);
+
+  return scalar grep { $_ eq $account } @{$billing_user_data->billing_accounts};
+}
+
 =head1 Plan Utilities
 
 =head2 get_plans()

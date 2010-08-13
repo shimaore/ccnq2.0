@@ -26,10 +26,15 @@ use CCNQ::Portal::Inner::Util;
 sub as_html {
   my $cv = shift;
 
+  my $account = session('account');
+
   var template_name => 'api/cdr';
   CCNQ::Portal->current_session->user &&
-  session('account')
+  $account
     or return CCNQ::Portal::content;
+
+  CCNQ::Portal::Inner::Util::user_can_access_billing_for($account)
+    or return CCNQ::Portal::content( error => _('You are not authorized to view billing data for this account.')_ );
 
   var account_subs  => \&CCNQ::Portal::Inner::Util::account_subs;
   var event_types   => \&CCNQ::Portal::Inner::Util::event_types;
@@ -54,10 +59,15 @@ sub _view_id {
   my @date = ();
   $day and push @date, $day;
 
+  my $account = session('account');
+
+  CCNQ::Portal::Inner::Util::user_can_access_billing_for($account)
+    or return;
+
   my $cv = AE::cv;
   CCNQ::API::cdr(
     'report',params->{view},
-    session('account'),
+    $account,
     params->{account_sub},
     params->{event_type},
     params->{year},
