@@ -94,32 +94,20 @@ sub request {
   return;
 }
 
-sub provisioning {
+sub _view_api {
+  my $prefix = shift;
   my $cb = pop;
   my ($design,$view,@id) = @_;
   my $uri = api_uri();
-  $uri->path_segments('provisioning',$design,$view,map { Encode::encode_utf8($_) } @id);
+  $uri->path_segments($prefix,$design,$view,map { Encode::encode_utf8($_) } @id);
   http_get $uri->as_string, _api_cb($cb);
   return;
 }
 
-sub cdr {
-  my $cb = pop;
-  my ($design,$view,@id) = @_;
-  my $uri = api_uri();
-  $uri->path_segments('cdr',$design,$view,map { Encode::encode_utf8($_) } @id);
-  http_get $uri->as_string, _api_cb($cb);
-  return;
-}
-
-sub billing {
-  my $cb = pop;
-  my ($design,$view,@id) = @_;
-  my $uri = api_uri();
-  $uri->path_segments('billing',$design,$view,map { Encode::encode_utf8($_) }@id);
-  http_get $uri->as_string, _api_cb($cb);
-  return;
-}
+sub provisioning { _view_api('provisioning',@_) }
+sub cdr          { _view_api('cdr'         ,@_) }
+sub billing      { _view_api('billing'     ,@_) }
+sub invoicing    { _view_api('invoicing'   ,@_) }
 
 sub _bucket {
   my $cb = pop;

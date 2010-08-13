@@ -361,6 +361,35 @@ use constant _cdr => __generic(sub {
   return;
 });
 
+=head2 _invoicing
+
+Handles /invoicing calls
+
+=cut
+
+use constant _invoicing => __generic(sub {
+  my ($httpd, $req, $path) = @_;
+
+  $req->method eq 'GET' or return 501;
+
+  my ($view,$id);
+  if($path =~ m{^/invoicing/(\w+)/(\w+)/(.*)$}) {
+    $view = $1.'/'.$2;
+    $id   = [map { decode_utf8(uri_unescape($_)) } split(qr|/|,$3)];
+  } else {
+    return 404;
+  }
+
+  use CCNQ::Invoicing;
+  CCNQ::Invoicing::view({
+    view => $view,
+    _id  => $id,
+  })->cb(__view_cb($req));
+
+  $httpd->stop_request;
+  return;
+});
+
 =head2 _rating_table
 
 Handles /rating_table calls.
@@ -521,6 +550,7 @@ sub _session_ready {
     '/request'      => sub { $handle_return->(_request,@_) },
     '/provisioning' => sub { $handle_return->(_provisioning,@_) },
     '/billing'      => sub { $handle_return->(_billing,@_) },
+    '/invoicing'    => sub { $handle_return->(_invoicing,@_) },
     '/rating_table' => sub { $handle_return->(_rating_table,@_) },
     '/bucket'       => sub { $handle_return->(_bucket,@_) },
     '/manager'      => sub { $handle_return->(_manager,@_) },
