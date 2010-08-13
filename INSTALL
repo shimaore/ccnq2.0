@@ -180,7 +180,7 @@ EOT
   sudo aptitude -y install libcrypt-ssleay-perl  # for CNAM
 
   cd ~/src
-  FREESWITCH=1.0.6-1
+  FREESWITCH=1.0.6-git20100812
   wget http://opensource.sotelips.net/~stephane/${ARCH}/freeswitch_${FREESWITCH}_${ARCH}.deb
   wget http://opensource.sotelips.net/~stephane/${ARCH}/freeswitch-lang-en_${FREESWITCH}_${ARCH}.deb
   wget http://opensource.sotelips.net/~stephane/${ARCH}/freeswitch-perl_${FREESWITCH}_${ARCH}.deb
