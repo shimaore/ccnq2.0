@@ -120,6 +120,9 @@ sub compute {
       month   => $start_dt->month,
       day     => $start_dt->day,
 
+      # Number of days in the billing period.
+      days    => $days,
+
       summary => $summary ->cleanup,
       by_sub  => $by_sub  ->cleanup,
       by_event=> $by_event->cleanup,
