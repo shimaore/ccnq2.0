@@ -18,9 +18,13 @@ use strict; use warnings;
 
 package CCNQ::Rating::Event::Number;
 
-use CCNQ::Rating::Table;
 use constant e164_to_location_table => 'e164_to_location';
-use constant e164_to_location => CCNQ::Rating::Table->new(e164_to_location_table);
+
+use CCNQ::Billing::Table;
+use constant e164_to_location =>
+  CCNQ::Rating::Table->new(CCNQ::Billing::Table::_db_name(e164_to_location_table));
+
+use CCNQ::Rating::Table;
 
 sub new {
   my $this = shift;
