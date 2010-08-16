@@ -28,6 +28,9 @@ use CCNQ::Invoicing::Daily;
 use Logger::Syslog;
 
 sub run {
+  my ($program_name) = @_;
+  info("$program_name starting");
+
   # If using EV, this will drop callback errors into syslog.
   $EV::DIED = sub {
     error("*** EV::DIED: $@");
