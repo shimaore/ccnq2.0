@@ -101,7 +101,7 @@ JAVASCRIPT
 use constant js_report_billing_cycle => <<'JAVASCRIPT';
   function (doc) {
     if(doc.profile == 'account' && doc.billing_cycle) {
-      emit([doc.billing_cycle],doc.account);
+      emit([doc.billing_cycle+""],doc.account);
     }
   }
 JAVASCRIPT
