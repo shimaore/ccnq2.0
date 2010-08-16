@@ -59,12 +59,10 @@ sub daily_cdr {
   my $view = $db->view('report/count',$options);
 
   $view->cb(sub {
-    my $docs = CCNQ::AE::receive_docs(@_);
+    my $rows = CCNQ::AE::receive_rows(@_);
 
-    $docs
-      or return $cv->end;
-
-    for my $r (@$docs) {
+    $cv->begin;
+    for my $r (@$rows) {
       $cv->begin;
 
       my @key = @{$r->{key}};
@@ -87,6 +85,7 @@ sub daily_cdr {
         $cv->end;
       });
     }
+    $cv->end;
   });
 
   return $cv;
