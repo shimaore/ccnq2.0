@@ -57,7 +57,7 @@ sub account { shift->{account} }
 # Period start-date
 sub year    { shift->{year}    }
 sub month   { shift->{month}   }
-sub day     { shift->{invoice}->{day} }
+sub day     { shift->invoice->{day} }
 
 =head2 billed
 
@@ -65,12 +65,12 @@ Billed date
 
 =cut
 
-sub billed  { shift->{invoice}->{billed} }
-sub days    { shift->{invoice}->{days}   }
+sub billed  { shift->invoice->{billed} }
+sub days    { shift->invoice->{days}   }
 
-sub summary { shift->{invoice}->{summary}  }
-sub by_sub  { shift->{invoice}->{by_sub}   }
-sub by_event{ shift->{invoice}->{by_event} }
+sub summary { shift->invoice->{summary}  }
+sub by_sub  { shift->invoice->{by_sub}   }
+sub by_event{ shift->invoice->{by_event} }
 
 use CCNQ::API;
 
