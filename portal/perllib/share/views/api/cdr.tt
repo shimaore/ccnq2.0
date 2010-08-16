@@ -35,7 +35,7 @@
           <option value="egress_call"   ><%|loc%>Egress Call<%END%></option>
           <option value="count_endpoint"><%|loc%>Endpoints<%END%></option>
           <option value="count_location"><%|loc%>Locations<%END%></option>
-          <option value="count_numbers" ><%|loc%>Numbers<%END%></option>
+          <option value="count_number"  ><%|loc%>Numbers<%END%></option>
 <!--
         <% FOREACH event_type IN event_types() %>
         <option value="<% event_type | html %>"><%|loc%><% event_type %><%END%></option>

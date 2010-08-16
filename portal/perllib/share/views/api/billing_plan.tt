@@ -19,7 +19,7 @@
           <option value="egress_call"   ><%|loc%>Egress Call<%END%></option>
           <option value="count_endpoint"><%|loc%>Endpoints<%END%></option>
           <option value="count_location"><%|loc%>Locations<%END%></option>
-          <option value="count_numbers" ><%|loc%>Numbers<%END%></option>
+          <option value="count_number"  ><%|loc%>Numbers<%END%></option>
         </select>
       </p>
     </div>
