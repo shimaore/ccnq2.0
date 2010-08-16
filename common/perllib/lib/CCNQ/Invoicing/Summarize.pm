@@ -80,6 +80,7 @@ sub compute {
       while( my ($type,$count) = each %$r ) {
 
         # Create CDR for the total of the monthly counts.
+        use bignum;
         my $units = $count / $days;
 
         my $flat_cbef = CCNQ::Rating::Event->new({
