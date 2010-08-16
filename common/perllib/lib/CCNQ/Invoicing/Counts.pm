@@ -25,6 +25,8 @@ use AnyEvent::CouchDB;
 use CCNQ::Provisioning;
 use CCNQ::Billing::Rating;
 
+use Logger::Syslog;
+
 =head2 daily_cdr
 
 daily_cdr will create CDRs that represent the number of items in the
@@ -37,20 +39,20 @@ This is used to account for partial billing-period use of a ressource.
 sub daily_cdr {
   my ($date,$group_level) = @_;
 
+  info("daily_cdr($date,$group_level)");
+
   # $date        is a YYYYMMDD date (today)
   # $group_level should be either 3 or 4
   #    group_level = 3 means only the profile (location,endpoint,number,..) is used.
-  #    group_level = 4 means the "type" is also used.
 
   # Run the view
+  #    group_level = 4 means the "type" is also used.
   my $couch = couch(CCNQ::Provisioning::provisioning_uri);
   my $db = $couch->db(CCNQ::Provisioning::provisioning_db);
 
   my $cv = AE::cv;
 
   my $options = {
-    startkey     => [$date],
-    endkey       => [$date,{}],
     group_level  => $group_level,
   };
 
