@@ -1,4 +1,4 @@
-package CCNQ::Invoice::PDF;
+package CCNQ::Invoice::Text;
 # Copyright (C) 2010  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
