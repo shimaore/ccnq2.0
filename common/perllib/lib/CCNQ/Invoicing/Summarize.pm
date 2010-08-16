@@ -95,11 +95,14 @@ sub compute {
           collecting_node => CCNQ::Install::host_name,
         });
 
-        my $cv = CCNQ::Billing::Rating::rate_and_save_cbef($flat_cbef);
-        my $cbef = CCNQ::AE::receive($cv);
+        debug("Rating count_$type");
 
-        $add_cdr->($cbef);
-
+        $cv->begin;
+        CCNQ::Billing::Rating::rate_and_save_cbef($flat_cbef)->cb(sub{
+          my $cbef = CCNQ::AE::receive(@_);
+          $add_cdr->($cbef);
+          $cv->end;
+        });
       }
     }
   };
