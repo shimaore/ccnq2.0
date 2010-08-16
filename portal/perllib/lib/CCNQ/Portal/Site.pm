@@ -59,4 +59,12 @@ sub billing_country {
   return $_[0]->{billing_country};
 }
 
+sub numbers_require_location {
+  return $_[0]->{numbers_require_location};
+}
+
+sub update_location_for_number {
+  return $_[0]->{update_location_for_number};
+}
+
 1;

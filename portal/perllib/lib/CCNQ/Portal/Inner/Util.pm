@@ -259,6 +259,16 @@ sub update_number {
   my $api_name = $params->{api_name};
   return CCNQ::Portal::content unless $api_name;
 
+  if( CCNQ::Portal->site->numbers_require_location ) {
+      $params->{location}
+        or return CCNQ::Portal::content( error => _('You must specify a location.')_ );
+  }
+
+  if( CCNQ::Portal->site->update_location_for_number ) {
+    my $r1 = CCNQ::Portal->site->update_location_for_number->($account,$number,$params->{location});
+    $r1 and return $r1;
+  }
+
   # Update the information in the API.
   my $cv = AE::cv;
   CCNQ::API::api_update($api_name,$params,$cv);

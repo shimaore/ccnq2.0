@@ -124,6 +124,8 @@ use constant default_content => sub {
 
   $template_params->{prefix} = prefix; # Dancer's prefix()
 
+  $template_params->{site} = CCNQ::Portal->site;
+
   my $r = ccnq_template( $template_name => $template_params );
   return ref($r) ? $r : encode_utf8($r);
 };

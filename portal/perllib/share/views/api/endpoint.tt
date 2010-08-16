@@ -38,6 +38,7 @@
           </select>
         </p>
 
+        <% UNLESS site.numbers_require_location %>
         <p class="ui-helper-clearfix">
           <label for="location" class="left"><% | loc %>Location:<% END %></label>
           <select name="location" class="required">
@@ -46,7 +47,7 @@
           <% END %>
           </select>
         </p>
-
+        <% END %>
 
         <% IF field.is_static  %><% configure_with = ["ip","port","srv"] %>
         <% FOREACH p IN configure_with %>
