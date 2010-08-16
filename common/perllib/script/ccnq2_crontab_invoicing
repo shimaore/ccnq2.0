@@ -20,7 +20,7 @@ use strict; use warnings;
 
 use AnyEvent;
 use CCNQ::AE;
-$CCNQ::AE::debug_receive = 0;
+$CCNQ::AE::debug_receive = 1;
 
 use constant PROGRAM_NAME => 'ccnq2_crontab_invoicing';
 
