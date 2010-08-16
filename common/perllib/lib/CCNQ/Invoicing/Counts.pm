@@ -57,7 +57,7 @@ sub daily_cdr {
   $view->cb(sub {
     my $docs = CCNQ::AE::receive_docs(@_);
 
-    for my $r ($@docs) {
+    for my $r (@$docs) {
       my @key = @{$r->{key}};
       my $count = $r->{value};
 
