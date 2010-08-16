@@ -140,7 +140,7 @@ sub compute {
     };
 
     CCNQ::Invoicing::insert($data)->cb(sub {
-      CCNQ::AE::Receive(@_);
+      CCNQ::AE::receive(@_);
       $cv->end;
     });
   });
