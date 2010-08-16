@@ -21,6 +21,19 @@ use strict; use warnings;
 use CCNQ::AE;
 $CCNQ::AE::debug_receive = 0;
 
+use constant PROGRAM_NAME => 'ccnq2_crontab_invoicing';
+
 use CCNQ::Invoicing::Daily;
 
-CCNQ::Invoicing::Daily::run();
+use Logger::Syslog;
+
+sub run {
+  # If using EV, this will drop callback errors into syslog.
+  $EV::DIED = sub {
+    error("*** EV::DIED: $@");
+  };
+  $0 = $program_name;
+
+  CCNQ::Invoicing::Daily::run();
+}
+run(PROGRAM_NAME);
