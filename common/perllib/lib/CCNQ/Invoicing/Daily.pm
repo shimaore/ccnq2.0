@@ -18,6 +18,7 @@ use strict; use warnings;
 
 use DateTime;
 
+use AnyEvent;
 use CCNQ::AE;
 
 use CCNQ::Invoicing::Counts;
