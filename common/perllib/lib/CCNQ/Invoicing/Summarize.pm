@@ -77,6 +77,9 @@ sub compute {
   # Create new CDRs for the daily counts
   my $compute_counts = sub {
 
+    my $rcv = AE::cv;
+
+    $rcv->begin;
     while( my ($account_sub,$r) = each %$counts ) {
 
       while( my ($type,$count) = each %$r ) {
@@ -98,14 +101,16 @@ sub compute {
 
         debug("Rating count_$type, got $units units.");
 
-        $cv->begin;
+        $rcv->begin;
         CCNQ::Billing::Rating::rate_and_save_cbef($flat_cbef)->cb(sub{
           my $cbef = CCNQ::AE::receive(@_);
           $add_cdr->($cbef);
-          $cv->end;
+          $rcv->end;
         });
       }
     }
+    $rcv->end;
+    return $rcv;
   };
 
   $view->cb(sub {
@@ -117,36 +122,38 @@ sub compute {
     }
 
     # Rating for daily counts
-    $compute_counts->();
-
-    # Store the resulting data in the "invoicing" database.
-
-    my $id = join('/',$account,$start_dt->year,$start_dt->month);
-
-    my $data = {
-      _id     => $id,
-      account => $account,
-
-      # The date at which the invoice was generated. (Bill date)
-      billed  => $end_dt->ymd(''),
-
-      # The period for which the invoice was generated. (Start date)
-      year    => $start_dt->year,
-      month   => $start_dt->month,
-      day     => $start_dt->day,
-
-      # Number of days in the billing period.
-      days    => $days,
-
-      summary => $summary ->cleanup,
-      by_sub  => $by_sub  ->cleanup,
-      by_event=> $by_event->cleanup,
-      # More details: use the CDRs themselves.
-    };
-
-    CCNQ::Invoicing::insert($data)->cb(sub {
+    $compute_counts->()->cb(sub{
       CCNQ::AE::receive(@_);
-      $cv->end;
+
+      # Store the resulting data in the "invoicing" database.
+
+      my $id = join('/',$account,$start_dt->year,$start_dt->month);
+
+      my $data = {
+        _id     => $id,
+        account => $account,
+
+        # The date at which the invoice was generated. (Bill date)
+        billed  => $end_dt->ymd(''),
+
+        # The period for which the invoice was generated. (Start date)
+        year    => $start_dt->year,
+        month   => $start_dt->month,
+        day     => $start_dt->day,
+
+        # Number of days in the billing period.
+        days    => $days,
+
+        summary => $summary ->cleanup,
+        by_sub  => $by_sub  ->cleanup,
+        by_event=> $by_event->cleanup,
+        # More details: use the CDRs themselves.
+      };
+
+      CCNQ::Invoicing::insert($data)->cb(sub {
+        CCNQ::AE::receive(@_);
+        $cv->end;
+      });
     });
   });
 
