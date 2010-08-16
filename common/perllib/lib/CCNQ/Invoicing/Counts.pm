@@ -55,24 +55,26 @@ sub daily_cdr {
   my $view = $db->view('count',$options);
 
   $view->cb(sub {
-    my $r = CCNQ::AE::receive(@_);
+    my $docs = CCNQ::AE::receive_docs(@_);
 
-    my @key = @{$r->{key}};
-    my $count = $r->{value};
+    for my $r ($@docs) {
+      my @key = @{$r->{key}};
+      my $count = $r->{value};
 
-    # For each record, generate a CDR
-    my $flat_cbef = {
-      start_date  => $date,
-      start_time  => '000000',
-      account     => $key[0],
-      account_sub => $key[1],
-      event_type  => join('_','daily_count',@key[2..($group_level-1)]),
-      count       => $count,
-      collecting_node => CCNQ::Install::host_name,
-    };
+      # For each record, generate a CDR
+      my $flat_cbef = {
+        start_date  => $date,
+        start_time  => '000000',
+        account     => $key[0],
+        account_sub => $key[1],
+        event_type  => join('_','daily_count',@key[2..($group_level-1)]),
+        count       => $count,
+        collecting_node => CCNQ::Install::host_name,
+      };
 
-    my $cv = CCNQ::Billing::Rating::rate_and_save_cbef($flat_cbef);
-    my $doc = CCNQ::AE::receive($cv);
+      my $cv = CCNQ::Billing::Rating::rate_and_save_cbef($flat_cbef);
+      my $doc = CCNQ::AE::receive($cv);
+    }
   });
 
   return CCNQ::AE::receive($view);
