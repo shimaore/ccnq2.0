@@ -36,7 +36,8 @@ use CCNQ::Install;
 sub compute {
   my ($view,$account,$start_dt,$end_dt) = @_;
 
-  my $days = $end_dt->delta_days($start_dt);
+  my $duration = $end_dt->delta_days($start_dt);
+  my $days = $duration->in_units('days');
   debug("This period had $days days.");
 
   my $by_event = CCNQ::MathContainer->new;
