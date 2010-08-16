@@ -18,13 +18,10 @@ use strict; use warnings;
 
 use DateTime;
 
-use CCNQ::Install;
 use CCNQ::AE;
 
 use CCNQ::Invoicing::Counts;
 use CCNQ::Invoicing::Summarize;
-
-use CCNQ::Billing;
 
 =head1 CCNQ::Invoicing::Daily
 
@@ -53,6 +50,9 @@ sub run {
   return;
 }
 
+use CCNQ::Billing;
+use Logger::Syslog;
+
 sub bill_run {
   my ($date,$cb) = @_;
 
@@ -64,6 +64,8 @@ sub bill_run {
     _id  => [$date->day],
   })->cb(sub {
     my $rows = CCNQ::AE::receive_rows(@_);
+
+    debug("Processing rows");
 
     $cv->begin;
     for my $r (@{$rows->{rows}}) {

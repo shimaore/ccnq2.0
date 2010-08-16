@@ -25,6 +25,8 @@ use AnyEvent::CouchDB;
 
 use CCNQ::CDR;
 
+use Logger::Syslog;
+
 sub compute {
   my ($view,$account,$start_dt,$end_dt) = @_;
 
@@ -157,7 +159,7 @@ sub monthly {
     include_docs => "true",
   };
 
-  my $view = $db->view('invoicing',$options);
+  my $view = $db->view('report/invoicing',$options);
   return compute($view,$account,$start_dt,$end_dt);
 }
 
