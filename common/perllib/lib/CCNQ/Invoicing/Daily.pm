@@ -59,10 +59,12 @@ sub bill_run {
   my $cv = AE::cv;
 
   # For each account which has its billing_cycle today...
-  CCNQ::Billing::billing_view({
+  my $view = CCNQ::Billing::billing_view({
     view => 'report/billing_cycle',
     _id  => [$date->day],
-  })->cb(sub {
+  });
+
+  $view->cb(sub{
     my $rows = CCNQ::AE::receive_rows(@_);
 
     debug("Processing rows");

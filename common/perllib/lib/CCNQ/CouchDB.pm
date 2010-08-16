@@ -358,11 +358,11 @@ sub view_cv {
       include_docs => "true",
     };
 
-    debug("view_cv: ".
-      join(',', map {
-          join(' ', map { sprintf("%04x",$_) } unpack("U*",$_));
-        } @key_prefix )
-    );
+    #debug("view_cv: ".
+    #  join(',', map {
+    #      join(' ', map { sprintf("%04x",$_) } unpack("U*",$_));
+    #    } @key_prefix )
+    #);
 
     $view = $couch_db->view($params->{view},$options);
   }
