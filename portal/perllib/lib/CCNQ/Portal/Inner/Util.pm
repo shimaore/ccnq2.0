@@ -305,10 +305,14 @@ sub update_location {
   defined($new_data) or confess "new_data is required";
 
   my $location_data = get_location($account,$location);
+  CCNQ::Portal->site->locations_cannot_be_modified && $location_data->{location}
+    and return CCNQ::Portal::content( error => _('This location already exists, please use a different name.')_ );
 
   my $params = {
     %$location_data, # Keep any existing information (this means data must be overwritten)
     %$new_data,
+    account => $account,
+    location => $location,
   };
 
   # Update the information in the API.

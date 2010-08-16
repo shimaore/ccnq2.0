@@ -42,7 +42,11 @@
         <% local_locations_menu %>
       <% ELSE %>
       <li><a href="<% prefix %>/provisioning/view/location/_all"><%|loc%>View all<%END%></a></li>
+      <% IF site.locations_cannot_be_modified %>
+      <li><a href="<% prefix %>/location"><%|loc%>Create<%END%></a></li>
+      <% ELSE %>
       <li><a href="<% prefix %>/location"><%|loc%>Manage<%END%></a></li>
+      <% END %>
       <% END %>
       <% END %>
     </ul>

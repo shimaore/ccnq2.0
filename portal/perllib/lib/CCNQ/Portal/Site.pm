@@ -67,4 +67,8 @@ sub update_location_for_number {
   return $_[0]->{update_location_for_number};
 }
 
+sub locations_cannot_be_modified {
+  return $_[0]->{locations_cannot_be_modified};
+}
+
 1;

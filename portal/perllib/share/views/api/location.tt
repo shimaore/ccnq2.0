@@ -34,7 +34,7 @@
   </fieldset>
 
 <% END %>
-
+<% UNLESS site.locations_cannot_be_modified %>
   <fieldset class="ui-widget">
     <legend><%|loc%>All locations for this account<%END%></legend>
     <% SET all_locations = locations_for(session.account) %>
@@ -48,5 +48,5 @@
     </ul>
     <% END %>
   </fieldset>
-
+<% END %>
 <% END %>
