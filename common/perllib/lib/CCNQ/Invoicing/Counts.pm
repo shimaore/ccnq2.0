@@ -46,6 +46,8 @@ sub daily_cdr {
   my $couch = couch(CCNQ::Provisioning::provisioning_uri);
   my $db = $couch->db(CCNQ::Provisioning::provisioning_db);
 
+  my $cv = AE::cv;
+
   my $options = {
     startkey     => [$date],
     endkey       => [$date,{}],
@@ -58,6 +60,8 @@ sub daily_cdr {
     my $docs = CCNQ::AE::receive_docs(@_);
 
     for my $r (@$docs) {
+      $cv->begin;
+
       my @key = @{$r->{key}};
       my $count = $r->{value};
 
@@ -72,14 +76,15 @@ sub daily_cdr {
         collecting_node => CCNQ::Install::host_name,
       };
 
-      my $cv = CCNQ::Billing::Rating::rate_and_save_cbef($flat_cbef);
-      my $doc = CCNQ::AE::receive($cv);
-
-      $view->send($doc);
+      my $rcv = CCNQ::Billing::Rating::rate_and_save_cbef($flat_cbef);
+      $rcv->cb(sub{
+        my $rated_cbef = CCNQ::AE::receive($cv);
+        $cv->end;
+      });
     }
   });
 
-  return CCNQ::AE::receive($view);
+  return $cv;
 }
 
 1;

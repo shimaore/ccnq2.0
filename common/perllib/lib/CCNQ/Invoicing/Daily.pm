@@ -41,8 +41,10 @@ sub run {
 
   # Do both account/account_sub/profile and account/account_sub/profile/type.
   my $date = $now->ymd('');
-  CCNQ::Invoicing::Counts::daily_cdr($date,3);
-  CCNQ::Invoicing::Counts::daily_cdr($date,4);
+  my $cv1 = CCNQ::Invoicing::Counts::daily_cdr($date,3);
+  CCNQ::AE::receive($cv1);
+  my $cv2 = CCNQ::Invoicing::Counts::daily_cdr($date,4);
+  CCNQ::AE::receive($cv2);
 
   # Run the bill.
   bill_run( $now,
