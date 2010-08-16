@@ -27,4 +27,6 @@ sub new {
     return $self;
 }
 
+sub init {}
+
 1;
