@@ -79,7 +79,7 @@ sub daily_cdr {
 
       my $rcv = CCNQ::Billing::Rating::rate_and_save_cbef($flat_cbef);
       $rcv->cb(sub{
-        my $rated_cbef = CCNQ::AE::receive($cv);
+        CCNQ::AE::receive(@_);
         $cv->end;
       });
     }
