@@ -62,7 +62,7 @@ sub daily_cdr {
     my $rows = CCNQ::AE::receive_rows(@_);
 
     $cv->begin;
-    for my $r (@$rows) {
+    for my $r (@{$rows->{rows}}) {
       $cv->begin;
 
       my @key = @{$r->{key}};
