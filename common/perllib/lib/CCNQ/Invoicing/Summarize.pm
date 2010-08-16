@@ -62,6 +62,9 @@ sub compute {
       my $type = $1;
       use bignum;
       $counts->{$account_sub}->{$type} += $cbef->{count};
+    } elsif($event_type =~ /^count_(.*)$/) {
+      # Ignore those since we will re-generate them.
+      # (This may happen if we run the cycle program more than once.)
     } else {
       $by_event->{$account_sub}->{$event_type} ||=
         CCNQ::Invoicing::Record->new;
