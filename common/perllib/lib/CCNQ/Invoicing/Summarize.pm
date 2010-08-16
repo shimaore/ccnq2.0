@@ -16,7 +16,6 @@ package CCNQ::Invoicing::Summarize;
 
 use strict; use warnings;
 
-use bignum;
 use DateTime;
 use DateTime::Duration;
 
@@ -46,6 +45,8 @@ sub compute {
   # Add each CDR per-category
   my $add_cdr = sub {
     my ($cbef) = @_;
+
+    use bignum;
 
     # Add each CDR per category.
     my $account_sub = $cbef->{account_sub};
