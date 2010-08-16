@@ -36,8 +36,7 @@ use CCNQ::Install;
 sub compute {
   my ($view,$account,$start_dt,$end_dt) = @_;
 
-  my $duration = $end_dt - $start_dt;
-  my $days = $duration->in_units('days');
+  my $days = $end_dt->delta_days($start_dt);
   debug("This period had $days days.");
 
   my $by_event = CCNQ::MathContainer->new;
@@ -164,6 +163,7 @@ sub monthly {
   my $options = {
     startkey     => [$account,$start_dt->ymd('')],
     endkey       => [$account,$end_dt  ->ymd('')],
+    inclusive_end   => "false",
     include_docs => "true",
   };
 
