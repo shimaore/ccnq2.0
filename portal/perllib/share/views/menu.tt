@@ -38,11 +38,16 @@
     <ul>
       <% IF session.account %>
       <li><span class="separator"><%|loc(session.account)%>Account [_1]<%END%></span></li>
+      <% IF local_locations_menu %>
+        <% local_locations_menu %>
+      <% ELSE %>
       <li><a href="<% prefix %>/provisioning/view/location/_all"><%|loc%>View all<%END%></a></li>
       <li><a href="<% prefix %>/location"><%|loc%>Manage<%END%></a></li>
       <% END %>
+      <% END %>
     </ul>
   </li>
+  <% END %>
   <li><span><%|loc%>Endpoints<%END%></span>
     <ul>
       <% IF session.account %>
