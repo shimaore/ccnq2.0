@@ -53,13 +53,14 @@ sub compute {
   my $add_cdr = sub {
     my ($cbef) = @_;
 
-    use bignum;
-
     # Add each CDR per category.
     my $account_sub = $cbef->{account_sub};
     my $event_type  = $cbef->{event_type};
+    debug("add_cdr for $account / $account_sub / $event_type");
+
     if($event_type =~ /^daily_count_(.*)$/) {
       my $type = $1;
+      use bignum;
       $counts->{$account_sub}->{$type} += $cbef->{count};
     } else {
       $by_event->{$account_sub}->{$event_type} ||=
@@ -95,7 +96,7 @@ sub compute {
           collecting_node => CCNQ::Install::host_name,
         });
 
-        debug("Rating count_$type");
+        debug("Rating count_$type, got $units units.");
 
         $cv->begin;
         CCNQ::Billing::Rating::rate_and_save_cbef($flat_cbef)->cb(sub{
