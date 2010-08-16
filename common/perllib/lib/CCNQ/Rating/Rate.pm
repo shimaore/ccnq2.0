@@ -488,12 +488,14 @@ $cbef_guards = {
 
   national_call => sub {
     my ($cbef) = @_;
-    cv_return($cbef->to->country eq $cbef->from->country);
+    cv_return($cbef->to->country && $cbef->from->country &&
+              $cbef->to->country eq $cbef->from->country);
   },
 
   international_call => sub {
     my ($cbef) = @_;
-    cv_return($cbef->to->country ne $cbef->from->country);
+    cv_return($cbef->to->country && $cbef->from->country &&
+              $cbef->to->country ne $cbef->from->country);
   },
 
   us_inter_state  => sub {
