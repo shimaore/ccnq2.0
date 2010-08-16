@@ -169,7 +169,7 @@ sub monthly {
   my $options = {
     startkey     => [$account,$start_dt->ymd('')],
     endkey       => [$account,$end_dt  ->ymd('')],
-    inclusive_end   => "true",
+    inclusive_end   => "false",
     include_docs => "true",
   };
 
