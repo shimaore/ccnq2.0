@@ -70,7 +70,6 @@ sub install {
 
 sub insert {
   my ($record) = @_;
-  $record = $record->as_hashref;
   return CCNQ::CouchDB::update_cv(invoicing_uri,invoicing_db,$record);
 }
 
