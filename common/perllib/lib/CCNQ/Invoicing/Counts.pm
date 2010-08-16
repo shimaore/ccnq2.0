@@ -54,7 +54,7 @@ sub daily_cdr {
     group_level  => $group_level,
   };
 
-  my $view = $db->view('count',$options);
+  my $view = $db->view('report/count',$options);
 
   $view->cb(sub {
     my $docs = CCNQ::AE::receive_docs(@_);
