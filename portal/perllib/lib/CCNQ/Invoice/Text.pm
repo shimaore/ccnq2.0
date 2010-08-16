@@ -25,16 +25,17 @@ sub header1 {
   print join(',',@params)."\n";
   if($type eq 'invoice') {
     print join('', map { "$_\n" }
-      $self->account,
-      $self->account_data->{name},
+      "Account: ".$self->account,
+      "Account name: ".$self->account_data->{name},
 
-      join('/',$self->year,$self->month),
-      $self->billed,
+      "Invoice for the month of: ".join('/',$self->year,$self->month),
+      "Invoiced on: ".$self->billed,
     );
   }
 }
 
 sub header2 {
+  my $self = shift;
   my ($type,@params) = @_;
 
   print "** Header: $type\n";
@@ -42,6 +43,7 @@ sub header2 {
 }
 
 sub header3 {
+  my $self = shift;
   my ($type,@params) = @_;
 
   print "*** Header: $type\n";
