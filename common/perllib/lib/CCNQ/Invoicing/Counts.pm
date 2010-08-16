@@ -52,7 +52,9 @@ sub daily_cdr {
     group_level  => $group_level,
   };
 
-  $db->view('count',$options)->cb(sub {
+  my $view = $db->view('count',$options);
+
+  $view->cb(sub {
     my $r = CCNQ::AE::receive(@_);
 
     my @key = @{$r->{key}};
@@ -72,7 +74,8 @@ sub daily_cdr {
     my $cv = CCNQ::Billing::Rating::rate_and_save_cbef($flat_cbef);
     my $doc = CCNQ::AE::receive($cv);
   });
-  return;
+
+  return CCNQ::AE::receive($view);
 }
 
 1;
