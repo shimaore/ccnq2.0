@@ -56,9 +56,7 @@ sub daily_cdr {
     group_level  => $group_level,
   };
 
-  my $view = $db->view('report/count',$options);
-
-  $view->cb(sub {
+  $db->view('report/count',$options)->cb(sub {
     my $rows = CCNQ::AE::receive_rows(@_);
 
     $cv->begin;
