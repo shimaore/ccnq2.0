@@ -26,6 +26,13 @@ use CCNQ::CDR;
 
 use Logger::Syslog;
 
+use CCNQ::MathContainer;
+use CCNQ::Invoicing;
+use CCNQ::Invoicing::Record;
+use CCNQ::Billing::Rating;
+use CCNQ::Rating::Event;
+use CCNQ::Install;
+
 sub compute {
   my ($view,$account,$start_dt,$end_dt) = @_;
 
