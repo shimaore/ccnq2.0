@@ -18,7 +18,6 @@ use strict; use warnings;
 
 use DateTime;
 
-use AnyEvent;
 use CCNQ::AE;
 
 use CCNQ::Invoicing::Counts;
@@ -51,6 +50,7 @@ sub run {
   return;
 }
 
+use AnyEvent;
 use CCNQ::Billing;
 use Logger::Syslog;
 
@@ -66,6 +66,8 @@ sub bill_run {
   });
 
   $view->cb(sub{
+    debug("Receiving rows");
+
     my $rows = CCNQ::AE::receive_rows(@_);
 
     debug("Processing rows");
