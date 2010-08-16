@@ -51,7 +51,6 @@
       <% END %>
     </ul>
   </li>
-  <% END %>
   <li><span><%|loc%>Endpoints<%END%></span>
     <ul>
       <% IF session.account %>
