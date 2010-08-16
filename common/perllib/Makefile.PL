@@ -59,5 +59,6 @@ install_script 'ccnq2_restart';
 install_script 'ccnq2_xmpp_agent';
 install_script 'ccnq2_sip_traces';
 install_script 'ccnq2_crontab_cdr';
+install_script 'ccnq2_crontab_invoicing';
 
 WriteAll;
