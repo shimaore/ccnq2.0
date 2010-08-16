@@ -74,6 +74,8 @@ sub daily_cdr {
 
       my $cv = CCNQ::Billing::Rating::rate_and_save_cbef($flat_cbef);
       my $doc = CCNQ::AE::receive($cv);
+
+      $view->send($doc);
     }
   });
 
