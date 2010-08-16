@@ -56,7 +56,7 @@ sub bill_run {
 
   # For each account which has its billing_cycle today...
   CCNQ::Billing::billing_view({
-    view => 'billing_cycle',
+    view => 'report/billing_cycle',
     _id  => [$date->day],
   })->cb(sub {
     my $r = CCNQ::AE::receive(@_);

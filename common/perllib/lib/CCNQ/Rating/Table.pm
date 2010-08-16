@@ -40,12 +40,14 @@ sub new {
   return bless $self, $this;
 }
 
+sub name { return shift->{name} }
+
 use CCNQ::Billing;
 
 sub db {
   my ($self) = @_;
   my $couch = couch(CCNQ::Billing::billing_uri);
-  my $couch_db = $couch->db($self->{name});
+  my $couch_db = $couch->db($self->name);
   return $couch_db;
 }
 
