@@ -66,11 +66,7 @@ sub bill_run {
   });
 
   $view->cb(sub{
-    debug("Receiving rows");
-
     my $rows = CCNQ::AE::receive_rows(@_);
-
-    debug("Processing rows");
 
     $cv->begin;
     for my $r (@{$rows->{rows}}) {

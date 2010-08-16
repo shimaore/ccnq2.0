@@ -18,6 +18,7 @@ use strict; use warnings;
 
 # Run-as: any user which has access to both provisioning and CDR CouchDB.
 
+use AnyEvent;
 use CCNQ::AE;
 $CCNQ::AE::debug_receive = 0;
 
