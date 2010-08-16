@@ -34,7 +34,7 @@ on that day.
 =cut
 
 sub run {
-  my $now = DateTime->now;
+  my $now = DateTime->now( time_zone => 'local' );
 
   # Do both account/account_sub/profile and account/account_sub/profile/type.
   my $date = $now->ymd('');
