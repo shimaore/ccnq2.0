@@ -87,7 +87,9 @@ JAVASCRIPT
 
 use constant js_report_count => <<'JAVASCRIPT';
   function (doc){
-    emit([doc.account,doc.account_sub,doc.profile,doc.type],1);
+    if(doc.account && doc.account_sub) {
+      emit([doc.account,doc.account_sub,doc.profile,doc.type],1);
+    }
   }
 JAVASCRIPT
 
