@@ -47,24 +47,38 @@ sub run {
   CCNQ::AE::receive($cv2);
 
   # Run the bill.
-  bill_run( $now,
-            \&CCNQ::Invoicing::Summarize::monthly );
+  my $cv3 = bill_run( $now,
+                       \&CCNQ::Invoicing::Summarize::monthly );
+  CCNQ::AE::receive($cv3);
+  return;
 }
 
 sub bill_run {
   my ($date,$cb) = @_;
+
+  my $cv = AE::cv;
 
   # For each account which has its billing_cycle today...
   CCNQ::Billing::billing_view({
     view => 'report/billing_cycle',
     _id  => [$date->day],
   })->cb(sub {
-    my $r = CCNQ::AE::receive(@_);
+    my $rows = CCNQ::AE::receive_rows(@_);
 
-    my $cv = $cb->($r->{doc},$date);
-    # Block until this account is processed
-    CCNQ::AE::receive($cv);
+    $cv->begin;
+    for my $r (@{$rows->{rows}}) {
+      $cv->begin;
+
+      my $rcv = $cb->($r->{doc},$date);
+      # Block until this account is processed
+      $rcv->cb(sub{
+        CCNQ::AE::receive(@_);
+        $cv->end;
+      });
+    }
+    $cv->end;
   });
+  return $cv;
 }
 
 1;
