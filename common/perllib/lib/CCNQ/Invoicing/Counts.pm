@@ -61,6 +61,7 @@ sub daily_cdr {
   $view->cb(sub {
     my $docs = CCNQ::AE::receive_docs(@_);
 
+    $cv->begin;
     for my $r (@$docs) {
       $cv->begin;
 
@@ -84,6 +85,7 @@ sub daily_cdr {
         $cv->end;
       });
     }
+    $cv->end;
   });
 
   return $cv;
