@@ -47,7 +47,7 @@ use constant invoicing_db => 'invoicing';
 
 use constant js_report_by_month => <<'JAVASCRIPT';
   function (doc) {
-    emit([doc.account,doc.year,doc.month],null);
+    emit([doc.account,doc.year+"",doc.month+""],null);
   }
 JAVASCRIPT
 
