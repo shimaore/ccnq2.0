@@ -53,13 +53,13 @@ sub header3 {
 sub summary_record {
   my $self = shift;
   # Lays out a single CDR (generally vertically)
-  my ($cdr) = @_;
+  my ($cdr,$param) = @_;
 
   for my $currency (sort keys %$cdr) {
     my $v = $cdr->{$currency};
 
     if($currency eq 'count') {
-      print "$v $cdr->{event_type}\n";
+      print "$v $param\n";
       next;
     }
     if($currency eq 'duration') {
@@ -67,7 +67,7 @@ sub summary_record {
       next;
     }
     # This is actual monetary value
-    print "Before tax: $v->{cost} $currency\n";
+    print "Before tax:   $v->{cost} $currency\n";
     for my $jurisdiction (sort keys %{$v->{taxes}}) {
       print "  $jurisdiction : $v->{taxes}->{$jurisdiction} $currency\n";
     }
@@ -96,7 +96,7 @@ sub start_records {
   # Start a table showing multiple CDRs
   # Generally one CDR per line
 
-  print SEP;
+  print LINE;
   print join('|',@columns)."\n";
 }
 
@@ -115,14 +115,14 @@ sub summary_line {
 
   # Prints the record that contains the sum for this table
   # (generally the last one in the table)
-  print SEP;
-  $self->record_line($cdr);
+  print LINE;
+  $self->cdr_line($cdr);
 }
 
 sub stop_records {
   my $self = shift;
   # Ends a table showing multiple CDRs
-  print SEP;
+  print LINE;
 }
 
 1;

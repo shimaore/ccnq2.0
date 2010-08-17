@@ -143,7 +143,7 @@ sub do_account_subs {
     # Show per-event-type summary for this sub
     $self->header3('events');
     for my $ev (sort keys %{$by_event->{$account_sub}}) {
-      $self->summary_record($by_event->{$account_sub}->{$ev});
+      $self->summary_record($by_event->{$account_sub}->{$ev},$ev);
     }
   }
 }
