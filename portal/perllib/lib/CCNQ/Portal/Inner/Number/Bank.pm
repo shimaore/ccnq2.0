@@ -154,7 +154,7 @@ post '/numbers/bank/modify' => sub {
   my $params = params;
 
   $params = {
-    CCNQ::Portal::Util::neat($number_data, grep { !/^_/ } keys %$params),
+    %{ CCNQ::Portal::Util::neat($number_data, grep { !/^_/ } keys %$params) },
     number => $number,
     profile => 'number',
   };
