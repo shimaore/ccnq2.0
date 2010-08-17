@@ -10,12 +10,20 @@
 <% IF session.account %>
   <fieldset class="ui-widget">
     <legend><% | loc(session.account) %>Account [_1]<% END %></legend>
+    <% IF local_index %>
+    <% local_index %>
+    <% ELSE %>
     <p><%|loc%>Please use the menus to navigate.<%END%></p>
+    <% END %>
   </fieldset>
 <% ELSE %>
   <fieldset class="ui-widget">
     <legend><%|loc%>Account information<%END%></legend>
+    <% IF local_index %>
+    <% local_index %>
+    <% ELSE %>
     <% | loc %>Please select an account.<% END %>
+    <% END %>
   </fieldset>
 <% END %>
 
