@@ -61,6 +61,7 @@ require_ok( 'CCNQ::Portal::Inner::Number' );
 require_ok( 'CCNQ::Portal::Inner::Number::Forwarding' );
 require_ok( 'CCNQ::Portal::Inner::Number::Location' );
 require_ok( 'CCNQ::Portal::Inner::Number::Bank' );
+require_ok( 'CCNQ::Portal::Inner::Number::Name' );
 require_ok( 'CCNQ::Portal::Inner::RatingTable' );
 require_ok( 'CCNQ::Portal::Inner::Bucket' );
 require_ok( 'CCNQ::Portal::Inner::Bucket::Instance' );

@@ -24,5 +24,6 @@ use CCNQ::Portal::Inner::CDR;
 use CCNQ::Portal::Inner::Number::Forwarding;
 use CCNQ::Portal::Inner::Number::Location;
 use CCNQ::Portal::Inner::Number::Bank;
+use CCNQ::Portal::Inner::Number::Name;
 
 'CCNQ::Portal::Content';

@@ -1,0 +1,18 @@
+<% USE loc %>
+<% IF field.number %>
+  <fieldset class="ui-widget"><legend><% | loc %>Number update<% END %></legend>
+    <form method="post" action="" accept-charset="utf-8" class="ui-widget validate">
+      <p class="ui-helper-clearfix">
+        <label for="number" class="left"><% | loc %>Number:<% END %></label>
+        <input type="text" readonly name="number" value="<% field.number | html %>" size="16" />
+      </p>
+      <p class="ui-helper-clearfix">
+        <label for="location" class="left"><% | loc %>Caller Name:<% END %></label>
+        <input type="text" name="name" value="<% field.name | html %>" size="16" width="16" />
+      </p>
+      <p class="ui-helper-clearfix submit">
+        <input type="submit" value="<% | loc %>Save<% END %>" />
+      </p>
+    </form>
+  </fieldset>
+<% END %>
