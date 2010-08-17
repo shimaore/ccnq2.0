@@ -92,10 +92,6 @@ EOT
   # Build the Perl modules and install them
   (cd ~/src/ccnq2.0/common/perllib && perl Makefile.PL && make && make test && sudo make install)
 
-# * On the API server:
-#
-  # The API server is the one that pushes HTTP request into the XMPP bus.
-
 # * On the manager server, the portal server, the API server, the CDR server, the bucket server, and the client-side SBCs:
 
   # The manager server takes generic Requests and splices them into per-server Activities.
