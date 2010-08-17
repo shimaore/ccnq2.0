@@ -92,13 +92,13 @@ EOT
   # Build the Perl modules and install them
   (cd ~/src/ccnq2.0/common/perllib && perl Makefile.PL && make && make test && sudo make install)
 
-# * On the manager server, the portal server, the API server, the CDR server, the bucket server, and the client-side SBCs:
+# * On the manager server, the portal server, an API server, the CDR server, the bucket server, and the client-side SBCs:
 
   # The manager server takes generic Requests and splices them into per-server Activities.
   # It uses CouchDB to store the Requests & Activities.
   # The portal server uses a CouchDB database to store information about portal users.
-  # The API server uses local CouchDB databases (provisioning, billing) for data queries.
-  # The client-side SBCs use a local CouchDB database (billing) to rate CDRs for storage.
+  # An API server uses local CouchDB databases (provisioning, billing) for data queries.
+  # Client-side SBCs use a local CouchDB database (billing) to rate CDRs for storage.
   # The CDR server uses a local CouchDB database for storage of rated CDRs.
   # The bucket server uses a local CouchDB database for storage of bucket data.
 
