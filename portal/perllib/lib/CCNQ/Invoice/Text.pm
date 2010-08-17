@@ -116,7 +116,7 @@ sub summary_line {
   # Prints the record that contains the sum for this table
   # (generally the last one in the table)
   print LINE;
-  $self->cdr_line({%$cdr,event_type=>'Total');
+  $self->cdr_line({%$cdr,event_type=>'Total'});
 }
 
 sub stop_records {
