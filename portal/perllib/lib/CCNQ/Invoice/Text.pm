@@ -89,7 +89,7 @@ our @columns = qw(
   total_cost
 );
 
-use constant LINE => ("x"x30)."\n";
+use constant LINE => ("-"x30)."\n";
 
 sub start_records {
   my $self = shift;
@@ -106,7 +106,7 @@ sub cdr_line {
   # Prints the record that contains the sum for this table
   # (generally the last one in the table)
 
-  print join('|',map { $cdr->{$_} } @columns)."\n";
+  print join('|',map { $cdr->{$_}||'' } @columns)."\n";
 }
 
 sub summary_line {
@@ -116,7 +116,7 @@ sub summary_line {
   # Prints the record that contains the sum for this table
   # (generally the last one in the table)
   print LINE;
-  $self->cdr_line($cdr);
+  $self->cdr_line({%$cdr,event_type=>'Total');
 }
 
 sub stop_records {

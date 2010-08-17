@@ -143,7 +143,7 @@ sub do_account_subs {
     # Show per-event-type summary for this sub
     $self->header3('events');
     for my $ev (sort keys %{$by_event->{$account_sub}}) {
-      $self->summary_record($by_event->{$account_sub}->{$ev},$ev);
+      $self->summary_record($by_event->{$account_sub}->{$ev},$ev||'days');
     }
   }
 }
@@ -160,7 +160,7 @@ sub do_detail {
     $self->header2('account_sub',$r->{name});
 
     # Show details for this sub
-    $self->header3('cdr');
+    $self->header3('cdr','Details');
     $self->start_records;
     my $cdrs = $self->cdr_by_sub($account_sub);
     for my $cdr (@$cdrs) {
