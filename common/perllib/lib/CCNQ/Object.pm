@@ -40,11 +40,11 @@ sub init {
   if(ref($_[0]) eq 'HASH') {
     my $params = shift;
     my @keys = keys %$params;
-    @self{@keys} = @$params{@keys};
+    @$self{@keys} = @$params{@keys};
   } else {
     my %params = shift;
     my @keys = keys %params;
-    @self{@keys} = @params{@keys};
+    @$self{@keys} = @params{@keys};
   }
 }
 
