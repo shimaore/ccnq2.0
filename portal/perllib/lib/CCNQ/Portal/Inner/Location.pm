@@ -81,10 +81,6 @@ sub clean_params {
     country
   ));
 
-  $params->{location} or do {
-    use Data::UUID;
-    $params->{location} = Data::UUID->to_string(Data::UUID->create());
-  };
   return $params;
 };
 
