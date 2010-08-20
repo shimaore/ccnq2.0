@@ -29,6 +29,7 @@ sub neat {
   my $params = shift;
   for my $p (@_) {
     my $v = params->{$p};
+    next unless defined $v;
     $v = Encode::decode_utf8($v,Encode::FB_HTMLCREF);
     next unless defined $v;
     $v =~ s/^\s+//; $v =~ s/\s+$//; $v =~ s/\s+/ /g;
