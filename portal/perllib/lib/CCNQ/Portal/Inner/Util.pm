@@ -265,8 +265,8 @@ sub update_number {
   }
 
   if( CCNQ::Portal->site->update_location_for_number ) {
-    my $r1 = CCNQ::Portal->site->update_location_for_number->($account,$number,$params->{location});
-    $r1 and return CCNQ::Portal::content( error => _($r1)_ );
+    my $error = CCNQ::Portal->site->update_location_for_number->($account,$number,$params->{location});
+    $error and return CCNQ::Portal::content( error => _($error)_ );
   }
 
   # Update the information in the API.
