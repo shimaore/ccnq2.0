@@ -33,6 +33,8 @@ get  '/number_forwarding/:number' => sub {
   var template_name => 'api/number-forwarding';
 
   my $account = session('account');
+  $account
+    or return CCNQ::Portal::content( error => _('Please select an account')_ );
 
   my $number = $normalize_number->(params->{number});
   $number
@@ -49,6 +51,8 @@ post '/number_forwarding/:number' => sub {
   var template_name => 'api/number-forwarding';
 
   my $account  = session('account');
+  $account
+    or return CCNQ::Portal::content( error => _('Please select an account')_ );
 
   my $number = $normalize_number->(params->{number});
   $number
