@@ -68,6 +68,13 @@
     <p class="ui-helper-clearfix">
     <label for="user_id" class="left"><% | loc %>User ID<% END %></label>
     <input type="text" name="user_id" value="<% field.id | html %>" class="required"/>
+    <select name="user_id_alt">
+      <option value=""></option>
+      <% FOREACH r IN get_all_users %>
+      <option value="<% r._id | html %>"><% r._id | html %></option>
+      <% END %>
+    </select>
+    </select>
     </p>
     <p class="ui-helper-clearfix submit">
     <input type="submit" value="<% | loc %>Retrieve<% END %>" />

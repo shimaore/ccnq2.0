@@ -28,6 +28,15 @@ use AnyEvent;
 use CCNQ::AE;
 use CCNQ::API;
 
+sub get_all_users {
+  my $cv = AE::cv;
+  CCNQ::Portal::db->all_docs->cb(sub{
+    $cv->send(CCNQ::AE::receive(@_));
+  });
+  my $all_docs = CCNQ::AE::receive_docs($cv);
+  return $all_docs;
+}
+
 sub retrieve {
   my ($user_id) = @_;
 
@@ -133,6 +142,7 @@ get '/user_profile' => sub {
     or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
   var template_name => 'user_profile';
+  var get_all_users => \&get_all_users;
   retrieve(CCNQ::Portal->current_session->user->id);
   return CCNQ::Portal::content;
 };
@@ -144,6 +154,7 @@ get '/user_profile/:user_id' => sub {
     or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
   var template_name => 'user_profile';
+  var get_all_users => \&get_all_users;
   retrieve(params->{user_id});
   return CCNQ::Portal::content;
 };
@@ -155,7 +166,8 @@ post '/user_profile/select' => sub {
     or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
   var template_name => 'user_profile';
-  retrieve(params->{user_id});
+  var get_all_users => \&get_all_users;
+  retrieve(params->{user_id}||params->{user_id_alt});
   return CCNQ::Portal::content;
 };
 
@@ -166,6 +178,7 @@ post '/user_profile' => sub {
     or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
   var template_name => 'user_profile';
+  var get_all_users => \&get_all_users;
   update(CCNQ::Portal->current_session->user->id);
   retrieve(CCNQ::Portal->current_session->user->id);
   return CCNQ::Portal::content;
