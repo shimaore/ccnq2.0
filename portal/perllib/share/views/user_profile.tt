@@ -74,7 +74,6 @@
       <option value="<% r.key | html %>" <% IF field.id == r.key %>selected<% END %>><% r.key | html %></option>
       <% END %>
     </select>
-    </select>
     </p>
     <p class="ui-helper-clearfix submit">
     <input type="submit" value="<% | loc %>Retrieve<% END %>" />
