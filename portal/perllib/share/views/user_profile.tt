@@ -70,7 +70,7 @@
     <input type="text" name="user_id" value="<% field.id | html %>" class="required"/>
     <select name="user_id_alt">
       <option value=""></option>
-      <% FOREACH r IN get_all_users %>
+      <% FOREACH r IN get_all_users.rows %>
       <option value="<% r.key | html %>" <% IF field.id == r.key %>selected<% END %>><% r.key | html %></option>
       <% END %>
     </select>

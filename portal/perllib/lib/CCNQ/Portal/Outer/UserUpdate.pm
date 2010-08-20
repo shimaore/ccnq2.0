@@ -33,7 +33,7 @@ sub get_all_users {
   CCNQ::Portal::db->all_docs->cb(sub{
     $cv->send(CCNQ::AE::receive(@_));
   });
-  my $all_docs = CCNQ::AE::receive_docs($cv);
+  my $all_docs = CCNQ::AE::receive_rows($cv);
   return $all_docs;
 }
 
