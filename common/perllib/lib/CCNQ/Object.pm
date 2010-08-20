@@ -21,12 +21,31 @@ use strict; use warnings;
 sub new {
     my $this = shift;
     my $class = ref($this) || $this;
-    my $self = shift || {};
+    my $self = {};
     bless $self, $class;
     $self->init(@_);
     return $self;
 }
 
-sub init {}
+
+#
+# Default mode is to support both
+#   ->new( \%hash )
+# or
+#   ->new( %hash )
+#
+
+sub init {
+  my $self = shift;
+  if(ref($_[0]) eq 'HASH') {
+    my $params = shift;
+    my @keys = keys %$params;
+    @self{@keys} = @$params{@keys};
+  } else {
+    my %params = shift;
+    my @keys = keys %params;
+    @self{@keys} = @params{@keys};
+  }
+}
 
 1;
