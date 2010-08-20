@@ -91,6 +91,7 @@ EOT
 
   # Build the Perl modules and install them
   (cd ~/src/ccnq2.0/common/perllib && perl Makefile.PL && make && make test && sudo make install)
+  # Alternatively, use   "dh-make-perl --build"   to build proper packages, then install them.
 
 # * On the manager server, the portal server, an API server, the CDR server, the bucket server, and the client-side SBCs:
 
@@ -114,6 +115,7 @@ EOT
 
   # Also, importantly, you MUST allow remote access to the "cdr" and "bucket" databases.
   # So on the cdr and bucket couchdb servers, assuming LOCAL_IP is the local IP to use:
+  export LOCAL_IP=192.168.1.xxx
   sed -i -e "s/;bind_address = 127.0.0.1/bind_address = $LOCAL_IP/" /etc/couchdb/local.ini
   echo $LOCAL_IP | tee /etc/ccn/couchdb_local_server >/dev/null
 
@@ -132,7 +134,7 @@ EOT
   # (leave the MySQL root password empty -- you'll be asked four times)
   # Also I do:
   sudo aptitude --purge remove portmap fam
-  sudo aptitude install -y postfix
+  sudo aptitude install -y postfix  # remove exim4
 
 
   # Install MediaProxy dispatcher (if using MediaProxy)
@@ -177,6 +179,7 @@ EOT
 
   cd ~/src
   FREESWITCH=1.0.6-git20100812
+  ARCH=amd64
   wget http://opensource.sotelips.net/~stephane/${ARCH}/freeswitch_${FREESWITCH}_${ARCH}.deb
   wget http://opensource.sotelips.net/~stephane/${ARCH}/freeswitch-lang-en_${FREESWITCH}_${ARCH}.deb
   wget http://opensource.sotelips.net/~stephane/${ARCH}/freeswitch-perl_${FREESWITCH}_${ARCH}.deb
@@ -200,25 +203,24 @@ EOT
   # The following command adds the current user to group "daemon":
   sudo adduser `whoami` daemon
 
-# * If you intent to use the "sip-traces" API:
+# * If you intent to use the "sip-traces" API (you should), run the following on any server that will handle SIP traffic:
 
-  sudo aptitude install -t testing libpam-runtime   # dependency issue as of 2010/08
+  sudo aptitude install -y -t testing libpam-runtime   # dependency issue as of 2010/08
   sudo aptitude install -y -t testing tshark ngrep
-  sudo groupadd -r wireshark
-  sudo adduser `whoami` wireshark
-  sudo ccnq2_sip_traces eth0 &
-  sudo ccnq2_sip_traces eth1 &
-
-  # (I'm working on a proper installer and /etc/init.d script.)
 
 # * Finally:
 
   # Install /etc/ccn/cookie
   sudo mkdir /etc/ccn
-  hexdump -C /dev/urandom | head -1 | md5sum | sudo tee /etc/ccn/cookie > /dev/null
+  [ -e /etc/ccn/cookie ] || hexdump -C /dev/urandom | head -1 | md5sum | sudo tee /etc/ccn/cookie > /dev/null
 
   # Monitor /var/log/syslog to see any errors.
   sudo tail -f /var/log/syslog &
+
+  # ------------------------------------------------------------
+  # At this point you should get your DNS configuration ready.
+  # (We're still missing proper documentation on this. :( )
+  # ------------------------------------------------------------
 
   # Then run:
   sudo ccnq2_upgrade
@@ -281,9 +283,11 @@ SQL
   # On the web portal server, you should also do:
   sudo aptitude -t testing install libtemplate-perl libnet-ldap-perl libpdf-api2-simple-perl libdata-uuid-perl
   sudo aptitude -t testing install libplack-perl # Used by the webserver starter (plackup)
-  (cd ~/src/ccnq2.0/portal/perllib && perl Makefile.PL && make && make test && sudo make install)
-
   sudo aptitude install memcached unzip
+
+  # Install the "portal" modules
+  (cd ~/src/ccnq2.0/portal/perllib && perl Makefile.PL && make && make test && sudo make install)
+  # Alternatively use  dh-make-perl --build
 
 # * Jabber server configuration:
   sudo aptitude -y install -t testing ejabberd
@@ -293,4 +297,4 @@ SQL
   sed -i -e 's/^{access, max_user_sessions, \[{10, all}\]}\./{access, max_user_sessions, [{20, all}]}./' /etc/ejabberd/ejabberd.cfg
 
 
-# These instructions currently need testing.
+# These instructions were last test 2010/08/18.
