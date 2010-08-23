@@ -71,8 +71,8 @@ sub print_header {
 
 sub set_fonts {
   my $self = shift;
-  $self->add_font('VerdanaBold');
-  $self->add_font('Verdana');
+  $self->doc->add_font('VerdanaBold');
+  $self->doc->add_font('Verdana');
 }
 
 sub header {
