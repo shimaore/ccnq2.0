@@ -250,7 +250,7 @@ sub summary_record {
     $self->doc->text("$cdr->{duration} seconds");
   }
 
-  if($cdr->{count}) {
+  if($cdr->{count} && $cdr->{count} != 1) {
     $self->doc->x($self->doc->margin_left+0.40*$self->doc->effective_width);
     $self->doc->text(sprintf("%0.4f units",$cdr->{count}));
   }
@@ -348,7 +348,7 @@ sub cdr_line {
     $self->doc->text($cdr->{duration});
   }
 
-  if($cdr->{count} && $cdr->{count} <> 1) {
+  if($cdr->{count} && $cdr->{count} != 1) {
     $self->doc->x($self->doc->margin_left+0.30*$self->doc->effective_width);
     $self->doc->text(sprintf("%0.4f",$cdr->{count}));
   }
