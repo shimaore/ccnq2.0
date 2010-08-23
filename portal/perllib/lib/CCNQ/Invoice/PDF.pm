@@ -171,18 +171,18 @@ sub summary_record {
     }
     # This is actual monetary value
     $self->doc->text("Before tax:   $v->{cost} $currency",
-      align => 'right', y => $self->doc->width_right );
+      align => 'right', x => $self->doc->width_right );
     $self->next_line;
     for my $jurisdiction (sort keys %{$v->{taxes}}) {
       $self->doc->text("  $jurisdiction : $v->{taxes}->{$jurisdiction} $currency",
-        align => 'right', y => $self->doc->width_right );
+        align => 'right', x => $self->doc->width_right );
       $self->next_line;
     }
     $self->doc->text("Total tax:    $v->{tax_amount} $currency",
-      align => 'right', y => $self->doc->width_right );
+      align => 'right', x => $self->doc->width_right );
     $self->next_line;
     $self->doc->text("Total amount: $v->{total_cost} $currency",
-      align => 'right', y => $self->doc->width_right );
+      align => 'right', x => $self->doc->width_right );
     $self->next_line;
   }
 }
