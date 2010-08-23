@@ -170,15 +170,19 @@ sub summary_record {
       next;
     }
     # This is actual monetary value
-    $self->doc->text("Before tax:   $v->{cost} $currency",align => 'right');
+    $self->doc->text("Before tax:   $v->{cost} $currency",
+      align => 'right', y => width_right );
     $self->next_line;
     for my $jurisdiction (sort keys %{$v->{taxes}}) {
-      $self->doc->text("  $jurisdiction : $v->{taxes}->{$jurisdiction} $currency", align => 'right');
+      $self->doc->text("  $jurisdiction : $v->{taxes}->{$jurisdiction} $currency",
+        align => 'right', y => width_right );
       $self->next_line;
     }
-    $self->doc->text("Total tax:    $v->{tax_amount} $currency",align => 'right');
+    $self->doc->text("Total tax:    $v->{tax_amount} $currency",
+      align => 'right', y => width_right );
     $self->next_line;
-    $self->doc->text("Total amount: $v->{total_cost} $currency",align => 'right');
+    $self->doc->text("Total amount: $v->{total_cost} $currency",
+      align => 'right', y => width_right );
     $self->next_line;
   }
 }
