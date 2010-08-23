@@ -143,8 +143,10 @@ sub footer {
 
   $self->doc->fill_color( '#552F55' );
 
+  $self->{page_num}++;
+
   $self->doc->set_font( 'VerdanaBold' );
-  $self->doc->text( 'Page ' . $page_num++,
+  $self->doc->text( 'Page ' . $self->{page_num},
               x => $self->doc->effective_width,
               y => 20,
               align => 'right' );
