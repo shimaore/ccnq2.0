@@ -43,7 +43,7 @@ sub init {
     # page dimensions
     width       => A4_WIDTH,
     height      => A4_HEIGHT,
-    line_height => 11,
+    line_height => 12, # 12 point for 12/11 point font
   );
 
   $self->doc->header( sub { $self->header(@_) } );
@@ -121,9 +121,9 @@ sub header {
   $self->doc->stroke_color( '#0000FF' );
 
 
-  $self->doc->y( $self->doc->height+$self->doc->line_height );
+  $self->doc->y( $self->doc->height-3*$self->doc->line_height );
   $self->doc->text( 'Unix time of report: ' . time() );
-  $self->doc->y( $self->doc->height );
+  $self->doc->y( $self->doc->height-2*$self->doc->line_height );
   $self->doc->text( 'Bottom line of header' );
 
   $self->doc->line( to_x => $self->doc->effective_width,
@@ -132,7 +132,7 @@ sub header {
               fill => 'off',
               width => 2 );
 
-  $self->doc->y( $self->doc->height - $self->doc->line_height );
+  $self->doc->y( $self->doc->height - 6*$self->doc->line_height );
 
   $self->doc->strokecolor( $strokecolor );
 }
