@@ -1,4 +1,4 @@
-package CCNQ::Portal::Locale;
+package CCNQ::Locale;
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@ use CCNQ::I18N;
 
 =pod
 
-  new CCNQ::Portal::User $user_id
+  CCNQ::Locale->new($locale_tag)
 
 =cut
 
@@ -44,4 +44,4 @@ sub loc {
   die "No language ".$self->id." available for $_[0]";
 }
 
-'CCNQ::Portal::Locale';
+'CCNQ::Locale';
