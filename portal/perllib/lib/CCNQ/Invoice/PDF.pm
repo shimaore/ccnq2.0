@@ -123,14 +123,17 @@ sub header {
 
   $self->doc->y( $self->doc->height-3*$self->doc->line_height );
   $self->doc->text( 'Unix time of report: ' . time() );
-  $self->doc->y( $self->doc->height-2*$self->doc->line_height );
+  $self->doc->y( $self->doc->height-4*$self->doc->line_height );
   $self->doc->text( 'Bottom line of header' );
 
-  $self->doc->line( to_x => $self->doc->effective_width,
-              to_y => $self->doc->y,
-              stroke => 'on',
-              fill => 'off',
-              width => 2 );
+  $self->doc->line(
+    x    => $self->doc->margin_left,
+    to_x => $self->doc->effective_width,
+    y    => $self->doc->height-$self->doc->margin_top,
+    to_y => $self->doc->height-$self->doc->margin_top,
+    stroke => 'on',
+    fill => 'off',
+    width => 2 );
 
   $self->doc->y( $self->doc->height - 6*$self->doc->line_height );
 
@@ -142,7 +145,9 @@ sub footer {
 
   my $fillcolor = $self->doc->fill_color;
   my $font = $self->doc->current_font;
+  my $strokecolor = $self->doc->strokecolor;
 
+  $self->doc->stroke_color( '#0000FF' );
   $self->doc->fill_color( '#555555' );
 
   $self->{page_num}++;
@@ -153,9 +158,18 @@ sub footer {
               y => 20,
               align => 'right' );
 
+  $self->doc->line(
+    x    => $self->doc->margin_left,
+    to_x => $self->doc->effective_width,
+    y    => $self->doc->margin_bottom,
+    to_y => $self->doc->margin_bottom,
+    stroke => 'on',
+    fill => 'off',
+    width => 2 );
+
   $self->doc->fill_color( $fillcolor );
   $self->doc->current_font( $font );
-
+  $self->doc->strokecolor( $strokecolor );
 }
 
 =head1 Functions dedicated to the layout
