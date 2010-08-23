@@ -113,19 +113,21 @@ sub header1 {
   my $self = shift;
   my ($type,@params) = @_;
 
-  $self->doc->text("* Header: $type");
+  $self->doc->set_font('VerdanaBold',12);
+  $self->doc->text("$type");
+  $self->doc->line( x => 0, to_x => $self->doc->effective_width );
   $self->next_line;
+
+  $self->doc->set_font('Verdana',11);
   $self->doc->text(join(',',@params));
   $self->next_line;
   if($type eq 'invoice') {
     $self->doc->text( "Account: ".$self->account );
-    $self->next_line;
-    $self->doc->text( "Account name: ".$self->account_data->{name} );
+    $self->doc->text( " - " . $self->account_data->{name}, autoflow => 'on' );
     $self->next_line;
 
-    $self->doc->text(  "Invoice for the month of: ".join('/',$self->year,$self->month) );
-    $self->next_line;
-    $self->doc->text(  "Invoiced on: ".$self->billed );
+    $self->doc->text(  "Your invoice of ".$self->billed );
+    $self->doc->text(  " for the month of: ".join('/',$self->year,$self->month) );
     $self->next_line;
   }
 }
@@ -134,8 +136,10 @@ sub header2 {
   my $self = shift;
   my ($type,@params) = @_;
 
-  $self->doc->text("** Header: $type");
+  $self->doc->set_font('VerdanaBold',11);
+  $self->doc->text("$type");
   $self->next_line;
+  $self->doc->set_font('Verdana',11);
   $self->doc->text( join(',',@params) );
   $self->next_line;
 }
@@ -144,7 +148,8 @@ sub header3 {
   my $self = shift;
   my ($type,@params) = @_;
 
-  $self->doc->text("*** Header: $type");
+  $self->doc->set_font('VerdanaItalic',12);
+  $self->doc->text("$type");
   $self->next_line;
   $self->doc->text( join(',',@params) );
   $self->next_line;
@@ -160,13 +165,11 @@ sub summary_record {
     my $v = $cdr->{$currency};
 
     if($currency eq 'count') {
-      $self->doc->text("$v $param");
-      $self->next_line;
+      $self->doc->text("    $v $param");
       next;
     }
     if($currency eq 'duration') {
-      $self->doc->text("$v seconds");
-      $self->next_line;
+      $self->doc->text("    $v seconds");
       next;
     }
     # This is actual monetary value
@@ -205,7 +208,7 @@ sub start_records {
   # Start a table showing multiple CDRs
   # Generally one CDR per line
 
-  $self->doc->line( to_x => $self->doc->x+$self->doc->effective_width*0.8 );
+  $self->doc->line( x => 0, to_x => $self->doc->effective_width );
   $self->next_line;
   $self->doc->text( join('|',@columns) );
   $self->next_line;
@@ -227,7 +230,7 @@ sub summary_line {
 
   # Prints the record that contains the sum for this table
   # (generally the last one in the table)
-  $self->doc->line( to_x => ($self->doc->x + 0.80*$self->doc->effective_width) );
+  $self->doc->line( x => 0, to_x => $self->doc->effective_width );
   $self->next_line;
   $self->cdr_line({%$cdr,event_type=>'Total'});
   $self->next_line;
@@ -236,7 +239,7 @@ sub summary_line {
 sub stop_records {
   my $self = shift;
   # Ends a table showing multiple CDRs
-  $self->doc->line( to_x => $self->doc->x+$self->doc->effective_width*0.8 );
+  $self->doc->line( x => 0, to_x => $self->doc->effective_width );
   $self->next_line;
 }
 
