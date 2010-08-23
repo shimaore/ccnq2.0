@@ -311,7 +311,6 @@ sub start_records {
   $self->doc->text( 'duration' );
   $self->doc->x($self->doc->margin_left+0.30*$self->doc->effective_width);
   $self->doc->text( 'count' );
-  $self->next_line;
 
   $self->doc->x($self->doc->margin_left+0.60*$self->doc->effective_width);
   $self->doc->text( 'cost' );
@@ -320,6 +319,7 @@ sub start_records {
   $self->doc->x($self->doc->margin_left+0.84*$self->doc->effective_width);
   $self->doc->text( 'total_cost' );
 
+  $self->next_line;
 }
 
 sub cdr_line {
@@ -332,16 +332,18 @@ sub cdr_line {
   $self->doc->x($self->doc->margin_left+0.00*$self->doc->effective_width);
   $self->doc->text("$cdr->{start_date} $cdr->{start_time} $cdr->{event_type}");
   $self->doc->x($self->doc->margin_left+0.70*$self->doc->effective_width);
-  $self->doc->text("$cdr->{from_e164} $cdr->{to_e164}");
+  $self->doc->text("$cdr->{from_e164} -> $cdr->{to_e164}");
   $self->next_line;
 
-  $self->doc->x($self->doc->margin_left+0.60*$self->doc->effective_width);
-  $self->doc->text($cdr->{cost});
-  $self->doc->x($self->doc->margin_left+0.72*$self->doc->effective_width);
-  $self->doc->text($cdr->{tax_amount});
-  $self->doc->x($self->doc->margin_left+0.84*$self->doc->effective_width);
-  $self->doc->text($cdr->{total_cost});
-
+  if($cdr->{total_cost}) {
+    $self->doc->x($self->doc->margin_left+0.60*$self->doc->effective_width);
+    $self->doc->text($cdr->{cost});
+    $self->doc->x($self->doc->margin_left+0.72*$self->doc->effective_width);
+    $self->doc->text($cdr->{tax_amount});
+    $self->doc->x($self->doc->margin_left+0.84*$self->doc->effective_width);
+    $self->doc->text($cdr->{total_cost});
+    $self->next_line;
+  }
 
   if($cdr->{duration}) {
     $self->doc->x($self->doc->margin_left+0.07*$self->doc->effective_width);
