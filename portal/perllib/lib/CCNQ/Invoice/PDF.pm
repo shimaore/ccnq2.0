@@ -89,11 +89,13 @@ sub separator {
   $self->doc->line(
     x     => $self->doc->margin_left,
     to_x  => $self->doc->width_right,
-    y     => $self->doc->y,
-    to_y  => $self->doc->y,
+    y     => $self->doc->y-1.2,
+    to_y  => $self->doc->y+1.2,
+    stroke => 'off',
+    fill   => 'on',
     fill_color    => 'blue',
     stroke_color  => 'blue',
-    width         => 1,
+    width  => 0.5,
   );
   $self->doc->x($self->doc->margin_left);
 
@@ -131,6 +133,7 @@ sub header1 {
   my $self = shift;
   my ($type,@params) = @_;
 
+  $self->next_line;
   $self->doc->set_font('VerdanaBold',12);
   $self->doc->text(join(' ',$type,@params));
   $self->separator;
@@ -156,6 +159,7 @@ sub header2 {
   my $self = shift;
   my ($type,@params) = @_;
 
+  $self->next_line;
   $self->doc->set_font('VerdanaBold',11);
   $self->doc->text(join(' ',$type,@params));
   $self->next_line;
@@ -166,6 +170,7 @@ sub header3 {
   my $self = shift;
   my ($type,@params) = @_;
 
+  $self->next_line;
   $self->doc->set_font('VerdanaItalic',12);
   $self->doc->text(join(' ',$type,@params));
   $self->next_line;
