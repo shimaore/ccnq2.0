@@ -1,4 +1,4 @@
-# Tests for inclusion of different CCNQ::Portal modules.
+# Tests for inclusion of different CCNQ::Locale modules.
 
 # Copyright (C) 2009  Stephane Alnet
 #
@@ -17,16 +17,16 @@
 use strict; use warnings;
 use Test::More;
 
-use_ok 'CCNQ::Portal::Locale';
+use_ok 'CCNQ::Locale';
 
-my $locale = CCNQ::Portal::Locale->new('en-US');
+my $locale = CCNQ::Locale->new('en-US');
 ok($locale,'Created locale');
 is($locale->id,'en-US','Stored locale');
 ok($locale->lang,'Created lang');
 ok($locale->loc('Test string'),'Loc works');
 is($locale->loc('Test string 1234'),'Test string 1234','Unknown string works');
 
-my $locale2 = CCNQ::Portal::Locale->new('fr-FR');
+my $locale2 = CCNQ::Locale->new('fr-FR');
 is($locale2->loc('Test String Example'),"Exemple de test",'Translation works');
 
 done_testing();
