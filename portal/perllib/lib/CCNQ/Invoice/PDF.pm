@@ -332,7 +332,9 @@ sub cdr_line {
   $self->doc->x($self->doc->margin_left+0.00*$self->doc->effective_width);
   $self->doc->text("$cdr->{start_date} $cdr->{start_time} $cdr->{event_type}");
   $self->doc->x($self->doc->margin_left+0.70*$self->doc->effective_width);
-  $self->doc->text("$cdr->{from_e164} -> $cdr->{to_e164}");
+  if($cdr->{from_e164} || $cdr->{to_e164}) {
+    $self->doc->text("$cdr->{from_e164} -> $cdr->{to_e164}");
+  }
   $self->next_line;
 
   if($cdr->{total_cost}) {
