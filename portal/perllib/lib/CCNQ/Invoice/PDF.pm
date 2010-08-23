@@ -86,7 +86,7 @@ sub next_line {
 sub separator {
   my $self = shift;
   my $extra = 0;
-  if($@) {
+  if(@_) {
     $extra = $self->doc->text(@_);
   }
 
