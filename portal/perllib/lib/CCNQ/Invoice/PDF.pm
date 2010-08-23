@@ -101,11 +101,6 @@ sub separator {
 
 }
 
-sub print_header {
-  my $self = shift;
-
-}
-
 sub set_fonts {
   my $self = shift;
   $self->doc->add_font('VerdanaItalic');
@@ -118,10 +113,44 @@ sub header {
 
   $self->doc->set_font('Verdana',12);
   # $self->doc->pdf->text();
+
+  my $strokecolor = $pdf->strokecolor;
+
+  $pdf->stroke_color( '#0000FF' );
+
+  $pdf->next_line;
+  $pdf->text( 'Unix time of report: ' . time() );
+
+  $pdf->y( $pdf->y - 5 );
+
+  $pdf->line( to_x => $pdf->effective_width,
+              to_y => $pdf->y,
+              stroke => 'on',
+              fill => 'off',
+              width => 2 );
+
+  $pdf->y( $pdf->height - 60 );
+
+  $pdf->strokecolor( $strokecolor );
+
 }
 
 sub footer {
   my $self = shift;
+
+  my $fillcolor = $pdf->fill_color;
+  my $font = $pdf->current_font;
+
+  $pdf->fill_color( '#552F55' );
+
+  $pdf->set_font( 'VerdanaBold' );
+  $pdf->text( 'Page ' . $page_num++,
+              x => $pdf->effective_width,
+              y => 20,
+              align => 'right' );
+
+  $pdf->fill_color( $fillcolor );
+  $pdf->current_font( $font );
 
 }
 
