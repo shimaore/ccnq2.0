@@ -32,7 +32,7 @@ sub gather_field {
   var account_subs  => \&CCNQ::Portal::Inner::Util::account_subs;
   var get_plans     => \&CCNQ::Portal::Inner::Util::get_plans;
 
-  my $account_billing_data = CCNQ::Portal::Inner::Util::account_billing_data;
+  my $account_billing_data = CCNQ::Portal::Inner::Util::account_billing_data($account);
 
   var field => {
     %$account_billing_data,
