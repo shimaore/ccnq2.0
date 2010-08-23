@@ -51,6 +51,8 @@ sub init {
   $self->set_margins();
 
   $self->set_fonts();
+
+  $self->doc->add_page();
 }
 
 sub set_margins {
