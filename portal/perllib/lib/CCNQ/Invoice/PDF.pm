@@ -36,6 +36,7 @@ sub doc { $_[0]->{doc} }
 
 sub init {
   my $self = shift;
+  $self->SUPER::init(@_);
 
   $self->{doc} = PDF::API2::Simple->new(
     file        => rand().'.pdf',

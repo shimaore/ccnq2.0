@@ -24,6 +24,7 @@ sub _print {
 
 sub init {
   my $self = shift;
+  $self->SUPER::init(@_);
   $self->{doc} = '';
 }
 
