@@ -31,16 +31,16 @@ sub header1 {
   my $self = shift;
   my ($type,@params) = @_;
 
-  $self->_print "* Header: $type\n";
-  $self->_print join(',',@params)."\n";
+  $self->_print( "* Header: $type\n");
+  $self->_print( join(',',@params)."\n" );
   if($type eq 'invoice') {
-    $self->_print join('', map { "$_\n" }
+    $self->_print( join('', map { "$_\n" }
       "Account: ".$self->account,
       "Account name: ".$self->account_data->{name},
 
       "Invoice for the month of: ".join('/',$self->year,$self->month),
       "Invoiced on: ".$self->billed,
-    );
+    ) );
   }
 }
 
@@ -48,16 +48,16 @@ sub header2 {
   my $self = shift;
   my ($type,@params) = @_;
 
-  $self->_print "** Header: $type\n";
-  $self->_print join(',',@params)."\n";
+  $self->_print( "** Header: $type\n" );
+  $self->_print( join(',',@params)."\n" );
 }
 
 sub header3 {
   my $self = shift;
   my ($type,@params) = @_;
 
-  $self->_print "*** Header: $type\n";
-  $self->_print join(',',@params)."\n";
+  $self->_print( "*** Header: $type\n" );
+  $self->_print( join(',',@params)."\n" );
 }
 
 sub summary_record {
@@ -69,20 +69,20 @@ sub summary_record {
     my $v = $cdr->{$currency};
 
     if($currency eq 'count') {
-      $self->_print "$v $param\n";
+      $self->_print( "$v $param\n" );
       next;
     }
     if($currency eq 'duration') {
-      $self->_print "$v seconds\n";
+      $self->_print( "$v seconds\n" );
       next;
     }
     # This is actual monetary value
     print "Before tax:   $v->{cost} $currency\n";
     for my $jurisdiction (sort keys %{$v->{taxes}}) {
-      $self->_print "  $jurisdiction : $v->{taxes}->{$jurisdiction} $currency\n";
+      $self->_print( "  $jurisdiction : $v->{taxes}->{$jurisdiction} $currency\n" );
     }
-    $self->_print "Total tax:    $v->{tax_amount} $currency\n";
-    $self->_print "Total amount: $v->{total_cost} $currency\n";
+    $self->_print( "Total tax:    $v->{tax_amount} $currency\n" );
+    $self->_print( "Total amount: $v->{total_cost} $currency\n" );
   }
 }
 
@@ -106,8 +106,8 @@ sub start_records {
   # Start a table showing multiple CDRs
   # Generally one CDR per line
 
-  $self->_print LINE;
-  $self->_print join('|',@columns)."\n";
+  $self->_print( LINE );
+  $self->_print( join('|',@columns)."\n" );
 }
 
 sub cdr_line {
@@ -116,7 +116,7 @@ sub cdr_line {
   # Prints the record that contains the sum for this table
   # (generally the last one in the table)
 
-  $self->_print join('|',map { $cdr->{$_}||'' } @columns)."\n";
+  $self->_print( join('|',map { $cdr->{$_}||'' } @columns)."\n" );
 }
 
 sub summary_line {
@@ -125,14 +125,14 @@ sub summary_line {
 
   # Prints the record that contains the sum for this table
   # (generally the last one in the table)
-  $self->_print LINE;
+  $self->_print( LINE );
   $self->cdr_line({%$cdr,event_type=>'Total'});
 }
 
 sub stop_records {
   my $self = shift;
   # Ends a table showing multiple CDRs
-  $self->_print LINE;
+  $self->_print( LINE );
 }
 
 1;
