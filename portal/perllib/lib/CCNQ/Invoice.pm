@@ -167,8 +167,7 @@ sub do_detail {
     my $account_sub = $r->{account_sub};
 
     # Show details for this sub
-    $self->header2('account_sub',$r->{name});
-    $self->header3('cdr','Details');
+    $self->header2('account_sub',$r->{name},'CDR');
     $self->start_records;
     my $cdrs = $self->cdr_by_sub($account_sub);
     for my $cdr (@$cdrs) {

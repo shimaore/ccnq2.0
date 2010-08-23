@@ -80,7 +80,21 @@ sub next_line {
   } else {
     $self->doc->next_line;
   }
-  $self->doc->x(0);
+  $self->doc->x($self->doc->margin_left);
+}
+
+sub separator {
+  $self->doc->line(
+    x     => $self->doc->margin_left,
+    to_x  => $self->doc->width_right,
+    y     => $self->doc->y,
+    to_y  => $self->doc->y,
+    fill_color    => 'blue',
+    stroke_color  => 'blue',
+    width         => 1,
+  );
+  $self->doc->x($self->doc->margin_left);
+
 }
 
 sub print_header {
@@ -117,7 +131,7 @@ sub header1 {
 
   $self->doc->set_font('VerdanaBold',12);
   $self->doc->text(join(' ',$type,@params));
-  $self->doc->line( x => 0, to_x => $self->doc->effective_width, y => $self->doc->y, to_y => $self->doc->y );
+  $self->separator;
   $self->next_line;
   $self->doc->set_font('Verdana',11);
 
@@ -209,7 +223,7 @@ sub start_records {
   # Start a table showing multiple CDRs
   # Generally one CDR per line
 
-  $self->doc->line( x => 0, to_x => $self->doc->effective_width, y => $self->doc->y, to_y => $self->doc->y );
+  $self->separator;
   $self->next_line;
   $self->doc->text( join('|',@columns) );
   $self->next_line;
@@ -231,7 +245,7 @@ sub summary_line {
 
   # Prints the record that contains the sum for this table
   # (generally the last one in the table)
-  $self->doc->line( x => 0, to_x => $self->doc->effective_width, y => $self->doc->y, to_y => $self->doc->y );
+  $self->separator;
   $self->next_line;
   $self->cdr_line({%$cdr,event_type=>'Total'});
   $self->next_line;
@@ -240,7 +254,7 @@ sub summary_line {
 sub stop_records {
   my $self = shift;
   # Ends a table showing multiple CDRs
-  $self->doc->line( x => 0, to_x => $self->doc->effective_width, y => $self->doc->y, to_y => $self->doc->y );
+  $self->separator;
   $self->next_line;
 }
 
