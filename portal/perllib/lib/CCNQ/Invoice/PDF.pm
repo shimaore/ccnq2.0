@@ -233,6 +233,10 @@ sub summary_record {
   my ($cdr,$param) = @_;
   defined($param) or $param = '';
 
+  $cdr->{duration} || $cdr->{count} ||
+  $#{grep { !/^(duration|count)$/ } keys %$cdr} >= 0
+    or return;
+
   $self->header3($param);
 
   if($cdr->{duration}) {

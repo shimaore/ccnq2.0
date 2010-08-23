@@ -180,7 +180,7 @@ sub do_summary {
   my $self = shift;
 
   $self->header2('summary');
-  $self->summary_record($self->summary);
+  $self->monetary_record($self->summary);
 }
 
 1;
