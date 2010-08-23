@@ -89,6 +89,7 @@ sub print_header {
 
 sub set_fonts {
   my $self = shift;
+  $self->doc->add_font('VerdanaItalic');
   $self->doc->add_font('VerdanaBold');
   $self->doc->add_font('Verdana');
 }
@@ -114,13 +115,11 @@ sub header1 {
   my ($type,@params) = @_;
 
   $self->doc->set_font('VerdanaBold',12);
-  $self->doc->text("$type");
+  $self->doc->text(join(' ',$type,@params);
   $self->doc->line( x => 0, to_x => $self->doc->effective_width );
   $self->next_line;
-
   $self->doc->set_font('Verdana',11);
-  $self->doc->text(join(',',@params));
-  $self->next_line;
+
   if($type eq 'invoice') {
     $self->doc->text( "Account: ".$self->account );
     $self->doc->text( " - " . $self->account_data->{name}, autoflow => 'on' );
@@ -137,11 +136,9 @@ sub header2 {
   my ($type,@params) = @_;
 
   $self->doc->set_font('VerdanaBold',11);
-  $self->doc->text("$type");
+  $self->doc->text(join(' ',$type,@params);
   $self->next_line;
   $self->doc->set_font('Verdana',11);
-  $self->doc->text( join(',',@params) );
-  $self->next_line;
 }
 
 sub header3 {
@@ -149,10 +146,9 @@ sub header3 {
   my ($type,@params) = @_;
 
   $self->doc->set_font('VerdanaItalic',12);
-  $self->doc->text("$type");
+  $self->doc->text(join(' ',$type,@params);
   $self->next_line;
-  $self->doc->text( join(',',@params) );
-  $self->next_line;
+  $self->doc->set_font('Verdana',11);
 }
 
 sub summary_record {
