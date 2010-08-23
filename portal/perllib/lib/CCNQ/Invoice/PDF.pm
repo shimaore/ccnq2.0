@@ -209,6 +209,7 @@ sub header2 {
   $self->next_line;
   $self->doc->set_font('VerdanaBold',11);
   $self->doc->text(join(' ',$type,@params));
+  $self->separator;
   $self->next_line;
   $self->doc->set_font('Verdana',11);
 }
@@ -220,6 +221,7 @@ sub header3 {
   $self->next_line;
   $self->doc->set_font('VerdanaItalic',12);
   $self->doc->text(join(' ',$type,@params));
+  $self->separator;
   $self->next_line;
   $self->doc->set_font('Verdana',11);
 }
@@ -230,18 +232,23 @@ sub summary_record {
   my ($cdr,$param) = @_;
   defined($param) or $param = '';
 
+  $self->header3($param);
+
+  if($cdr->{count}) {
+    $self->doc->text("    $cdr->{count} units", autoflow => 'on' );
+  }
+
+  if($cdr->{duration}) {
+    $self->doc->text("    $cdr->{duration} seconds", autoflow => 'on' );
+  }
+
   for my $currency (sort keys %$cdr) {
+    next if $currency eq 'count' || $currency eq 'duration';
+
     my $v = $cdr->{$currency};
 
-    if($currency eq 'count') {
-      $self->doc->text("    $v $param", autoflow => 'on' );
-      next;
-    }
-    if($currency eq 'duration') {
-      $self->doc->text("    $v seconds", autoflow => 'on' );
-      next;
-    }
     # This is actual monetary value
+    next unless $v->{total_cost};
     $self->doc->text("Before tax:   $v->{cost} $currency",
       align => 'right', x => $self->doc->width_right );
     $self->next_line;
