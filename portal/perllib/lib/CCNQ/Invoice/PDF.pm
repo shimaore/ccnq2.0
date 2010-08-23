@@ -121,12 +121,16 @@ sub header1 {
   $self->doc->set_font('Verdana',11);
 
   if($type eq 'invoice') {
-    $self->doc->text( "Account: ".$self->account );
-    $self->doc->text( " - " . $self->account_data->{name}, autoflow => 'on' );
+    my $text =
+      "Account: ".$self->account .
+      " - " . $self->account_data->{name};
+    $self->doc->text( $text, autflow => 'on' );
     $self->next_line;
 
-    $self->doc->text(  "Your invoice of ".$self->billed );
-    $self->doc->text(  " for the month of: ".join('/',$self->year,$self->month) );
+    my $text2 =
+      "Your invoice of ".$self->billed .
+      " for the month of: ".join('/',$self->year,$self->month);
+    $self->doc->text( $text2, autoflow => 'on' );
     $self->next_line;
   }
 }
@@ -161,11 +165,11 @@ sub summary_record {
     my $v = $cdr->{$currency};
 
     if($currency eq 'count') {
-      $self->doc->text("    $v $param");
+      $self->doc->text("    $v $param", autoflow => 'on' );
       next;
     }
     if($currency eq 'duration') {
-      $self->doc->text("    $v seconds");
+      $self->doc->text("    $v seconds", autoflow => 'on' );
       next;
     }
     # This is actual monetary value
@@ -216,7 +220,7 @@ sub cdr_line {
   # Prints the record that contains the sum for this table
   # (generally the last one in the table)
 
-  $self->doc->text( join('|',map { $cdr->{$_}||'' } @columns) );
+  $self->doc->text( join('|',map { $cdr->{$_}||'' } @columns), autoflow => 'on' );
   $self->next_line;
 }
 
