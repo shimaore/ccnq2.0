@@ -86,19 +86,22 @@ sub next_line {
 sub separator {
   my $self = shift;
 
+  my $strokecolor = $self->doc->strokecolor;
+
+  $self->doc->stroke_color( '#0000FF' );
+
   $self->doc->line(
     x     => $self->doc->margin_left,
     to_x  => $self->doc->width_right,
-    y     => $self->doc->y-1.2,
-    to_y  => $self->doc->y+1.2,
-    stroke => 'off',
-    fill   => 'on',
-    fill_color    => 'blue',
-    stroke_color  => 'blue',
+    y     => $self->doc->y,
+    to_y  => $self->doc->y,
+    stroke => 'on',
+    fill   => 'off',
     width  => 0.5,
   );
   $self->doc->x($self->doc->margin_left);
 
+  $self->doc->strokecolor( $strokecolor );
 }
 
 sub set_fonts {
@@ -112,7 +115,6 @@ sub header {
   my $self = shift;
 
   $self->doc->set_font('Verdana',12);
-  # $self->doc->pdf->text();
 
   my $strokecolor = $self->doc->strokecolor;
 
@@ -145,7 +147,7 @@ sub footer {
 
   $self->{page_num}++;
 
-  $self->doc->set_font( 'VerdanaBold' );
+  $self->doc->set_font( 'Verdana', 11 );
   $self->doc->text( 'Page ' . $self->{page_num},
               x => $self->doc->effective_width,
               y => 20,
