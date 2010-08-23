@@ -141,7 +141,7 @@ sub do_account_subs {
     # Show summary for this sub
     $self->header2('account_sub',$r->{name});
     if( $by_sub->{$account_sub} ) {
-      $self->summary_record($by_sub->{$account_sub});
+      $self->monetary_record($by_sub->{$account_sub});
     }
 
     # Show per-event-type summary for this sub

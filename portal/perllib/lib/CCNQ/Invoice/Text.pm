@@ -93,6 +93,11 @@ sub summary_record {
   }
 }
 
+sub monetary_record {
+  my $self = shift;
+  $self->summary_record(@_);
+}
+
 our @columns = qw(
   count
   event_type

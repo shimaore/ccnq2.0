@@ -245,6 +245,12 @@ sub summary_record {
     $self->doc->text(sprintf("%0.4f units",$cdr->{count}));
   }
 
+  $self->monetary_record($cdr);
+}
+
+sub monetary_record {
+  my $self = shift;
+
   for my $currency (sort keys %$cdr) {
     next if $currency eq 'count' || $currency eq 'duration';
 
