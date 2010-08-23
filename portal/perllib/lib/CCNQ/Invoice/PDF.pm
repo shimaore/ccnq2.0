@@ -171,6 +171,7 @@ sub summary_record {
     }
     # This is actual monetary value
     $self->doc->text("Before tax:   $v->{cost} $currency",align => 'right');
+    $self->next_line;
     for my $jurisdiction (sort keys %{$v->{taxes}}) {
       $self->doc->text("  $jurisdiction : $v->{taxes}->{$jurisdiction} $currency", align => 'right');
       $self->next_line;
@@ -201,6 +202,7 @@ sub start_records {
   # Generally one CDR per line
 
   $self->doc->line( to_x => $self->doc->x+$self->doc->effective_width*0.8 );
+  $self->next_line;
   $self->doc->text( join('|',@columns) );
   $self->next_line;
 }
@@ -222,6 +224,7 @@ sub summary_line {
   # Prints the record that contains the sum for this table
   # (generally the last one in the table)
   $self->doc->line( to_x => ($self->doc->x + 0.80*$self->doc->effective_width) );
+  $self->next_line;
   $self->cdr_line({%$cdr,event_type=>'Total'});
   $self->next_line;
 }
