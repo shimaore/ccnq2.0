@@ -130,6 +130,7 @@ sub summary_record {
   my $self = shift;
   # Lays out a single CDR (generally vertically)
   my ($cdr,$param) = @_;
+  $param ||= '';
 
   for my $currency (sort keys %$cdr) {
     my $v = $cdr->{$currency};
@@ -189,7 +190,7 @@ sub summary_line {
 
   # Prints the record that contains the sum for this table
   # (generally the last one in the table)
-  $self->doc->line( to_x => $self->doc->x+$self->doc->effective_width*0.8 );
+  $self->doc->line( to_x => ($self->doc->x + 0.80*$self->doc->effective_width) );
   $self->cdr_line({%$cdr,event_type=>'Total'});
 }
 
