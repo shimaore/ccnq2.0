@@ -64,8 +64,8 @@ sub as_string {
 sub set_margins {
   my $self = shift;
 
-  $self->doc->margin_left (0.1*$self->width);
-  $self->doc->margin_right(0.1*$self->width);
+  $self->doc->margin_left (0.1*$self->doc->width);
+  $self->doc->margin_right(0.1*$self->doc->width);
   # Reserve two lines for the header
   $self->doc->margin_top    (4*$self->doc->line_height);
   # Reserve two lines for the footer
