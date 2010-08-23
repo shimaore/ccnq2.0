@@ -28,6 +28,22 @@ use CCNQ::API;
 
 =head1 Account Utilities
 
+=head2 account_billing_data($account)
+
+=cut
+
+sub account_billing_data {
+  my ($account) = @_;
+
+  defined($account) or confess "account is required";
+
+  my $cv2 = AE::cv;
+  CCNQ::API::billing('report','accounts',$account,$cv2);
+  my $account_billing_data = CCNQ::AE::receive_first_doc($cv2)
+    || { billing_country => CCNQ::Portal->site->billing_country };
+  return $account_billing_data;
+}
+
 =head2 account_subs($account)
 
 =cut
