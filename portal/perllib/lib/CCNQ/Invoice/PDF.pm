@@ -84,6 +84,8 @@ sub next_line {
 }
 
 sub separator {
+  my $self = shift;
+
   $self->doc->line(
     x     => $self->doc->margin_left,
     to_x  => $self->doc->width_right,
