@@ -21,7 +21,7 @@ require_ok( 'CCNQ::Portal::Site' );
 require_ok( 'CCNQ::Portal::Formatter' ); # Obsolete, we use CGI::FormBuilder instead
 
 require_ok( 'CCNQ::I18N' );
-require_ok( 'CCNQ::Portal::Locale' );
+require_ok( 'CCNQ::Locale' );
 require_ok( 'CCNQ::Portal::Locale::Number' );
 
 
