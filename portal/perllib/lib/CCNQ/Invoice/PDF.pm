@@ -114,43 +114,43 @@ sub header {
   $self->doc->set_font('Verdana',12);
   # $self->doc->pdf->text();
 
-  my $strokecolor = $pdf->strokecolor;
+  my $strokecolor = $self->doc->strokecolor;
 
-  $pdf->stroke_color( '#0000FF' );
+  $self->doc->stroke_color( '#0000FF' );
 
-  $pdf->next_line;
-  $pdf->text( 'Unix time of report: ' . time() );
+  $self->doc->next_line;
+  $self->doc->text( 'Unix time of report: ' . time() );
 
-  $pdf->y( $pdf->y - 5 );
+  $self->doc->y( $self->doc->y - 5 );
 
-  $pdf->line( to_x => $pdf->effective_width,
-              to_y => $pdf->y,
+  $self->doc->line( to_x => $self->doc->effective_width,
+              to_y => $self->doc->y,
               stroke => 'on',
               fill => 'off',
               width => 2 );
 
-  $pdf->y( $pdf->height - 60 );
+  $self->doc->y( $self->doc->height - 60 );
 
-  $pdf->strokecolor( $strokecolor );
+  $self->doc->strokecolor( $strokecolor );
 
 }
 
 sub footer {
   my $self = shift;
 
-  my $fillcolor = $pdf->fill_color;
-  my $font = $pdf->current_font;
+  my $fillcolor = $self->doc->fill_color;
+  my $font = $self->doc->current_font;
 
-  $pdf->fill_color( '#552F55' );
+  $self->doc->fill_color( '#552F55' );
 
-  $pdf->set_font( 'VerdanaBold' );
-  $pdf->text( 'Page ' . $page_num++,
-              x => $pdf->effective_width,
+  $self->doc->set_font( 'VerdanaBold' );
+  $self->doc->text( 'Page ' . $page_num++,
+              x => $self->doc->effective_width,
               y => 20,
               align => 'right' );
 
-  $pdf->fill_color( $fillcolor );
-  $pdf->current_font( $font );
+  $self->doc->fill_color( $fillcolor );
+  $self->doc->current_font( $font );
 
 }
 
