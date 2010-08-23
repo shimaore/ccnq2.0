@@ -58,7 +58,7 @@ sub init {
 
 sub as_string {
   my $self = shift;
-  return $self->doc->as_string;
+  return $self->doc->stringify;
 }
 
 sub set_margins {
