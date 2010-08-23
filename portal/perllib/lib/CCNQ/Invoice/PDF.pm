@@ -64,12 +64,12 @@ sub as_string {
 sub set_margins {
   my $self = shift;
 
-  $self->doc->margin_left (0.1*A4_WIDTH);
-  $self->doc->margin_right(0.1*A4_WIDTH);
+  $self->doc->margin_left (0.1*$self->width);
+  $self->doc->margin_right(0.1*$self->width);
   # Reserve two lines for the header
-  $self->doc->margin_top    (0.1*A4_WIDTH+2*$self->doc->line_height);
+  $self->doc->margin_top    (4*$self->doc->line_height);
   # Reserve two lines for the footer
-  $self->doc->margin_bottom (0.1*A4_WIDTH+2*$self->doc->line_height);
+  $self->doc->margin_bottom (4*$self->doc->line_height);
 }
 
 sub next_line {
@@ -120,10 +120,11 @@ sub header {
 
   $self->doc->stroke_color( '#0000FF' );
 
-  $self->doc->next_line;
-  $self->doc->text( 'Unix time of report: ' . time() );
 
-  $self->doc->y( $self->doc->y - 5 );
+  $self->doc->y( $self->doc->height+$self->doc->line_height );
+  $self->doc->text( 'Unix time of report: ' . time() );
+  $self->doc->y( $self->doc->height );
+  $self->doc->text( 'Bottom line of header' );
 
   $self->doc->line( to_x => $self->doc->effective_width,
               to_y => $self->doc->y,
@@ -131,10 +132,9 @@ sub header {
               fill => 'off',
               width => 2 );
 
-  $self->doc->y( $self->doc->height - 60 );
+  $self->doc->y( $self->doc->height - $self->doc->line_height );
 
   $self->doc->strokecolor( $strokecolor );
-
 }
 
 sub footer {
@@ -143,7 +143,7 @@ sub footer {
   my $fillcolor = $self->doc->fill_color;
   my $font = $self->doc->current_font;
 
-  $self->doc->fill_color( '#552F55' );
+  $self->doc->fill_color( '#555555' );
 
   $self->{page_num}++;
 
