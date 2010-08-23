@@ -135,7 +135,7 @@ sub summary_record {
   my $self = shift;
   # Lays out a single CDR (generally vertically)
   my ($cdr,$param) = @_;
-  $param ||= '';
+  defined($param) or $param = '';
 
   for my $currency (sort keys %$cdr) {
     my $v = $cdr->{$currency};

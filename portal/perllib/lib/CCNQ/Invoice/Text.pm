@@ -69,6 +69,7 @@ sub summary_record {
   my $self = shift;
   # Lays out a single CDR (generally vertically)
   my ($cdr,$param) = @_;
+  defined($param) or $param = '';
 
   for my $currency (sort keys %$cdr) {
     my $v = $cdr->{$currency};
@@ -82,7 +83,7 @@ sub summary_record {
       next;
     }
     # This is actual monetary value
-    print "Before tax:   $v->{cost} $currency\n";
+    $self->_print( "Before tax:   $v->{cost} $currency\n" );
     for my $jurisdiction (sort keys %{$v->{taxes}}) {
       $self->_print( "  $jurisdiction : $v->{taxes}->{$jurisdiction} $currency\n" );
     }
