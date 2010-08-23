@@ -79,7 +79,7 @@ sub header {
   my $self = shift;
 
   $self->doc->set_font('Verdana',12);
-  $self->doc->pdf->text();
+  # $self->doc->pdf->text();
 }
 
 sub footer {
