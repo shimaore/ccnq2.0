@@ -85,7 +85,10 @@ sub next_line {
 
 sub separator {
   my $self = shift;
-  my $extra = shift || 0;
+  my $extra = 0;
+  if($@) {
+    $extra = $self->doc->text(@_);
+  }
 
   my $strokecolor = $self->doc->strokecolor;
 
@@ -183,7 +186,7 @@ sub header1 {
 
   $self->next_line;
   $self->doc->set_font('VerdanaBold',12);
-  $self->separator($self->doc->text(join(' ',$type,@params)));
+  $self->separator(join(' ',$type,@params));
   $self->next_line;
   $self->doc->set_font('Verdana',11);
 
@@ -208,7 +211,7 @@ sub header2 {
 
   $self->next_line;
   $self->doc->set_font('VerdanaBold',11);
-  $self->separator($self->doc->text(join(' ',$type,@params)));
+  $self->separator(join(' ',$type,@params));
   $self->next_line;
   $self->doc->set_font('Verdana',11);
 }
@@ -219,7 +222,7 @@ sub header3 {
 
   $self->next_line;
   $self->doc->set_font('VerdanaItalic',12);
-  $self->separator($self->doc->text(join(' ',$type,@params)));
+  $self->separator(join(' ',$type,@params));
   $self->next_line;
   $self->doc->set_font('Verdana',11);
 }
