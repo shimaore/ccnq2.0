@@ -304,10 +304,22 @@ sub start_records {
   # Start a table showing multiple CDRs
   # Generally one CDR per line
 
+  $self->doc->set_font('Verdana',10);
   $self->separator;
   $self->next_line;
-  $self->doc->text( join('|',@columns) );
+  $self->doc->x($self->doc->margin_left+0.07*$self->doc->effective_width);
+  $self->doc->text( 'duration' );
+  $self->doc->x($self->doc->margin_left+0.30*$self->doc->effective_width);
+  $self->doc->text( 'count' );
   $self->next_line;
+
+  $self->doc->x($self->doc->margin_left+0.60*$self->doc->effective_width);
+  $self->doc->text( 'cost' );
+  $self->doc->x($self->doc->margin_left+0.72*$self->doc->effective_width);
+  $self->doc->text( 'tax_amount' );
+  $self->doc->x($self->doc->margin_left+0.84*$self->doc->effective_width);
+  $self->doc->text( 'total_cost' );
+
 }
 
 sub cdr_line {
@@ -316,7 +328,31 @@ sub cdr_line {
   # Prints the record that contains the sum for this table
   # (generally the last one in the table)
 
-  $self->doc->text( join('|',map { $cdr->{$_}||'' } @columns), autoflow => 'on' );
+  $self->doc->set_font('Verdana',10);
+  $self->doc->x($self->doc->margin_left+0.00*$self->doc->effective_width);
+  $self->doc->text("$cdr->{start_date} $cdr->{start_time} $cdr->{event_type}");
+  $self->doc->x($self->doc->margin_left+0.70*$self->doc->effective_width);
+  $self->doc->text("$cdr->{from_e164} $cdr->{to_e164}");
+  $self->next_line;
+
+  $self->doc->x($self->doc->margin_left+0.60*$self->doc->effective_width);
+  $self->doc->text($cdr->{cost});
+  $self->doc->x($self->doc->margin_left+0.72*$self->doc->effective_width);
+  $self->doc->text($cdr->{tax_amount});
+  $self->doc->x($self->doc->margin_left+0.84*$self->doc->effective_width);
+  $self->doc->text($cdr->{total_cost});
+
+
+  if($cdr->{duration}) {
+    $self->doc->x($self->doc->margin_left+0.07*$self->doc->effective_width);
+    $self->doc->text($cdr->{duration});
+  }
+
+  if($cdr->{count} && $cdr->{count} <> 1) {
+    $self->doc->x($self->doc->margin_left+0.30*$self->doc->effective_width);
+    $self->doc->text(sprintf("%0.4f",$cdr->{count}));
+  }
+
   $self->next_line;
 }
 
