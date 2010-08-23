@@ -140,6 +140,10 @@ sub submit_number {
     inbound_username
   ));
 
+  $params->{location} ||= $endpoint_data->{location}
+    if CCNQ::Portal->site->numbers_require_location ||
+       CCNQ::Portal->site->update_location_for_number;
+
   return CCNQ::Portal::Inner::Util::update_number($account,$number,$params);
 }
 
