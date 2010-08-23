@@ -154,7 +154,7 @@ sub footer {
 
   $self->doc->set_font( 'Verdana', 11 );
   $self->doc->text( 'Page ' . $self->{page_num},
-    to_x => $self->doc->width_right,
+    x => $self->doc->width_right,
     y => 3*$self->doc->line_height,
     align => 'right' );
 
