@@ -46,8 +46,8 @@ sub init {
     line_height => 11,
   );
 
-  $self->header( sub { $self->header(@_) } );
-  $self->footer( sub { $self->footer(@_) } );
+  $self->doc->header( sub { $self->header(@_) } );
+  $self->doc->footer( sub { $self->footer(@_) } );
 
   $self->set_margins();
 
