@@ -20,8 +20,8 @@ use base qw(CCNQ::Invoice);
 use PDF::API2::Simple;
 use IO::String;
 
-# This could use Paper::Specs if the module wasn't "ALPHA" in big bold
-# letters.
+# use PDF::API2::Util;
+# my %sizes = PDF::API2::Util::getPaperSizes();
 
 use constant IN_TO_PT  => 72;
 use constant CM_TO_PT  => 72/2.54;
@@ -79,12 +79,123 @@ sub header {
   my $self = shift;
 
   $self->doc->set_font('Verdana',12);
-  $self->doc->pdf->text
+  $self->doc->pdf->text();
 }
 
 sub footer {
   my $self = shift;
 
 }
+
+=head1 Functions dedicated to the layout
+
+=cut
+
+sub header1 {
+  my $self = shift;
+  my ($type,@params) = @_;
+
+  $self->doc->text("* Header: $type\n");
+  $self->doc->text(join(',',@params)."\n");
+  if($type eq 'invoice') {
+    $self->doc->text( join('', map { "$_\n" }
+      "Account: ".$self->account,
+      "Account name: ".$self->account_data->{name},
+
+      "Invoice for the month of: ".join('/',$self->year,$self->month),
+      "Invoiced on: ".$self->billed,
+    ) );
+  }
+}
+
+sub header2 {
+  my $self = shift;
+  my ($type,@params) = @_;
+
+  $self->doc->text("** Header: $type\n");
+  $self->doc->text( join(',',@params)."\n" );
+}
+
+sub header3 {
+  my $self = shift;
+  my ($type,@params) = @_;
+
+  $self->doc->text("*** Header: $type\n");
+  $self->doc->text( join(',',@params)."\n" );
+}
+
+sub summary_record {
+  my $self = shift;
+  # Lays out a single CDR (generally vertically)
+  my ($cdr,$param) = @_;
+
+  for my $currency (sort keys %$cdr) {
+    my $v = $cdr->{$currency};
+
+    if($currency eq 'count') {
+      $self->doc->text("$v $param\n");
+      next;
+    }
+    if($currency eq 'duration') {
+      $self->doc->text("$v seconds\n");
+      next;
+    }
+    # This is actual monetary value
+    $self->doc->text("Before tax:   $v->{cost} $currency\n");
+    for my $jurisdiction (sort keys %{$v->{taxes}}) {
+      $self->doc->text("  $jurisdiction : $v->{taxes}->{$jurisdiction} $currency\n");
+    }
+    $self->doc->text("Total tax:    $v->{tax_amount} $currency\n");
+    $self->doc->text("Total amount: $v->{total_cost} $currency\n");
+  }
+}
+
+our @columns = qw(
+  count
+  event_type
+  start_date
+  start_time
+  from_e164
+  to_e164
+  duration
+  cost
+  tax_amount
+  total_cost
+);
+
+sub start_records {
+  my $self = shift;
+  # Start a table showing multiple CDRs
+  # Generally one CDR per line
+
+  $self->doc->line( to_x => $self->doc->x+$self->doc->effective_width*0.8 );
+  $self->doc->text( join('|',@columns)."\n" );
+}
+
+sub cdr_line {
+  my $self = shift;
+  my ($cdr) = @_;
+  # Prints the record that contains the sum for this table
+  # (generally the last one in the table)
+
+  $self->doc->text( join('|',map { $cdr->{$_}||'' } @columns)."\n" );
+}
+
+sub summary_line {
+  my $self = shift;
+  my ($cdr) = @_;
+
+  # Prints the record that contains the sum for this table
+  # (generally the last one in the table)
+  $self->doc->line( to_x => $self->doc->x+$self->doc->effective_width*0.8 );
+  $self->cdr_line({%$cdr,event_type=>'Total'});
+}
+
+sub stop_records {
+  my $self = shift;
+  # Ends a table showing multiple CDRs
+  $self->doc->line( to_x => $self->doc->x+$self->doc->effective_width*0.8 );
+}
+
 
 1;
