@@ -92,7 +92,7 @@ sub separator {
 
   my $strokecolor = $self->doc->strokecolor;
 
-  $self->doc->stroke_color( '#0000FF' );
+  $self->doc->stroke_color( $self->separator_color );
 
   $self->doc->line(
     x     => $self->doc->margin_left+$extra+2,
@@ -115,6 +115,9 @@ sub set_fonts {
   $self->doc->add_font('Verdana');
 }
 
+sub separator_color { '#20c020' }
+sub header_color    { '#208020' }
+
 sub header {
   my $self = shift;
 
@@ -122,13 +125,14 @@ sub header {
 
   my $strokecolor = $self->doc->strokecolor;
 
-  $self->doc->stroke_color( '#0000FF' );
+  $self->doc->stroke_color( $self->header_color );
 
-
-  $self->doc->y( $self->doc->height-3*$self->doc->line_height );
-  $self->doc->text( 'Unix time of report: ' . time() );
-  $self->doc->y( $self->doc->height-4*$self->doc->line_height );
-  $self->doc->text( 'Bottom line of header' );
+  my $text = $self->account . " - " . join('/',$self->year,$self->month);
+  $self->doc->text( $text,
+    x => $self->doc->width_right,
+    y => $self->doc->height-3*$self->doc->line_height,
+    align => 'right',
+  );
 
   $self->doc->line(
     x    => $self->doc->margin_left,
@@ -151,7 +155,7 @@ sub footer {
   my $font = $self->doc->current_font;
   my $strokecolor = $self->doc->strokecolor;
 
-  $self->doc->stroke_color( '#0000FF' );
+  $self->doc->stroke_color( $self->header_color );
   $self->doc->fill_color( '#555555' );
 
   $self->{page_num}++;
@@ -160,7 +164,8 @@ sub footer {
   $self->doc->text( 'Page ' . $self->{page_num},
     x => $self->doc->width_right,
     y => 3*$self->doc->line_height,
-    align => 'right' );
+    align => 'right',
+  );
 
   $self->doc->line(
     x    => $self->doc->margin_left,
@@ -241,12 +246,12 @@ sub summary_record {
   $self->header3($param);
 
   if($cdr->{duration}) {
-    $self->doc->x($self->doc->margin_left);
+    $self->doc->x($self->doc->margin_left+0.07*$self->doc->effective_width);
     $self->doc->text("$cdr->{duration} seconds");
   }
 
   if($cdr->{count}) {
-    $self->doc->x($self->doc->margin_left+0.33*$self->doc->effective_width);
+    $self->doc->x($self->doc->margin_left+0.40*$self->doc->effective_width);
     $self->doc->text(sprintf("%0.4f units",$cdr->{count}));
   }
 
