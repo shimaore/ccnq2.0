@@ -52,6 +52,18 @@ use base qw(CCNQ::Object);
 
 =cut
 
+use CCNQ::Locale;
+
+sub locale  {
+  my $self = shift;
+  if(!$self->{_locale}) {
+    $self->{_locale} = CCNQ::Locale->new($self->{locale});
+  }
+  return $self->{_locale};
+}
+
+sub loc     { shift->locale->loc(@_) }
+
 sub account { shift->{account} }
 
 # Period start-date
