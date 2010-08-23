@@ -116,7 +116,8 @@ sub submit_number {
   my $params = CCNQ::Portal::Inner::Util::get_number($account,$number);
 
   # Validate that the number is in this account.
-  $params->{account} eq $account || CCNQ::Portal->current_session->user->profile->is_admin
+  CCNQ::Portal->current_session->user->profile->is_admin ||
+  $params->{account} eq $account
     or return CCNQ::Portal::content( error => _('Unauthorized for this number')_ );
 
   $params = {
