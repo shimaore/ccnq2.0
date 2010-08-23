@@ -55,6 +55,11 @@ sub init {
   $self->doc->add_page();
 }
 
+sub as_string {
+  my $self = shift;
+  return $self->doc->as_string;
+}
+
 sub set_margins {
   my $self = shift;
 

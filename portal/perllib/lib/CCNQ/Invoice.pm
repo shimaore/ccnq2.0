@@ -125,6 +125,7 @@ sub run {
   $self->do_account_subs();
 
   $self->do_detail();
+  return $self->as_string;
 }
 
 sub do_account_subs {

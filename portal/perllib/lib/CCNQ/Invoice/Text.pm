@@ -27,6 +27,11 @@ sub init {
   $self->{doc} = '';
 }
 
+sub as_string {
+  my $self = shift;
+  return $self->{doc};
+}
+
 sub header1 {
   my $self = shift;
   my ($type,@params) = @_;
