@@ -82,7 +82,7 @@ sub account_data {
     CCNQ::API::billing('report','accounts',$self->account,$cv);
     $self->{account_data} = CCNQ::AE::receive_first_doc($cv);
   }
-  return $self->{account_data};
+  return $self->{account_data} or die "account_data not available";
 }
 
 sub account_subs {
@@ -93,7 +93,7 @@ sub account_subs {
     CCNQ::API::billing('report','account_subs',$self->account,$cv);
     $self->{account_subs} = CCNQ::AE::receive_docs($cv);
   }
-  return $self->{account_subs};
+  return $self->{account_subs} or die "account_subs not available";
 }
 
 sub invoice {
@@ -103,7 +103,7 @@ sub invoice {
     CCNQ::API::invoicing('report','monthly',$self->account,$self->year,$self->month,$cv);
     $self->{invoice} = CCNQ::AE::receive_first_doc($cv);
   }
-  return $self->{invoice};
+  return $self->{invoice} or die "invoice not available";
 }
 
 sub cdr_by_sub {
@@ -137,12 +137,20 @@ sub do_account_subs {
 
   for my $r (@$account_subs) {
     my $account_sub = $r->{account_sub};
+
     # Show summary for this sub
     $self->header2('account_sub',$r->{name});
-    $self->summary_record($by_sub->{$account_sub});
+    if( $by_sub->{$account_sub} ) {
+      $self->summary_record($by_sub->{$account_sub});
+      $self->header3('events');
+    } else {
+      $self->header3('events','no summary');
+    }
 
     # Show per-event-type summary for this sub
-    $self->header3('events');
+    $by_event->{$account_sub}
+      or next;
+
     for my $ev (sort keys %{$by_event->{$account_sub}}) {
       $self->summary_record($by_event->{$account_sub}->{$ev},$ev||'days');
     }
@@ -157,17 +165,17 @@ sub do_detail {
 
   for my $r (@$account_subs) {
     my $account_sub = $r->{account_sub};
-    # Show summary for this sub
-    $self->header2('account_sub',$r->{name});
 
     # Show details for this sub
+    $self->header2('account_sub',$r->{name});
     $self->header3('cdr','Details');
     $self->start_records;
     my $cdrs = $self->cdr_by_sub($account_sub);
     for my $cdr (@$cdrs) {
       $self->cdr_line($cdr);
     }
-    $self->summary_line($by_sub->{$account_sub});
+    $by_sub->{$account_sub}
+      and $self->summary_line($by_sub->{$account_sub});
     $self->stop_records;
   }
 }
