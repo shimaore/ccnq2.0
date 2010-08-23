@@ -115,7 +115,7 @@ sub header1 {
   my ($type,@params) = @_;
 
   $self->doc->set_font('VerdanaBold',12);
-  $self->doc->text(join(' ',$type,@params);
+  $self->doc->text(join(' ',$type,@params));
   $self->doc->line( x => 0, to_x => $self->doc->effective_width );
   $self->next_line;
   $self->doc->set_font('Verdana',11);
@@ -136,7 +136,7 @@ sub header2 {
   my ($type,@params) = @_;
 
   $self->doc->set_font('VerdanaBold',11);
-  $self->doc->text(join(' ',$type,@params);
+  $self->doc->text(join(' ',$type,@params));
   $self->next_line;
   $self->doc->set_font('Verdana',11);
 }
@@ -146,7 +146,7 @@ sub header3 {
   my ($type,@params) = @_;
 
   $self->doc->set_font('VerdanaItalic',12);
-  $self->doc->text(join(' ',$type,@params);
+  $self->doc->text(join(' ',$type,@params));
   $self->next_line;
   $self->doc->set_font('Verdana',11);
 }
