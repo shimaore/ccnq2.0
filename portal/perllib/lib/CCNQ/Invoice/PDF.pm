@@ -234,12 +234,14 @@ sub summary_record {
 
   $self->header3($param);
 
-  if($cdr->{count}) {
-    $self->doc->text("    $cdr->{count} units", autoflow => 'on' );
+  if($cdr->{duration}) {
+    $self->doc->x($self->doc->margin_left);
+    $self->doc->text("$cdr->{duration} seconds");
   }
 
-  if($cdr->{duration}) {
-    $self->doc->text("    $cdr->{duration} seconds", autoflow => 'on' );
+  if($cdr->{count}) {
+    $self->doc->x($self->doc->margin_left+0.33*$self->doc->effective_width);
+    $self->doc->text(sprintf("%0.4f units",$cdr->{count}));
   }
 
   for my $currency (sort keys %$cdr) {
