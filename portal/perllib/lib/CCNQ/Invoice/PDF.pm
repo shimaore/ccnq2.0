@@ -72,6 +72,16 @@ sub set_margins {
   $self->doc->margin_bottom (0.1*A4_WIDTH+2*$self->doc->line_height);
 }
 
+sub next_line {
+  my $self = shift;
+
+  if( $self->doc->next_line_would_extend_page ) {
+    $self->doc->add_page;
+  } else {
+    $self->doc->next_line;
+  }
+}
+
 sub print_header {
   my $self = shift;
 
@@ -104,19 +114,19 @@ sub header1 {
   my ($type,@params) = @_;
 
   $self->doc->text("* Header: $type");
-  $self->doc->next_line;
+  $self->next_line;
   $self->doc->text(join(',',@params));
-  $self->doc->next_line;
+  $self->next_line;
   if($type eq 'invoice') {
     $self->doc->text( "Account: ".$self->account );
-    $self->doc->next_line;
+    $self->next_line;
     $self->doc->text( "Account name: ".$self->account_data->{name} );
-    $self->doc->next_line;
+    $self->next_line;
 
     $self->doc->text(  "Invoice for the month of: ".join('/',$self->year,$self->month) );
-    $self->doc->next_line;
+    $self->next_line;
     $self->doc->text(  "Invoiced on: ".$self->billed );
-    $self->doc->next_line;
+    $self->next_line;
   }
 }
 
@@ -125,9 +135,9 @@ sub header2 {
   my ($type,@params) = @_;
 
   $self->doc->text("** Header: $type");
-  $self->doc->next_line;
+  $self->next_line;
   $self->doc->text( join(',',@params) );
-  $self->doc->next_line;
+  $self->next_line;
 }
 
 sub header3 {
@@ -135,9 +145,9 @@ sub header3 {
   my ($type,@params) = @_;
 
   $self->doc->text("*** Header: $type");
-  $self->doc->next_line;
+  $self->next_line;
   $self->doc->text( join(',',@params) );
-  $self->doc->next_line;
+  $self->next_line;
 }
 
 sub summary_record {
@@ -151,24 +161,24 @@ sub summary_record {
 
     if($currency eq 'count') {
       $self->doc->text("$v $param");
-      $self->doc->next_line;
+      $self->next_line;
       next;
     }
     if($currency eq 'duration') {
       $self->doc->text("$v seconds");
-      $self->doc->next_line;
+      $self->next_line;
       next;
     }
     # This is actual monetary value
     $self->doc->text("Before tax:   $v->{cost} $currency",align => 'right');
     for my $jurisdiction (sort keys %{$v->{taxes}}) {
       $self->doc->text("  $jurisdiction : $v->{taxes}->{$jurisdiction} $currency", align => 'right');
-      $self->doc->next_line;
+      $self->next_line;
     }
     $self->doc->text("Total tax:    $v->{tax_amount} $currency",align => 'right');
-    $self->doc->next_line;
+    $self->next_line;
     $self->doc->text("Total amount: $v->{total_cost} $currency",align => 'right');
-    $self->doc->next_line;
+    $self->next_line;
   }
 }
 
@@ -192,7 +202,7 @@ sub start_records {
 
   $self->doc->line( to_x => $self->doc->x+$self->doc->effective_width*0.8 );
   $self->doc->text( join('|',@columns) );
-  $self->doc->next_line;
+  $self->next_line;
 }
 
 sub cdr_line {
@@ -202,7 +212,7 @@ sub cdr_line {
   # (generally the last one in the table)
 
   $self->doc->text( join('|',map { $cdr->{$_}||'' } @columns) );
-  $self->doc->next_line;
+  $self->next_line;
 }
 
 sub summary_line {
@@ -213,14 +223,14 @@ sub summary_line {
   # (generally the last one in the table)
   $self->doc->line( to_x => ($self->doc->x + 0.80*$self->doc->effective_width) );
   $self->cdr_line({%$cdr,event_type=>'Total'});
-  $self->doc->next_line;
+  $self->next_line;
 }
 
 sub stop_records {
   my $self = shift;
   # Ends a table showing multiple CDRs
   $self->doc->line( to_x => $self->doc->x+$self->doc->effective_width*0.8 );
-  $self->doc->next_line;
+  $self->next_line;
 }
 
 
