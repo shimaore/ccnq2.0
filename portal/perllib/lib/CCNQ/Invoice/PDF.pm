@@ -250,6 +250,7 @@ sub summary_record {
 
 sub monetary_record {
   my $self = shift;
+  my ($cdr) = @_;
 
   for my $currency (sort keys %$cdr) {
     next if $currency eq 'count' || $currency eq 'duration';
