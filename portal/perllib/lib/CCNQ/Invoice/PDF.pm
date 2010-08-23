@@ -103,10 +103,10 @@ sub header1 {
   my $self = shift;
   my ($type,@params) = @_;
 
-  $self->doc->text("* Header: $type\n");
-  $self->doc->text(join(',',@params)."\n");
+  $self->doc->text("* Header: $type");
+  $self->doc->text(join(',',@params));
   if($type eq 'invoice') {
-    $self->doc->text( join('', map { "$_\n" }
+    $self->doc->text( join(' ',
       "Account: ".$self->account,
       "Account name: ".$self->account_data->{name},
 
@@ -120,16 +120,16 @@ sub header2 {
   my $self = shift;
   my ($type,@params) = @_;
 
-  $self->doc->text("** Header: $type\n");
-  $self->doc->text( join(',',@params)."\n" );
+  $self->doc->text("** Header: $type");
+  $self->doc->text( join(',',@params) );
 }
 
 sub header3 {
   my $self = shift;
   my ($type,@params) = @_;
 
-  $self->doc->text("*** Header: $type\n");
-  $self->doc->text( join(',',@params)."\n" );
+  $self->doc->text("*** Header: $type");
+  $self->doc->text( join(',',@params) );
 }
 
 sub summary_record {
@@ -142,20 +142,20 @@ sub summary_record {
     my $v = $cdr->{$currency};
 
     if($currency eq 'count') {
-      $self->doc->text("$v $param\n");
+      $self->doc->text("$v $param");
       next;
     }
     if($currency eq 'duration') {
-      $self->doc->text("$v seconds\n");
+      $self->doc->text("$v seconds");
       next;
     }
     # This is actual monetary value
-    $self->doc->text("Before tax:   $v->{cost} $currency\n");
+    $self->doc->text("Before tax:   $v->{cost} $currency",align => 'right');
     for my $jurisdiction (sort keys %{$v->{taxes}}) {
-      $self->doc->text("  $jurisdiction : $v->{taxes}->{$jurisdiction} $currency\n");
+      $self->doc->text("  $jurisdiction : $v->{taxes}->{$jurisdiction} $currency", align => 'right');
     }
-    $self->doc->text("Total tax:    $v->{tax_amount} $currency\n");
-    $self->doc->text("Total amount: $v->{total_cost} $currency\n");
+    $self->doc->text("Total tax:    $v->{tax_amount} $currency",align => 'right');
+    $self->doc->text("Total amount: $v->{total_cost} $currency",align => 'right');
   }
 }
 
@@ -178,7 +178,7 @@ sub start_records {
   # Generally one CDR per line
 
   $self->doc->line( to_x => $self->doc->x+$self->doc->effective_width*0.8 );
-  $self->doc->text( join('|',@columns)."\n" );
+  $self->doc->text( join('|',@columns) );
 }
 
 sub cdr_line {
@@ -187,7 +187,7 @@ sub cdr_line {
   # Prints the record that contains the sum for this table
   # (generally the last one in the table)
 
-  $self->doc->text( join('|',map { $cdr->{$_}||'' } @columns)."\n" );
+  $self->doc->text( join('|',map { $cdr->{$_}||'' } @columns) );
 }
 
 sub summary_line {
