@@ -128,7 +128,7 @@ sub header {
 
   $self->doc->line(
     x    => $self->doc->margin_left,
-    to_x => $self->doc->effective_width,
+    to_x => $self->doc->width_right,
     y    => $self->doc->height-$self->doc->margin_top,
     to_y => $self->doc->height-$self->doc->margin_top,
     stroke => 'on',
@@ -154,13 +154,13 @@ sub footer {
 
   $self->doc->set_font( 'Verdana', 11 );
   $self->doc->text( 'Page ' . $self->{page_num},
-              x => $self->doc->effective_width,
-              y => 20,
-              align => 'right' );
+    to_x => $self->doc->width_right,
+    y => 3*$self->doc->line_height,
+    align => 'right' );
 
   $self->doc->line(
     x    => $self->doc->margin_left,
-    to_x => $self->doc->effective_width,
+    to_x => $self->doc->width_right,
     y    => $self->doc->margin_bottom,
     to_y => $self->doc->margin_bottom,
     stroke => 'on',
