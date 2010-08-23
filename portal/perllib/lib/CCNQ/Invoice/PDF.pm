@@ -80,6 +80,7 @@ sub next_line {
   } else {
     $self->doc->next_line;
   }
+  $self->doc->x(0);
 }
 
 sub print_header {
