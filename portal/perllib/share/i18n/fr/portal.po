@@ -84,8 +84,8 @@ msgstr "Enregistrer"
 msgid "No account available"
 msgstr "Indisponible"
 
-msgid "[_1] units"
-msgstr "[_1] unités"
+msgid "%1 units"
+msgstr "%1 unités"
 
 msgid "Before tax"
 msgstr "H.T."
