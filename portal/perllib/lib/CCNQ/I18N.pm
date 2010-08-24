@@ -56,13 +56,15 @@ sub encoding {
 
 # Note that numf and quant are provided by default.
 
+package CCNQ::I18N::en;
+
 sub duration {
   my $self = shift;
   my ($seconds) = @_;
   return $self->numf($seconds)." seconds";
 }
 
-sub timestamp {
+sub time {
   my $self = shift;
   my ($timestamp) = @_;
   return scalar(gmtime($timestamp));
@@ -82,5 +84,32 @@ sub amount {
   return $currency.$self->numf($value);
 }
 
+package CCNQ::I18N::fr;
+
+sub duration {
+  my $self = shift;
+  my ($seconds) = @_;
+  return $self->numf($seconds)." secondes";
+}
+
+sub time {
+  my $self = shift;
+  my ($timestamp) = @_;
+  return scalar(gmtime($timestamp));
+}
+
+sub date {
+  my $self = shift;
+  my ($timestamp) = @_;
+  return scalar(gmtime($timestamp));
+}
+
+sub amount {
+  my $self = shift;
+  my ($currency,$value) = @_;
+  $currency ||= '';
+  # See e.g. Number::Format's format_price
+  return $self->numf($value).$currency;
+}
 
 'CCNQ::I18N';
