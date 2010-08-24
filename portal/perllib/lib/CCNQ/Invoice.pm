@@ -177,6 +177,9 @@ sub do_account_subs {
       or next;
 
     for my $ev (sort keys %{$by_event->{$account_sub}}) {
+      # Restrict to the higher levels for now -- we probably don't have
+      # translations for the lower ones.
+      next unless $ev =~ /^\w+_\w+$/; # count_*, *_call, ..
       $self->summary_record($by_event->{$account_sub}->{$ev},$self->loc($ev||'days'));
     }
   }
