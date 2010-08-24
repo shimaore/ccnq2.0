@@ -265,6 +265,7 @@ sub monetary_record {
   for my $currency (sort keys %$cdr) {
     next if $currency eq 'count' || $currency eq 'duration';
 
+    use bignum;
     my $v = $cdr->{$currency};
 
     # This is actual monetary value
@@ -359,11 +360,13 @@ sub cdr_line {
   }
 
   if($cdr->{duration}) {
+    use bignum;
     $self->doc->x($self->doc->margin_left+0.07*$self->doc->effective_width);
     $self->doc->text($self->loc("[duration,_1]",$cdr->{duration}));
   }
 
   if($cdr->{count} && $cdr->{count} != 1) {
+    use bignum;
     $self->doc->x($self->doc->margin_left+0.30*$self->doc->effective_width);
     $self->doc->text(sprintf("%0.4f",$cdr->{count}));
   }
