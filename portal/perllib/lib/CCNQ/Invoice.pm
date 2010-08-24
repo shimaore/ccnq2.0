@@ -167,7 +167,7 @@ sub do_account_subs {
     my $account_sub = $r->{account_sub};
 
     # Show summary for this sub
-    $self->header2($self->loc('sub-account'),$r->{name});
+    $self->header2($r->{name});
     if( $by_sub->{$account_sub} ) {
       $self->monetary_record($by_sub->{$account_sub});
     }
@@ -195,7 +195,7 @@ sub do_detail {
     my $account_sub = $r->{account_sub};
 
     # Show details for this sub
-    $self->header2($self->loc('sub-account'),$r->{name},$self->loc('CDR'));
+    $self->header2($r->{name},$self->loc('CDR'));
     $self->start_records;
     my $cdrs = $self->cdr_by_sub($account_sub);
     for my $cdr (@$cdrs) {

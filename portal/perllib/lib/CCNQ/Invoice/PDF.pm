@@ -212,11 +212,11 @@ sub header1 {
 
 sub header2 {
   my $self = shift;
-  my ($type,@params) = @_;
+  my (@params) = @_;
 
   $self->next_line;
   $self->doc->set_font('VerdanaBold',11);
-  $self->separator(join(' ',$type,@params));
+  $self->separator(join(' ',@params));
   $self->next_line;
   $self->doc->set_font('Verdana',11);
 }
