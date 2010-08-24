@@ -46,40 +46,58 @@ sub encoding {
   return 'utf-8';
 }
 
+sub duration {
+  my $self = shift;
+  my ($seconds) = @_;
+  my $hours = int($seconds / 3600);
+  $seconds -= $hours*3600;
+  my $minutes = int($seconds / 60);
+  $seconds -= $minutes*60;
+
+  my @text = ();
+  $hours   and push @text, "${hours}h";
+  $minutes and push @text, "${minutes}m";
+  push @text, "${seconds}s";
+  return join(' ',@text);
+}
+
+# These follow DateTime conventions.
+sub time {
+  my $self = shift;
+  my ($time) = @_;
+  return $time->hms;
+}
+
+
 package CCNQ::I18N::en;
+
+use base qw(CCNQ::I18N);
 
 use Lingua::EN::Numbers::Ordinate;
 sub ord { ordinate($_[1]) }
 
 # Note that numf and quant are provided by default.
 
-sub duration {
-  my $self = shift;
-  my ($seconds) = @_;
-  return $self->numf($seconds)." seconds";
-}
-
-sub time {
-  my $self = shift;
-  my ($timestamp) = @_;
-  return scalar(gmtime($timestamp));
-}
+# These follow DateTime conventions.
 
 sub date {
   my $self = shift;
-  my ($timestamp) = @_;
-  return scalar(gmtime($timestamp));
+  my ($date) = @_;
+  return $date->mdy('/');
 }
 
 sub amount {
   my $self = shift;
-  my ($currency,$value) = @_;
+  my ($value,$currency) = @_;
   $currency ||= '';
   # See e.g. Number::Format's format_price
   return $currency.$self->numf($value);
 }
 
+
 package CCNQ::I18N::fr;
+
+use base qw(CCNQ::I18N);
 
 use Lingua::FR::Numbers qw(number_to_fr ordinate_to_fr);
 sub numf{ number_to_fr($_[1]) }
@@ -87,27 +105,17 @@ sub ord { ordinate_to_fr($_[1]) }
 #use Lingua::FR::Numbers::Ordinate;
 #sub fr::ord { ordinate_fr($_[1]) }
 
-sub duration {
-  my $self = shift;
-  my ($seconds) = @_;
-  return $self->numf($seconds)." secondes";
-}
-
-sub time {
-  my $self = shift;
-  my ($timestamp) = @_;
-  return scalar(gmtime($timestamp));
-}
+# These follow DateTime conventions.
 
 sub date {
   my $self = shift;
-  my ($timestamp) = @_;
-  return scalar(gmtime($timestamp));
+  my ($date) = @_;
+  return $date->dmy('/');
 }
 
 sub amount {
   my $self = shift;
-  my ($currency,$value) = @_;
+  my ($value,$currency) = @_;
   $currency ||= '';
   # See e.g. Number::Format's format_price
   return $self->numf($value).$currency;

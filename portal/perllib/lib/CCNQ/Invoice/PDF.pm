@@ -290,19 +290,6 @@ sub monetary_record {
   }
 }
 
-our @columns = qw(
-  count
-  event_type
-  start_date
-  start_time
-  from_e164
-  to_e164
-  duration
-  cost
-  tax_amount
-  total_cost
-);
-
 sub start_records {
   my $self = shift;
   # Start a table showing multiple CDRs
@@ -326,16 +313,28 @@ sub start_records {
   $self->next_line;
 }
 
+use DateTime;
+use DateTime::Duration;
+
 sub cdr_line {
   my $self = shift;
   my ($cdr) = @_;
   # Prints the record that contains the sum for this table
   # (generally the last one in the table)
 
+  my $datetime = DateTime->new(
+    year    => substr($cdr->{start_date},0,4),
+    month   => substr($cdr->{start_date},4,2),
+    day     => substr($cdr->{start_date},6,2),
+    hour    => substr($cdr->{start_time},0,2),
+    minute  => substr($cdr->{start_time},2,2),
+    second  => substr($cdr->{start_time},4,2),
+  );
+
   $self->doc->set_font('Verdana',10);
   $self->doc->x($self->doc->margin_left+0.00*$self->doc->effective_width);
   $self->doc->text(
-    $self->loc("[date,_1] [time,_1] [_1]",$cdr->{start_date},$cdr->{start_time},$cdr->{event_type})
+    $self->loc("[date,_1] [time,_1] [_1]",$datetime,$datetime,$cdr->{event_type})
   );
   $self->doc->x($self->doc->margin_left+0.70*$self->doc->effective_width);
   if($cdr->{from_e164} || $cdr->{to_e164}) {
