@@ -100,7 +100,7 @@ package CCNQ::I18N::fr;
 use base qw(CCNQ::I18N);
 
 use Lingua::FR::Numbers qw(number_to_fr ordinate_to_fr);
-sub numf{ number_to_fr($_[1]) }
+sub numb{ number_to_fr($_[1]) }
 sub ord { ordinate_to_fr($_[1]) }
 #use Lingua::FR::Numbers::Ordinate;
 #sub fr::ord { ordinate_fr($_[1]) }
