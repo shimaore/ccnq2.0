@@ -111,3 +111,29 @@ msgstr "taxes"
 msgid "total cost"
 msgstr "total"
 
+msgid "Invoice Summary"
+msgstr "Montants facturés"
+
+msgid "account_sub"
+msgid "sous-compte"
+
+msgid "ingress_call"
+msgstr "appel entrant"
+
+msgid "egress_call"
+msgstr "appel sortant"
+
+msgid "count_endpoint"
+msgstr "nombre de sites"
+
+msgid "count_number"
+msgstr "nombre de numéros"
+
+msgid "days"
+msgstr "jours"
+
+msgid "CDR"
+msgstr "Détail des appels"
+
+msgid "Your invoice"
+msgstr "Votre facture"

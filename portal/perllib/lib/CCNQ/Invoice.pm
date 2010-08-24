@@ -38,6 +38,21 @@ generate summaries, etc.
 However the layout is not fixed and this code will attempt to provide
 flexibility.
 
+=head1 SYNOPSIS
+
+
+  use CCNQ::Invoice::PDF;
+
+  my $generator = CCNQ::Invoice::PDF->new({
+    account=>"stephane",
+    year=>2010,
+    month=>7,
+    locale=>"fr"
+  });
+
+  # Print out the PDF
+  print $generator->run();
+
 =cut
 
 use base qw(CCNQ::Object);
@@ -49,6 +64,7 @@ use base qw(CCNQ::Object);
   account
   year
   month
+  locale
 
 =cut
 
@@ -73,7 +89,7 @@ sub day     { shift->invoice->{day} }
 
 =head2 billed
 
-Billed date
+Billed date (YYYYMMDD)
 
 =cut
 
