@@ -195,19 +195,24 @@ sub header1 {
   $self->next_line;
   $self->doc->set_font('Verdana',11);
 
-  if($type eq 'invoice') {
-    my $text =
-      "Account: ".$self->account .
-      " - " . $self->account_data->{name};
-    $self->doc->text( $text, autflow => 'on' );
-    $self->next_line;
+  my $text = $self->loc("Account [_1] - [_2]",
+    $self->account,
+    $self->account_data->{name},
+  );
+  $self->doc->text( $text, autflow => 'on' );
+  $self->next_line;
 
-    my $text2 =
-      "Your invoice of ".$self->billed .
-      " for the month of: ".join('/',$self->year,$self->month);
-    $self->doc->text( $text2, autoflow => 'on' );
-    $self->next_line;
-  }
+  my $billed = DateTime->new(
+    year  => substr($self->billed,0,4),
+    month => substr($self->billed,4,2),
+    day   => substr($self->billed,6,2),
+  );
+  my $text2 = $self->loc("Your invoice dated [date,_1] for the month of [_2]",
+    $billed,
+    join('/',$self->year,$self->month),
+  );
+  $self->doc->text( $text2, autoflow => 'on' );
+  $self->next_line;
 }
 
 sub header2 {

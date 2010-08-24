@@ -137,3 +137,9 @@ msgstr "Détail des appels"
 
 msgid "Your invoice"
 msgstr "Votre facture"
+
+msgid "Your invoice dated %date(%1) for the month of %2"
+msgstr "Votre facture du %date(%1) pour le mois de %2"
+
+msgid "Account %1 - %2"
+msgstr "Compte %1 - %2"
