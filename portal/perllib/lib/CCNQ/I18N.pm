@@ -107,8 +107,6 @@ package CCNQ::I18N::fr;
 
 use base qw(CCNQ::I18N);
 
-use constant EN_SPACE => "\x{2002}";
-
 use Lingua::FR::Numbers qw(number_to_fr ordinate_to_fr);
 sub numb{ number_to_fr($_[1]) }
 sub ord { ordinate_to_fr($_[1]) }
@@ -128,7 +126,7 @@ sub amount {
   my ($value,$currency) = @_;
   $currency ||= '';
   # See e.g. Number::Format's format_price
-  return $self->numf($value).EN_SPACE.$currency;
+  return $self->numf($value)." ".$currency;
 }
 
 'CCNQ::I18N';
