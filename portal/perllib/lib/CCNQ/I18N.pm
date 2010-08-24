@@ -69,7 +69,7 @@ sub time {
 }
 
 # See also Data::Money, Locale::Currency, etc.
-sub currencies {
+sub currencies() {
   return {
     'EUR' => "\x{20AC}",
     'USD' => 'US$',
