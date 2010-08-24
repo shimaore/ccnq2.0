@@ -69,7 +69,7 @@ sub time {
 }
 
 # See also Data::Money, Locale::Currency, etc.
-sub currencies() {
+sub currencies {
   return {
     'EUR' => "\x{20AC}",
     'USD' => 'US$',
@@ -98,7 +98,7 @@ sub amount {
   my $self = shift;
   my ($value,$currency) = @_;
   $currency ||= '';
-  exists currencies->{$currency} and $currency = currencies->{$currency};
+  exists currencies()->{$currency} and $currency = currencies()->{$currency};
   # See e.g. Number::Format's format_price
   return $currency.$self->numf($value);
 }
@@ -126,7 +126,7 @@ sub amount {
   my $self = shift;
   my ($value,$currency) = @_;
   $currency ||= '';
-  exists currencies->{$currency} and $currency = currencies->{$currency};
+  exists currencies()->{$currency} and $currency = currencies()->{$currency};
   # See e.g. Number::Format's format_price
   return $self->numf($value)." ".$currency;
 }
