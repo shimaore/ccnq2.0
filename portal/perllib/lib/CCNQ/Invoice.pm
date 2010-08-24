@@ -130,7 +130,7 @@ sub cdr_by_sub {
 sub run {
   my $self = shift;
 
-  $self->header1('invoice');
+  $self->header1($self->loc('Your invoice'));
 
   $self->do_summary();
 
@@ -176,7 +176,7 @@ sub do_detail {
     my $account_sub = $r->{account_sub};
 
     # Show details for this sub
-    $self->header2('account_sub',$r->{name},'CDR');
+    $self->header2($self->loc('account_sub'),$r->{name},$self->loc('CDR'));
     $self->start_records;
     my $cdrs = $self->cdr_by_sub($account_sub);
     for my $cdr (@$cdrs) {
@@ -191,7 +191,7 @@ sub do_detail {
 sub do_summary {
   my $self = shift;
 
-  $self->header2('summary');
+  $self->header2($self->loc('Invoice Summary'));
   $self->monetary_record($self->summary);
 }
 

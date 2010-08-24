@@ -247,12 +247,12 @@ sub summary_record {
 
   if($cdr->{duration}) {
     $self->doc->x($self->doc->margin_left+0.07*$self->doc->effective_width);
-    $self->doc->text("$cdr->{duration} seconds");
+    $self->doc->text($self->loc('[duration,_1]',$cdr->{duration}));
   }
 
   if($cdr->{count} && $cdr->{count} != 1) {
     $self->doc->x($self->doc->margin_left+0.40*$self->doc->effective_width);
-    $self->doc->text(sprintf("%0.4f units",$cdr->{count}));
+    $self->doc->text($self->loc('[_1] units',sprintf("%0.4f",$cdr->{count})));
   }
 
   $self->monetary_record($cdr);
@@ -269,18 +269,22 @@ sub monetary_record {
 
     # This is actual monetary value
     next unless $v->{total_cost};
-    $self->doc->text("Before tax:   $v->{cost} $currency",
+    $self->doc->text(
+      $self->loc("Before tax: [amount,_1,_2]",$v->{cost},$currency),
       align => 'right', x => $self->doc->width_right );
     $self->next_line;
     for my $jurisdiction (sort keys %{$v->{taxes}}) {
-      $self->doc->text("  $jurisdiction : $v->{taxes}->{$jurisdiction} $currency",
+      $self->doc->text(
+        "  $jurisdiction ".$self->loc("[amount,_1,_2]",$v->{taxes}->{$jurisdiction},$currency),
         align => 'right', x => $self->doc->width_right );
       $self->next_line;
     }
-    $self->doc->text("Total tax:    $v->{tax_amount} $currency",
+    $self->doc->text(
+      $self->loc("Total tax: [amount,_1,_2]",$v->{tax_amount},$currency),
       align => 'right', x => $self->doc->width_right );
     $self->next_line;
-    $self->doc->text("Total amount: $v->{total_cost} $currency",
+    $self->doc->text(
+      $self->loc("Total amount: [amount,_1,_2]",$v->{total_cost},$currency),
       align => 'right', x => $self->doc->width_right );
     $self->next_line;
   }
@@ -308,16 +312,16 @@ sub start_records {
   $self->separator;
   $self->next_line;
   $self->doc->x($self->doc->margin_left+0.07*$self->doc->effective_width);
-  $self->doc->text( 'duration' );
+  $self->doc->text( $self->loc('duration') );
   $self->doc->x($self->doc->margin_left+0.30*$self->doc->effective_width);
-  $self->doc->text( 'count' );
+  $self->doc->text( $self->loc('count') );
 
   $self->doc->x($self->doc->margin_left+0.60*$self->doc->effective_width);
-  $self->doc->text( 'cost' );
+  $self->doc->text( $self->loc('cost') );
   $self->doc->x($self->doc->margin_left+0.72*$self->doc->effective_width);
-  $self->doc->text( 'tax_amount' );
+  $self->doc->text( $self->loc('tax_amount') );
   $self->doc->x($self->doc->margin_left+0.84*$self->doc->effective_width);
-  $self->doc->text( 'total_cost' );
+  $self->doc->text( $self->loc('total_cost') );
 
   $self->next_line;
 }
@@ -330,7 +334,9 @@ sub cdr_line {
 
   $self->doc->set_font('Verdana',10);
   $self->doc->x($self->doc->margin_left+0.00*$self->doc->effective_width);
-  $self->doc->text("$cdr->{start_date} $cdr->{start_time} $cdr->{event_type}");
+  $self->doc->text(
+    $self->loc("[date,_1] [time,_1] [_1]",$cdr->{start_date},$cdr->{start_time},$cdr->{event_type})
+  );
   $self->doc->x($self->doc->margin_left+0.70*$self->doc->effective_width);
   if($cdr->{from_e164} || $cdr->{to_e164}) {
     $self->doc->text("$cdr->{from_e164} -> $cdr->{to_e164}");
@@ -339,17 +345,17 @@ sub cdr_line {
 
   if($cdr->{total_cost}) {
     $self->doc->x($self->doc->margin_left+0.60*$self->doc->effective_width);
-    $self->doc->text($cdr->{cost});
+    $self->doc->text($self->loc("[amount,_1]",$cdr->{cost}));
     $self->doc->x($self->doc->margin_left+0.72*$self->doc->effective_width);
-    $self->doc->text($cdr->{tax_amount});
+    $self->doc->text($self->loc("[amount,_1]",$cdr->{tax_amount}));
     $self->doc->x($self->doc->margin_left+0.84*$self->doc->effective_width);
-    $self->doc->text($cdr->{total_cost});
+    $self->doc->text($self->loc("[amount,_1]",$cdr->{total_cost}));
     $self->next_line;
   }
 
   if($cdr->{duration}) {
     $self->doc->x($self->doc->margin_left+0.07*$self->doc->effective_width);
-    $self->doc->text($cdr->{duration});
+    $self->doc->text($self->loc("[duration,_1]",$cdr->{duration}));
   }
 
   if($cdr->{count} && $cdr->{count} != 1) {

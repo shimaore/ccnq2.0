@@ -77,6 +77,7 @@ sub date {
 sub amount {
   my $self = shift;
   my ($currency,$value) = @_;
+  $currency ||= '';
   # See e.g. Number::Format's format_price
   return $currency.$self->numf($value);
 }
