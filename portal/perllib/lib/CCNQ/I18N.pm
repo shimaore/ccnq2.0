@@ -68,6 +68,14 @@ sub time {
   return $time->hms;
 }
 
+# See also Data::Money, Locale::Currency, etc.
+sub currencies {
+  return {
+    'EUR' => "\x{20AC}",
+    'USD' => 'US$',
+  };
+}
+
 
 package CCNQ::I18N::en;
 

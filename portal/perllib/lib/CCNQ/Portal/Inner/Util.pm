@@ -14,7 +14,6 @@ package CCNQ::Portal::Inner::Util;
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings; use Carp;
-use utf8;
 
 use CCNQ::Portal;
 use CCNQ::Portal::I18N;
@@ -345,7 +344,8 @@ sub update_location {
 =cut
 
 sub get_currencies {
-  return { 'EUR' => '€', 'USD' => 'US$' };
+  use CCNQ::I18N;
+  return CCNQ::I18N::currencies;
 }
 
 =head1 CDR Utilities
