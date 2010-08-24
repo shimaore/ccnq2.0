@@ -42,21 +42,16 @@ use Locale::Maketext::Lexicon {
         # _style  => 'gettext',
 };
 
-use Lingua::EN::Numbers::Ordinate;
-sub en::ord { ordinate($_[1]) }
-use Lingua::FR::Numbers qw(number_to_fr ordinate_to_fr);
-sub fr::numf{ number_to_fr($_[1]) }
-sub fr::ord { ordinate_to_fr($_[1]) }
-#use Lingua::FR::Numbers::Ordinate;
-#sub fr::ord { ordinate_fr($_[1]) }
-
 sub encoding {
   return 'utf-8';
 }
 
-# Note that numf and quant are provided by default.
-
 package CCNQ::I18N::en;
+
+use Lingua::EN::Numbers::Ordinate;
+sub ord { ordinate($_[1]) }
+
+# Note that numf and quant are provided by default.
 
 sub duration {
   my $self = shift;
@@ -85,6 +80,12 @@ sub amount {
 }
 
 package CCNQ::I18N::fr;
+
+use Lingua::FR::Numbers qw(number_to_fr ordinate_to_fr);
+sub numf{ number_to_fr($_[1]) }
+sub ord { ordinate_to_fr($_[1]) }
+#use Lingua::FR::Numbers::Ordinate;
+#sub fr::ord { ordinate_fr($_[1]) }
 
 sub duration {
   my $self = shift;
