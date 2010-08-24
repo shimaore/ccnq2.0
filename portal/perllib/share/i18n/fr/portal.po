@@ -84,3 +84,30 @@ msgstr "Enregistrer"
 msgid "No account available"
 msgstr "Indisponible"
 
+msgid "[_1] units"
+msgstr "[_1] unités"
+
+msgid "Before tax: [amount,_1,_2]"
+msgstr "H.T. [amount,_1,_2]"
+
+msgid "Total tax: [amount,_1,_2]"
+msgstr "Taxes [amount,_1,_2]"
+
+msgid "Total amount: [amount,_1,_2]"
+msgstr "T.T.C. [amount,_1,_2]"
+
+msgid "duration"
+msgstr "durée"
+
+msgid "count"
+msgstr "compte"
+
+msgid "cost"
+msgstr "coût"
+
+msgid "tax amount"
+msgstr "taxes"
+
+msgid "total cost"
+msgstr "total"
+

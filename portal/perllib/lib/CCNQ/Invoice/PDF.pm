@@ -307,9 +307,9 @@ sub start_records {
   $self->doc->x($self->doc->margin_left+0.60*$self->doc->effective_width);
   $self->doc->text( $self->loc('cost') );
   $self->doc->x($self->doc->margin_left+0.72*$self->doc->effective_width);
-  $self->doc->text( $self->loc('tax_amount') );
+  $self->doc->text( $self->loc('tax amount') );
   $self->doc->x($self->doc->margin_left+0.84*$self->doc->effective_width);
-  $self->doc->text( $self->loc('total_cost') );
+  $self->doc->text( $self->loc('total cost') );
 
   $self->next_line;
 }
