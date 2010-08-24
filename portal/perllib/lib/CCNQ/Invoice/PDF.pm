@@ -262,7 +262,7 @@ sub summary_record {
     $self->doc->text($self->loc('[_1] units',sprintf("%0.4f",$cdr->{count})));
   }
 
-  $self->monetary_record($cdr);
+  $self->monetary_record($cdr) or $self->next_line;
 }
 
 sub monetary_record_entry {
@@ -281,6 +281,7 @@ sub monetary_record {
   my $self = shift;
   my ($cdr) = @_;
 
+  my $count = 0;
   for my $currency (sort keys %$cdr) {
     next if $currency eq 'count' || $currency eq 'duration';
 
@@ -297,7 +298,9 @@ sub monetary_record {
 
     $self->monetary_record_entry("Total tax"   ,$v->{tax_amount},$currency);
     $self->monetary_record_entry("Total amount",$v->{total_cost},$currency);
+    $count++;
   }
+  return $count;
 }
 
 sub start_records {
