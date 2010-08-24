@@ -95,7 +95,7 @@ sub portal_users {
 sub user_can_access_billing_for {
   my ($account) = @_;
 
-  CCNQ::Portal->current_session->user->is_admin
+  CCNQ::Portal->current_session->user->profile->is_admin
     and return 1;
 
   my $user_id = CCNQ::Portal->current_session->user->id;
