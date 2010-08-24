@@ -110,6 +110,18 @@ package CCNQ::I18N::fr;
 use base qw(CCNQ::I18N);
 
 use Lingua::FR::Numbers qw(number_to_fr ordinate_to_fr);
+
+use Number::Format;
+our $number_formatter = Number::Format->new(
+    -thousands_sep => ' ',
+    -decimal_point => ',',
+);
+
+sub numf{
+  my $self = shift;
+  my ($number) = @_;
+  return $number_formatter->format_number($number);
+}
 sub numb{ number_to_fr($_[1]) }
 sub ord { ordinate_to_fr($_[1]) }
 #use Lingua::FR::Numbers::Ordinate;

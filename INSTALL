@@ -281,7 +281,7 @@ SQL
 # * On the Portal server(s):
 
   # On the web portal server, you should also do:
-  sudo aptitude -t testing install libtemplate-perl libnet-ldap-perl libpdf-api2-simple-perl libdata-uuid-perl
+  sudo aptitude -t testing install libtemplate-perl libnet-ldap-perl libpdf-api2-simple-perl libdata-uuid-perl libnumber-format-perl
   sudo aptitude -t testing install libplack-perl # Used by the webserver starter (plackup)
   sudo aptitude install memcached unzip
 
