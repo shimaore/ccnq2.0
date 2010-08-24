@@ -322,20 +322,26 @@ sub cdr_line {
   # Prints the record that contains the sum for this table
   # (generally the last one in the table)
 
-  my $datetime = DateTime->new(
-    year    => substr($cdr->{start_date},0,4),
-    month   => substr($cdr->{start_date},4,2),
-    day     => substr($cdr->{start_date},6,2),
-    hour    => substr($cdr->{start_time},0,2),
-    minute  => substr($cdr->{start_time},2,2),
-    second  => substr($cdr->{start_time},4,2),
-  );
-
   $self->doc->set_font('Verdana',10);
   $self->doc->x($self->doc->margin_left+0.00*$self->doc->effective_width);
-  $self->doc->text(
-    $self->loc("[date,_1] [time,_1] [_1]",$datetime,$datetime,$cdr->{event_type})
-  );
+  if($cdr->{start_date} && $cdr->{start_time}) {
+    my $datetime = DateTime->new(
+      year    => substr($cdr->{start_date},0,4),
+      month   => substr($cdr->{start_date},4,2),
+      day     => substr($cdr->{start_date},6,2),
+      hour    => substr($cdr->{start_time},0,2),
+      minute  => substr($cdr->{start_time},2,2),
+      second  => substr($cdr->{start_time},4,2),
+    );
+    $self->doc->text(
+      $self->loc("[date,_1] [time,_1]",$datetime,$datetime)." ".
+      $self->loc($cdr->{event_type})
+    );
+  } else {
+    $self->doc->text(
+      $self->loc($cdr->{event_type})
+    );
+  }
   $self->doc->x($self->doc->margin_left+0.70*$self->doc->effective_width);
   if($cdr->{from_e164} || $cdr->{to_e164}) {
     $self->doc->text("$cdr->{from_e164} -> $cdr->{to_e164}");
