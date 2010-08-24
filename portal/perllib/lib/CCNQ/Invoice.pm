@@ -167,7 +167,7 @@ sub do_account_subs {
     my $account_sub = $r->{account_sub};
 
     # Show summary for this sub
-    $self->header2($self->loc('account_sub'),$r->{name});
+    $self->header2($self->loc('sub-account'),$r->{name});
     if( $by_sub->{$account_sub} ) {
       $self->monetary_record($by_sub->{$account_sub});
     }
@@ -179,7 +179,7 @@ sub do_account_subs {
     for my $ev (sort keys %{$by_event->{$account_sub}}) {
       # Restrict to the higher levels for now -- we probably don't have
       # translations for the lower ones.
-      next unless $ev =~ /^\w+_\w+$/; # count_*, *_call, ..
+      next unless $ev =~ /^[^_]+_[^_]+$/; # count_*, *_call, ..
       $self->summary_record($by_event->{$account_sub}->{$ev},$self->loc($ev||'days'));
     }
   }
@@ -195,7 +195,7 @@ sub do_detail {
     my $account_sub = $r->{account_sub};
 
     # Show details for this sub
-    $self->header2($self->loc('account_sub'),$r->{name},$self->loc('CDR'));
+    $self->header2($self->loc('sub-account'),$r->{name},$self->loc('CDR'));
     $self->start_records;
     my $cdrs = $self->cdr_by_sub($account_sub);
     for my $cdr (@$cdrs) {

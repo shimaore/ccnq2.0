@@ -114,8 +114,8 @@ msgstr "total"
 msgid "Invoice Summary"
 msgstr "Montants facturés"
 
-msgid "account_sub"
-msgid "sous-compte"
+msgid "sub-account"
+msgstr "sous-compte"
 
 msgid "ingress_call"
 msgstr "appel entrant"
