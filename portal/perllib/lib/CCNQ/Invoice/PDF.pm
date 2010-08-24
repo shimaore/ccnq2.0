@@ -258,6 +258,18 @@ sub summary_record {
   $self->monetary_record($cdr);
 }
 
+sub monetary_record_entry {
+  my $self = shift;
+  my ($label,$amount,$currency) = @_;
+
+  $self->doc->x($self->doc->margin_left+0.74*$self->doc->effective_width);
+  $self->doc->text($self->loc($label));
+  $self->doc->text(
+    $self->loc("[amount,_1,_2]",$amount,$currency),
+    align => 'right', x => $self->doc->width_right );
+  $self->next_line;
+}
+
 sub monetary_record {
   my $self = shift;
   my ($cdr) = @_;
@@ -270,24 +282,14 @@ sub monetary_record {
 
     # This is actual monetary value
     next unless $v->{total_cost};
-    $self->doc->text(
-      $self->loc("Before tax: [amount,_1,_2]",$v->{cost},$currency),
-      align => 'right', x => $self->doc->width_right );
-    $self->next_line;
+    $self->monetary_record_entry("Before tax",$v->{cost},$currency);
+
     for my $jurisdiction (sort keys %{$v->{taxes}}) {
-      $self->doc->text(
-        "  $jurisdiction ".$self->loc("[amount,_1,_2]",$v->{taxes}->{$jurisdiction},$currency),
-        align => 'right', x => $self->doc->width_right );
-      $self->next_line;
+      $self->monetary_record_entry($jurisdiction,$v->{taxes}->{$jurisdiction},$currency);
     }
-    $self->doc->text(
-      $self->loc("Total tax: [amount,_1,_2]",$v->{tax_amount},$currency),
-      align => 'right', x => $self->doc->width_right );
-    $self->next_line;
-    $self->doc->text(
-      $self->loc("Total amount: [amount,_1,_2]",$v->{total_cost},$currency),
-      align => 'right', x => $self->doc->width_right );
-    $self->next_line;
+
+    $self->monetary_record_entry("Total tax"   ,$v->{tax_amount},$currency);
+    $self->monetary_record_entry("Total amount",$v->{total_cost},$currency);
   }
 }
 
