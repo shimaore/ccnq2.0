@@ -167,7 +167,7 @@ sub do_account_subs {
     my $account_sub = $r->{account_sub};
 
     # Show summary for this sub
-    $self->header2('account_sub',$r->{name});
+    $self->header2($self->loc('account_sub'),$r->{name});
     if( $by_sub->{$account_sub} ) {
       $self->monetary_record($by_sub->{$account_sub});
     }
@@ -177,7 +177,7 @@ sub do_account_subs {
       or next;
 
     for my $ev (sort keys %{$by_event->{$account_sub}}) {
-      $self->summary_record($by_event->{$account_sub}->{$ev},$ev||'days');
+      $self->summary_record($by_event->{$account_sub}->{$ev},$self->loc($ev||'days'));
     }
   }
 }
