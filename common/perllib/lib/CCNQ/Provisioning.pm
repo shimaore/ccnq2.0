@@ -133,15 +133,6 @@ use constant js_recent_names => <<'JAVASCRIPT';
   }
 JAVASCRIPT
 
-use constant js_recent_cnam => <<'JAVASCRIPT';
-function(doc) {
-  if(!doc.cnam) return;
-  var d = new Date();
-  if(doc.timestamp_cnam*1000 < d.getTime()-3*24*3600000) return;
-  emit(doc._id, doc.cnam);
-}
-JAVASCRIPT
-
 use constant provisioning_designs => {
   report => {
     language => 'javascript',
@@ -191,13 +182,6 @@ use constant provisioning_designs => {
         # no reduce function
       }
     },
-  },
-  cnam => {
-    language => 'javascript',
-    views    => {
-      recent => {
-        map => js_recent_cnam,
-      },
   },
 };
 
