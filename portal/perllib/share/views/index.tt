@@ -4,33 +4,22 @@
   <div class="content"><% result %></div>
 <% END %>
 
-<% local_index %>
 <% IF session.user_id %>
 <!-- Inner -->
-<% IF session.account %>
+<% IF local_index %>
+<% local_index %>
+<% ELSE %>
+  <% IF session.account %>
   <fieldset class="ui-widget">
     <legend><% | loc(session.account) %>Account [_1]<% END %></legend>
-    <% IF local_index %>
-    <% local_index %>
-    <% ELSE %>
     <p><%|loc%>Please use the menus to navigate.<%END%></p>
-    <% END %>
   </fieldset>
-<% ELSE %>
+  <% ELSE %>
   <fieldset class="ui-widget">
     <legend><%|loc%>Account information<%END%></legend>
-    <% IF local_index %>
-    <% local_index %>
-    <% ELSE %>
     <% | loc %>Please select an account.<% END %>
-    <% END %>
   </fieldset>
-<% END %>
-
-<% IF is_admin %>
-<% END %>
-
-<% IF is_sysadmin %>
+  <% END %>
 <% END %>
 <!-- /Inner -->
 <% ELSE %>

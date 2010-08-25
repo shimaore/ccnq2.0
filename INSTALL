@@ -19,6 +19,9 @@
 # I assume you use sudo to gain root access.
 #
 
+# This file is a series of shell code fragments.
+# Each command starts two spaces from the left column.
+
 # * Update apt's sources.list to import the "testing" distribution
 #   (needed for some packages on the API and MediaProxy servers):
 
@@ -228,6 +231,18 @@ EOT
   # Monitor syslog during the execution of the script to know what to do next.
   # If syslog shows no line containing the word "error" then you should be OK.
 
+# * Note: For upgrades, run:
+
+  # Install the updated modules
+  (cd ~/src/ccnq2.0 && git pull)
+  (cd ~/src/ccnq2.0/common/perllib && perl Makefile.PL && make && make test && sudo make install)
+
+  # Upgrade the configuration(s) as needed
+  sudo ccnq2_upgrade
+
+  #-> The ccnq2_upgrade_all contrib script can be used from a management server
+  #   to upgrade multiple servers at once.
+
 # * On the proxies:
 
   # Part of the syslog information (during ccnq2_upgrade) asks to run some MySQL commands to initialize the database.
@@ -246,15 +261,8 @@ SQL
 
   # ACL updates
   # As appropriate, review
-  # b2bua/client-sbc-config/freeswitch/conf/autoload_configs/acl.client-sbc-config.conf.xml
+  # /opt/freeswitch/conf/autoload_configs/client-sbc-config.acl.xml
   # to add your proxies' IP addresses.
-
-  # Install the updated modules
-  (cd ~/src/ccnq2.0 && git pull)
-  (cd ~/src/ccnq2.0/common/perllib && perl Makefile.PL && make && make test && sudo make install)
-
-  # Upgrade the configuration(s) as needed
-  sudo ccnq2_upgrade
 
 # * Using the manager process (this will be rewritten once we have a proper installer):
 
@@ -263,8 +271,10 @@ SQL
   ccnq2_xmpp_agent
 
   # Please monitor /var/log/syslog for the connection information:
-  #   Creating XMPP Connection for <host_name>@<domain_name>/.../... using password <password>
+  #   Creating XMPP Connection for <host_name>@<domain_name>/.../... using password <password>.
   # and add a user <host_name> with password <password> in your jabber server.
+  #-> To do this use the ejabberctl command:
+  #   sudo /usr/sbin/ejabberdctl register <host_name> <domain_name> <password>
 
   # Try again. This time the user should connect properly.
   ccnq2_xmpp_agent &
@@ -277,6 +287,9 @@ SQL
   #     opensips   (for access to the OpenSIPS FIFO)
   #     daemon     (for access to the FreeSwitch CLI / FIFO)
   #
+
+  #-> The ccnq2_xmpp_restart_all contrib script can be used from a management server
+  #   to restart the XMPP agent on multiple servers.
 
 # * On the Portal server(s):
 
@@ -295,6 +308,5 @@ SQL
   sed -i -e 's/^{shaper, normal, {maxrate, 1000}}\./{shaper, normal, {maxrate, 1000000}}./' /etc/ejabberd/ejabberd.cfg
   #   Also, some clients might have more than 10 connections at a time.
   sed -i -e 's/^{access, max_user_sessions, \[{10, all}\]}\./{access, max_user_sessions, [{20, all}]}./' /etc/ejabberd/ejabberd.cfg
-
 
 # These instructions were last test 2010/08/18.
