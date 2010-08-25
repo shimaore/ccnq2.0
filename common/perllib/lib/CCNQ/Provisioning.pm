@@ -124,12 +124,13 @@ JAVASCRIPT
 
 use constant js_recent_names => <<'JAVASCRIPT';
   function(doc) {
+    if(doc.profile != 'number') return;
     if(!doc.name) return;
     var d = new Date();
     // Timelapse in hours
     var delta = (d.getTime()/1000 - doc.timestamp_name)/3600;
     if(delta > 26) return;
-    emit(doc.number, doc.name);
+    emit([doc.number,doc.name],null);
   }
 JAVASCRIPT
 
