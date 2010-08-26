@@ -33,6 +33,7 @@ sub do_sql {
   my $error = sub {
     error(join(',',@_));
     $cv->send([@_]);
+    return;
   };
 
   my $build_callback = sub {
@@ -42,16 +43,20 @@ sub do_sql {
       return $error->('Database error: [_1]',$@) if $@;
       debug("Executing $sql with (".join(',',@{$args}).") and callback $cb");
       $db->exec($sql,@{$args},$cb);
+      return;
     };
   };
 
   my $run = sub {
     $error->('Database error: [_1]',$@) if $@;
+    debug("Commit sequence");
     $db->commit(sub {
       return $error->('Database error: [_1]',$@) if $@;
       # It seems the documentation for AnyEvent::DBI is incorrect.
       # $error->('Commit failed') unless $_[1];
+      debug("Sequence committed");
       $cv->send;
+      return;
     });
   };
 
@@ -105,7 +110,7 @@ sub do_sql_query {
     });
   };
 
-  debug("Postponing $sql with (".join(',',@{$args}).") and callback $cb");
+  debug("Executing $sql with (".join(',',@{$args}).") and callback $cb");
 
   $db->exec($sql,@{$args},$cb);
 
