@@ -137,6 +137,9 @@ get '/billing/account_sub' => sub {
   session('account') =~ /^[\w-]+$/
     or return CCNQ::Portal::content( error => _('Please select an account')_ );
 
+  CCNQ::Portal::Inner::Util::account_billing_data(session('account'))->{account}
+    or return CCNQ::Portal::content( error => _('Please activate the account first.')_ );
+
   if( params->{account_sub} && params->{account_sub} =~ /^[\w-]+$/ ) {
     gather_field_sub(params->{account_sub});
   } else {
