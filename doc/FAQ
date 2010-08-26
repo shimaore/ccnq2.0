@@ -1,0 +1,28 @@
+
+=head1 FAQ
+
+=head2 I get the following error when starting ccnq2_xmpp_agent manually:
+parser error: Can't call method "NamespaceEnd" on an undefined value at /usr/lib/perl5/XML/Parser/Expat.pm line 614.
+ on [<failure xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><not-authorized/></failure>]
+
+This indicates that the connection with the XMPP server was closed intempestively.
+Make sure you have registerd the proper user and password combination on your Jabber server.
+
+=head1 FAQ
+
+=head2 I get the following error when starting ccnq2_xmpp_agent manually:
+parser error: Can't call method "NamespaceEnd" on an undefined value at /usr/lib/perl5/XML/Parser/Expat.pm line 614.
+ on [<stream:error><conflict xmlns='urn:ietf:params:xml:ns:xmpp-streams'/><text xml:lang='en' xmlns='urn:ietf:params:xml:ns:xmpp-streams'>Replaced by new connection</text></stream:error></stream:stream>]
+
+This indicates either that a ccnq2_xmpp_agent is already running for this host.
+Make sure you only have one ccnq2_xmpp_agent running per host.
+
+This might also indicate that you forgot to bump the number of concurrent connections a single client can have with your Jabber server.
+In this case run for example
+   sed -i -e 's/^{access, max_user_sessions, \[{10, all}\]}\./{access, max_user_sessions, [{20, all}]}./' /etc/ejabberd/ejabberd.cfg
+(or edit the ejabberd.cfg file) to bring the number of max_user_sessions to a value that matches your use of the system.
+
+This finally might indicate that you have two identical services running for the same host and same cluster.
+A host can belong to multiple clusters; however if you put multiple services inside the same cluster (for example a proxy and a SBC service),
+the system won't be able to differentiate common service (specifically host-based service such as monit, etc.).
+In this case you need to split the service amongst two clusters and re-configure the host to belong to both clusters.
