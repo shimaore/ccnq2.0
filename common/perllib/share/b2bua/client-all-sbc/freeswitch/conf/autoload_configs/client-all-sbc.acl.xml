@@ -1,3 +1,7 @@
 <list name="sbc-all" default="allow">
   <node type="allow" cidr="0.0.0.0/0"/>
 </list>
+<!-- Should be modified to list authorized proxies -->
+<list name="internal-all" default="allow">
+  <node type="allow" cidr="0.0.0.0/0"/>
+</list>
