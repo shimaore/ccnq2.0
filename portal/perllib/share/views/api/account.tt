@@ -26,8 +26,8 @@
     <fieldset class="ui-widget">
       <legend><% | loc %>Billing email recipients<% END %></legend>
       <ul>
-        <% FOREACH recipient IN field.email_recipients %>
-        <li><% recipient.key | html %><!-- XXX button to remove this recipient --></li>
+        <% FOREACH recipient IN billing_users(session.account) %>
+        <li><% recipient.email | html %> (<% recipient.name | html %>)<!-- XXX button to remove this recipient --></li>
         <% END %>
       </ul>
     </fieldset>

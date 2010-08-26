@@ -29,6 +29,7 @@ sub gather_field {
   my $account = session('account');
 
   var portal_users  => \&CCNQ::Portal::Inner::Util::portal_users;
+  var billing_users => \&CCNQ::Portal::Inner::Util::billing_users;
   var account_subs  => \&CCNQ::Portal::Inner::Util::account_subs;
   var get_plans     => \&CCNQ::Portal::Inner::Util::get_plans;
 

@@ -89,6 +89,17 @@ use constant js_report_users => <<'JAVASCRIPT';
   }
 JAVASCRIPT
 
+# All billing_account info
+use constant js_report_users_by_account => <<'JAVASCRIPT';
+  function (doc) {
+    if(doc.profile == 'user' && doc.billing_accounts) {
+      for(var account in doc.billing_accounts) {
+        emit([account],null);
+      }
+    }
+  }
+JAVASCRIPT
+
 # All "bucket"-class documents.
 use constant js_report_buckets => <<'JAVASCRIPT';
   function (doc) {
@@ -127,6 +138,9 @@ use constant billing_designs => {
       },
       users => {
         map => js_report_users,
+      },
+      users_by_account => {
+        map => js_report_users_by_account,
       },
       buckets => {
         map => js_report_buckets,

@@ -107,6 +107,18 @@ sub user_can_access_billing_for {
   return scalar grep { $_ eq $account } @{$billing_user_data->billing_accounts};
 }
 
+=head2 billing_users($account)
+
+=cut
+
+sub billing_users {
+  my ($account) = @_;
+
+  my $cv = AE::cv;
+  CCNQ::API::billing('report','users_by_account',$account,$cv);
+  return CCNQ::AE::receive_docs($cv);
+}
+
 =head1 Plan Utilities
 
 =head2 get_plans()
