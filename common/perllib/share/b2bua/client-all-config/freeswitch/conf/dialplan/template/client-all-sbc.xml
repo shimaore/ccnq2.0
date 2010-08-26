@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<include>
+
+  <!-- egress: from client to the rest of the world -->
+  <context name="egress-all">
+
+    <extension name="unloop">
+      <condition field="${unroll_loops}" expression="^true$"/>
+      <condition field="${sip_looped_call}" expression="^true$">
+        <action application="deflect" data="${destination_number}"/>
+      </condition>
+    </extension>
+
+    <!-- Place the call -->
+    <extension name="place-call">
+      <condition field="destination_number" expression="^(.*)$"/>
+        <action application="set" data="ccnq_direction=egress"/>
+        <action application="set" data="progress_timeout=12"/>
+        <action application="bridge" data="sofia/sbc-all/$1@$${egress_target};source=${sip_received_ip}"/>
+      </condition>
+    </extension>
+
+  </context>
+
+  <!-- ingress: from the rest of the world to the client -->
+  <context name="ingress-all">
+
+    <extension name="unloop">
+      <condition field="${unroll_loops}" expression="^true$"/>
+      <condition field="${sip_looped_call}" expression="^true$">
+        <action application="deflect" data="${destination_number}"/>
+      </condition>
+    </extension>
+
+    <!-- Place the call -->
+    <extension name="default-ingress">
+      <condition field="destination_number" expression="^([^-]*)-(.*)$">
+        <action application="set" data="ccnq_direction=ingress"/>
+        <action application="set" data="progress_timeout=12"/>
+        <action application="set" data="force_transfer_context=refer-all"/>
+        <action application="bridge" data="sofia/internal-all/$1@$2"/>
+      </condition>
+    </extension>
+
+  </context>
+
+  <!-- ingress + REFER -->
+  <context name="refer-all">
+
+    <extension name="unloop">
+      <condition field="${unroll_loops}" expression="^true$"/>
+      <condition field="${sip_looped_call}" expression="^true$">
+        <action application="deflect" data="${destination_number}"/>
+      </condition>
+    </extension>
+
+    <extension name="refer-block">
+      <!-- do not accept REFER pointing to the destination_number at the local domain -->
+      <condition field="${sip_refer_to}">
+       <expression><![CDATA[<sip:${destination_number}@${domain_name}]]></expression>
+      </condition>
+    </extension>
+
+    <extension name="refer">
+      <condition field="${sip_refer_to}">
+        <expression><![CDATA[<sip:(.*)@(.*)>]]></expression>
+        <action application="set" data="refer_user=$1"/>
+        <action application="set" data="refer_domain=$2"/>
+        <action application="bridge" data="sofia/internal-all/${refer_user}@$${egress_target};source=${ingress_target}"/>
+      </condition>
+    </extension>
+  </context>
+
+</include>
