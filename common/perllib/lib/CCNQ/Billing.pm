@@ -38,7 +38,7 @@ use constant js_report_account_all => <<'JAVASCRIPT';
     }
     if(doc.billing_accounts) {
       for(var account in doc.billing_accounts) {
-        emit([account],null);
+        emit([doc.billing_accounts[account]],null);
       }
     }
   }
@@ -94,7 +94,7 @@ use constant js_report_users_by_account => <<'JAVASCRIPT';
   function (doc) {
     if(doc.profile == 'user' && doc.billing_accounts) {
       for(var account in doc.billing_accounts) {
-        emit([account],null);
+        emit([doc.billing_accounts[account]],null);
       }
     }
   }
