@@ -8,7 +8,7 @@
     <form action="<% prefix %>/number/<% cluster %>/<% category %>" method="post" accept-charset="utf-8" class="ui-widget validate">
       <p class="ui-helper-clearfix">
         <label for="number" class="left"><% | loc %>Number:<% END %></label>
-        <input type="text" name="number" value="<% field.number | html %>" class="digits" size="16" />
+        <input type="text" name="number" value="<% field.number | html %>" class="" size="16" />
         <select name="number_alt">
           <option value=""></option>
           <% FOREACH n IN numbers_for(session.account) %>
