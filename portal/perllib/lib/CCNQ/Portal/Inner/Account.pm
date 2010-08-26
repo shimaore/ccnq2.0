@@ -157,7 +157,7 @@ sub handle_account_sub {
   session('account') =~ /^[\w-]+$/
     or return CCNQ::Portal::content( error => _('Please select an account')_ );
 
-  CCNQ::Portal::Inner::Util::account_billing_data($account)->{account}
+  CCNQ::Portal::Inner::Util::account_billing_data($account)->{session('account')}
     or return CCNQ::Portal::content( error => _('Please activate the account first.')_ );
 
   my $params = CCNQ::Portal::Util::neat({
