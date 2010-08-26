@@ -13,7 +13,7 @@
 
     <!-- Place the call -->
     <extension name="place-call">
-      <condition field="destination_number" expression="^(.*)$"/>
+      <condition field="destination_number" expression="^(.*)$">
         <action application="set" data="ccnq_direction=egress"/>
         <action application="set" data="progress_timeout=12"/>
         <action application="bridge" data="sofia/sbc-all/$1@$${egress_target};source=${sip_received_ip}"/>
