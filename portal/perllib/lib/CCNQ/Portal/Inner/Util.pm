@@ -84,6 +84,7 @@ sub portal_users {
   my $cv = CCNQ::Portal::db->view('report/portal_users_by_account', {
     startkey => [$account],
     endkey   => [$account,{}],
+    include_docs => 'true',
   });
   return CCNQ::AE::receive_docs($cv);
 }
