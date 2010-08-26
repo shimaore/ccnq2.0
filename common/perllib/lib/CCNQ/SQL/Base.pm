@@ -39,7 +39,7 @@ sub do_sql {
     my ($sql,$args,$cb) = @_;
     debug("Postponing $sql with (".join(',',@{$args}).") and callback $cb");
     return sub {
-      $error->('Database error: [_1]',$@) if $@;
+      return $error->('Database error: [_1]',$@) if $@;
       debug("Executing $sql with (".join(',',@{$args}).") and callback $cb");
       $db->exec($sql,@{$args},$cb);
     };
@@ -48,7 +48,7 @@ sub do_sql {
   my $run = sub {
     $error->('Database error: [_1]',$@) if $@;
     $db->commit(sub {
-      $error->('Database error: [_1]',$@) if $@;
+      return $error->('Database error: [_1]',$@) if $@;
       # It seems the documentation for AnyEvent::DBI is incorrect.
       # $error->('Commit failed') unless $_[1];
       $cv->send;
