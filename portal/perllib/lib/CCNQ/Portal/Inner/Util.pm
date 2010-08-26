@@ -81,11 +81,11 @@ sub portal_users {
 
   defined($account) or confess "account must be defined";
 
-  my $cv1 = CCNQ::Portal::db->view('report/portal_users_by_account', {
+  my $cv = CCNQ::Portal::db->view('report/portal_users_by_account', {
     startkey => [$account],
     endkey   => [$account,{}],
   });
-  return CCNQ::AE::receive_ids($cv1);
+  return CCNQ::AE::receive_docs($cv);
 }
 
 =head2 user_can_access_billing_for($account)
