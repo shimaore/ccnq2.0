@@ -53,6 +53,7 @@ sub avp
         user_ip         => 174, # IP to use if not registered and no CFNR
         user_port       => 175, # port to use if not registered and no CFNR
         user_srv        => 178, # used instead of IP if present
+        user_via        => 176, # route via this forwarding_sbc host
         user_location   => 177, # emergency location data
         strip_digit     => 179,
         # by username, force media-proxy

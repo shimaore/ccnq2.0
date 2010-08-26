@@ -82,6 +82,7 @@ sub insert
     my $ip          = $params->{ip};
     my $port        = $params->{port};
     my $srv         = $params->{srv};
+    my $via         = $params->{via};
     my $dest_domain = $params->{dest_domain};
     my $strip_digit = $params->{strip_digit};
     my $account     = $params->{account};
@@ -158,6 +159,7 @@ SQL
         $self->_avp_set($username,$domain,'user_ip',$ip),
         $self->_avp_set($username,$domain,'user_port',$port),
         $self->_avp_set($username,$domain,'user_srv',$srv),
+        $self->_avp_set($username,$domain,'user_via',$via),
         $self->_avp_set($username,$domain,'dest_domain',$dest_domain),
         $self->_avp_set($username,$domain,'strip_digit',$strip_digit),
         $self->_avp_set($username,$domain,'allow_onnet',$allow_onnet?1:undef),
@@ -195,6 +197,7 @@ SQL
         $self->_avp_set($username,$domain,'user_ip',undef),
         $self->_avp_set($username,$domain,'user_port',undef),
         $self->_avp_set($username,$domain,'user_srv',undef),
+        $self->_avp_set($username,$domain,'user_via',undef),
         $self->_avp_set($username,$domain,'dest_domain',undef),
         $self->_avp_set($username,$domain,'strip_digit',undef),
         $self->_avp_set($username,$domain,'allow_onnet',undef),

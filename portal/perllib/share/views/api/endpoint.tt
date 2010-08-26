@@ -49,7 +49,7 @@
         </p>
         <% END %>
 
-        <% IF field.is_static  %><% configure_with = ["ip","port","srv"] %>
+        <% IF field.is_static  %><% configure_with = ["ip","port","srv","via"] %>
         <% FOREACH p IN configure_with %>
         <p class="ui-helper-clearfix">
           <label for="<% p %>" class="left"><% | loc %><% p %><% END %></label>

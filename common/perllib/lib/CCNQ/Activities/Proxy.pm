@@ -308,6 +308,7 @@ sub endpoint_update {
           ip
           port
           srv
+          via
           dest_domain
           strip_digit
           account

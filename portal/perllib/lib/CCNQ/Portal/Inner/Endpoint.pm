@@ -41,6 +41,7 @@ sub clean_params {
     ip
     port
     srv
+    via
 
     dest_domain
     strip_digit
