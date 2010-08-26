@@ -69,7 +69,7 @@ EOT
 # * Note: for high performance, the directory /opt/freeswitch/db must be
 # in memory.
    grep '/opt/freeswitch/db' /etc/fstab || \
-   (echo 'tmpfs /opt/freeswitch/db tmpfs defaults 0 0' | sudo tee -a /etc/fstab >/dev/null)
+   (echo 'fsdbfs /opt/freeswitch/db tmpfs defaults 0 0' | sudo tee -a /etc/fstab >/dev/null)
 
 # * On all servers, install the program:
 #
