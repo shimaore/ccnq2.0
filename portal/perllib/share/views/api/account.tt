@@ -35,7 +35,7 @@
       <legend><% | loc %>Portal users<% END %></legend>
       <ul>
         <% FOREACH user IN portal_users(session.account) %>
-        <li><% user.name | html %> (<% user.id %>)<!-- XXX button to remove this recipient --></li>
+        <li><% user.name | html %> (<% user.email %>)<!-- XXX button to remove this recipient --></li>
         <% END %>
       </ul>
     </fieldset>
