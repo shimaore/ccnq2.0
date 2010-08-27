@@ -139,6 +139,7 @@ SQL
     }
     else
     {
+        # XXX FIXME These are creating issues. I'm not sure they serve any purpose anymore, maybe it's time to remove this piece?
         push @res,
             <<'SQL',[$username,$domain];
             INSERT INTO subscriber(username,domain) VALUES (?,?)
