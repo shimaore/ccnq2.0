@@ -106,8 +106,8 @@ sub user_can_access_billing_for {
   my $billing_user_data = CCNQ::AE::receive_first_doc($cv);
 
   return $billing_user_data &&
-          $billing_user_data->billing_accounts &&
-          scalar grep { $_ eq $account } @{$billing_user_data->billing_accounts};
+          $billing_user_data->{billing_accounts} &&
+          scalar grep { $_ eq $account } @{$billing_user_data->{billing_accounts}};
 }
 
 =head2 billing_users($account)
