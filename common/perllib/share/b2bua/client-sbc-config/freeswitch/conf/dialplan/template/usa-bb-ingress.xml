@@ -1,0 +1,8 @@
+<extension name="cleanup-sdp" continue="true">
+  <condition field="destination_number" expression="^call"/>
+  <condition field="${switch_r_sdp}" expression="/(.*)(m=audio \d+ RTP\/AVP)([ \d]+)(.*)/s" break="never">
+      <action application="set" data="switch_r_sdp=$1$2 18 0 101$4"/>
+  </condition>
+</extension>
+
+<X-PRE-PROCESS cmd="include" data="usa-ingress.xml"/>
