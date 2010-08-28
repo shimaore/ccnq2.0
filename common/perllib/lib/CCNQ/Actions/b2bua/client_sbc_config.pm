@@ -41,7 +41,7 @@ sub _install {
   # dialplan/template
   debug("b2bua/$b2bua_name: Installing dialplan/template");
   for my $name (qw( client-sbc-template ),
-      map {($_.'-ingress',$_.'-egress')} qw( e164 france loopback transparent transparent-cnam usa-cnam usa usa-cnam-bb )) {
+      map {($_.'-ingress',$_.'-egress')} qw( e164 france loopback transparent transparent-cnam usa-cnam usa usa-bb usa-cnam-bb )) {
     CCNQ::B2BUA::copy_file($b2bua_name,qw( dialplan template ),"${name}.xml");
   }
 
