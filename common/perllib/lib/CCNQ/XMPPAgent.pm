@@ -263,10 +263,11 @@ sub handle_message {
     my $error  = $@;
     my $result = shift;
 
-    debug("XMPPAgent: send_response got error=$error, result=$result");
+    # debug("XMPPAgent: send_response got error=$error, result=$result");
 
     # CANCEL is either "die 'cancel'" or ->send('cancel').
-    if($error eq 'cancel' || $result eq 'cancel') {
+    if((defined($error)  && $error  eq 'cancel') ||
+       (defined($result) && $result eq 'cancel')) {
       debug("CANCEL for function=$function, action=$action");
       return;
     }

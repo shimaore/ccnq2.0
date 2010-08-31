@@ -75,8 +75,8 @@ sub insert
     # Also note that they are only used for inbound calls, never for outbound calls.
     my $account           = $params->{account};
     my $account_sub       = $params->{account_sub};
-    $account     = undef if $account     eq '';
-    $account_sub = undef if $account_sub eq '';
+    $account     = undef if defined($account) && $account     eq '';
+    $account_sub = undef if defined($account) && $account_sub eq '';
     my $number_location   = $params->{number_location};
 
     return ()
