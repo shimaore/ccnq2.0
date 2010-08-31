@@ -32,7 +32,7 @@
       </p>
       <p class="ui-helper-clearfix">
         <label for="days_ago" class="left"><% | loc %>Timestamp:<% END %></label>
-        <select name="days_ago" class="required">
+        <select name="days_ago">
           <option value="0"><% | loc %>Today<% END %></option>
           <option value="1"><% | loc %>Yesterday<% END %></option>
           <% FOREACH days IN [2..9]%>
