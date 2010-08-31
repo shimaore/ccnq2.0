@@ -61,10 +61,11 @@ $FileOwner root
 $FileGroup adm
 $FileCreateMode 0640
 $DirCreateMode 0755
-auth,authpriv.*                 /var/log/auth.log
-*.*;auth,authpriv.none          -/var/log/syslog
+auth,authpriv.*             /var/log/auth.log
+*.info;auth,authpriv.none  -/var/log/syslog
 EOT
   sudo /etc/init.d/rsyslog reload
+#    Also notice how we do not log "debug" information.
 
 # * Note: for high performance, the directory /opt/freeswitch/db must be
 # in memory.
@@ -305,8 +306,12 @@ SQL
 # * Jabber server configuration:
   sudo aptitude -y install -t testing ejabberd
   #   On ejabberd I change the "default" shaper to accept much higher rates:
-  sed -i -e 's/^{shaper, normal, {maxrate, 1000}}\./{shaper, normal, {maxrate, 1000000}}./' /etc/ejabberd/ejabberd.cfg
+  sudo sed -i -e 's/^{shaper, normal, {maxrate, 1000}}\./{shaper, normal, {maxrate, 1000000}}./' /etc/ejabberd/ejabberd.cfg
   #   Also, some clients might have more than 10 connections at a time.
-  sed -i -e 's/^{access, max_user_sessions, \[{10, all}\]}\./{access, max_user_sessions, [{20, all}]}./' /etc/ejabberd/ejabberd.cfg
+  sudo sed -i -e 's/^{access, max_user_sessions, \[{10, all}\]}\./{access, max_user_sessions, [{20, all}]}./' /etc/ejabberd/ejabberd.cfg
+  #   Finally, make sure that the loglevel is sufficiently low.
+  sudo sed -i -e 's/^{loglevel, 5}\./{loglevel, 4}./' /etc/ejabberd/ejabberd.cfg
+  #   Restart ejabberd to account for the new settings
+  sudo /etc/init.d/ejabberd restart
 
 # These instructions were last test 2010/08/18.
