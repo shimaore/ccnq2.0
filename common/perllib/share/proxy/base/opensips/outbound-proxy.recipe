@@ -2,7 +2,6 @@
 generic
 toolbox
 forwarder
-accounting
 invite-outbound-proxy
 invite
 loose-route
