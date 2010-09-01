@@ -101,6 +101,8 @@ sub update {
     my $email = $untainter->extract(-as_email=>'email');
     if($email) {
       $params->{email} = $email->format;
+      $params->{email} =~ s/^\s+//;
+      $params->{email} =~ s/\s+$//;
       $billing_params->{email} = $params->{email};
     } else {
       if(params->{email}) {
