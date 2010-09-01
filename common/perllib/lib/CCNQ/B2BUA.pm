@@ -86,7 +86,6 @@ CRON
   my $crontab_file = File::Spec->catfile(CCNQ::CCN,'ccnq2_crontab_cdr.crontab');
 
   CCNQ::Util::print_to($crontab_file,$crontab_line);
-  # CCNQ::Util::execute(qq(/usr/bin/crontab -u "$freeswitch_username" -l | /bin/grep -v ccnq2_crontab_cdr | /bin/cat - "${crontab_file}" | /usr/bin/crontab -u "$freeswitch_username" -));
   CCNQ::Util::execute(qq(/usr/bin/crontab -u "$freeswitch_username" "${crontab_file}"));
 }
 
