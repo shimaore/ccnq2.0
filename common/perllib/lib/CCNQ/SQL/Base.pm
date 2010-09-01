@@ -32,7 +32,10 @@ sub do_sql {
 
   my $error = sub {
     error(join(',',@_));
-    $cv->send([@_]);
+    $db->rollback(sub {
+      debug("Rolled back: $@");
+      $cv->send([@_]);
+    });
     return;
   };
 
