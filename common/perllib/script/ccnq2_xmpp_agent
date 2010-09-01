@@ -25,6 +25,7 @@ use CCNQ::Install;
 use CCNQ::XMPPAgent;
 
 use Logger::Syslog;
+use Sys::Syslog;
 
 use constant seconds_before_restarting => 5;
 use constant PROGRAM_NAME => 'ccnq2_xmpp_agent';
@@ -36,6 +37,9 @@ use constant PROGRAM_NAME => 'ccnq2_xmpp_agent';
 sub run {
   my ($program_name) = @_;
   info("$program_name starting");
+
+  # Reduce CPU and disk usage by not logging debug messages by default.
+  Sys::Syslog::setlogmask(LOG_UPTO(LOG_INFO));
 
   # If using EV, this will drop callback errors into syslog.
   $EV::DIED = sub {
