@@ -89,13 +89,19 @@ sub _dispatch {
 sub dr_reload {
   my ($params,$context) = @_;
   use CCNQ::AE;
-  return CCNQ::AE::execute($context,qw( /usr/sbin/opensipsctl fifo dr_reload ));
+  CCNQ::AE::rate_limit(
+    'dr_reload', 10, # once every 10 seconds
+    CCNQ::AE::execute($context,qw( /usr/sbin/opensipsctl fifo dr_reload ))
+  );
 }
 
 sub trusted_reload {
   my ($params,$context) = @_;
   use CCNQ::AE;
-  return CCNQ::AE::execute($context,qw( /usr/sbin/opensipsctl fifo trusted_reload ));
+  CCNQ::AE::rate_limit(
+    'trusted_reload', 10, # once every 10 seconds
+    CCNQ::AE::execute($context,qw( /usr/sbin/opensipsctl fifo trusted_reload ))
+  );
 }
 
 sub trace {

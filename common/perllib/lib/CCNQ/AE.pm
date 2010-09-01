@@ -105,4 +105,59 @@ sub croak_cv {
   return $cv;
 }
 
+=head1 $rcv = rate_limit_cv($class,$interval,$cv)
+
+Returns a new AE::cv which rate-limits the operation described by $cv to
+one every $interval seconds. There is one such rate-limiter per $class.
+
+(The operations performed by all $cv belonging to the same $class should
+be idempotent.)
+
+$cv and $rcv should return 'completed' if successful.
+
+=cut
+
+our $rate_limit_timer;
+
+sub rate_limit_cv {
+  my ($class,$interval,$cv) = @_;
+
+  my $now = AnyEvent->now;
+
+  $rate_limit_timer->{$class} &&
+  $now < $rate_limit_timer->{$class}->{when}
+  # There is a cb waiting to be ran.
+  and do {
+    # Do nothing, this will be ran eventually.
+    my $rcv = AE::cv;
+    $rcv->send('completed');
+    return $rcv;
+  };
+
+  $rate_limit_timer->{$class} &&
+  $now - $rate_limit_timer->{$class}->{when} < $interval
+  # The last one was ran less than $interval seconds ago.
+  and do {
+    # Postpone the next one.
+    my $ago = $now - $rate_limit_timer->{$class};
+    my $until = $interval - $ago;
+    my $rcv = AE::cv;
+    $rate_limit_timer->{$class} = {
+      when => $now + $interval/2,
+      cb   => AnyEvent->timer( after => $until, cb => sub {
+                receive($cv);
+                delete $rate_limit_timer->{$class};
+                $rcv->send('completed');
+              }),
+    };
+    return $rcv;
+  };
+
+  # None pending, or last one was long enough ago.
+  $rate_limit_timer->{$class} = {
+    when => $now,
+  };
+  return $cv;
+}
+
 'CCNQ::AE';
