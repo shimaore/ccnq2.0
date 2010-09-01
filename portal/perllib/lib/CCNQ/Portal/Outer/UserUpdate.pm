@@ -35,7 +35,7 @@ sub get_all_users {
   });
   my $all_docs = CCNQ::AE::receive_rows($cv);
   $all_docs = { rows => [
-    sort { $a->{key} cmp $b->{key} } }
+    sort { $a->{key} cmp $b->{key} }
     grep { $_->{id} !~ /^_/}
     @{$all_docs->{rows}}
   ] };
