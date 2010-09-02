@@ -144,6 +144,13 @@ EOT
     my $ingress_target = "inbound-proxy.${cluster_fqdn}";
     $ingress_target = shift(@ingress_target) if $#ingress_target >= 0;
 
+    # Sometimes we want to be able to use a single outside port (5060 typically)
+    # to talk to multiple carriers. This allows different internal profiles to map
+    # to a single external profile (for egress).
+    my @egress_profile = $dns_txt->( 'egress-profile',$name,CCNQ::Install::fqdn );
+    my $egress_profile = $name;
+    $egress_profile = shift(@egress_profile) if $#egress_profile >= 0;
+
     # XXX Only one egress IP supported at this time.
     my $egress_ip = shift @egress_ips;
     $dialplan_text .= <<"EOT";
@@ -155,6 +162,7 @@ EOT
 
       <X-PRE-PROCESS cmd="set" data="ingress_target=${ingress_target}"/>
       <X-PRE-PROCESS cmd="set" data="egress_target=${egress_ip}"/>
+      <X-PRE-PROCESS cmd="set" data="egress_profile=${egress_profile}"/>
       <X-PRE-PROCESS cmd="include" data="template/${dialplan_template}.xml"/>
 EOT
   } # for $name
