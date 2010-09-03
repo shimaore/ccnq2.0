@@ -35,7 +35,7 @@
         <select name="days_ago">
           <option value="0"><% | loc %>Today<% END %></option>
           <option value="1"><% | loc %>Yesterday<% END %></option>
-          <% FOREACH days IN [2..9]%>
+          <% FOREACH days IN [2..3]%>
           <option value="<% days %>"><% | loc %><% days %> days ago<% END %></option>
           <%END%>
           <option value=""><% | loc %>Any<% END %></option>
