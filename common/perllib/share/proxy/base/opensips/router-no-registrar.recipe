@@ -1,5 +1,6 @@
 # Recipe for a static-only (no registration) router in the CCNQ2.0 standard design
 generic
+accounting
 toolbox
 forwarder
 authenticate

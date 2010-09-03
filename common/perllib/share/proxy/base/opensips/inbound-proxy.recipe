@@ -1,5 +1,6 @@
 # Recipe for the inbound proxy in the CCNQ2.0 standard design
 generic
+accounting
 toolbox
 forwarder
 invite-inbound-proxy

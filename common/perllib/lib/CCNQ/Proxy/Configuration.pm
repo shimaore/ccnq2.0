@@ -6,7 +6,8 @@ use CCNQ::Proxy;
 
 use CCNQ::Proxy::Base;
 
-use constant accounting   => 'flatstore';
+# use constant accounting   => 'flatstore';
+use constant accounting   => 'none';
 use constant authenticate => 'db';
 use constant db_login     => 'opensips';
 use constant db_password  => 'opensips';

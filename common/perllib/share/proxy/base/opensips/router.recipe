@@ -1,5 +1,6 @@
 # Recipe for a customer-facing router in the CCNQ2.0 standard design
 generic
+accounting
 toolbox
 forwarder
 authenticate

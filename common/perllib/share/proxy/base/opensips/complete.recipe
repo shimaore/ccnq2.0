@@ -1,5 +1,6 @@
 # Recipe for a standalone proxy that does it all
 generic
+accounting
 toolbox
 forwarder
 authenticate
