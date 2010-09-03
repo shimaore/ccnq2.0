@@ -39,7 +39,7 @@ sub run {
   info("$program_name starting");
 
   # Reduce CPU and disk usage by not logging debug messages by default.
-  Sys::Syslog::setlogmask(LOG_UPTO(LOG_INFO));
+  ## Sys::Syslog::setlogmask(LOG_UPTO(LOG_INFO));
 
   # If using EV, this will drop callback errors into syslog.
   $EV::DIED = sub {
