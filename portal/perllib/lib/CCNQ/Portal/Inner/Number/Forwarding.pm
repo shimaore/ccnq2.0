@@ -62,6 +62,7 @@ post '/number_forwarding/:number' => sub {
   CCNQ::Portal::Util::neat($params,qw(
     forwarding_type
     forwarding_number
+    forwarding_mode
   ));
 
   my $forwarding_type = $params->{forwarding_type};

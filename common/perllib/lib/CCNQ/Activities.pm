@@ -208,7 +208,7 @@ sub forwarding {
   my $self = shift;
   my ($request) = @_;
 
-  my $forwarding_sbc_name = $self->FORWARDING_SBC_NAME;
+  my $forwarding_sbc_name = $self->FORWARDING_SBC_NAME($request->{forwarding_mode});
   my $forwarding_uri = sub { 'sip:'.$request->{forwarding_number}.'@'.$forwarding_sbc_name.';account='.$request->{account}.';account_sub='.$request->{account_sub} };
 
   my $forwarding_data = {};

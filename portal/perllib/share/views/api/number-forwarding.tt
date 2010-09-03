@@ -14,6 +14,16 @@
           <option value="err"  <% IF field.forwarding_type == "err"  %>selected<%END %>><% |loc %>On error<% END %></option>
         </select>
       </p>
+      <% IF forwarding_modes %>
+      <p class="ui-helper-clearfix">
+        <label for="forwarding_mode" class="left"><% | loc %>Forwarding Mode:<% END %></label>
+        <select name="forwarding_mode">
+          <% FOR m IN forwarding_modes.pairs %>
+          <option value="<% m.key | html %>" <% IF field.forwarding_mode == m.key %>selected<%END %>><% m.value | html %></option>
+          <% END %>
+        </select>
+      </p>
+      <% END %>
       <p class="ui-helper-clearfix">
         <label for="forwarding_number" class="left"><% | loc %>Forward to:<% END %></label>
         <input type="text" name="forwarding_number" value="<% field.forwarding_number | html %>" />
