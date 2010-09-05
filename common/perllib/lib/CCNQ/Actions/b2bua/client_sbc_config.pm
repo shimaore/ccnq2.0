@@ -148,7 +148,6 @@ EOT
     CCNQ::B2BUA::copy_file($b2bua_name,qw( .. scripts ),${name});
   }
 
-  CCNQ::B2BUA::crontab_update();
   return;
 }
 
