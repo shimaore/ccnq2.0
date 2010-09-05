@@ -75,7 +75,8 @@ EOT
 # * On all servers, install the program:
 #
   sudo aptitude update
-  sudo aptitude -y install ntp monit psmisc build-essential git-core
+  sudo aptitude -y install ntp psmisc build-essential git-core
+  sudo aptitude -y install -t testing monit
   # Perl modules in testing have proper versions (the ones in Lenny might not).
   sudo aptitude -y install -t testing \
      libdatetime-perl libdatetime-locale-perl libanyevent-perl libasync-interrupt-perl libauthen-sasl-perl libcache-memcached-perl libcgi-untaint-email-perl libcgi-untaint-perl libclass-inspector-perl libcommon-sense-perl libcrypt-cbc-perl libdata-dump-perl libdata-dump-streamer-perl libdata-structure-util-perl libdbi-perl libdigest-hmac-perl libdigest-sha1-perl libemail-valid-perl libexpat-dev libhttp-server-simple-perl libhttp-server-simple-psgi-perl libio-all-perl libio-string-perl libio-stringy-perl libjson-perl libjson-xs-perl liblingua-en-numbers-ordinate-perl liblocale-maketext-lexicon-perl liblogger-syslog-perl libmailtools-perl libmime-types-perl libmodule-install-perl libnet-dns-perl libnet-ip-perl libnet-libidn-perl libnet-ssleay-perl libobject-event-perl libparams-util-perl libstring-crc32-perl libtest-deep-perl libtest-simple-perl libuniversal-require-perl liburi-perl libwww-perl libxml-parser-perl libxml-writer-perl libyaml-perl
