@@ -32,11 +32,11 @@ sub _install {
   # XXX Replace by a system where the different components request
   #     monit modules.
   -e '/etc/init.d/couchdb' && -e '/usr/bin/couchdb'
-    and push @components qw( conf.d/couchdb );
+    and push @components, qw( conf.d/couchdb );
   -e '/etc/init.d/freeswitch' && -e '/opt/freeswitch/bin/freeswitch'
-    and push @components qw( conf.d/freeswitch );
+    and push @components, qw( conf.d/freeswitch );
   -e '/etc/init.d/opensips' && -e '/usr/sbin/opensips'
-    and push @components qw( conf.d/opensips );
+    and push @components, qw( conf.d/opensips );
 
   for my $file (@components) {
     my $src = File::Spec->catfile(CCNQ::Monit::monit_directory,$file);
