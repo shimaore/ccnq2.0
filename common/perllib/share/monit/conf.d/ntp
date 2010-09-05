@@ -1,4 +1,4 @@
 check process ntp with pidfile /var/run/ntpd.pid
-  start program = "/etc/init.d/ntp start" with timeout 60 seconds
+  start program = "/etc/init.d/ntp start"
   stop  program = "/etc/init.d/ntp stop"
   group server
