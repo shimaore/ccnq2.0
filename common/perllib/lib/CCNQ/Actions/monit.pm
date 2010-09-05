@@ -25,7 +25,7 @@ use Logger::Syslog;
 
 sub _install {
   my ($params,$context) = @_;
-  for my $file qw( couchdb.monitrc freeswitch.monitrc local.monitrc monitrc opensips.monitrc ) {
+  for my $file qw( monitrc conf.d/local conf.d/couchdb conf.d/freeswitch conf.d/opensips ) {
     my $src = File::Spec->catfile(CCNQ::Monit::monit_directory,$file);
     my $content = CCNQ::Util::content_of($src);
     $content =~ s/__HOST__/CCNQ::Install::host_name()/ge;
