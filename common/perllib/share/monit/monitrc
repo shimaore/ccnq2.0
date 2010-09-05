@@ -1,6 +1,6 @@
 # check services at 2-minute intervals
 set daemon  120
-    with start delay 20
+#    with start delay 20
 
 set logfile syslog facility log_daemon
 set mailserver mail.__DOMAIN__
