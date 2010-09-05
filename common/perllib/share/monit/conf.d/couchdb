@@ -1,4 +1,4 @@
-check process __HOST__.couchdb with pidfile /usr/local/var/run/couchdb/couchdb.pid
+check process __HOST__.couchdb with pidfile /var/run/couchdb/couchdb.pid
    group couchdb
    start program = "/etc/init.d/couchdb start"
    stop  program = "/etc/init.d/couchdb stop"
