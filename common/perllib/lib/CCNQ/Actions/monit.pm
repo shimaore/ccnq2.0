@@ -25,9 +25,20 @@ use Logger::Syslog;
 
 sub _install {
   my ($params,$context) = @_;
-  for my $file qw( monitrc conf.d/local conf.d/root-fs conf.d/cron
-                    conf.d/ntp conf.d/named conf.d/ssh
-                    conf.d/couchdb conf.d/freeswitch conf.d/opensips ) {
+  my @components = qw(
+    monitrc conf.d/local conf.d/root-fs conf.d/cron
+    conf.d/ntp conf.d/named conf.d/ssh
+  );
+  # XXX Replace by a system where the different components request
+  #     monit modules.
+  -e '/etc/init.d/couchdb' && -e '/usr/bin/couchdb'
+    and push @components qw( conf.d/couchdb );
+  -e '/etc/init.d/freeswitch' && -e '/opt/freeswitch/bin/freeswitch'
+    and push @components qw( conf.d/freeswitch );
+  -e '/etc/init.d/opensips' && -e '/usr/sbin/opensips'
+    and push @components qw( conf.d/opensips );
+
+  for my $file (@components) {
     my $src = File::Spec->catfile(CCNQ::Monit::monit_directory,$file);
     my $content = CCNQ::Util::content_of($src);
     $content =~ s/__HOST__/CCNQ::Install::host_name()/ge;
