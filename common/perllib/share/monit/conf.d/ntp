@@ -1,4 +1,4 @@
-check process ntp with pidfile /var/run/ntpd.pid
+check process __HOST__.ntp with pidfile /var/run/ntpd.pid
   start program = "/etc/init.d/ntp start"
   stop  program = "/etc/init.d/ntp stop"
   group server

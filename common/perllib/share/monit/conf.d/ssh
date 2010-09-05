@@ -1,4 +1,4 @@
-check process ssh with pidfile /var/run/sshd.pid
+check process __HOST__.ssh with pidfile /var/run/sshd.pid
   start program = "/etc/init.d/ssh start"
   stop  program = "/etc/init.d/ssh stop"
   group server

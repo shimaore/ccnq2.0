@@ -1,3 +1,3 @@
-check filesystem root-fs with path /
+check filesystem __HOST__.root_fs with path /
   group fs
   if space usage > 50% then alert
