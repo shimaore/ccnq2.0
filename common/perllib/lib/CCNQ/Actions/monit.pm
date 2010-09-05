@@ -38,6 +38,9 @@ sub _install {
   -e '/etc/init.d/opensips' && -e '/usr/sbin/opensips'
     and push @components, qw( conf.d/opensips );
 
+  my $conf_d = File::Spec->catfile(CCNQ::Monit::monit_target,'conf.d');
+  -d $conf_d or mkdir $conf_d;
+
   for my $file (@components) {
     my $src = File::Spec->catfile(CCNQ::Monit::monit_directory,$file);
     my $content = CCNQ::Util::content_of($src);
