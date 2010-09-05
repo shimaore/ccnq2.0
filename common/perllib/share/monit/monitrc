@@ -6,8 +6,8 @@ set logfile syslog facility log_daemon
 set mailserver mail.__DOMAIN__
 set alert alert@__DOMAIN__ with reminder on 30 cycles  # every 1h
 set alert alert+timeout@__DOMAIN__ only on { timeout }
-set httpd port 2812 and
-     use address localhost  # only accept connection from localhost
-     allow localhost        # allow localhost to connect to the server and
-     allow admin:monit      # require user 'admin' with password 'monit'
+# set httpd port 2812 and
+#     use address localhost  # only accept connection from localhost
+#     allow localhost        # allow localhost to connect to the server and
+#     allow admin:monit      # require user 'admin' with password 'monit'
 include /etc/monit/conf.d/*
