@@ -36,6 +36,9 @@ sub _install {
     CCNQ::Util::print_to($dst,$content);
   }
 
+  # Restart monit with the new configuration
+  CCNQ::Util::execute('/etc/init.d/monit','restart');
+
   return;
 }
 
