@@ -83,7 +83,7 @@ sub crontab_update {
   my $crontab_line = <<CRON;
 SHELL=/bin/bash
 PATH=/bin:/usr/bin:/usr/local/bin
-#-disabled-# 0 * * * *   nice -n 20 ccnq2_crontab_cdr
+0 * * * *   nice -n 10 ccnq2_crontab_cdr
 CRON
   my $crontab_file = File::Spec->catfile(CCNQ::CCN,'ccnq2_crontab_cdr.crontab');
 
