@@ -1,0 +1,10 @@
+check process postfix with pidfile /var/spool/postfix/pid/master.pid
+  start program = "/etc/init.d/postfix start" with timeout 60 seconds
+  stop  program = "/etc/init.d/postfix stop"
+  if failed host shimaore.net port 25 protocol smtp
+    with timeout 15 seconds
+    then restart
+  if failed port 465 type tcpssl protocol smtp
+    with timeout 15 seconds
+    then restart
+  group server

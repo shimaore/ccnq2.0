@@ -1,21 +1,20 @@
 check process __HOST__.couchdb with pidfile /usr/local/var/run/couchdb/couchdb.pid
    group couchdb
-   start program = "/usr/local/etc/init.d/couchdb start"
-   stop  program = "/usr/local/etc/init.d/couchdb stop"
+   start program = "/etc/init.d/couchdb start"
+   stop  program = "/etc/init.d/couchdb stop"
    if failed port 5984 type TCP then restart
    if 5 restarts within 5 cycles then timeout
    depends on __HOST__.couchdb_bin
    depends on __HOST__.couchdb_rc
 
-check file __HOST__.couchdb_bin with path /usr/local/usr/bin/couchdb
+check file __HOST__.couchdb_bin with path /usr/bin/couchdb
    group couchdb
    if failed checksum then unmonitor
    if failed permission 755 then unmonitor
 
-check file __HOST__.couchdb_rc with path /usr/local/etc/init.d/couchdb
+check file __HOST__.couchdb_rc with path /etc/init.d/couchdb
    group couchdb
    if failed checksum then unmonitor
    if failed permission 755 then unmonitor
    if failed uid root then unmonitor
    # if failed gid root then unmonitor
-
