@@ -22,7 +22,7 @@
       <% END %>
     <% END %>
     </div>
-    <% FOREACH d IN r; UNLESS d.key.match('^_|^request|^type|^endpoint_ip') %>
+    <% FOREACH d IN r; UNLESS d.key.match('^_|^request|^type|^endpoint_ip|^action') %>
       <div class="entry">
         <span class="key"><%|loc%><% d.key %><%END%></span>
         <span class="value">
