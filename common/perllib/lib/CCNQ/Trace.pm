@@ -222,6 +222,7 @@ SCRIPT
       unlink $script;
       debug("trace: completed pcap dump");
       $rcv->send({pcap => MIME::Base64::encode($content)});
+      undef $content;
     });
 
   } else {
@@ -274,6 +275,7 @@ SCRIPT
       unlink $script;
       debug("trace: completed text dump");
       $rcv->send({rows => [@content]});
+      undef @content;
     });
 
   }

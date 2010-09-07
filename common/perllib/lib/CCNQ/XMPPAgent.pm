@@ -226,6 +226,8 @@ sub handle_message {
       eval {
         $request_body = decode_json( delete $context->{fragments}->{$message_id} );
       };
+      undef  $context->{fragments}->{$message_id};
+      delete $context->{fragments}->{$message_id};
       error("Object received is not an hashref"),
       return unless defined($request_body) && ref($request_body) eq 'HASH';
     } else {

@@ -16,7 +16,7 @@
 
 use strict; use warnings;
 
-use AnyEvent::Watchdog autorestart => 1, heartbeat => 30;
+use AnyEvent::Watchdog autorestart => 1, heartbeat => 15;
 use AnyEvent;
 
 use CCNQ::AE;
