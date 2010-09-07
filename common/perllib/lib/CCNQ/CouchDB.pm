@@ -313,6 +313,7 @@ sub retrieve_cv {
     }
 
     $rcv->send($doc);
+    undef $doc;
   });
   return $rcv;
 }
@@ -370,6 +371,7 @@ sub view_cv {
   $view->cb(sub{
     my $data = CCNQ::AE::receive(@_);
     $rcv->send($data);
+    undef $data;
   });
   return $rcv;
 }
