@@ -348,7 +348,7 @@ sub handle_message {
 sub _join_room {
   my ($context,$dest) = @_;
   my $nick = join(',',$context->{function},$context->{username},rand());
-  info("Attempting to join $dest as $nick");
+  debug("Attempting to join $dest as $nick");
   $context->{muc}->join_room($context->{connection},$dest,$nick,{
     history => {seconds=>0},
     create_instant => 1,
@@ -526,7 +526,7 @@ sub start {
     },
   );
 
-  info("($cluster_name,$role,$function) Connecting");
+  debug("($cluster_name,$role,$function) Connecting");
   $con->connect ();
 }
 
