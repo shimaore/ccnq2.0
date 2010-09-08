@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Copyright (C) 2009  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
@@ -25,6 +25,9 @@ INTERFACE=$1
 DEFAULT_SIZE_MB=100
 # What should we capture?
 DEFAULT_FILTER="udp or icmp or tcp portrange 5060-5099"
+
+# Do not attempt to run if the logging directory does not exist.
+[ -d /var/log/traces ] || exit
 
 # Capture 1Mo per file, up to the indicated size
 exec /usr/bin/dumpcap \
