@@ -10,6 +10,11 @@
         <option <% IF n.number_type == t.key %>selected<% END %> value="<% t.key | html %>" ><% t.value | html %></option>
         <% END %>
       </select>
+      <select name="number_type" readonly>
+        <% FOREACH t IN carriers %>
+        <option <% IF n.carrier == t.key %>selected<% END %> value="<% t.key | html %>" ><% t.value | html %></option>
+        <% END %>
+      </select>
       <input type="submit" value="<%|loc%>Save<%END%>">
     </form>
     <form method="POST" action="delete">

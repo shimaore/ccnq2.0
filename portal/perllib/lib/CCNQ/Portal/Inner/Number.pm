@@ -39,6 +39,24 @@ sub registered_number_types {
   return $number_types;
 }
 
+our $carriers;
+
+sub register_carriers {
+  my $self = shift;
+  my ($new_carriers) = @_;
+  $carriers ||= {};
+  $carriers = {
+    %$carriers,
+    %$new_carriers,
+  };
+  return;
+}
+
+sub registered_carriers {
+  my $self = shift;
+  return $carriers;
+}
+
 use CCNQ::AE;
 use CCNQ::API;
 
