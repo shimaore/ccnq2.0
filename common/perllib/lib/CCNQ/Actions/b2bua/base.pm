@@ -66,7 +66,6 @@ EOT
 
   CCNQ::Util::execute('/bin/sed','-i','-e','s/^FREESWITCH_ENABLED="false"$/FREESWITCH_ENABLED="true"/','/etc/default/freeswitch');
 
-  CCNQ::Trace::install();
   return;
 }
 
@@ -81,11 +80,6 @@ sub _session_ready {
   use CCNQ::XMPPAgent;
   CCNQ::XMPPAgent::join_cluster_room($context);
   return;
-}
-
-sub trace {
-  use CCNQ::Trace;
-  return CCNQ::Trace::run(shift->{params});
 }
 
 'CCNQ::Actions::b2bua::base';

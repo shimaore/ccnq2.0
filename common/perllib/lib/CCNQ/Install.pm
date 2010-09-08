@@ -182,6 +182,7 @@ use constant roles_to_functions => {
   'client-ocs-sbc'              => [qw( b2bua/client_ocs_sbc     b2bua/base monit node )],
   'client-all-sbc'              => [qw( b2bua/client_all_sbc     b2bua/base monit node )],
   'live-cdrs'                   => [qw( b2bua/live_cdrs db/billing )],
+  'traces'                      => [qw( node/traces )],
   'services'                    => [qw( b2bua/services           b2bua/base monit node )],
   'inbound-proxy'               => [qw( proxy/inbound_proxy        proxy/base monit node )],
   'outbound-proxy'              => [qw( proxy/outbound_proxy       proxy/base monit node )],

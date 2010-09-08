@@ -107,6 +107,7 @@ require_ok( 'CCNQ::Actions::mediaproxy::relay' );
 require_ok( 'CCNQ::Actions::monit' );
 require_ok( 'CCNQ::Actions::node' );
 require_ok( 'CCNQ::Actions::node::api' );
+require_ok( 'CCNQ::Actions::node::traces' );
 require_ok( 'CCNQ::Actions::db::provisioning' );
 require_ok( 'CCNQ::Actions::db::billing' );
 require_ok( 'CCNQ::Actions::db::bucket' );

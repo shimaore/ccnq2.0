@@ -55,7 +55,6 @@ sub _install {
 
   CCNQ::Util::execute('/bin/sed','-i','-e','s/^RUN_OPENSIPS=no$/RUN_OPENSIPS=yes/','/etc/default/opensips');
 
-  CCNQ::Trace::install();
   return;
 }
 
@@ -102,11 +101,6 @@ sub trusted_reload {
     'trusted_reload', 10, # once every 10 seconds
     CCNQ::AE::execute($context,qw( /usr/sbin/opensipsctl fifo trusted_reload ))
   );
-}
-
-sub trace {
-  use CCNQ::Trace;
-  CCNQ::Trace::run(shift->{params});
 }
 
 'CCNQ::Actions::proxy::base';

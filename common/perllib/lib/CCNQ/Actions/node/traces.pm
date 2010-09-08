@@ -1,5 +1,5 @@
-package CCNQ::Actions::node;
-# Copyright (C) 2009  Stephane Alnet
+package CCNQ::Actions::node::traces;
+# Copyright (C) 2010  Stephane Alnet
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -15,36 +15,25 @@ package CCNQ::Actions::node;
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use strict; use warnings;
 
-use Carp;
-use AnyEvent;
-use CCNQ::AE::Run;
-use Logger::Syslog;
+use CCNQ::Util;
+use CCNQ::XMPPAgent;
 
-sub install_all {
-    my ($params,$context) = @_;
-    return CCNQ::AE::Run::attempt_on_roles_and_functions('_install',$params,$context);
-}
+use CCNQ::Trace;
 
-sub restart_all {
-    my ($params,$context) = @_;
-    return CCNQ::AE::Run::attempt_on_roles_and_functions('_restart',$params,$context);
-}
-
-# Used to provide server-wide status information.
-sub status {
+sub _install {
   my ($params,$context) = @_;
-  my $rcv = AE::cv;
-  $rcv->send({running => 1});
-  return $rcv;
-}
-
-sub restart_agent {
-  my ($params,$context) = @_;
-  use AnyEvent::Watchdog::Util;
-  AnyEvent::Watchdog::Util::enabled
-    or croak "Not running under watchdog!";
-  AnyEvent::Watchdog::Util::restart;
+  CCNQ::Trace::install();
   return;
 }
 
-'CCNQ::Actions::node';
+sub _session_ready {
+  my ($params,$context) = @_;
+  CCNQ::XMPPAgent::join_cluster_room($context);
+  return;
+}
+
+sub trace {
+  return CCNQ::Trace::run(shift->{params});
+}
+
+'CCNQ::Actions::node::traces';
