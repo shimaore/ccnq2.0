@@ -6,11 +6,13 @@
     <form method="POST" action="modify">
       <input type="text" readonly name="number" value="<% n.number | html %>" size="16" />
       <select name="number_type">
+        <option value=""></option>
         <% FOREACH t IN number_types %>
         <option <% IF n.number_type == t.key %>selected<% END %> value="<% t.key | html %>" ><% t.value | html %></option>
         <% END %>
       </select>
       <select name="number_type" readonly>
+        <option value=""></option>
         <% FOREACH t IN carriers %>
         <option <% IF n.carrier == t.key %>selected<% END %> value="<% t.key | html %>" ><% t.value | html %></option>
         <% END %>
