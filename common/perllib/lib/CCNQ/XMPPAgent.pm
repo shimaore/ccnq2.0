@@ -288,7 +288,7 @@ sub handle_message {
     if($error) {
       # Make sure the error is an arrayref;
       $error = [$error] if ref($error) ne 'ARRAY';
-      debug("FAILURE for function=$function, action=$action");
+      error("FAILURE for function=$function, action=$action");
       _send_im_message($context,$msg->from,{
         status    => STATUS_FAILED,
         from      => CCNQ::Install::host_name,

@@ -78,8 +78,9 @@ sub _dispatch {
 
   my ($module,$command) = ($action =~ m{^(.*)/(delete|update|query)$});
 
-  die ['Invalid action [_1]',$action]
-    unless $module && $command;
+  # Simply ignore commands we don't know how to handle.
+  $module && $command
+    or return;
 
   use CCNQ::Proxy::Configuration;
   return CCNQ::Proxy::Configuration::run_from_class($module,$command,$request->{params},$context);
