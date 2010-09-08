@@ -26,12 +26,6 @@ sub _install {
   return;
 }
 
-sub _session_ready {
-  my ($params,$context) = @_;
-  CCNQ::XMPPAgent::join_cluster_room($context);
-  return;
-}
-
 sub trace {
   return CCNQ::Trace::run(shift->{params});
 }
