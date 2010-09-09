@@ -205,7 +205,7 @@ FIFODIR=`mktemp -d`
 FIFO="\$FIFODIR/fifo"
 mkfifo "\$FIFO"
 (nice mergecap -w - $base_dir/*.pcap | nice ngrep -i -l -q -I - -O "\$FIFO" '$ngrep_filter' >/dev/null) \&
-nice tshark -i "\$FIFO" -R '$tshark_filter' -w /dev/stdout
+nice tshark -i "\$FIFO" -R '$tshark_filter' -w /dev/stdout 2>/dev/null
 rm "\$FIFO"
 rmdir "\$FIFODIR"
 SCRIPT
