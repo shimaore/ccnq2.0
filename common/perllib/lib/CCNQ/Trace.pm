@@ -202,8 +202,8 @@ sub run {
     # Output the subset of packets
     my $script_content = <<SCRIPT;
 #!/bin/sh
-mergecap -w - $base_dir/*.pcap | ngrep -i -l -q -I - -O '$fh' '$ngrep_filter' >/dev/null;
-exec tshark -r "$fh" -R '$tshark_filter' -w -
+nice mergecap -w - $base_dir/*.pcap | ngrep -i -l -q -I - -O '$fh' '$ngrep_filter' >/dev/null;
+exec nice tshark -r "$fh" -R '$tshark_filter' -w -
 SCRIPT
     print $script $script_content;
     close($script);
@@ -232,8 +232,8 @@ SCRIPT
     my $fields = join(' ',map { ('-e', $_) } @{trace_field_names()});
     my $script_content = <<SCRIPT;
 #!/bin/sh
-mergecap -w - $base_dir/*.pcap | ngrep -i -l -q -I - -O '$fh' '$ngrep_filter' >/dev/null;
-exec tshark -r "$fh" -R '$tshark_filter' -nltad -T fields $fields
+nice mergecap -w - $base_dir/*.pcap | ngrep -i -l -q -I - -O '$fh' '$ngrep_filter' >/dev/null;
+exec nice tshark -r "$fh" -R '$tshark_filter' -nltad -T fields $fields
 SCRIPT
     print $script $script_content;
     close($script);
