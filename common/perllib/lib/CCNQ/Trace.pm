@@ -204,8 +204,8 @@ sub run {
 FIFODIR=`mktemp -d`
 FIFO="\$FIFODIR/fifo"
 mkfifo "\$FIFO"
-(nice mergecap -w - $base_dir/*.pcap | nice ngrep -i -l -q -I - -O "\$FIFO" '$ngrep_filter' >/dev/null) &
-nice tshark -i "\$FIFO" -R '$tshark_filter' -w -
+(nice mergecap -w - $base_dir/*.pcap | nice ngrep -i -l -q -I - -O "\$FIFO" '$ngrep_filter' >/dev/null) \&
+nice tshark -i "\$FIFO" -R '$tshark_filter' -w /dev/stdout
 rm "\$FIFO"
 rmdir "\$FIFODIR"
 SCRIPT
@@ -238,7 +238,7 @@ SCRIPT
 FIFODIR=`mktemp -d`
 FIFO="\$FIFODIR/fifo"
 mkfifo "\$FIFO"
-(nice mergecap -w - $base_dir/*.pcap | ngrep -i -l -q -I - -O "\$FIFO" '$ngrep_filter' >/dev/null) &
+(nice mergecap -w - $base_dir/*.pcap | ngrep -i -l -q -I - -O "\$FIFO" '$ngrep_filter' >/dev/null) \&
 nice tshark -i "\$FIFO" -R '$tshark_filter' -nltad -T fields $fields
 rm "\$FIFO"
 rmdir "\$FIFODIR"
