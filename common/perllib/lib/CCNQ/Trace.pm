@@ -234,7 +234,7 @@ SCRIPT
     # Output JSON
     my $fields = join(' ',map { ('-e', $_) } @{trace_field_names()});
     my $script_content = <<SCRIPT;
-#!/bin/sh
+#!/bin/bash
 FIFODIR=`mktemp -d`
 FIFO="\$FIFODIR/fifo"
 mkfifo "\$FIFO"
