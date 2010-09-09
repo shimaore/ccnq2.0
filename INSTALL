@@ -212,6 +212,7 @@ EOT
 
   sudo aptitude install -y -t testing libpam-runtime   # dependency issue as of 2010/08
   sudo aptitude install -y -t testing tshark ngrep
+  sudo adduser `whoami` wireshark
 
 # * Finally:
 
