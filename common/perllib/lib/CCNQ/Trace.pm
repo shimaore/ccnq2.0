@@ -198,16 +198,13 @@ sub run {
   if($dump_packets) {
     debug("trace: starting pcap dump");
 
+    my $fh     = new File::Temp (SUFFIX => '.pcap');
+
     # Output the subset of packets
     my $script_content = <<SCRIPT;
 #!/bin/bash
-FIFODIR=`mktemp -d`
-FIFO="\$FIFODIR/fifo"
-mkfifo "\$FIFO"
-(nice mergecap -w - $base_dir/*.pcap | nice ngrep -i -l -q -I - -O "\$FIFO" '$ngrep_filter' >/dev/null) \&
-nice tshark -i "\$FIFO" -R '$tshark_filter' -w /dev/stdout 2>/dev/null
-rm "\$FIFO"
-rmdir "\$FIFODIR"
+nice mergecap -w - $base_dir/*.pcap | nice ngrep -i -l -q -I - -O "$fh" '$ngrep_filter' >/dev/null
+exec nice tshark -r "$fh" -R '$tshark_filter' -w -
 SCRIPT
     print $script $script_content;
     close($script);
@@ -222,6 +219,7 @@ SCRIPT
     $cv->cb(sub {
       shift->recv;
       undef $cv;
+      undef $fh;
       unlink $script;
       debug("trace: completed pcap dump");
       $rcv->send({pcap => MIME::Base64::encode($content)});
