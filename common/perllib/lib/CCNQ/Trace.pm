@@ -202,8 +202,8 @@ sub run {
 
     # Output the subset of packets
     my $script_content = <<SCRIPT;
-#!/bin/bash
-nice mergecap -w - $base_dir/*.pcap | nice ngrep -i -l -q -I - -O "$fh" '$ngrep_filter' >/dev/null
+#!/bin/sh
+nice mergecap -w - $base_dir/*.pcap | nice ngrep -i -l -q -I - -O '$fh' '$ngrep_filter' >/dev/null;
 exec nice tshark -r "$fh" -R '$tshark_filter' -w -
 SCRIPT
     print $script $script_content;
