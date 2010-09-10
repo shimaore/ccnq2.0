@@ -32,6 +32,6 @@ DEFAULT_FILTER="udp portrange 5060-5299 or udp portrange 15060-15299 or icmp or 
 # Capture 10Mo per file, up to the indicated size
 exec /usr/bin/dumpcap \
   -p -i $INTERFACE \
-  -a filesize:10000  -b files:${RING_SIZE:-$DEFAULT_RING_SIZE} \
+  -b filesize:10000  -b files:${RING_SIZE:-$DEFAULT_RING_SIZE} \
   -w /var/log/traces/$INTERFACE.pcap \
   -f "${FILTER:-$DEFAULT_FILTER}"
