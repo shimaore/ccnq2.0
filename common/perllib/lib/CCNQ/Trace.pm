@@ -233,7 +233,7 @@ SCRIPT
     my $script_content = <<SCRIPT;
 #!/bin/bash
 nice mergecap -w - $base_dir/*.pcap | ngrep -i -l -q -I - -O '$fh' '$ngrep_filter' >/dev/null;
-exec nice tshark -i "$fh" -R '$tshark_filter' -nltad -T fields $fields
+exec nice tshark -r "$fh" -R '$tshark_filter' -nltad -T fields $fields
 SCRIPT
     print $script $script_content;
     close($script);
