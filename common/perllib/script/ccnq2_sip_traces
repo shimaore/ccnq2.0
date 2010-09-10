@@ -21,17 +21,17 @@
 # Which interface should we attempt to capture?
 INTERFACE=$1
 
-# Size of the capture spool / ring (in Mo)
-DEFAULT_SIZE_MB=100
+# Size of the capture spool / ring (in 10Mo blocks)
+DEFAULT_RING_SIZE=20
 # What should we capture?
-DEFAULT_FILTER="udp or icmp or tcp portrange 5060-5099"
+DEFAULT_FILTER="udp portrange 5060-5299 or udp portrange 15060-15299 or icmp or tcp portrange 5060-5299 or tcp portrange 15060-15299"
 
 # Do not attempt to run if the logging directory does not exist.
 [ -d /var/log/traces ] || exit
 
-# Capture 1Mo per file, up to the indicated size
+# Capture 10Mo per file, up to the indicated size
 exec /usr/bin/dumpcap \
   -p -i $INTERFACE \
-  -a filesize:1024  -b files:${SIZE_MB:-$DEFAULT_SIZE_MB} \
+  -a filesize:10000  -b files:${RING_SIZE:-$DEFAULT_RING_SIZE} \
   -w /var/log/traces/$INTERFACE.pcap \
   -f "${FILTER:-$DEFAULT_FILTER}"
