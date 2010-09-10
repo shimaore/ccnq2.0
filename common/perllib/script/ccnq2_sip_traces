@@ -24,7 +24,7 @@ INTERFACE=$1
 # Size of the capture spool / ring (in 10Mo blocks)
 DEFAULT_RING_SIZE=20
 # What should we capture?
-DEFAULT_FILTER="udp portrange 5060-5299 or udp portrange 15060-15299 or icmp or tcp portrange 5060-5299 or tcp portrange 15060-15299"
+DEFAULT_FILTER="udp portrange 5060-5299 or udp portrange 15060-15299 or icmp or tcp portrange 5060-5200 or tcp portrange 15060-15200"
 
 # Do not attempt to run if the logging directory does not exist.
 [ -d /var/log/traces ] || exit
