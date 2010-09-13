@@ -19,58 +19,6 @@ use strict; use warnings;
 
 use base qw(CCNQ::Proxy::Base);
 
-=pod
-    An endpoint can be a line or trunk towards one of your downstream
-    customers.
-    <p>
-    Subscribers are uniquely identified by their Username. (You can use
-    the Inbound Numbers screen to assign DIDs to an endpoint.)
-    <p>
-    There are two methods to authenticate an endpoint when they place a call:
-    <ul>
-    <li>by the IP address of their endpoint;
-    <li>using the Username and Password specified.
-    </ul>
-    Note that the originating port (UDP or TCP) for the SIP message is never matched;
-    the port specified for the Subscriber is only used for calls going to that endpoint
-    (see below).
-
-    <p>
-    If an endpoint cannot accept all digits in calls sent to them (for example 10 instead of 11 digits US), then
-    use the Strip Digit field to specify how many digits should be stripped when sending calls to that
-    endpoint.
-
-    <p>
-    For calls that must terminate at an endpoint, the following are tried in order:
-    <ul>
-    <li>the location specified in the registration information, if the endpoint is registered;
-    <li>the location (SIP URI) specified as the CFNR (Call Forward on Non-Registered)
-        for the destination Inbound Number if one is specified (see under Inbound Numbers);
-    <li>as a last resort, the IP address and SIP port number specified for the Subscriber.
-    </ul>
-
-
-sub form
-{
-    my $self = shift;
-    return (
-        'Username'              => 'text',
-        'Domain' => [ map { $_ => $_ } $self->list_of_domains ],
-        'Password'              => 'text',
-        'IP'                    => 'ip',
-        'Port'                  => 'text',
-        'SRV'                   => 'text',
-        'Dest_Domain'           => 'text',
-        'Strip_Digit'           => [''=>'None',1=>'Strip First Digit'],
-        'Account'               => 'text',
-        'Allow_OnNet'           => [1=>'Yes',0=>'No'],
-        'Always_Proxy_Media'    => [0=>'No',1=>'Yes'],
-        'Forwarding_SBC'        => [0=>'No',1=>'Yes'],
-    );
-}
-
-=cut
-
 use Digest::MD5 qw(md5_hex);
 
 sub insert
@@ -97,9 +45,10 @@ sub insert
     my $check_from = $params->{check_from};
     my $user_location = $params->{location};
 
-    return ()
-      unless defined $username and $username ne ''
-      and    defined $domain   and $domain   ne '';
+    defined $username and $username ne ''
+      or die('No username');
+    defined $domain   and $domain   ne ''
+      or die('No domain');
 
     my $challenge   = $self->{challenge};
     $challenge = $domain if $challenge eq '';
@@ -110,9 +59,8 @@ sub insert
 
     $ip = undef unless defined($ip) && $ip =~ /^[\d.]+$/;
 
-    # A Forwarding SBC can only be authenticated by IP.
-    return ()
-      if $forwarding_sbc && !defined($ip);
+    $forwarding_sbc && !defined($ip)
+      and die('A Forwarding SBC can only be authenticated by IP.');
 
     $strip_digit = undef unless defined($strip_digit) && $strip_digit =~ /^\d$/;
 
@@ -180,9 +128,10 @@ sub delete
     my $domain   = $params->{domain};
     my $ip       = $params->{ip};
 
-    return ()
-      unless defined $username and $username ne ''
-      and    defined $domain   and $domain   ne '';
+    defined $username and $username ne ''
+      or die('No username');
+    defined $domain   and $domain   ne ''
+      or die('No domain');
 
     my @res = (
         <<'SQL',[$username,$domain],
