@@ -31,10 +31,11 @@ sub do_sql {
   my $cv = AE::cv;
 
   my $error = sub {
-    error(join(',',@_));
+    my $msg = shift;
+    error($msg);
     $db->rollback(sub {
       debug("Rolled back: $@");
-      $cv->send([@_]);
+      $cv->send(["Rolled back because $msg"]);
     });
     return;
   };
@@ -43,7 +44,7 @@ sub do_sql {
     my ($sql,$args,$cb) = @_;
     debug("Postponing $sql with (".join(',',@{$args}).") and callback $cb");
     return sub {
-      return $error->('Database error: [_1]',$@) if $@;
+      return $error->("Database error: $@") if $@;
       debug("Executing $sql with (".join(',',@{$args}).") and callback $cb");
       $db->exec($sql,@{$args},$cb);
       return;
@@ -51,10 +52,10 @@ sub do_sql {
   };
 
   my $run = sub {
-    $error->('Database error: [_1]',$@) if $@;
+    $error->("Database error: $@") if $@;
     debug("Commit sequence");
     $db->commit(sub {
-      return $error->('Database error: [_1]',$@) if $@;
+      return $error->("Database error: $@") if $@;
       # It seems the documentation for AnyEvent::DBI is incorrect.
       # $error->('Commit failed') unless $_[1];
       debug("Sequence committed");
@@ -82,8 +83,9 @@ sub do_sql_query {
   my $cv = AE::cv;
 
   my $error = sub {
-    error(join(',',@_));
-    $cv->send([@_]);
+    my $msg = shift;
+    error($msg);
+    $cv->send(["Query canceled because $msg"]);
   };
 
   $error->('Invalid query') unless $sql && $columns;
@@ -92,13 +94,13 @@ sub do_sql_query {
   $sql =~ s/_columns_/join(',',@{$columns})/ge;
 
   my $cb = sub{
-    $error->('Database error: [_1]',$@) if $@;
+    $error->("Database error: $@") if $@;
 
     # This ensures the $db object is kept alive until we finish.
     my $dummy = $db;
 
     my ($dbh, $rows, $rv) = @_;
-    $#_ or $error->('Database error: [_1]',$@);
+    $#_ or $error->("Database error: $@");
     debug("Sending SQL response");
     my $map_columns = sub {
       my %a;
