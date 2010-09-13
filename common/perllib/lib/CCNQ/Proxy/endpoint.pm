@@ -78,6 +78,14 @@ sub insert
       unless $forwarding_sbc =~ /^\d$/;
 
     my @res;
+
+    # Map IP to username (for IP-based authentication)
+    if(defined $ip)
+    {
+        push @res, $self->_avp_set($ip,$domain,'src_subs',$username);
+        push @res, $self->_avp_set($ip,$domain,'forwarding_sbc',$forwarding_sbc);
+    }
+
     if( defined $password and $password ne '' )
     {
         push @res,
@@ -87,22 +95,13 @@ SQL
     }
     else
     {
-        # XXX FIXME These are creating issues. I'm not sure they serve any purpose anymore, maybe it's time to remove this piece?
         push @res,
             <<'SQL',[$username,$domain];
-            INSERT INTO subscriber(username,domain) VALUES (?,?)
+            DELETE FROM subscriber WHERE username = ? AND domain = ?
 SQL
     }
 
-    # Map IP to username (for IP-based authentication)
-    if(defined $ip)
-    {
-        push @res, $self->_avp_set($ip,$domain,'src_subs',$username);
-        push @res, $self->_avp_set($ip,$domain,'forwarding_sbc',$forwarding_sbc);
-    }
-
     return (
-        @res,
         $self->_avp_set($username,$domain,'account',$account),
         $self->_avp_set($username,$domain,'account_sub',$account_sub),
         $self->_avp_set($username,$domain,'user_ip',$ip),
@@ -118,6 +117,7 @@ SQL
         $self->_avp_set($username,$domain,'ignore_default_outbound_route',$ignore_default_outbound_route?1:undef),
         $self->_avp_set($username,$domain,'check_from',$check_from?1:undef),
         $self->_avp_set($username,$domain,'user_location',$user_location),
+        @res,
     );
 }
 
