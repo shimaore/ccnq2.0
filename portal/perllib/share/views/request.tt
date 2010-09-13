@@ -6,7 +6,7 @@
 <% SET progress = 0 %>
 <% SET total = 0 %>
 <% FOREACH r IN result %>
-  <% IF r.status %>
+  <% IF r.status && r.response %>
     <% SET rank = r.rank %>
     <% IF not activities.$rank %><% SET activities.$rank = 1 %><% SET progress = progress + 1 %><% END %>
     <% IF r.status == 'failed' %><% SET refresh = 0 %> <span class="ui-icon ui-icon-alert"></span><% END %>
