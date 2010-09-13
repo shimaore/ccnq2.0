@@ -115,7 +115,7 @@ sub crontab_update {
   my $crontab_line = <<CRON;
 SHELL=/bin/bash
 PATH=/bin:/usr/bin:/usr/local/bin
-20 3 * * *   nice -n 20 /usr/bin/env find /var/log/traces -type f '!' -newermt '3 days ago' -delete
+20 3 * * *   nice -n 20 /usr/bin/env find /var/log/traces -type f '!' -newermt '2 days ago' -delete
 CRON
   my $crontab_file = File::Spec->catfile(CCNQ::CCN,'ccnq2_crontab_traces.crontab');
 
