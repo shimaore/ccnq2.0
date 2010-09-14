@@ -137,11 +137,11 @@ sub rate_limit_cv {
   # The last one was ran less than $interval seconds ago.
   and do {
     # Postpone the next one.
-    my $ago = $now - $rate_limit_timer->{$class};
+    my $ago = $now - $rate_limit_timer->{$class}->{when};
     my $until = $interval - $ago;
     my $rcv = AE::cv;
     $rate_limit_timer->{$class} = {
-      when => $now + $interval/2,
+      when => $now + $until,
       cb   => AnyEvent->timer( after => $until, cb => sub {
                 receive($cv);
                 delete $rate_limit_timer->{$class};
