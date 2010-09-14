@@ -300,8 +300,8 @@ sub handle_message {
       return;
     }
 
-    # SUCCESS is either ->send(undef), ->send('completed'), or ->send({ name => value }).
-    if( $result && $result ne 'completed' && ref($result) ne 'HASH' ) {
+    # SUCCESS is either ->send(undef), or ->send({ name => value }).
+    if( $result && ref($result) ne 'HASH' ) {
       error(Carp::longmess("Coding error: $result is not a valid response"));
       return;
     }
@@ -320,7 +320,7 @@ sub handle_message {
       action    => $request_body->{action},
       response_at => time(),
     };
-    # $result is either undef, 'completed' or a hashref.
+    # $result is either undef, or a hashref.
     # Only report a valid content -- i.e. a hashref.
     $response->{result} = $result if ref($result);
     _send_im_message($context,$msg->from,$response);

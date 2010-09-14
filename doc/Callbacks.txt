@@ -1,6 +1,6 @@
 [This document was last updated 2010-03-20 and is considered current.]
 
-This is the specification for the callbacks provided by the 
+This is the specification for the callbacks provided by the
 actions-handling modules (found under CCNQ::Actions::*).
 
 These modules contain named sub()s (called "actions"). These "actions" are
@@ -60,13 +60,7 @@ The AE::cv must return the following values (via ->send):
 
   # Send a "successful" response with or without a result:
   $rcv->send                     # No result is provided in the response
-  $rcv->send('completed')        # Same as above, more explicit.
   $rcv->send({ name => value })  # Successful, with result (must be a hashref)
 
   # Send a "failure" response with an error message:
-  $rcv->send([$error_template,$param1,$param2,..])
-
-Error messages follow the templates in Locale::Maketext, i.e. should use
-[_1], [_2], .. for parameters. This allows for I18N of error messages when
-they are eventually presented on the portal.
-
+  $rcv->send([$error_message])

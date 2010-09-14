@@ -113,8 +113,6 @@ one every $interval seconds. There is one such rate-limiter per $class.
 (The operations performed by all $cv belonging to the same $class should
 be idempotent.)
 
-$cv and $rcv should return 'completed' if successful.
-
 =cut
 
 our $rate_limit_timer;
