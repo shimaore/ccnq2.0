@@ -32,7 +32,7 @@ sub execute {
 
     return $rcv->send(['Failed to execute [_1]: [_2]',$command,$@]) if $@;
 
-    return $rcv->send('completed') if $ret == 0;
+    return $rcv->send if $ret == 0; # completed
 
     # Happily lifted from perlfunc.
     if ($ret == -1) {
