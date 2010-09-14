@@ -173,7 +173,7 @@ sub __build_response_handler {
       # Since "status" is not the marker used to decide whether there was an error,
       # it should always be 'completed' if no {error} is present.
       error(Carp::longmess("node/api: Coding error: status is '$response->{status}', but no {error} present, should be 'completed'"))
-        if $response->{status} ne 'completed';
+        if $response->{status} ne CCNQ::XMPPAgent::STATUS_COMPLETED;
       if($response->{result}) {
         my $json_content = encode_json($response->{result});
         debug("node/api: Request queued: $response->{status} with $json_content");
