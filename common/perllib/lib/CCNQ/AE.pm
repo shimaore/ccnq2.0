@@ -26,17 +26,17 @@ sub execute {
   my $rcv = AE::cv;
 
   my $cv = eval { AnyEvent::Util::run_cmd([@_],'<','/dev/null','>','/dev/null','2>','/dev/null') };
-  die ['Failed to execute [_1]: [_2]',$@] if $@;
+  die ["Failed to execute $command: $@"] if $@;
   $cv->cb( sub {
     my $ret = eval { shift->recv };
 
-    return $rcv->send(['Failed to execute [_1]: [_2]',$command,$@]) if $@;
+    return $rcv->send(["Failed to execute $command: $@"]) if $@;
 
     return $rcv->send if $ret == 0; # completed
 
     # Happily lifted from perlfunc.
     if ($ret == -1) {
-        return $rcv->send(['Failed to execute [_1]: [_2]',$command,$!]);
+        return $rcv->send(["Failed to execute $command: $!"]);
     }
     elsif ($ret & 127) {
         return $rcv->send(['Child command [_1] died with signal [_2], [_3] coredump',

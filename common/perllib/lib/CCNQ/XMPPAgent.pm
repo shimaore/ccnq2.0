@@ -279,7 +279,7 @@ sub handle_message {
 
     # FAILURE is either "die ..." or ->send([$error_template,...]);
     # Note that both die($error_msg) and die([$error_template,...]) are
-    # valid and supported. (The later uses Maketext-type templates.)
+    # valid and supported.
     # However {error} must always be an arrayref.
 
     # If ->send([$error]) was used, use that (in preference to what $@ might
