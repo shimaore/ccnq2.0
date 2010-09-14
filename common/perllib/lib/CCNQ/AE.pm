@@ -130,7 +130,7 @@ sub rate_limit_cv {
   and do {
     # Do nothing, this will be ran eventually.
     my $rcv = AE::cv;
-    $rcv->send('completed');
+    $rcv->send; # completed
     return $rcv;
   };
 
@@ -147,7 +147,7 @@ sub rate_limit_cv {
       cb   => AnyEvent->timer( after => $until, cb => sub {
                 receive($cv);
                 delete $rate_limit_timer->{$class};
-                $rcv->send('completed');
+                $rcv->send; # completed
               }),
     };
     return $rcv;
