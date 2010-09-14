@@ -17,46 +17,6 @@ package CCNQ::Activities::Proxy;
 
 use Carp;
 
-sub aliases_update {
-  my $self = shift;
-  my $request = shift;
-
-  $request->{cluster_name} or croak "No cluster_name";
-
-  # Return list of activities required to complete this request.
-  return (
-    {
-      action => 'aliases/update',
-      cluster_name => $request->{cluster_name},
-      params => { map { $_ => $request->{$_} } qw(
-          username
-          domain
-          target_username
-          target_domain
-      )}
-    },
-  );
-}
-
-sub aliases_delete {
-  my $self = shift;
-  my $request = shift;
-
-  $request->{cluster_name} or croak "No cluster_name";
-
-  # Return list of activities required to complete this request.
-  return (
-    {
-      action => 'aliases/delete',
-      cluster_name => $request->{cluster_name},
-      params => { map { $_ => $request->{$_} } qw(
-        username
-        domain
-      )}
-    },
-  );
-}
-
 sub domain_update {
   my $self = shift;
   my $request = shift;

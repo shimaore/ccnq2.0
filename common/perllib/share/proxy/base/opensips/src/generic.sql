@@ -74,22 +74,6 @@ CREATE TABLE subscriber (
 CREATE INDEX username_idx ON subscriber (username);
 
 --
--- Table structure for table 'aliases' -- location-like table
---
--- alias_db-create.sql
-INSERT INTO version (table_name, table_version) values ('aliases','2');
-CREATE TABLE aliases (
-    id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    alias_username CHAR(64) DEFAULT '' NOT NULL,
-    alias_domain CHAR(64) DEFAULT '' NOT NULL,
-    username CHAR(64) DEFAULT '' NOT NULL,
-    domain CHAR(64) DEFAULT '' NOT NULL,
-    CONSTRAINT alias_idx UNIQUE (alias_username, alias_domain)
-);
-
-CREATE INDEX target_idx ON aliases (username, domain);
-
---
 -- Table structure for table 'avpops'
 --
 -- avpops-create.sql
