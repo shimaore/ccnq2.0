@@ -21,8 +21,8 @@ use CCNQ::Install;
 -e CCNQ::Install::couchdb_local_server_file or $ENV{'CCNQ_couchdb_local_server'} = '127.0.0.1';
 
 require_ok( "CCNQ::Manager" );
-is(ref(CCNQ::Manager::request_to_activity('aliases_delete')->recv),'CODE');
-is(ref(CCNQ::Manager::request_to_activity('aliases_update')->recv),'CODE');
+is(ref(CCNQ::Manager::request_to_activity('domain_delete')->recv),'CODE');
+is(ref(CCNQ::Manager::request_to_activity('domain_update')->recv),'CODE');
 is(ref(CCNQ::Manager::request_to_activity('endpoint_delete')->recv),'CODE');
 is(ref(CCNQ::Manager::request_to_activity('trace_query')->recv),'CODE');
 ok(!defined(CCNQ::Manager::request_to_activity('testing_with_an_unknown_weird_spooky_request')->recv));
