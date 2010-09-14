@@ -62,7 +62,6 @@ require_ok( 'CCNQ::Restart' );
 require_ok( 'CCNQ::XMPPAgent' );
 
 require_ok( 'CCNQ::Proxy' );
-require_ok( 'CCNQ::Proxy::aliases' );
 require_ok( 'CCNQ::Proxy::Base' );
 require_ok( 'CCNQ::Proxy::Config' );
 require_ok( 'CCNQ::Proxy::Configuration' );
@@ -120,8 +119,6 @@ require_ok( 'CCNQ::Actions::proxy::router_no_registrar' );
 require_ok( 'CCNQ::Actions::proxy::complete_transparent' );
 
 # These will eventually go.
-require_ok( 'CCNQ::Manager::Requests::aliases_delete' );
-require_ok( 'CCNQ::Manager::Requests::aliases_update' );
 require_ok( 'CCNQ::Manager::Requests::domain_delete' );
 require_ok( 'CCNQ::Manager::Requests::domain_update' );
 require_ok( 'CCNQ::Manager::Requests::dr_gateway_delete' );
