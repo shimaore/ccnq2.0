@@ -56,6 +56,13 @@ sub clean_params {
     location
 
   ));
+  $params->{strip_digit}                   ||= undef;
+  $params->{allow_onnet}                   ||= undef;
+  $params->{always_proxy_media}            ||= undef;
+  $params->{forwarding_sbc}                ||= undef;
+  $params->{ignore_caller_outbound_route}  ||= undef;
+  $params->{ignore_default_outbound_route} ||= undef;
+  $params->{check_from}                    ||= undef;
 }
 
 use constant password_charset => "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-";
