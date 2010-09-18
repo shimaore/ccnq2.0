@@ -44,6 +44,11 @@ sub clean_params {
     via
 
     dest_domain
+
+    location
+
+  ));
+  CCNQ::Portal::Util::strip($params,qw(
     strip_digit
     allow_onnet
     always_proxy_media
@@ -52,17 +57,7 @@ sub clean_params {
     ignore_caller_outbound_route
     ignore_default_outbound_route
     check_from
-
-    location
-
   ));
-  $params->{strip_digit}                   ||= undef;
-  $params->{allow_onnet}                   ||= undef;
-  $params->{always_proxy_media}            ||= undef;
-  $params->{forwarding_sbc}                ||= undef;
-  $params->{ignore_caller_outbound_route}  ||= undef;
-  $params->{ignore_default_outbound_route} ||= undef;
-  $params->{check_from}                    ||= undef;
 }
 
 use constant password_charset => "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-";

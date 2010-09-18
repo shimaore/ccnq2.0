@@ -39,6 +39,29 @@ sub neat {
   return $params;
 }
 
+=head1 strip
+
+Same as neat() but explicitely set the value to undef instead of
+not storing it.
+
+=cut
+
+sub strip {
+  my $params = shift;
+  for my $p (@_) {
+    my $v = params->{$p};
+    if(defined($v)) {
+      $v = Encode::decode_utf8($v,Encode::FB_HTMLCREF);
+    }
+    if(defined($v)) {
+      $v =~ s/^\s+//; $v =~ s/\s+$//; $v =~ s/\s+/ /g;
+    }
+    $v = undef if defined($v) && $v eq '';
+    $params->{$p} = $v;
+  }
+  return $params;
+}
+
 sub redirect_request {
   my $r = CCNQ::AE::receive(@_);
 
