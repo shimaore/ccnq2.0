@@ -21,6 +21,14 @@ use CCNQ::Portal::I18N;
 use CCNQ::Portal::Util;
 use CCNQ::Portal::Inner::Util;
 
+=head1 number_type
+
+A number_type is used by a customer to select a number (for example
+during self-ordering). For example "Metered DID", "Unlimited DID",
+"Toll-Free", etc.
+
+=cut
+
 our $number_types;
 
 sub register_number_types {
@@ -38,6 +46,13 @@ sub registered_number_types {
   my $self = shift;
   return $number_types;
 }
+
+=head1 carrier
+
+A carrier is used by management personel to identify a carrier,
+carrier trunk, carrier trunk type, etc.
+
+=cut
 
 our $carriers;
 
