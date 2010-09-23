@@ -60,15 +60,6 @@ sub clean_params {
   ));
 }
 
-use constant password_charset => "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-";
-use constant password_charset_length => length(password_charset);
-
-sub _random_password {
-  my ($length) = @_;
-  return '' if $length == 0;
-  return _random_password($length-1).substr(password_charset,int(rand(password_charset_length)),1);
-}
-
 sub gather_field {
   my $params = clean_params();
 
@@ -91,7 +82,7 @@ sub gather_field {
     $endpoint_data = CCNQ::Portal::Inner::Util::get_endpoint($account,$endpoint);
   } else {
     $params->{domain} ||= CCNQ::Install::cluster_fqdn($params->{cluster}) if $params->{cluster};
-    $params->{password} ||= _random_password(16);
+    $params->{password} ||= CCNQ::Portal::Util::random_password(16);
     $endpoint_data = $params;
   }
 

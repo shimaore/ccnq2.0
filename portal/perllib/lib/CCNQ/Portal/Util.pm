@@ -72,4 +72,13 @@ sub redirect_request {
   return redirect $url;
 }
 
+use constant password_charset => "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-";
+use constant password_charset_length => length(password_charset);
+
+sub random_password {
+  my ($length) = @_;
+  return '' if $length == 0;
+  return _random_password($length-1).substr(password_charset,int(rand(password_charset_length)),1);
+}
+
 1;
