@@ -45,7 +45,7 @@ sub as_tabs {
   $cv or return send_error();
   my $result = CCNQ::AE::receive_docs($cv);
   $result->[0] or return send_error();
-  my @columns = sort keys %{ $result->[0] };
+  my @columns = sort grep { !/^_/ } keys %{ $result->[0] };
   # header row
   my $tab = join("\t",@columns)."\n";
   # data rows
