@@ -43,7 +43,7 @@ sub as_tabs {
   content_type 'text/tab-separated-values';
   header 'Content-Disposition' => qq(attachment; filename="export.csv");
   $cv or return send_error();
-  my $result = sub { CCNQ::AE::receive_docs($cv) };
+  my $result = CCNQ::AE::receive_docs($cv);
   $result->[0] or return send_error();
   my @columns = sort keys %{ $result->[0] };
   # header row
