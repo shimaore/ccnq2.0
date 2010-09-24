@@ -33,7 +33,26 @@ sub as_json {
   my $cv = shift;
   $cv or return send_error();
   content_type 'text/json';
+  header 'Content-Disposition' => qq(attachment; filename="export.json");
   return to_json($cv->recv);
+}
+
+sub as_tabs {
+  my $cv = shift;
+  $cv or return send_error();
+  content_type 'text/tab-separated-values';
+  header 'Content-Disposition' => qq(attachment; filename="export.csv");
+  $cv or return send_error();
+  my $result = sub { CCNQ::AE::receive_docs($cv) };
+  $result->[0] or return send_error();
+  my @columns = sort keys %{ $result->[0] };
+  # header row
+  my $tab = join("\t",@columns)."\n";
+  # data rows
+  $tab .= join('', map {
+    join("\t", @{$_}{@columns})."\n"  # everybody love hashref slices!
+  } @$result);
+  return $tab;
 }
 
 =head1 /provisioning/view/:view/@id
@@ -62,6 +81,7 @@ sub _view_id {
 # View one
 get      '/provisioning/view/:view/:id' => sub { to_html(_view_id) };
 get '/json/provisioning/view/:view/:id' => sub { as_json(_view_id) };
+get '/tabs/provisioning/view/:view/:id' => sub { as_tabs(_view_id) };
 
 sub _get_number {
   CCNQ::Portal->current_session->user &&
@@ -84,6 +104,8 @@ get      '/provisioning/number'         => sub { to_html(_get_number) };
 get      '/provisioning/number/:number' => sub { to_html(_get_number) };
 get '/json/provisioning/number'         => sub { as_json(_get_number) };
 get '/json/provisioning/number/:number' => sub { as_json(_get_number) };
+get '/tabs/provisioning/number'         => sub { as_tabs(_get_number) };
+get '/tabs/provisioning/number/:number' => sub { as_tabs(_get_number) };
 
 sub _view_account {
   CCNQ::Portal->current_session->user &&
