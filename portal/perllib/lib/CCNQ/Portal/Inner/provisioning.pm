@@ -46,13 +46,13 @@ sub as_tabs {
   my $result = CCNQ::AE::receive_docs($cv);
   $result->[0] or return send_error();
   my @columns = sort grep { !/^_/ } keys %{ $result->[0] };
-  # header row
-  my $tab = join("\t",@columns)."\n";
-  # data rows
-  $tab .= join('', map {
-    join("\t", map { defined($_) ? $_ : '' } @{$_}{@columns})."\n"  # everybody love hashref slices!
-  } @$result);
-  return $tab;
+  return
+    # header row
+    join("\t",@columns)."\n".
+    # data rows
+    join('', map {
+      join("\t", map { defined($_) ? $_ : '' } @{$_}{@columns})."\n"  # everybody love hashref slices!
+    } @$result);
 }
 
 =head1 /provisioning/view/:view/@id
