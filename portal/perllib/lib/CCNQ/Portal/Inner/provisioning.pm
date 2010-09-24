@@ -50,7 +50,7 @@ sub as_tabs {
   my $tab = join("\t",@columns)."\n";
   # data rows
   $tab .= join('', map {
-    join("\t", @{$_}{@columns})."\n"  # everybody love hashref slices!
+    join("\t", map { defined($_) ? $_ : '' } @{$_}{@columns})."\n"  # everybody love hashref slices!
   } @$result);
   return $tab;
 }
