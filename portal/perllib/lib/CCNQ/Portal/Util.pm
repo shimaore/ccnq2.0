@@ -78,7 +78,7 @@ use constant password_charset_length => length(password_charset);
 sub random_password {
   my ($length) = @_;
   return '' if $length == 0;
-  return _random_password($length-1).substr(password_charset,int(rand(password_charset_length)),1);
+  return random_password($length-1).substr(password_charset,int(rand(password_charset_length)),1);
 }
 
 1;
