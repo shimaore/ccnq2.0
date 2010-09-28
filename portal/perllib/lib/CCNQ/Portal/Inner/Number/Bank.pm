@@ -70,6 +70,24 @@ sub as_json {
   return to_json( CCNQ::AE::receive($cv));
 }
 
+sub as_tabs {
+  my $cv = shift;
+  $cv or return send_error();
+  content_type 'text/tab-separated-values';
+  header 'Content-Disposition' => qq(attachment; filename="export.csv");
+  my $result = CCNQ::AE::receive_docs($cv);
+  $result->[0] or return "";
+  my @columns = qw( number number_type carrier );
+  return
+    # header row
+    join("\t", map { _($_)_ } @columns)."\n".
+    # data rows
+    join('', map {
+      join("\t", map { defined($_) ? $_ : '' } @{$_}{@columns})."\n"  # everybody love hashref slices!
+    } @$result);
+}
+
+
 sub _get_bank_numbers {
   CCNQ::Portal->current_session->user
     or return;
@@ -99,6 +117,7 @@ sub _get_bank_numbers {
 
 get       '/numbers/bank/' => sub { to_html _get_bank_numbers };
 get  '/json/numbers/bank/' => sub { as_json _get_bank_numbers };
+get  '/tabs/numbers/bank/' => sub { as_tabs _get_bank_numbers };
 
 =head2 PUT /numbers/bank?number=...
 
