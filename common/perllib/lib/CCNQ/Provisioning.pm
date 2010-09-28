@@ -37,22 +37,6 @@ use constant js_report_by_account => <<'JAVASCRIPT';
   }
 JAVASCRIPT
 
-use constant js_report_by_endpoint => <<'JAVASCRIPT';
-  function (doc) {
-    if(doc.endpoint) {
-      emit([doc.account,doc.endpoint,doc.profile,doc.type,doc._id],null);
-    }
-  }
-JAVASCRIPT
-
-use constant js_report_by_location => <<'JAVASCRIPT';
-  function (doc) {
-    if(doc.location) {
-      emit([doc.account,doc.location,doc.profile,doc.type,doc._id],null);
-    }
-  }
-JAVASCRIPT
-
 use constant js_report_numbers => <<'JAVASCRIPT';
   function (doc){
     if(doc.profile == 'number') {
@@ -170,14 +154,6 @@ use constant provisioning_designs => {
     views    => {
       account => {
         map => js_report_by_account,
-        # no reduce function
-      },
-      endpoint_all => {
-        map => js_report_by_endpoint,
-        # no reduce function
-      },
-      location_all => {
-        map => js_report_by_location,
         # no reduce function
       },
       number => {
