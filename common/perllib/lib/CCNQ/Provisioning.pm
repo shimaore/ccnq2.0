@@ -163,7 +163,7 @@ use constant provisioning_designs => {
       lookup_numbers => {
         map => js_report_lookup_numbers,
         # no reduce function
-      },a_
+      },
       lookup_numbers_in_account => {
         map => js_report_lookup_numbers_in_account,
       },
