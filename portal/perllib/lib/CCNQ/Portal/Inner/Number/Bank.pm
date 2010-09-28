@@ -105,7 +105,7 @@ sub _get_bank_numbers {
       or return;
 
     # If a number is provided, only show that one.
-    my $number = CCNQ::Portal::normalize_number->(params->{number});
+    my $number = CCNQ::Portal::normalize_number(params->{number});
     if($number) {
       CCNQ::API::provisioning('report','number_bank',$number,$cv);
     } else {
