@@ -52,9 +52,8 @@ sub as_tabs {
   $cv or return send_error();
   content_type 'text/tab-separated-values';
   header 'Content-Disposition' => qq(attachment; filename="export.csv");
-  $cv or return send_error();
   my $result = CCNQ::AE::receive_docs($cv);
-  $result->[0] or return send_error();
+  $result->[0] or return "";
   my @columns = sort grep { !/^_/ } keys %{ $result->[0] };
   return
     # header row

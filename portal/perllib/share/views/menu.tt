@@ -30,7 +30,6 @@
       <li><a href="<% prefix %>/billing/account_address"><%|loc%>Billing Address<%END%></a></li>
       <li><a href="<% prefix %>/bucket/account/"><%|loc%>Bucket Values<%END%></a></li>
       <li><a href="<% prefix %>/cdr/"><%|loc%>Call Detail Records (CDR)<%END%></a></li>
-      <li><a href="<% prefix %>/provisioning/view/account"><%|loc%>Inventory<%END%></a></li>
       <% END %>
     </ul>
   </li>
@@ -75,7 +74,7 @@
       <% IF session.account %>
       <li><span class="separator"><%|loc(session.account)%>Account [_1]<%END%></span></li>
       <li><a href="<% prefix %>/tabs/provisioning/view/number/_all"><%|loc%>Download all<%END%></a></li>
-      <li><span><form action="<% prefix %>/provisioning/number" method="GET">
+      <li><span><form action="<% prefix %>/provisioning/lookup/number" method="GET">
           <input type="text" size="16" name="number" /></form></span></li>
       <% local_numbers_menu %>
       <% END %>
