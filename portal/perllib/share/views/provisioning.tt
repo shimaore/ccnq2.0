@@ -19,6 +19,8 @@
       | <span class="edit"><a href="<% prefix %>/number_location/<% r.number %>"><%|loc%>Change Location<%END%></a></span>
       | <span class="edit"><a href="<% prefix %>/number_name/<% r.number %>"><%|loc%>Change Caller Name<%END%></a></span>
       | <span class="edit"><a href="<% prefix %>/numbers/bank/return/<% r.number %>"><%|loc%>Delete<%END%></a></span>
+      <% ELSE %>
+      | <span class="edit"><a href="<% prefix %>/numbers/bank/?number=<% r.number %>"><%|loc%>Modify<%END%></a></span>
       <% END %>
     <% END %>
     </div>

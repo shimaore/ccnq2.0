@@ -85,7 +85,14 @@ sub _get_bank_numbers {
     # Restrict the generic view to administrators
     CCNQ::Portal->current_session->user->profile->is_admin
       or return;
-    CCNQ::API::provisioning('report','number_bank',$cv);
+
+    # If a number is provided, only show that one.
+    my $number = CCNQ::Portal::normalize_number->(params->{number});
+    if($number) {
+      CCNQ::API::provisioning('report','number_bank',$number,$cv);
+    } else {
+      CCNQ::API::provisioning('report','number_bank',$cv);
+    }
   }
   return $cv;
 }
