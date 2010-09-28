@@ -85,6 +85,14 @@ use constant js_report_all_numbers => <<'JAVASCRIPT';
   }
 JAVASCRIPT
 
+use constant js_report_all_numbers_in_account => <<'JAVASCRIPT';
+  function (doc){
+    if(doc.profile == 'number') {
+      emit([doc.account,doc.number],null)
+    }
+  }
+JAVASCRIPT
+
 use constant js_report_count => <<'JAVASCRIPT';
   function (doc){
     if(doc.account && doc.account_sub) {
@@ -134,6 +142,28 @@ use constant js_recent_names => <<'JAVASCRIPT';
   }
 JAVASCRIPT
 
+# Locate endpoint across all accounts
+use constant js_report_lookup_endpoint => <<'JAVASCRIPT';
+  function (doc) {
+    if(doc.profile != 'endpoint') return;
+    emit([doc.endpoint],null);
+    if(doc.ip ) emit([doc.ip ],null);
+    if(doc.srv) emit([doc.srv],null);
+  }
+JAVASCRIPT
+
+# TBD: locate endpoint across all accounts in an account context
+
+# Locate endpoint in an account
+use constant js_report_lookup_endpoint_in_account => <<'JAVASCRIPT';
+  function (doc) {
+    if(doc.profile != 'endpoint') return;
+    emit([doc.account,doc.endpoint],null);
+    if(doc.ip ) emit([doc.account,doc.ip ],null);
+    if(doc.srv) emit([doc.account,doc.srv],null);
+  }
+JAVASCRIPT
+
 use constant provisioning_designs => {
   report => {
     language => 'javascript',
@@ -166,6 +196,9 @@ use constant provisioning_designs => {
         map => js_report_all_numbers,
         # no reduce function
       },
+      all_numbers_in_account => {
+        map => js_report_all_numbers_in_account,
+      },
       count => {
         map => js_report_count,
         reduce => js_reduce_sum,
@@ -181,7 +214,13 @@ use constant provisioning_designs => {
       recent_names => {
         map => js_recent_names,
         # no reduce function
-      }
+      },
+      lookup_endpoint => {
+        map => js_report_lookup_endpoint,
+      },
+      lookup_endpoint_in_account => {
+        map => js_report_lookup_endpoint_in_account,
+      },
     },
   },
 };

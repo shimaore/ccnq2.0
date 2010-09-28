@@ -53,9 +53,13 @@
   </li>
   <li><span><%|loc%>Endpoints<%END%></span>
     <ul>
+      <% IF is_admin %>
+      <li><span><form action="<% prefix %>/provisioning/lookup/endpoint" method="GET">
+          <input type="text" size="16" name="key" /></form></span></li>
+      <% END %>
       <% IF session.account %>
       <li><span class="separator"><%|loc(session.account)%>Account [_1]<%END%></span></li>
-      <li><a href="<% prefix %>/provisioning/view/endpoint/_all"><%|loc%>View all<%END%></a></li>
+      <li><a href="<% prefix %>/tabs/provisioning/view/endpoint/_all"><%|loc%>Download all<%END%></a></li>
       <li><a href="<% prefix %>/provisioning/endpoint"><%|loc%>Manage<%END%></a></li>
       <% local_endpoints_menu %>
       <% END %>
@@ -64,14 +68,15 @@
   <li><span><%|loc%>Numbers<%END%></span>
     <ul>
       <% IF is_admin %>
-      <!-- <li><a href="<% prefix %>/provisioning/number/_all"><%|loc%>All numbers (across all accounts)<%END%></a></li> -->
       <li><span><form action="<% prefix %>/provisioning/number" method="GET">
           <input type="text" size="16" name="number" /></form></span></li>
       <li><a href="<% prefix %>/numbers/bank/"><%|loc%>Available Numbers<%END%></a></li>
       <% END %>
       <% IF session.account %>
       <li><span class="separator"><%|loc(session.account)%>Account [_1]<%END%></span></li>
-      <li><a href="<% prefix %>/provisioning/view/number/_all"><%|loc%>View all<%END%></a></li>
+      <li><a href="<% prefix %>/tabs/provisioning/view/number/_all"><%|loc%>Download all<%END%></a></li>
+      <li><span><form action="<% prefix %>/provisioning/number" method="GET">
+          <input type="text" size="16" name="number" /></form></span></li>
       <% local_numbers_menu %>
       <% END %>
     </ul>

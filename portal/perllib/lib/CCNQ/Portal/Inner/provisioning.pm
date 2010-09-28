@@ -22,6 +22,16 @@ use CCNQ::API;
 
 use CCNQ::AE;
 
+=head1 Formatters
+
+=head2 to_html
+
+=head2 as_json
+
+=head2 as_tabs
+
+=cut
+
 sub to_html {
   my $cv = shift;
   var template_name => 'provisioning';
@@ -48,7 +58,7 @@ sub as_tabs {
   my @columns = sort grep { !/^_/ } keys %{ $result->[0] };
   return
     # header row
-    join("\t",@columns)."\n".
+    join("\t", map { _($_)_ } @columns)."\n".
     # data rows
     join('', map {
       join("\t", map { defined($_) ? $_ : '' } @{$_}{@columns})."\n"  # everybody love hashref slices!
@@ -57,7 +67,7 @@ sub as_tabs {
 
 =head1 /provisioning/view/:view/@id
 
-Generic Provisioning API query, restricted to administrative accounts.
+Retrieve a view for the current (session) account.
 
 =cut
 
@@ -78,10 +88,15 @@ sub _view_id {
   return $cv;
 }
 
-# View one
 get      '/provisioning/view/:view/:id' => sub { to_html(_view_id) };
 get '/json/provisioning/view/:view/:id' => sub { as_json(_view_id) };
 get '/tabs/provisioning/view/:view/:id' => sub { as_tabs(_view_id) };
+
+=head1 /provisioning/number
+
+Retrieve one or all numbers across all accounts.
+
+=cut
 
 sub _get_number {
   CCNQ::Portal->current_session->user &&
@@ -107,6 +122,12 @@ get '/json/provisioning/number/:number' => sub { as_json(_get_number) };
 get '/tabs/provisioning/number'         => sub { as_tabs(_get_number) };
 get '/tabs/provisioning/number/:number' => sub { as_tabs(_get_number) };
 
+=head1 /provisioning/view/account
+
+Retrieve all provisioning data for the current (session) account.
+
+=cut
+
 sub _view_account {
   CCNQ::Portal->current_session->user &&
   session('account')
@@ -121,5 +142,42 @@ sub _view_account {
 
 get      '/provisioning/view/account' => sub { to_html(_view_account) };
 get '/json/provisioning/view/account' => sub { as_json(_view_account) };
+get '/tabs/provisioning/view/account' => sub { as_tabs(_view_account) };
 
-'CCNQ::Portal::Inner::billing_plan';
+=head1 /provisioning/lookup/:what
+
+Lookup one item in the current account, or all accounts if admin.
+
+=cut
+
+sub _lookup {
+  my $what = shift;
+
+  return sub {
+    CCNQ::Portal->current_session->user
+      or return;
+
+    session('account') ||
+    CCNQ::Portal->current_session->user->profile->is_admin
+      or return;
+
+    my $account = session('account');
+
+    my $key = params->{key};
+    return unless $key;
+
+    my $cv = AE::cv;
+    if(!CCNQ::Portal->current_session->user->profile->is_admin) {
+      CCNQ::API::provisioning('report',"lookup_${what}_in_account",$account,$key,$cv);
+    } else {
+      CCNQ::API::provisioning('report',"lookup_${what}",$key,$cv);
+    }
+    return $cv;
+  }
+}
+
+get      '/provisioning/lookup/:what' => sub { to_html(_lookup(params->{what})) };
+get '/json/provisioning/lookup/:what' => sub { as_json(_lookup(params->{what})) };
+get '/tabs/provisioning/lookup/:what' => sub { as_tabs(_lookup(params->{what})) };
+
+1;
