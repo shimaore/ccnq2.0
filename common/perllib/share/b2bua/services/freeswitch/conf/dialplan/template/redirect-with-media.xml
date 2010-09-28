@@ -15,6 +15,8 @@
         <action application="gentones" data="%(2000,4000,440,480)"/> <!-- ringback -->
         <action application="set" data="ccnq_account=${regex(${sip_req_params}|account=([^;]*)|%1)}"/>
         <action application="set" data="ccnq_account_sub=${regex(${sip_req_params}|account_sub=([^;]*)|%1)}"/>
+        <action application="set" data="instant_ringback=true"/>
+        <action application="set" data="ringback=$${us-ring}"/>
         <action application="bridge" data="sofia/sbc-$${profile_name}/${destination_number}@$${egress_target};account=${ccnq_account};account_sub=${ccnq_account_sub}"/>
       </condition>
     </extension>
