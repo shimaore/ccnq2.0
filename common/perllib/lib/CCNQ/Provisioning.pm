@@ -85,15 +85,7 @@ use constant js_report_count => <<'JAVASCRIPT';
   }
 JAVASCRIPT
 
-use constant js_reduce_sum => <<'JAVASCRIPT';
-  function(keys, values, rereduce) {
-    var sum = 0;
-    for(var i in values) {
-      sum += values[i];
-    }
-    return sum;
-  }
-JAVASCRIPT
+use constant js_reduce_sum => '_sum';
 
 # Numbers bank: Make sure the selection criteria match those in
 # CCNQ::Activities::Number.
