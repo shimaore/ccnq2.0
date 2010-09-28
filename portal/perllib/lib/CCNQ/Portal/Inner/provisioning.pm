@@ -18,6 +18,7 @@ use strict; use warnings;
 use Dancer ':syntax';
 use CCNQ::Portal;
 use CCNQ::Portal::I18N;
+use CCNQ::Portal::Util;
 use CCNQ::API;
 
 use CCNQ::AE;
@@ -156,23 +157,29 @@ sub _lookup {
     CCNQ::Portal->current_session->user
       or return;
 
-    session('account') ||
-    CCNQ::Portal->current_session->user->profile->is_admin
+    my $params = {};
+    CCNQ::Portal::Util::neat($params,qw(
+      key
+    ));
+
+    my $key = $params->{key};
+    defined($key)
       or return;
 
-    my $account = session('account');
-
-    my $key = params->{key};
-    return unless $key;
-
-    my $cv = AE::cv;
-    if(!CCNQ::Portal->current_session->user->profile->is_admin) {
-      CCNQ::API::provisioning('report',"lookup_${what}_in_account",$account,$key,$cv);
-    } else {
+    if(CCNQ::Portal->current_session->user->profile->is_admin) {
+      my $cv = AE::cv;
       CCNQ::API::provisioning('report',"lookup_${what}",$key,$cv);
+      return $cv;
     }
-    return $cv;
-  }
+
+    my $account = session('account');
+    if($account) {
+      my $cv = AE::cv;
+      CCNQ::API::provisioning('report',"lookup_${what}_in_account",$account,$key,$cv);
+      return $cv;
+    }
+    return;
+  };
 }
 
 get      '/provisioning/lookup/:what' => sub { to_html(_lookup(params->{what})) };
