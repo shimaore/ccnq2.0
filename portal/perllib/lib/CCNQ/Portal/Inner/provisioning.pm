@@ -92,36 +92,6 @@ get      '/provisioning/view/:view/:id' => sub { to_html(_view_id) };
 get '/json/provisioning/view/:view/:id' => sub { as_json(_view_id) };
 get '/tabs/provisioning/view/:view/:id' => sub { as_tabs(_view_id) };
 
-=head1 /provisioning/number
-
-Retrieve one or all numbers across all accounts.
-
-=cut
-
-sub _get_number {
-  CCNQ::Portal->current_session->user &&
-  CCNQ::Portal->current_session->user->profile->is_admin
-    or return;
-
-  my $cv = AE::cv;
-  my $number = params->{number};
-  if($number eq '_all') {
-    CCNQ::API::provisioning('report','all_numbers',$cv);
-  } else {
-    $number = CCNQ::Portal::normalize_number($number);
-    $number or return;
-    CCNQ::API::provisioning('report','all_numbers',$number,$cv);
-  }
-  return $cv;
-}
-
-get      '/provisioning/number'         => sub { to_html(_get_number) };
-get      '/provisioning/number/:number' => sub { to_html(_get_number) };
-get '/json/provisioning/number'         => sub { as_json(_get_number) };
-get '/json/provisioning/number/:number' => sub { as_json(_get_number) };
-get '/tabs/provisioning/number'         => sub { as_tabs(_get_number) };
-get '/tabs/provisioning/number/:number' => sub { as_tabs(_get_number) };
-
 =head1 /provisioning/view/account
 
 Retrieve all provisioning data for the current (session) account.
@@ -168,7 +138,11 @@ sub _lookup {
 
     if(CCNQ::Portal->current_session->user->profile->is_admin) {
       my $cv = AE::cv;
-      CCNQ::API::provisioning('report',"lookup_${what}",$key,$cv);
+      if($key eq '_all') {
+        CCNQ::API::provisioning('report',"lookup_${what}",$cv);
+      } else {
+        CCNQ::API::provisioning('report',"lookup_${what}",$key,$cv);
+      }
       return $cv;
     }
 

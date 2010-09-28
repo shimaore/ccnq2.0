@@ -77,7 +77,7 @@ use constant js_report_locations => <<'JAVASCRIPT';
   }
 JAVASCRIPT
 
-use constant js_report_all_numbers => <<'JAVASCRIPT';
+use constant js_report_lookup_numbers => <<'JAVASCRIPT';
   function (doc){
     if(doc.profile == 'number') {
       emit([doc.number],null)
@@ -85,7 +85,7 @@ use constant js_report_all_numbers => <<'JAVASCRIPT';
   }
 JAVASCRIPT
 
-use constant js_report_all_numbers_in_account => <<'JAVASCRIPT';
+use constant js_report_lookup_numbers_in_account => <<'JAVASCRIPT';
   function (doc){
     if(doc.profile == 'number') {
       emit([doc.account,doc.number],null)
@@ -192,12 +192,12 @@ use constant provisioning_designs => {
         map => js_report_locations,
         # no reduce function
       },
-      all_numbers => {
-        map => js_report_all_numbers,
+      lookup_numbers => {
+        map => js_report_lookup_numbers,
         # no reduce function
-      },
-      all_numbers_in_account => {
-        map => js_report_all_numbers_in_account,
+      },a_
+      lookup_numbers_in_account => {
+        map => js_report_lookup_numbers_in_account,
       },
       count => {
         map => js_report_count,

@@ -109,7 +109,7 @@ post '/numbers/bank/create' => sub {
     or return CCNQ::Portal::content( error => _('Please specify a valid number')_ );
 
   my $cv = AE::cv;
-  CCNQ::API::provisioning('report','all_numbers',$number,$cv);
+  CCNQ::API::provisioning('report','lookup_numbers',$number,$cv);
   my $number_data = CCNQ::AE::receive_first_doc($cv);
   $number_data
     and return CCNQ::Portal::content( error => _('This number already exists. Please delete it first.')_ );
