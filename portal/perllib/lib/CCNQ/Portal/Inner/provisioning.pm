@@ -156,8 +156,8 @@ sub _lookup {
   };
 }
 
-get      '/provisioning/lookup/:what' => sub { to_html(_lookup(params->{what})) };
-get '/json/provisioning/lookup/:what' => sub { as_json(_lookup(params->{what})) };
-get '/tabs/provisioning/lookup/:what' => sub { as_tabs(_lookup(params->{what})) };
+get      '/provisioning/lookup/:what' => sub { to_html(_lookup(params->{what})->()) };
+get '/json/provisioning/lookup/:what' => sub { as_json(_lookup(params->{what})->()) };
+get '/tabs/provisioning/lookup/:what' => sub { as_tabs(_lookup(params->{what})->()) };
 
 1;
