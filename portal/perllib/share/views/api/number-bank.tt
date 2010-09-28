@@ -11,7 +11,7 @@
         <option <% IF n.number_type == t.key %>selected<% END %> value="<% t.key | html %>" ><% t.value | html %></option>
         <% END %>
       </select>
-      <select name="number_type" readonly>
+      <select name="carrier" readonly>
         <option value=""></option>
         <% FOREACH t IN carriers %>
         <option <% IF n.carrier == t.key %>selected<% END %> value="<% t.key | html %>" ><% t.value | html %></option>
