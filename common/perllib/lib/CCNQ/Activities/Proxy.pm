@@ -274,6 +274,8 @@ sub endpoint_update {
           account
           account_sub
           allow_onnet
+          src_disabled
+          dst_disabled
           always_proxy_media
           forwarding_sbc
           outbound_route

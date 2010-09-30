@@ -77,6 +77,14 @@
           <input type="checkbox" name="allow_onnet" <% IF field.allow_onnet %>checked<% END %> value="1" />
         </p>
         <p class="ui-helper-clearfix">
+          <label for="src_disabled" class="left"><% | loc %>Forbid outbound calls<% END %></label>
+          <input type="checkbox" name="src_disabled" <% IF field.src_disabled %>checked<% END %> value="1" />
+        </p>
+        <p class="ui-helper-clearfix">
+          <label for="dst_disabled" class="left"><% | loc %>Forbid inbound calls<% END %></label>
+          <input type="checkbox" name="dst_disabled" <% IF field.dst_disabled %>checked<% END %> value="1" />
+        </p>
+        <p class="ui-helper-clearfix">
           <label for="always_proxy_media" class="left"><% | loc %>Always proxy media<% END %></label>
           <input type="checkbox" name="always_proxy_media" <% IF field.always_proxy_media %>checked<% END %> value="1" />
         </p>

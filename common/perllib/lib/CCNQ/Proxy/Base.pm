@@ -49,6 +49,7 @@ sub avp
 
         # by username
         src_subs        => 170, # IP to username
+        src_disabled    => 171, # if true, cannot call out
         # routing calls towards an endpoint
         user_ip         => 174, # IP to use if not registered and no CFNR
         user_port       => 175, # port to use if not registered and no CFNR
@@ -73,6 +74,7 @@ sub avp
 
         # by number
         dst_subs        => 180, # DID to username
+        dst_disabled    => 189, # if true, cannot call into
         cfa             => 181,
         cfnr            => 182,
         cfb             => 183,

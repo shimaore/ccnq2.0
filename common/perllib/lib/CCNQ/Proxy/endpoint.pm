@@ -42,6 +42,9 @@ sub insert
     # default_outbound_route is outbound_route 0
     my $ignore_default_outbound_route = $params->{ignore_default_outbound_route};
 
+    my $src_disabled = $params->{src_disabled};
+    my $dst_disabled = $params->{dst_disabled};
+
     my $check_from = $params->{check_from};
     my $user_location = $params->{location};
 
@@ -111,6 +114,8 @@ SQL
         $self->_avp_set($username,$domain,'dest_domain',$dest_domain),
         $self->_avp_set($username,$domain,'strip_digit',$strip_digit),
         $self->_avp_set($username,$domain,'allow_onnet',$allow_onnet?1:undef),
+        $self->_avp_set($username,$domain,'src_disabled',$src_disabled?1:undef),
+        $self->_avp_set($username,$domain,'dst_disabled',$dst_disabled?1:undef),
         $self->_avp_set($username,$domain,'user_force_mp',$always_mp?1:undef),
         $self->_avp_set($username,$domain,'user_outbound_route',$user_outbound_route),
         $self->_avp_set($username,$domain,'ignore_caller_outbound_route',$ignore_caller_outbound_route?1:undef),
@@ -151,6 +156,8 @@ SQL
         $self->_avp_set($username,$domain,'dest_domain',undef),
         $self->_avp_set($username,$domain,'strip_digit',undef),
         $self->_avp_set($username,$domain,'allow_onnet',undef),
+        $self->_avp_set($username,$domain,'src_disabled',undef),
+        $self->_avp_set($username,$domain,'dst_disabled',undef),
         $self->_avp_set($username,$domain,'user_force_mp',undef),
         $self->_avp_set($username,$domain,'user_outbound_route',undef),
         $self->_avp_set($username,$domain,'ignore_caller_outbound_route',undef),
