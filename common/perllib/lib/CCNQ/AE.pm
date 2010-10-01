@@ -139,9 +139,14 @@ sub rate_limit_cv {
     # Postpone the next one.
     my $ago = $now - $rate_limit_timer->{$class}->{when};
     my $until = $interval - $ago;
-    my $rcv = AnyEvent->timer( after => $until, cb => $cv );
+    my $rcv = AE::cv;
     $rate_limit_timer->{$class} = {
       when => $now + $until,
+      timer => AnyEvent->timer( after => $until, cb => sub {
+        undef $rate_limit_timer->{$class}->{timer};
+        $cv->();
+        $rcv->send;
+      }),
     };
     return $rcv;
   };
