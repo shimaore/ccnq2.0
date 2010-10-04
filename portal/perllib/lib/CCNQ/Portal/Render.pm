@@ -51,6 +51,7 @@ sub ccnq_template {
     my ($view, $tokens, $options) = @_;
     $options ||= {layout => 1};
 
+    use Dancer::Config 'setting';
     my $layout = setting('layout');
     undef $layout unless $options->{layout};
 
