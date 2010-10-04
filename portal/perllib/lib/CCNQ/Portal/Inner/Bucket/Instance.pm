@@ -31,7 +31,7 @@ get  '/bucket/account/' => sub {
   var template_name => 'api/bucket/account';
 
   CCNQ::Portal->current_session->user &&
-  session('account')
+  CCNQ::Portal::Inner::Util::validate_account
     or return CCNQ::Portal::content;
 
   var get_buckets        => \&CCNQ::Portal::Inner::Util::get_buckets;
@@ -44,13 +44,15 @@ get  '/bucket/account/' => sub {
 post '/bucket/account/' => sub {
   var template_name => 'api/bucket/account';
 
+  my $account = CCNQ::Portal::Inner::Util::validate_account;
+
   CCNQ::Portal->current_session->user                    &&
   CCNQ::Portal->current_session->user->profile->is_admin &&
-  session('account')
+  $account
     or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
   my $params = CCNQ::Portal::Util::neat({
-    account => session('account'),
+    account => $account,
   },qw(
     name
     account_sub

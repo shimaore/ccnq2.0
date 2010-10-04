@@ -18,15 +18,16 @@ use strict; use warnings;
 use Dancer ':syntax';
 use CCNQ::Portal;
 use CCNQ::Portal::I18N;
+use CCNQ::Portal::Util;
+use CCNQ::Portal::Inner::Util;
 use CCNQ::API;
 
 use CCNQ::AE;
-use CCNQ::Portal::Inner::Util;
 
 sub as_html {
   my $cv = shift;
 
-  my $account = session('account');
+  my $account = CCNQ::Portal::Inner::Util::validate_account;
 
   var template_name => 'api/cdr';
   CCNQ::Portal->current_session->user &&
@@ -59,7 +60,7 @@ sub _view_id {
   my @date = ();
   $day and push @date, $day;
 
-  my $account = session('account');
+  my $account = CCNQ::Portal::Inner::Util::validate_account;
 
   CCNQ::Portal::Inner::Util::user_can_access_billing_for($account)
     or return;

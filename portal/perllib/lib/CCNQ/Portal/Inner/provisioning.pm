@@ -19,6 +19,7 @@ use Dancer ':syntax';
 use CCNQ::Portal;
 use CCNQ::Portal::I18N;
 use CCNQ::Portal::Util;
+use CCNQ::Portal::Inner::Util;
 use CCNQ::API;
 
 use CCNQ::AE;
@@ -72,11 +73,12 @@ Retrieve a view for the current (session) account.
 =cut
 
 sub _view_id {
+  my $account = CCNQ::Portal::Inner::Util::validate_account;
+
   CCNQ::Portal->current_session->user &&
-  session('account')
+  $account
     or return;
 
-  my $account = session('account');
   my $id = params->{id};
 
   my $cv = AE::cv;
@@ -99,11 +101,11 @@ Retrieve all provisioning data for the current (session) account.
 =cut
 
 sub _view_account {
-  CCNQ::Portal->current_session->user &&
-  session('account')
-    or return;
+  my $account = CCNQ::Portal::Inner::Util::validate_account;
 
-  my $account = session('account');
+  CCNQ::Portal->current_session->user &&
+  $account
+    or return;
 
   my $cv = AE::cv;
   CCNQ::API::provisioning('report','account',$account,$cv);
@@ -146,7 +148,7 @@ sub _lookup {
       return $cv;
     }
 
-    my $account = session('account');
+    my $account = CCNQ::Portal::Inner::Util::validate_account;
     if($account) {
       my $cv = AE::cv;
       CCNQ::API::provisioning('report',"lookup_${what}_in_account",$account,$key,$cv);

@@ -30,7 +30,7 @@ get  '/number_name/:number' => sub {
   CCNQ::Portal->current_session->user
     or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
-  my $account = session('account');
+  my $account = CCNQ::Portal::Inner::Util::validate_account;
   $account
     or return CCNQ::Portal::content( error => _('Please select an account')_ );
 
@@ -52,7 +52,7 @@ post '/number_name/:number' => sub {
   CCNQ::Portal->current_session->user
     or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
-  my $account  = session('account');
+  my $account  = CCNQ::Portal::Inner::Util::validate_account;
   $account
     or return CCNQ::Portal::content( error => _('Please select an account')_ );
 

@@ -86,10 +86,9 @@ sub default {
   CCNQ::Portal->current_session->user
     or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
-  session('account')
+  my $account = CCNQ::Portal::Inner::Util::validate_account;
+  $account
     or return CCNQ::Portal::content( error => _('Please select an account')_ );
-
-  my $account = session('account');
 
   my $category = params->{category};
   my $cluster  = params->{cluster};
@@ -132,10 +131,9 @@ sub submit_number {
   CCNQ::Portal->current_session->user
     or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
-  session('account')
+  my $account = CCNQ::Portal::Inner::Util::validate_account;
+  $account
     or return CCNQ::Portal::content( error => _('Please select an account')_ );
-
-  my $account  = session('account');
 
   my $endpoint = params->{endpoint};
   return CCNQ::Portal::content unless $endpoint;

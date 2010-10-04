@@ -27,6 +27,22 @@ use CCNQ::API;
 
 =head1 Account Utilities
 
+=head2 validate_account()
+
+=cut
+
+use CCNQ::Portal::Outer::AccountSelection;
+
+sub validate_account {
+  use Dancer ':syntax';
+  # If a (potentially) new account is passed as a parameter, validate it.
+  params->{account}
+  and do {
+    return CCNQ::Portal::Outer::AccountSelection::account(params->{account});
+  };
+  return session('account');
+}
+
 =head2 account_billing_data($account)
 
 =cut

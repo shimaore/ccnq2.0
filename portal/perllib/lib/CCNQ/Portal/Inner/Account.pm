@@ -19,14 +19,13 @@ use Dancer ':syntax';
 use CCNQ::Portal;
 use CCNQ::Portal::I18N;
 use CCNQ::Portal::Util;
+use CCNQ::Portal::Inner::Util;
 
 use CCNQ::AE;
 use CCNQ::API;
 
-use CCNQ::Portal::Inner::Util;
-
 sub gather_field {
-  my $account = session('account');
+  my $account = CCNQ::Portal::Inner::Util::validate_account;
 
   var portal_users  => \&CCNQ::Portal::Inner::Util::portal_users;
   var billing_users => \&CCNQ::Portal::Inner::Util::billing_users;
@@ -42,7 +41,7 @@ sub gather_field {
 }
 
 sub gather_field_sub {
-  my $account = session('account');
+  my $account = CCNQ::Portal::Inner::Util::validate_account;
   my $account_sub = shift;
 
   var get_plans     => \&CCNQ::Portal::Inner::Util::get_plans;
@@ -61,7 +60,8 @@ get '/billing/account' => sub {
   CCNQ::Portal->current_session->user
     or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
-  if( session('account') && session('account') =~ /^[\w-]+$/ ) {
+  my $account = CCNQ::Portal::Inner::Util::validate_account;
+  if( $account && $account =~ /^[\w-]+$/ ) {
     gather_field();
   }
   return CCNQ::Portal::content;
@@ -112,8 +112,7 @@ get '/billing/account_sub/:account_sub' => sub {
   CCNQ::Portal->current_session->user
     or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
-  session('account') &&
-  session('account') =~ /^[\w-]+$/
+  CCNQ::Portal::Inner::Util::validate_account
     or return CCNQ::Portal::content( error => _('Please select an account')_ );
 
   params->{account_sub} &&
@@ -133,11 +132,11 @@ get '/billing/account_sub' => sub {
   CCNQ::Portal->current_session->user
     or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
-  session('account') &&
-  session('account') =~ /^[\w-]+$/
+  my $account = CCNQ::Portal::Inner::Util::validate_account;
+  $account
     or return CCNQ::Portal::content( error => _('Please select an account')_ );
 
-  CCNQ::Portal::Inner::Util::account_billing_data(session('account'))->{account}
+  CCNQ::Portal::Inner::Util::account_billing_data($account)->{account}
     or return CCNQ::Portal::content( error => _('Please activate the account first.')_ );
 
   if( params->{account_sub} && params->{account_sub} =~ /^[\w-]+$/ ) {
@@ -156,15 +155,15 @@ sub handle_account_sub {
   CCNQ::Portal->current_session->user->profile->is_admin
     or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
-  session('account') &&
-  session('account') =~ /^[\w-]+$/
+  my $account = CCNQ::Portal::Inner::Util::validate_account;
+  $account
     or return CCNQ::Portal::content( error => _('Please select an account')_ );
 
-  CCNQ::Portal::Inner::Util::account_billing_data(session('account'))->{account}
+  CCNQ::Portal::Inner::Util::account_billing_data($account)->{account}
     or return CCNQ::Portal::content( error => _('Please activate the account first.')_ );
 
   my $params = CCNQ::Portal::Util::neat({
-    account     => session('account'),
+    account     => CCNQ::Portal::Inner::Util::validate_account,
   }, qw(
     account_sub
     name

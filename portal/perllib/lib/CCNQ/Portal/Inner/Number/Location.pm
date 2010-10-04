@@ -29,7 +29,7 @@ get  '/number_location/:number' => sub {
 
   var template_name => 'api/number-location';
 
-  my $account = session('account');
+  my $account = CCNQ::Portal::Inner::Util::validate_account;
   $account
     or return CCNQ::Portal::content( error => _('Please select an account')_ );
 
@@ -46,7 +46,7 @@ get  '/number_location/:number' => sub {
 post '/number_location/:number' => sub {
   my $normalize_number = \&CCNQ::Portal::normalize_number;
 
-  my $account  = session('account');
+  my $account  = CCNQ::Portal::Inner::Util::validate_account;
   $account
     or return CCNQ::Portal::content( error => _('Please select an account')_ );
 

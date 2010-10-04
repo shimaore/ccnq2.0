@@ -32,7 +32,7 @@ get  '/number_forwarding/:number' => sub {
 
   var template_name => 'api/number-forwarding';
 
-  my $account = session('account');
+  my $account = CCNQ::Portal::Inner::Util::validate_account;
   $account
     or return CCNQ::Portal::content( error => _('Please select an account')_ );
 
@@ -50,7 +50,7 @@ post '/number_forwarding/:number' => sub {
 
   var template_name => 'api/number-forwarding';
 
-  my $account  = session('account');
+  my $account  = CCNQ::Portal::Inner::Util::validate_account;
   $account
     or return CCNQ::Portal::content( error => _('Please select an account')_ );
 

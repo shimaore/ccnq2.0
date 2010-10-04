@@ -19,11 +19,10 @@ use Dancer ':syntax';
 use CCNQ::Portal;
 use CCNQ::Portal::I18N;
 use CCNQ::Portal::Util;
+use CCNQ::Portal::Inner::Util;
 
 use CCNQ::AE;
 use CCNQ::API;
-
-use CCNQ::Portal::Inner::Util;
 
 =head1 Locations
 
@@ -64,7 +63,7 @@ sub get_location {
 
 sub clean_params {
   my $params = {
-    account       => session('account'),
+    account       =>   CCNQ::Portal::Inner::Util::validate_account,
   };
 
   CCNQ::Portal::Util::neat($params,qw(

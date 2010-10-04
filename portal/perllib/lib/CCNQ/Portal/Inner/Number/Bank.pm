@@ -236,7 +236,7 @@ get '/numbers/bank/return/:number' => sub {
   $number
     or return CCNQ::Portal::content( error => _('Please specify a valid number')_ );
 
-  my $account = session('account');
+  my $account = CCNQ::Portal::Inner::Util::validate_account;
 
   my $number_data = CCNQ::Portal::Inner::Util::get_number($account,$number);
   $number_data

@@ -19,6 +19,7 @@ use Dancer ':syntax';
 
 use CCNQ::Portal;
 use CCNQ::Portal::I18N;
+use CCNQ::Portal::Inner::Util;
 
 use Geo::PostalAddress;
 
@@ -32,12 +33,16 @@ use Geo::PostalAddress;
 get '/billing/account_address' => sub {
   var template_name => 'api/account_address';
 
-  return unless CCNQ::Portal->current_session->user;
-  return unless session('account');
+  CCNQ::Portal->current_session->user
+    or return CCNQ::Portal::content( error => _('Unauthorized')_ );
+
+  my $account = CCNQ::Portal::Inner::Util::validate_account;
+  $account
+    or return CCNQ::Portal::content( error => _('Please select an account')_);
 
   # Retrieve the account's data.
   my $cv = AE::cv;
-  CCNQ::API::billing('report','accounts',session('account'),$cv);
+  CCNQ::API::billing('report','accounts',$account,$cv);
   my $data = CCNQ::AE::receive_first_doc($cv) || {};
   var account_billing_data => $data;
 
@@ -56,15 +61,18 @@ get '/billing/account_address' => sub {
 post '/billing/account_address' => sub {
   var template_name => 'api/account_address';
 
-  return unless CCNQ::Portal->current_session->user;
-  return unless session('account');
+  my $account = CCNQ::Portal::Inner::Util::validate_account;
+
+  CCNQ::Portal->current_session->user &&
+  $account
+    or return CCNQ::Portal::content( error => _('Please select an account')_);
 
   # Customers cannot update their own addresses.
   return unless CCNQ::Portal->current_session->user->profile->is_admin;
 
   # Retrieve the account's data.
   my $cv = AE::cv;
-  CCNQ::API::billing('report','accounts',session('account'),$cv);
+  CCNQ::API::billing('report','accounts',$account,$cv);
   my $data = CCNQ::AE::receive_first_doc($cv) || {};
 
   # Update the address if the one that was submitted is valid.

@@ -27,7 +27,7 @@ use CCNQ::API;
 
 sub clean_params {
   my $params = {
-    account       => session('account'),
+    account       => CCNQ::Portal::Inner::Util::validate_account,
   };
 
   CCNQ::Portal::Util::neat($params,qw(
@@ -65,7 +65,7 @@ sub clean_params {
 sub gather_field {
   my $params = clean_params();
 
-  my $account = session('account');
+  my $account = CCNQ::Portal::Inner::Util::validate_account;
 
   my $static_clusters  = CCNQ::Portal::Inner::Util::clusters_for_static_endpoints;
   var static_clusters  => $static_clusters;
@@ -103,7 +103,7 @@ sub gather_field {
 sub endpoint_default {
   CCNQ::Portal->current_session->user
     or return CCNQ::Portal::content( error => _('Unauthorized')_ );
-  session('account')
+  CCNQ::Portal::Inner::Util::validate_account
     or return CCNQ::Portal::content( error => _('Please select an account')_ );
   gather_field();
   return CCNQ::Portal::content;
@@ -125,7 +125,7 @@ post '/provisioning/endpoint' => sub {
     or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
   # This is how we create new endpoints.
-  session('account')
+  CCNQ::Portal::Inner::Util::validate_account
     or return CCNQ::Portal::content( error => _('Please select an account')_ );
 
   my $params = clean_params();
@@ -148,7 +148,7 @@ post '/provisioning/endpoint' => sub {
   # Update the information in the API.
   my $cv1 = AE::cv;
   CCNQ::API::api_update('endpoint',$params,$cv1);
-  return CCNQ::Portal::Util::redirect_request($cv1);
+  return CCNQ::Portal::Inner::Util::redirect_request($cv1);
 };
 
 get '/provisioning/endpoint_location' => sub {
@@ -156,10 +156,9 @@ get '/provisioning/endpoint_location' => sub {
   CCNQ::Portal->current_session->user
     or return CCNQ::Portal::content( error => _('Unauthorized')_ );
 
-  session('account')
+  my $account = CCNQ::Portal::Inner::Util::validate_account;
+  $account
     or return CCNQ::Portal::content( error => _('Please select an account')_ );
-
-  my $account = session('account');
 
   my $endpoint = params->{endpoint};
   return CCNQ::Portal::content unless $endpoint;
