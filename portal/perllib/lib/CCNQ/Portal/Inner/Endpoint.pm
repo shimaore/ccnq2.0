@@ -148,7 +148,7 @@ post '/provisioning/endpoint' => sub {
   # Update the information in the API.
   my $cv1 = AE::cv;
   CCNQ::API::api_update('endpoint',$params,$cv1);
-  return CCNQ::Portal::Inner::Util::redirect_request($cv1);
+  return CCNQ::Portal::Util::redirect_request($cv1);
 };
 
 get '/provisioning/endpoint_location' => sub {
