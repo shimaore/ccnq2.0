@@ -18,6 +18,7 @@ use strict; use warnings;
 use Dancer ':syntax';
 use CCNQ::Portal;
 use CCNQ::Portal::I18N;
+use CCNQ::Portal::Inner::Util;
 
 =head1 Content
 
@@ -26,6 +27,8 @@ This is the page shown by default when no parameters are provided.
 =cut
 
 get '/' => sub {
+  # Handles account changes, if any
+  CCNQ::Portal::Inner::Util::validate_account;
   return CCNQ::Portal::content;
 };
 
