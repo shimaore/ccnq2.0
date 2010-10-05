@@ -3,7 +3,7 @@
 <% FOREACH doc IN all_accounts() %>
   <tr>
     <td>
-      <form action="<% prefix %>/" method="POST" accept-charset="utf-8" class="ui-widget">
+      <form action="<% prefix %>/" method="GET" accept-charset="utf-8" class="ui-widget">
         <input type="submit" name="account" value="<% doc.account | html %>">
       </form>
     </td>
