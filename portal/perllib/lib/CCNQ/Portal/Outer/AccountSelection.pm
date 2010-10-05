@@ -38,6 +38,10 @@ sub account {
   my $account = shift;
   my $accounts = available_accounts;
 
+  # Need to be logged in for this to work.
+  CCNQ::Portal->current_session->user
+    or return;
+
   # "is_admin" profiles can access any account.
   if(CCNQ::Portal->current_session->user->profile->is_admin) {
     defined $account or $account = '';
