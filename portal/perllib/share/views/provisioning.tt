@@ -7,12 +7,12 @@
     <div>
     <a href="<% prefix %>/provisioning/view/<% profile | uri %>/<% r.$profile | uri %>?account=<% r.account | uri %>">View</a>
     <% IF profile == 'endpoint' and r.password %>
-      | <span class="registration"><a href="<% prefix %>/provisioning/endpoint_location?endpoint=<% r.endpoint | uri %>;account=<% r.account | uri %>"><%|loc%>Registration status<%END%></a></span>
+      | <span class="registration"><a href="<% prefix %>/provisioning/endpoint_location?endpoint=<% r.endpoint | uri %>&account=<% r.account | uri %>"><%|loc%>Registration status<%END%></a></span>
     <% END %>
     <% IF profile == 'endpoint' %>
       | <span class="edit"><a href="<% prefix %>/provisioning/endpoint/<% r.endpoint %>?account=<% r.account | uri %>"><%|loc%>Edit<%END%></a></span>
     <% ELSIF profile == 'location' %>
-      | <span class="edit"><a href="<% prefix %>/location?location=<% r.location | uri %>;account=<% r.account | uri %>"><%|loc%>Edit<%END%></a></span>
+      | <span class="edit"><a href="<% prefix %>/location?location=<% r.location | uri %>&account=<% r.account | uri %>"><%|loc%>Edit<%END%></a></span>
     <% ELSIF profile == 'number' %>
       <% IF r.account %>
       | <span class="edit"><a href="<% prefix %>/number_forwarding/<% r.number %>?account=<% r.account | uri %>"><%|loc%>Change Forwarding<%END%></a></span>
@@ -20,7 +20,7 @@
       | <span class="edit"><a href="<% prefix %>/number_name/<% r.number %>?account=<% r.account | uri %>"><%|loc%>Change Caller Name<%END%></a></span>
       | <span class="edit"><a href="<% prefix %>/numbers/bank/return/<% r.number %>?account=<% r.account | uri %>"><%|loc%>Delete<%END%></a></span>
       <% ELSE %>
-      | <span class="edit"><a href="<% prefix %>/numbers/bank/?number=<% r.number %>;account=<% r.account | uri %>"><%|loc%>Modify<%END%></a></span>
+      | <span class="edit"><a href="<% prefix %>/numbers/bank/?number=<% r.number %>&account=<% r.account | uri %>"><%|loc%>Modify<%END%></a></span>
       <% END %>
     <% END %>
     </div>
@@ -28,8 +28,8 @@
       <div class="entry">
         <span class="key"><%|loc%><% d.key | html %><%END%></span>
         <span class="value">
-          <% IF    d.key == 'endpoint' %><a href="<% prefix %>/provisioning/view/endpoint/<% d.value | uri %>;account=<% r.account | uri %>"><% d.value | html %></a>
-          <% ELSIF d.key == 'location' %><a href="<% prefix %>/provisioning/view/location/<% d.value | uri %>;account=<% r.account | uri %>"><% d.value | html %></a>
+          <% IF    d.key == 'endpoint' %><a href="<% prefix %>/provisioning/view/endpoint/<% d.value | uri %>&account=<% r.account | uri %>"><% d.value | html %></a>
+          <% ELSIF d.key == 'location' %><a href="<% prefix %>/provisioning/view/location/<% d.value | uri %>&account=<% r.account | uri %>"><% d.value | html %></a>
           <% ELSIF d.key == 'account'  %><a href="<% prefix %>/?account=<% r.account | uri %>"><% d.value | html %></a>
           <% ELSE %><% d.value | html %><% END %>
         </span>
