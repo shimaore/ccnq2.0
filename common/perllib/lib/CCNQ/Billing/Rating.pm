@@ -33,14 +33,30 @@ use CCNQ::Billing::Account;
 
 use Logger::Syslog;
 
-sub rate_cbef {
+use CCNQ::CDR;
+
+sub _save_cbef {
   my ($cbef) = @_;
+  my $record = $cbef->as_hashref;
+  return CCNQ::CDR::insert($record);
+}
+
+=head1 rate_cbef($flat_cbef)
+
+Returns a condvar which will either:
+- receive a rated cbef if the cbef could be rated;
+- or receive undef otherwise.
+
+=cut
+
+sub rate_cbef {
+  my ($flat_cbef) = @_;
   my $rcv = AE::cv;
 
-  CCNQ::Billing::Account::plan_of($cbef)->cb(sub{
+  CCNQ::Billing::Account::plan_of($flat_cbef)->cb(sub{
     my $plan = CCNQ::AE::receive(@_);
     if($plan) {
-      CCNQ::Rating::rate_cbef($cbef,$plan)->cb(sub{$rcv->send(CCNQ::AE::receive(@_))});
+      CCNQ::Rating::rate_cbef($flat_cbef,$plan)->cb(sub{$rcv->send(CCNQ::AE::receive(@_))});
     } else {
       $rcv->send;
     }
@@ -48,18 +64,33 @@ sub rate_cbef {
   return $rcv;
 }
 
-use CCNQ::CDR;
+=head1 save_cbef($flat_cbef)
+
+Returns a condvar which will return once the cbef has been saved.
+(The cbef will not get rated.)
+
+=cut
 
 sub save_cbef {
-  my ($cbef) = @_;
-  my $record = eval { $cbef->as_hashref };
-  return CCNQ::CDR::insert($record||$cbef);
+  my ($flat_cbef) = @_;
+  my $cbef = new CCNQ::Rating::Event($flat_cbef);
+  # Return immediately on invalid flat_cbef
+  $cbef or do { my $rcv = AE::cv; $rcv->send(), return $rcv };
+  return _save_cbef($cbef);
 }
 
+=head1 rate_and_save_cbef($flat_cbef)
+
+Returns a condvar which will either:
+- return the rated cbef if the cbef could be rated and was successfully saved;
+- return undef otherwise.
+
+=cut
+
 sub rate_and_save_cbef {
-  my ($cbef) = @_;
+  my ($flat_cbef) = @_;
   my $rcv = AE::cv;
-  rate_cbef($cbef)->cb(sub{
+  rate_cbef($flat_cbef)->cb(sub{
     my $rated_cbef = CCNQ::AE::receive(@_);
     return $rcv->send() if !$rated_cbef;
 
