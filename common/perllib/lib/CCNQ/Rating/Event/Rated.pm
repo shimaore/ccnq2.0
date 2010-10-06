@@ -19,20 +19,6 @@ use base qw( CCNQ::Rating::Event );
 
 use Math::BigFloat;
 
-# Prevent inserting twice the same CDR by mistake.
-sub id {
-  my ($self) = @_;
-  return join( '-',
-    $self->{account},
-    $self->{account_sub},
-    $self->{start_date},
-    $self->{start_time},
-    $self->{event_type},
-    ($self->{from_e164}||'none'),
-    ($self->{to_e164}||'none'),
-  );
-}
-
 sub compute_taxes {
   my ($self) = @_;
   $self->{taxable_cost} = $self->cost;
@@ -52,18 +38,6 @@ sub compute_taxes {
   }
 
   $self->{total_cost} = $self->taxable_cost + $self->tax_amount;
-}
-
-sub as_json {
-  my ($self) = @_;
-  return encode_json($self->as_hashref);
-}
-
-sub as_hashref {
-  my ($self) = @_;
-  my $id = $self->id;
-  my $data = $self->cleanup;
-  return { %$data, _id => $id };
 }
 
 'CCNQ::Rating::Event::Rated';

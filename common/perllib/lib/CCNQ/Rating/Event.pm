@@ -112,6 +112,20 @@ sub new {
   return bless $self, $class;
 }
 
+# Prevent inserting twice the same CDR by mistake.
+sub id {
+  my ($self) = @_;
+  return join( '-',
+    $self->{account},
+    $self->{account_sub},
+    $self->{start_date},
+    $self->{start_time},
+    $self->{event_type},
+    ($self->{from_e164}||'none'),
+    ($self->{to_e164}||'none'),
+  );
+}
+
 sub to {
   my ($self) = @_;
   $self->{_to} ||= new CCNQ::Rating::Event::Number($self->{to_e164});
@@ -131,6 +145,19 @@ sub rounding {
   } else {
     return $amount;
   }
+}
+
+sub as_json {
+  my ($self) = @_;
+  use JSON;
+  return encode_json($self->as_hashref);
+}
+
+sub as_hashref {
+  my ($self) = @_;
+  my $id = $self->id;
+  my $data = $self->cleanup;
+  return { %$data, _id => $id };
 }
 
 our $AUTOLOAD;
