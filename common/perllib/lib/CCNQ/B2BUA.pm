@@ -77,6 +77,7 @@ sub copy_file {
 
 # Update crontab to insert crontab_cdr
 use AnyEvent::DNS;
+use CCNQ::Install;
 
 sub crontab_update {
   my $freeswitch_username = 'freeswitch';
