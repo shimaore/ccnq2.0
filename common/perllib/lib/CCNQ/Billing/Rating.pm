@@ -52,7 +52,8 @@ use CCNQ::CDR;
 
 sub save_cbef {
   my ($cbef) = @_;
-  return CCNQ::CDR::insert($cbef);
+  my $record = eval { $cbef->as_hashref };
+  return CCNQ::CDR::insert($record||$cbef);
 }
 
 sub rate_and_save_cbef {

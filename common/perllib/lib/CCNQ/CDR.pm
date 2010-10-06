@@ -84,9 +84,8 @@ sub install {
 }
 
 sub insert {
-  my ($rated_cbef) = @_;
-  my $record = $rated_cbef->as_hashref;
-  return CCNQ::CouchDB::update_cv(cdr_uri,cdr_db,$record);
+  my ($params) = @_;
+  return CCNQ::CouchDB::update_cv(cdr_uri,cdr_db,$params);
 }
 
 sub retrieve {
