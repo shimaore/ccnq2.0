@@ -107,7 +107,7 @@ sub process_file {
         collecting_node => CCNQ::Install::host_name,
       });
     } else {
-      $cv = CCNQ::Billing::Rating::and_save_cbef({
+      $cv = CCNQ::Billing::Rating::save_cbef({
         %$flat_cbef,
         collecting_node => CCNQ::Install::host_name,
       });
