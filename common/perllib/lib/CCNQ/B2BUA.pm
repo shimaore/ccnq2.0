@@ -76,14 +76,26 @@ sub copy_file {
 }
 
 # Update crontab to insert crontab_cdr
+use AnyEvent::DNS;
+
 sub crontab_update {
   my $freeswitch_username = 'freeswitch';
-  # Currently disabled due to high load / overlapping processes.
-  # Need to revise and provide better implementation.
+
+  my $dns_txt = sub {
+    my $dn = CCNQ::Install::catdns(@_);
+    my $cv = AE::cv;
+    AnyEvent::DNS::txt( $dn, $cv );
+    return ($cv->recv);
+  };
+
+  my $param = '';
+  $dns_txt->( 'do-rating',CCNQ::Install::fqdn )
+    and $param = '-r';
+
   my $crontab_line = <<CRON;
 SHELL=/bin/bash
 PATH=/bin:/usr/bin:/usr/local/bin
-0 * * * *   nice -n 10 ccnq2_crontab_cdr
+1 * * * *   nice -n 10 ccnq2_crontab_cdr ${param}
 CRON
   my $crontab_file = File::Spec->catfile(CCNQ::CCN,'ccnq2_crontab_cdr.crontab');
 
