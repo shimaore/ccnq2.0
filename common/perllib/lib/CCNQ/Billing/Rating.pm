@@ -75,7 +75,7 @@ sub save_cbef {
   my ($flat_cbef) = @_;
   my $cbef = new CCNQ::Rating::Event($flat_cbef);
   # Return immediately on invalid flat_cbef
-  $cbef or do { my $rcv = AE::cv; $rcv->send(), return $rcv };
+  $cbef or do { my $rcv = AE::cv; $rcv->send(); return $rcv };
   return _save_cbef($cbef);
 }
 
@@ -98,7 +98,7 @@ sub rate_and_save_cbef {
     $rated_cbef->compute_taxes();
 
     # Save the new (rated) CBEF...
-    save_cbef($rated_cbef)->cb(sub{$rcv->send(CCNQ::AE::receive(@_))});
+    _save_cbef($rated_cbef)->cb(sub{$rcv->send(CCNQ::AE::receive(@_))});
   });
   return $rcv;
 }
