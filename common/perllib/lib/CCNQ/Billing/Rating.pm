@@ -50,6 +50,11 @@ sub rate_cbef {
 
 use CCNQ::CDR;
 
+sub save_cbef {
+  my ($cbef) = @_;
+  return CCNQ::CDR::insert($cbef);
+}
+
 sub rate_and_save_cbef {
   my ($cbef) = @_;
   my $rcv = AE::cv;
@@ -61,7 +66,7 @@ sub rate_and_save_cbef {
     $rated_cbef->compute_taxes();
 
     # Save the new (rated) CBEF...
-    CCNQ::CDR::insert($rated_cbef)->cb(sub{$rcv->send(CCNQ::AE::receive(@_))});
+    save_cbef($rated_cbef)->cb(sub{$rcv->send(CCNQ::AE::receive(@_))});
   });
   return $rcv;
 }

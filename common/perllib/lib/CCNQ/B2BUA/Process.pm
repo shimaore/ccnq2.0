@@ -87,7 +87,7 @@ sub read_b2bua {
 }
 
 sub process_file {
-  my ($fh,$eh) = @_;
+  my ($fh,$eh,$do_rating) = @_;
 
   my $rating_errors = 0;
   my $rate_and_save_flat_cbef = sub {
@@ -100,10 +100,18 @@ sub process_file {
       debug("Invalid start timestamp: ".$flat_cbef->{start});
       return;
     }
-    my $cv = CCNQ::Billing::Rating::rate_and_save_cbef({
-      %$flat_cbef,
-      collecting_node => CCNQ::Install::host_name,
-    });
+    my $cv;
+    if($do_rating) {
+      $cv = CCNQ::Billing::Rating::rate_and_save_cbef({
+        %$flat_cbef,
+        collecting_node => CCNQ::Install::host_name,
+      });
+    } else {
+      $cv = CCNQ::Billing::Rating::and_save_cbef({
+        %$flat_cbef,
+        collecting_node => CCNQ::Install::host_name,
+      });
+    }
     my $doc = CCNQ::AE::receive($cv);
     return $doc;
   };
@@ -112,6 +120,7 @@ sub process_file {
 }
 
 sub run {
+  my ($do_rating) = @_;
   rotate_cdr();
 
   my @entries = read_entries();
@@ -123,7 +132,7 @@ sub run {
     my $rejected  = REJECTED_DIR.'/'.$file;
     open(my $fh, '<', $full_name) or die "$full_name: $!";
     open(my $eh, '>', $rejected ) or die "$rejected: $!";
-    my $ok = process_file($fh,$eh);
+    my $ok = process_file($fh,$eh,$do_rating);
     close($eh) or die "$rejected: $!";
     close($fh) or die "$full_name: $!";
     stow_away($file);

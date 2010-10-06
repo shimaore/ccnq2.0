@@ -27,4 +27,6 @@ $CCNQ::AE::debug_receive = 0;
 
 use CCNQ::B2BUA::Process;
 
-CCNQ::B2BUA::Process::run();
+my $do_rating = $ARGV[0] && $ARGV[0] eq '-r';
+
+CCNQ::B2BUA::Process::run($do_rating);
