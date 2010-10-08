@@ -41,6 +41,30 @@ get  '/number_forwarding/:number' => sub {
     or return CCNQ::Portal::content( error => _('Please specify a valid number')_ );
 
   my $number_data = CCNQ::Portal::Inner::Util::get_number($account,$number);
+
+  # Old data
+  my $type = $number_data->{forwarding_type};
+  if($type) {
+    if($type eq 'all') {
+      $number_data->{cfa_number} = $number_data->{forwarding_number};
+      $number_data->{cfa_mode}   = $number_data->{forwarding_mode};
+    }
+    if($type eq 'err') {
+      $number_data->{cfda_number} = $number_data->{forwarding_number};
+      $number_data->{cfda_mode}   = $number_data->{forwarding_mode};
+      $number_data->{cfb_number}  = $number_data->{forwarding_number};
+      $number_data->{cfb_mode}    = $number_data->{forwarding_mode};
+      if($number_data->{register}) {
+        $number_data->{cfnr_number} = $number_data->{forwarding_number};
+        $number_data->{cfnr_mode}   = $number_data->{forwarding_mode};
+      }
+    }
+  }
+  # /Old data
+
+  # Default value specified in
+  $number_data->{cfda_timeout} ||= 90;
+
   var field => $number_data;
   return CCNQ::Portal::content;
 };
@@ -60,22 +84,16 @@ post '/number_forwarding/:number' => sub {
 
   my $params = {};
   CCNQ::Portal::Util::neat($params,qw(
-    forwarding_type
-    forwarding_number
-    forwarding_mode
+    cfa_number    cfa_mode
+    cfnr_number   cfnr_mode
+    cfda_number   cfda_mode   cfda_timeout
+    cfb_number    cfb_mode
   ));
 
-  my $forwarding_type = $params->{forwarding_type};
-  grep { $forwarding_type eq $_ } qw( none all err )
-    or return CCNQ::Portal::content( error => _('Invalid option')_ );
-
-  my $forwarding_number = $normalize_number->($params->{forwarding_number});
-
-  # Forwarding number must be provided for all types except "none"/Never.
-  return CCNQ::Portal::content( error => _('Please specify a valid forwarding number')_ )
-    if $forwarding_type ne 'none' and not $forwarding_number;
-
-  $params->{forwarding_number} = $forwarding_number;
+  for my $i (qw(cfa cfnr cfda cfb)) {
+    my $n = $i.'_number';
+    $params->{$n} = $normalize_number->($params->{$n});
+  }
 
   return CCNQ::Portal::Inner::Util::update_number($account,$number,$params);
 };

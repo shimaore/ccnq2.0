@@ -208,17 +208,19 @@ sub forwarding {
   my $self = shift;
   my ($request) = @_;
 
-  my $forwarding_sbc_name = $self->FORWARDING_SBC_NAME($request->{forwarding_mode});
-  my $forwarding_uri = sub { 'sip:'.$request->{forwarding_number}.'@'.$forwarding_sbc_name.';account='.$request->{account}.';account_sub='.$request->{account_sub} };
-
   my $forwarding_data = {};
 
-  if($request->{forwarding_type} eq 'all') {
-    $forwarding_data->{cfa} = $forwarding_uri->();
-  }
-  if($request->{forwarding_type} eq 'err') {
-    $forwarding_data->{cfda} = $forwarding_uri->();
-    $forwarding_data->{cfnr} = $forwarding_uri->() if $request->{register};
+  for my $i (qw(cfa cfnr cfda cfb)) {
+    my $n = $i.'_number';
+    my $m = $i.'_mode';
+
+    $request->{$n}
+      or next;
+
+    my $forwarding_sbc_name = $self->FORWARDING_SBC_NAME($request->{$m});
+    my $forwarding_uri = sub { 'sip:'.$request->{$n}.'@'.$forwarding_sbc_name.';account='.$request->{account}.';account_sub='.$request->{account_sub} };
+
+    $forwarding_data->{$i} = $forwarding_uri->();
   }
   return $forwarding_data;
 }

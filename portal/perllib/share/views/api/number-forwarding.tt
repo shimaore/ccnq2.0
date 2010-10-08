@@ -7,26 +7,53 @@
         <input type="text" readonly name="number" value="<% field.number | html %>" size="16" />
       </p>
       <p class="ui-helper-clearfix">
-        <label for="forwarding_type" class="left"><% | loc %>Call Forwarding:<% END %></label>
-        <select name="forwarding_type">
-          <option value="none" <% IF field.forwarding_type == "none" %>selected<%END %>><% |loc %>Never<% END %></option>
-          <option value="all"  <% IF field.forwarding_type == "all"  %>selected<%END %>><% |loc %>All calls<% END %></option>
-          <option value="err"  <% IF field.forwarding_type == "err"  %>selected<%END %>><% |loc %>On error<% END %></option>
-        </select>
+        <label for="cfa_number" class="left"><% | loc %>Forward all incoming call to:<% END %></label>
+        <input type="text" name="cfa_number" value="<% field.cfa_number | html %>" />
+        <% IF forwarding_modes %>
+          <select name="cfa_mode">
+            <% FOR m IN forwarding_modes.pairs %>
+            <option value="<% m.key | html %>" <% IF field.cfa_mode == m.key %>selected<%END %>><% m.value | html %></option>
+            <% END %>
+          </select>
+        <% END %>
       </p>
-      <% IF forwarding_modes %>
+      <% IF field.register %>
       <p class="ui-helper-clearfix">
-        <label for="forwarding_mode" class="left"><% | loc %>Forwarding Mode:<% END %></label>
-        <select name="forwarding_mode">
-          <% FOR m IN forwarding_modes.pairs %>
-          <option value="<% m.key | html %>" <% IF field.forwarding_mode == m.key %>selected<%END %>><% m.value | html %></option>
-          <% END %>
-        </select>
+        <label for="cfnr_number" class="left"><% | loc %>When your endpoint is not accessible, incoming call attempts will normally fail, with an indication that the number has been disconnected. Instead, forward them to:<% END %></label>
+        <input type="text" name="cfnr_number" value="<% field.cfnr_number | html %>" />
+        <% IF forwarding_modes %>
+          <select name="cfnr_mode">
+            <% FOR m IN forwarding_modes.pairs %>
+            <option value="<% m.key | html %>" <% IF field.cfnr_mode == m.key %>selected<%END %>><% m.value | html %></option>
+            <% END %>
+          </select>
+        <% END %>
       </p>
       <% END %>
       <p class="ui-helper-clearfix">
-        <label for="forwarding_number" class="left"><% | loc %>Forward to:<% END %></label>
-        <input type="text" name="forwarding_number" value="<% field.forwarding_number | html %>" />
+        <label for="cfb_number" class="left"><% | loc %>When busy, forward call to:<% END %></label>
+        <input type="text" name="cfb_number" value="<% field.cfb_number | html %>" />
+        <% IF forwarding_modes %>
+          <select name="cfb_mode">
+            <% FOR m IN forwarding_modes.pairs %>
+            <option value="<% m.key | html %>" <% IF field.cfb_mode == m.key %>selected<%END %>><% m.value | html %></option>
+            <% END %>
+          </select>
+        <% END %>
+      </p>
+      <p class="ui-helper-clearfix">
+        <label for="cfda_timeout" class="left"><% | loc %>If an incoming call is not answered after at most:<% END %></label>
+        <input type="text" name="cfda_timeout" value="<% field.cfda_timeout | html %>" />
+        <%|loc%>seconds<%END%>
+        <label for="cfda_number" class="left"><% | loc %>, or if the call otherwise fails to connect (for example because your endpoint is not accessible), forward the call to:<% END %></label>
+        <input type="text" name="cfda_number" value="<% field.cfda_number | html %>" />
+        <% IF forwarding_modes %>
+          <select name="cfda_mode">
+            <% FOR m IN forwarding_modes.pairs %>
+            <option value="<% m.key | html %>" <% IF field.cfda_mode == m.key %>selected<%END %>><% m.value | html %></option>
+            <% END %>
+          </select>
+        <% END %>
       </p>
       <p class="ui-helper-clearfix submit">
         <input type="submit" value="<% | loc %>Save<% END %>" />
