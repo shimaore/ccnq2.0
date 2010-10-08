@@ -1,13 +1,13 @@
 <profile name="sbc-$${profile_name}">
   <domains>
-    <domain name="all" alias="true" parse="false"/> 
+    <domain name="all" alias="true" parse="false"/>
   </domains>
-  
+
   <settings>
     <param name="alias" value="sip:$${external_sip_ip}:$${external_sip_port}"/>
     <!--<param name="media-option" value="resume-media-on-hold"/> -->
     <param name="media-option" value="bypass-media-after-att-xfer"/>
-    <param name="user-agent-string" value="CCNQ2.0"/>
+    <param name="user-agent-string" value="CCNQ sbc-$${profile_name}"/>
     <param name="debug" value="3"/>
     <param name="sip-trace" value="no"/>
     <param name="context" value="ingress-$${profile_name}"/>
@@ -33,7 +33,7 @@
     <!--<param name="manage-shared-appearance" value="true"/>-->
     <!--<param name="dbname" value="share_presence"/>-->
     <!--<param name="presence-hosts" value="$${domain}"/>-->
-    
+
     <!-- <param name="bitpacking" value="aal2"/> -->
     <!--<param name="max-proceeding" value="1000"/>-->
     <!--<param name="session-timeout" value="120"/>-->
@@ -47,15 +47,15 @@
     <param name="tls-sip-port" value="$${internal_tls_port}"/>
     <param name="tls-cert-dir" value="$${internal_ssl_dir}"/>
     <param name="tls-version" value="$${sip_tls_version}"/>
-    
+
     <!--<param name="rtp-rewrite-timestamps" value="true"/>-->
     <param name="pass-rfc2833" value="true"/>
     <!--<param name="odbc-dsn" value="dsn:user:pass"/>-->
-    
+
     <param name="inbound-bypass-media" value="false"/>
     <param name="inbound-proxy-media" value="false"/>
     <param name="inbound-late-negotiation" value="false"/>
-    
+
     <!-- <param name="accept-blind-reg" value="true"/> -->
     <!-- <param name="accept-blind-auth" value="true"/> -->
     <!-- <param name="suppress-cng" value="true"/> -->
@@ -93,6 +93,6 @@
          <!--<param name="disable-srv" value="false" />-->
          <!--<param name="disable-naptr" value="false" />-->
 
-    
+
   </settings>
 </profile>
