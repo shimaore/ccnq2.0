@@ -1,0 +1,16 @@
+Source: libccnq-perl
+Section: perl
+Priority: optional
+Build-Depends: debhelper (>= 7)
+Build-Depends-Indep: perl
+Maintainer: Stephane Alnet <stephane@shimaore.net>
+Standards-Version: 3.9.1
+Homepage: http://search.cpan.org/dist/CCNQ/
+
+Package: libccnq-perl
+Architecture: all
+Depends: ${misc:Depends}, ${perl:Depends}
+Description: Distribution for ccnq2.0 (core modules)
+ carrierclass.net is a carrier-oriented voice management system.
+ .
+ This package contains the core modules.
