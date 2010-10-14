@@ -78,6 +78,8 @@ sub as_tabs {
   my $result = CCNQ::AE::receive_docs($cv);
   $result->[0] or return "";
   my @columns = qw( number number_type carrier );
+  vars->{numbers_bank_extra_columns}
+    and push @columns, @{vars->{numbers_bank_extra_columns}};
   return
     # header row
     join("\t", map { _($_)_ } @columns)."\n".
