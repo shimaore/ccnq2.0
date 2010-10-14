@@ -66,7 +66,7 @@ sub _view_id {
     $account,
     params->{year},
     params->{month},
-    params->{day},
+    params->{day}||'',
     params->{account_sub},
     params->{event_type},
     $cv);

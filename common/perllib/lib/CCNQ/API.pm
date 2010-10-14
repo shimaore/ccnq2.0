@@ -104,7 +104,7 @@ sub _path_api {
   return;
 }
 
-sub cdr          { _view_api('cdr'         ,@_) }
+sub cdr          { _path_api('cdr'         ,@_) }
 
 sub _view_api {
   my $prefix = shift;
