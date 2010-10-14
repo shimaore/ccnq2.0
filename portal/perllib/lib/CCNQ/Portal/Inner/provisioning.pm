@@ -135,6 +135,8 @@ sub _lookup {
     ));
 
     my $key = $params->{key};
+    $what eq 'number'
+      and $key = CCNQ::Portal::normalize_number($key);
     defined($key)
       or return;
 
