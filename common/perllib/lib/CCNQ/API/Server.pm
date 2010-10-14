@@ -343,18 +343,37 @@ use constant _cdr => __generic(sub {
 
   $req->method eq 'GET' or return 501;
 
-  my ($view,$id);
-  if($path =~ m{^/cdr/(\w+)/(\w+)/(.*)$}) {
-    $view = $1.'/'.$2;
-    $id   = [map { decode_utf8(uri_unescape($_)) } split(qr|/|,$3)];
+  my ($account,$year,$month,$day,$account_sub,$event_type);
+  if($path =~ m{^/cdr/(.*)$}) {
+    ($account,$year,$month,$day,$account_sub,$event_type) =
+      map { decode_utf8(uri_unescape($_)) } split(qr|/|,$1);
+    defined($account) && defined($year) && defined($month)
+      or return 418;
   } else {
     return 404;
   }
 
+  $day = int($day);
+  my ($start_key,$end_key);
+  if($day) {
+    $start_key = $end_key = sprintf('%s-%04d-%02d-%02d',$account,$year,$month,$day);
+  } else {
+    $start_key = sprintf('%s-%04d-%02d-00',$account,$year,$month);
+    $end_key   = sprintf('%s-%04d-%02d-32',$account,$year,$month);
+  }
+  if(defined($account_sub)) {
+    $start_key .= '-'.$account_sub;
+    $end_key   .= '-'.$account_sub;
+    if(defined($event_type)) {
+      $start_key .= '-'.$event_type;
+      $end_key   .= '-'.$event_type;
+    }
+  }
+
   use CCNQ::CDR;
-  CCNQ::CDR::view({
-    view => $view,
-    _id  => $id,
+  CCNQ::CDR::all_docs({
+    start_key => $start_key,
+    end_key   => $end_key,
   })->cb(__view_cb($req));
 
   $httpd->stop_request;

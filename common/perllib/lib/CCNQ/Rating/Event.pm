@@ -115,12 +115,14 @@ sub new {
 # Prevent inserting twice the same CDR by mistake.
 sub id {
   my ($self) = @_;
+  # The order of fields is such that the records are properly ordered for
+  # invoicing, etc.
   return join( '-',
     $self->{account},
-    $self->{account_sub},
     $self->{start_date},
-    $self->{start_time},
+    $self->{account_sub},
     $self->{event_type},
+    $self->{start_time},
     ($self->{from_e164}||'none'),
     ($self->{to_e164}||'none'),
   );

@@ -139,7 +139,7 @@ sub cdr_by_sub {
   my ($account_sub) = @_;
 
   my $cv = AE::cv;
-  CCNQ::API::cdr('report','monthly_by_sub',$self->account,$self->year,$self->month,$account_sub,$cv);
+  CCNQ::API::cdr($self->account,$self->year,$self->month,undef,$account_sub,$cv);
   return CCNQ::AE::receive_docs($cv);
 }
 

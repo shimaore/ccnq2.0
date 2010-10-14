@@ -94,6 +94,18 @@ sub request {
   return;
 }
 
+sub _path_api {
+  my $prefix = shift;
+  my $cb = pop;
+  my (@fields) = @_;
+  my $uri = api_uri();
+  $uri->path_segments($prefix,map { Encode::encode_utf8($_) } @fields);
+  http_get $uri->as_string, _api_cb($cb);
+  return;
+}
+
+sub cdr          { _view_api('cdr'         ,@_) }
+
 sub _view_api {
   my $prefix = shift;
   my $cb = pop;
@@ -105,7 +117,6 @@ sub _view_api {
 }
 
 sub provisioning { _view_api('provisioning',@_) }
-sub cdr          { _view_api('cdr'         ,@_) }
 sub billing      { _view_api('billing'     ,@_) }
 sub invoicing    { _view_api('invoicing'   ,@_) }
 

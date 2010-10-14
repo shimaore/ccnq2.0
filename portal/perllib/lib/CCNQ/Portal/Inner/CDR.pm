@@ -51,15 +51,11 @@ sub as_json {
   return to_json($cv->recv);
 }
 
-=head1 /cdr/:view
+=head1 /cdr/view
 
 =cut
 
 sub _view_id {
-  my $day   = params->{day};
-  my @date = ();
-  $day and push @date, $day;
-
   my $account = CCNQ::Portal::Inner::Util::validate_account;
 
   CCNQ::Portal::Inner::Util::user_can_access_billing_for($account)
@@ -67,20 +63,19 @@ sub _view_id {
 
   my $cv = AE::cv;
   CCNQ::API::cdr(
-    'report',params->{view},
     $account,
-    params->{account_sub},
-    params->{event_type},
     params->{year},
     params->{month},
-    @date,
+    params->{day},
+    params->{account_sub},
+    params->{event_type},
     $cv);
   return $cv;
 }
 
 # View one
 get      '/cdr/'      => sub { as_html() };
-get      '/cdr/:view' => sub { as_html(_view_id) };
-get '/json/cdr/:view' => sub { as_json(_view_id) };
+get      '/cdr/view'  => sub { as_html(_view_id) };
+get '/json/cdr/view'  => sub { as_json(_view_id) };
 
 'CCNQ::Portal::Inner::billing_plan';

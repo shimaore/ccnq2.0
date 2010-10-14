@@ -19,30 +19,7 @@
 <%|loc%>Please select an account.<%END%>
 <% ELSE %>
 <fieldset class="ui-widget"><legend><%|loc%>CDR Report<%END%></legend>
-  <form action="by_type" method="GET" accept-charset="utf-8" class="ui-widget validate">
-    <p class="ui-helper-clearfix">
-      <label for="account_sub" class="left"><%|loc%>Account sub<%END%></label>
-      <select name="account_sub" class="required">
-        <% FOREACH account_sub IN account_subs(session.account) %>
-        <option value="<% account_sub.account_sub | html %>"><% account_sub.name | html %></option>
-        <% END %>
-      </select>
-    </p>
-    <p class="ui-helper-clearfix">
-      <label for="event_type" class="left"><%|loc%>Event type<%END%></label>
-      <select name="event_type" class="required">
-          <option value="ingress_call"  ><%|loc%>Ingress Call<%END%></option>
-          <option value="egress_call"   ><%|loc%>Egress Call<%END%></option>
-          <option value="count_endpoint"><%|loc%>Endpoints<%END%></option>
-          <option value="count_location"><%|loc%>Locations<%END%></option>
-          <option value="count_number"  ><%|loc%>Numbers<%END%></option>
-<!--
-        <% FOREACH event_type IN event_types() %>
-        <option value="<% event_type | html %>"><%|loc%><% event_type %><%END%></option>
-        <% END %>
--->
-      </select>
-    </p>
+  <form action="view" method="GET" accept-charset="utf-8" class="ui-widget validate">
     <p class="ui-helper-clearfix">
       <label for="year" class="left"><%|loc%>Month or Day to report<%END%></label>
       <input type="text" name="year"  size="4" value="<%|loc%>YYYY<%END%>" class="required" />
