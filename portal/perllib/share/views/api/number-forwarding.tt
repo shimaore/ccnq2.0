@@ -1,13 +1,9 @@
 <% USE loc %>
 <% IF field.number %>
-  <fieldset class="ui-widget"><legend><% | loc %>Number update<% END %></legend>
+  <fieldset class="ui-widget"><legend><% | loc(field.number) %>Forwarding for number [_1]<% END %></legend>
     <form method="post" action="" accept-charset="utf-8" class="ui-widget validate">
       <p class="ui-helper-clearfix">
-        <label for="number" class="left"><% | loc %>Number:<% END %></label>
-        <input type="text" readonly name="number" value="<% field.number | html %>" size="16" />
-      </p>
-      <p class="ui-helper-clearfix">
-        <label for="cfa_number" class="left"><% | loc %>Forward all incoming call to:<% END %></label>
+        <label for="cfa_number"><% | loc %>Forward all incoming call to:<% END %></label>
         <input type="text" name="cfa_number" value="<% field.cfa_number | html %>" />
         <% IF forwarding_modes %>
           <select name="cfa_mode">
@@ -19,7 +15,7 @@
       </p>
       <% IF field.register %>
       <p class="ui-helper-clearfix">
-        <label for="cfnr_number" class="left"><% | loc %>When your endpoint is not accessible, incoming call attempts will normally fail, with an indication that the number has been disconnected. Instead, forward them to:<% END %></label>
+        <label for="cfnr_number"><% | loc %>When your endpoint is not accessible, incoming call attempts will normally fail, with an indication that the number has been disconnected. Instead, forward them to:<% END %></label>
         <input type="text" name="cfnr_number" value="<% field.cfnr_number | html %>" />
         <% IF forwarding_modes %>
           <select name="cfnr_mode">
@@ -31,7 +27,7 @@
       </p>
       <% END %>
       <p class="ui-helper-clearfix">
-        <label for="cfb_number" class="left"><% | loc %>When busy, forward call to:<% END %></label>
+        <label for="cfb_number"><% | loc %>When busy, forward call to:<% END %></label>
         <input type="text" name="cfb_number" value="<% field.cfb_number | html %>" />
         <% IF forwarding_modes %>
           <select name="cfb_mode">
@@ -42,10 +38,10 @@
         <% END %>
       </p>
       <p class="ui-helper-clearfix">
-        <label for="cfda_timeout" class="left"><% | loc %>If an incoming call is not answered after at most:<% END %></label>
+        <label for="cfda_timeout"><% | loc %>If an incoming call is not answered after at most:<% END %></label>
         <input type="text" name="cfda_timeout" value="<% field.cfda_timeout | html %>" />
         <%|loc%>seconds<%END%>
-        <label for="cfda_number" class="left"><% | loc %>, or if the call otherwise fails to connect (for example because your endpoint is not accessible), forward the call to:<% END %></label>
+        <label for="cfda_number"><% | loc %>, or if the call otherwise fails to connect (for example because your endpoint is not accessible), forward the call to:<% END %></label>
         <input type="text" name="cfda_number" value="<% field.cfda_number | html %>" />
         <% IF forwarding_modes %>
           <select name="cfda_mode">
