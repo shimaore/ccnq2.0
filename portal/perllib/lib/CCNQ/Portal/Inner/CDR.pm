@@ -61,15 +61,18 @@ sub _view_id {
   CCNQ::Portal::Inner::Util::user_can_access_billing_for($account)
     or return;
 
-  my $cv = AE::cv;
-  CCNQ::API::cdr(
+  my @params = (
     $account,
     params->{year},
     params->{month},
-    params->{day}||'',
-    params->{account_sub},
-    params->{event_type},
-    $cv);
+  );
+
+  if(params->{day}) {
+    push @params, params->{day};
+  }
+
+  my $cv = AE::cv;
+  CCNQ::API::cdr( @params, $cv );
   return $cv;
 }
 
