@@ -81,14 +81,14 @@ get r('/js/([\w.-]+)\.js') => sub {
   content_of(path(CCNQ::Portal::SRC,'public','js',(splat)[0].".js"));
 };
 
+get r('/images/([\w.-]+)\.gif') => sub {
+  content_type 'text/javascript';
+  content_of(path(CCNQ::Portal::SRC,'public','js',(splat)[0].".gif"));
+};
+
 get r('/js/localization/([\w.-]+)\.js') => sub {
   content_type 'text/javascript';
   content_of(path(CCNQ::Portal::SRC,'public','js','localization',(splat)[0].".js"));
-};
-
-get r('/images/tango-icon-theme/22x22/status/([\w-]+)\.png') => sub {
-  content_type 'image/png';
-  content_of(path(CCNQ::Portal::SRC,'public','images','tango-icon-theme','22x22','status',(splat)[0].".png"));
 };
 
 1;
