@@ -90,9 +90,9 @@ sub _view_id {
   return $cv;
 }
 
-get      '/provisioning/view/:view/:id' => sub { to_html(_view_id) };
-get '/json/provisioning/view/:view/:id' => sub { as_json(_view_id) };
-get '/tabs/provisioning/view/:view/:id' => sub { as_tabs(_view_id) };
+get '/provisioning/view/:view/:id.html' => sub { to_html(_view_id) };
+get '/provisioning/view/:view/:id.json' => sub { as_json(_view_id) };
+get '/provisioning/view/:view/:id.json' => sub { as_tabs(_view_id) };
 
 =head1 /provisioning/view/account
 
@@ -112,9 +112,9 @@ sub _view_account {
   return $cv;
 }
 
-get      '/provisioning/view/account' => sub { to_html(_view_account) };
-get '/json/provisioning/view/account' => sub { as_json(_view_account) };
-get '/tabs/provisioning/view/account' => sub { as_tabs(_view_account) };
+get '/provisioning/view/account.html' => sub { to_html(_view_account) };
+get '/provisioning/view/account.json' => sub { as_json(_view_account) };
+get '/provisioning/view/account.tabs' => sub { as_tabs(_view_account) };
 
 =head1 /provisioning/lookup/:what
 
@@ -160,8 +160,8 @@ sub _lookup {
   };
 }
 
-get      '/provisioning/lookup/:what' => sub { to_html(_lookup(params->{what})->()) };
-get '/json/provisioning/lookup/:what' => sub { as_json(_lookup(params->{what})->()) };
-get '/tabs/provisioning/lookup/:what' => sub { as_tabs(_lookup(params->{what})->()) };
+get '/provisioning/lookup/:what.html' => sub { to_html(_lookup(params->{what})->()) };
+get '/provisioning/lookup/:what.json' => sub { as_json(_lookup(params->{what})->()) };
+get '/provisioning/lookup/:what.tabs' => sub { as_tabs(_lookup(params->{what})->()) };
 
 1;

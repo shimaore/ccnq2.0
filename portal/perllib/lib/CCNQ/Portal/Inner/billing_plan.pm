@@ -43,7 +43,7 @@ get '/billing/billing_plan/:plan_name' => sub {
   return CCNQ::Portal::content;
 };
 
-get '/json/billing/billing_plan' => sub {
+get '/billing/billing_plan.json' => sub {
   my $params = CCNQ::Portal::Util::neat({},qw(plan_name));
   my $plan_name = $params->{plan_name};
 
@@ -59,7 +59,7 @@ get '/json/billing/billing_plan' => sub {
   return to_json($plan_data);
 };
 
-post '/json/billing/billing_plan' => sub {
+post '/billing/billing_plan.json' => sub {
   my $params = CCNQ::Portal::Util::neat({},qw(plan_name rating_steps));
   my $plan_name    = $params->{plan_name};
   my $rating_steps = $params->{rating_steps};

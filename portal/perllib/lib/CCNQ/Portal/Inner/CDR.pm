@@ -76,8 +76,8 @@ sub _view_id {
 }
 
 # View one
-get      '/cdr/'      => sub { as_html() };
-get      '/cdr/view'  => sub { as_html(_view_id) };
-get '/json/cdr/view'  => sub { as_json(_view_id) };
+get '/cdr/query.html' => sub { as_html() };
+get '/cdr/view.html'  => sub { as_html(_view_id) };
+get '/cdr/view.json'  => sub { as_json(_view_id) };
 
 'CCNQ::Portal::Inner::billing_plan';

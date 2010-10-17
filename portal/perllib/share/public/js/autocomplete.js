@@ -11,7 +11,7 @@ $(function() {
         return;
       }
 
-      lastXhr = $.getJSON( prefix+"/json/numbers", request, function( data, status, xhr ) {
+      lastXhr = $.getJSON( prefix+"/numbers.json", request, function( data, status, xhr ) {
         cache[ term ] = data;
         if ( xhr === lastXhr ) {
           response( data );

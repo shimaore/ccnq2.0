@@ -58,7 +58,7 @@ $(function() {
   var action_selector = "#plan > li:last-child > .step-action > ul";
 
   /* Load the data from the server */
-  $.getJSON( prefix+'/json/billing/billing_plan', { plan_name: plan_name }, function(data){
+  $.getJSON( prefix+'/billing/billing_plan.json', { plan_name: plan_name }, function(data){
 
     /* Remove all child nodes */
     $("#plan").empty();
@@ -156,7 +156,7 @@ $(function() {
 
     rating_steps = JSON.stringify(rating_steps);
 
-    $.post( prefix+'/json/billing/billing_plan', { plan_name: plan_name, rating_steps: rating_steps }, function(data){
+    $.post( prefix+'/billing/billing_plan.json', { plan_name: plan_name, rating_steps: rating_steps }, function(data){
       /* we will get { ok: "true" } iff everything went OK */
       if(data.ok) {
         $("#history").append('(<a href="'+prefix+'/request/'+data.request+'">Check</a>) ');

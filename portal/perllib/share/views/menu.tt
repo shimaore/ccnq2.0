@@ -29,7 +29,7 @@
       <li><a href="<% prefix %>/billing/account"><%|loc%>Manage<%END%></a></li>
       <li><a href="<% prefix %>/billing/account_address"><%|loc%>Billing Address<%END%></a></li>
       <li><a href="<% prefix %>/bucket/account/"><%|loc%>Bucket Values<%END%></a></li>
-      <li><a href="<% prefix %>/cdr/"><%|loc%>Call Detail Records (CDR)<%END%></a></li>
+      <li><a href="<% prefix %>/cdr/query.html"><%|loc%>Call Detail Records (CDR)<%END%></a></li>
       <% END %>
     </ul>
   </li>
@@ -53,15 +53,15 @@
   <li><span><%|loc%>Endpoints<%END%></span>
     <ul>
       <% IF is_admin %>
-      <li><span><form action="<% prefix %>/provisioning/lookup/endpoint" method="GET">
+      <li><span><form action="<% prefix %>/provisioning/lookup/endpoint.html" method="GET">
           <input type="text" size="16" name="key" /></form></span></li>
       <% END %>
       <% IF session.account %>
       <li><span class="separator"><%|loc(session.account)%>Account [_1]<%END%></span></li>
-      <li><a href="<% prefix %>/tabs/provisioning/view/endpoint/_all"><%|loc%>Download all<%END%></a></li>
+      <li><a href="<% prefix %>/provisioning/view/endpoint/_all.tabs"><%|loc%>Download all<%END%></a></li>
       <li><a href="<% prefix %>/provisioning/endpoint"><%|loc%>Manage<%END%></a></li>
       <% IF not is_admin %>
-      <li><span><form action="<% prefix %>/provisioning/lookup/endpoint" method="GET">
+      <li><span><form action="<% prefix %>/provisioning/lookup/endpoint.html" method="GET">
           <input type="text" size="16" name="key" /></form></span></li>
       <% END %>
       <% local_endpoints_menu %>
@@ -71,15 +71,15 @@
   <li><span><%|loc%>Numbers<%END%></span>
     <ul>
       <% IF is_admin %>
-      <li><span><form action="<% prefix %>/provisioning/lookup/number" method="GET">
+      <li><span><form action="<% prefix %>/provisioning/lookup/number.html" method="GET">
           <input type="text" size="16" name="key" /></form></span></li>
-      <li><a href="<% prefix %>/tabs/numbers/bank/"><%|loc%>Available Numbers<%END%></a></li>
+      <li><a href="<% prefix %>/numbers/bank/all.tabs"><%|loc%>Available Numbers<%END%></a></li>
       <% END %>
       <% IF session.account %>
       <li><span class="separator"><%|loc(session.account)%>Account [_1]<%END%></span></li>
-      <li><a href="<% prefix %>/tabs/provisioning/view/number/_all"><%|loc%>Download all<%END%></a></li>
+      <li><a href="<% prefix %>/provisioning/view/number/_all.tabs"><%|loc%>Download all<%END%></a></li>
       <% IF not is_admin %>
-      <li><span><form action="<% prefix %>/provisioning/lookup/number" method="GET">
+      <li><span><form action="<% prefix %>/provisioning/lookup/number.html" method="GET">
           <input type="text" size="16" name="key" /></form></span></li>
       <% END %>
       <% local_numbers_menu %>
