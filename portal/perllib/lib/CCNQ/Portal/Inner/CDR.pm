@@ -67,9 +67,8 @@ sub _view_id {
     params->{month},
   );
 
-  if(params->{day}) {
-    push @params, params->{day};
-  }
+  params->{day}
+    and push @params, params->{day};
 
   my $cv = AE::cv;
   CCNQ::API::cdr( @params, $cv );
