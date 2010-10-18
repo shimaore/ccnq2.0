@@ -41,6 +41,7 @@ use constant cdr_designs => {
   },
 };
 
+sub db { CCNQ::CouchDB::db(cdr_uri,cdr_db) }
 
 sub install {
   my ($params,$context) = @_;
@@ -55,11 +56,6 @@ sub insert {
 sub retrieve {
   my ($params) = @_;
   return CCNQ::CouchDB::retrieve_cv(cdr_uri,cdr_db,$params);
-}
-
-sub view {
-  my ($params) = @_;
-  return CCNQ::CouchDB::view_cv(cdr_uri,cdr_db,$params);
 }
 
 'CCNQ::CDR';

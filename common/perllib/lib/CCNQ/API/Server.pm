@@ -371,7 +371,7 @@ use constant _cdr => __generic(sub {
   }
 
   use CCNQ::CDR;
-  CCNQ::CDR::all_docs({
+  CCNQ::CDR::db->all_docs({
     start_key => $start_key,
     end_key   => $end_key,
   })->cb(__view_cb($req));
