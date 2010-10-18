@@ -71,11 +71,10 @@ sub period {
     $end_key   = sprintf('%s-%04d%02d32',$account,$year,$month);
   }
 
-  use CCNQ::CDR;
-
   return db->all_docs({
     start_key => $start_key,
     end_key   => $end_key,
+    include_docs => 'true',
   });
 }
 
