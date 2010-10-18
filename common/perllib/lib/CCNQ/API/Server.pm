@@ -525,7 +525,6 @@ sub _session_ready {
     '/rating_table' => sub { $handle_return->(_rating_table,@_) },
     '/bucket'       => sub { $handle_return->(_bucket,@_) },
     '/manager'      => sub { $handle_return->(_manager,@_) },
-    '/cdr'          => sub { $handle_return->(_cdr,@_) },
   );
   return;
 }
