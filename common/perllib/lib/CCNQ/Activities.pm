@@ -214,7 +214,7 @@ sub forwarding {
     my $n = $i.'_number';
     my $m = $i.'_mode';
 
-    $request->{$n}
+    $request->{$n} && $request->{$m}
       or next;
 
     my $forwarding_sbc_name = $self->FORWARDING_SBC_NAME($request->{$m});

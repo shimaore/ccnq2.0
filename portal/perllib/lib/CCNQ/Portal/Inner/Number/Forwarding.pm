@@ -83,7 +83,7 @@ post '/number_forwarding/:number' => sub {
     or return CCNQ::Portal::content( error => _('Please specify a valid number')_ );
 
   my $params = {};
-  CCNQ::Portal::Util::neat($params,qw(
+  CCNQ::Portal::Util::strip($params,qw(
     cfa_number    cfa_mode
     cfnr_number   cfnr_mode
     cfda_number   cfda_mode   cfda_timeout
