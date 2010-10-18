@@ -356,10 +356,11 @@ use constant _cdr => __generic(sub {
   $day = int($day);
   my ($start_key,$end_key);
   if($day) {
-    $start_key = $end_key = sprintf('%s-%04d-%02d-%02d',$account,$year,$month,$day);
+    $start_key = sprintf('%s-%04d%02d%02d',$account,$year,$month,$day);
+    $end_key   = $start_key.chr(0x7e);
   } else {
-    $start_key = sprintf('%s-%04d-%02d-00',$account,$year,$month);
-    $end_key   = sprintf('%s-%04d-%02d-32',$account,$year,$month);
+    $start_key = sprintf('%s-%04d%02d00',$account,$year,$month);
+    $end_key   = sprintf('%s-%04d%02d32',$account,$year,$month);
   }
 
   use CCNQ::CDR;
