@@ -50,7 +50,7 @@ sub install {
   my $rcv = AE::cv;
 
   info("Creating CouchDB '${db_name}' database on server $uri");
-  my $couch_db = db($uri,$db_name);
+  my $db = db($uri,$db_name);
 
   my $install_designs = sub {
     # No designs
