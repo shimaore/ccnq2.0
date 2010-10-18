@@ -19,7 +19,7 @@
 <%|loc%>Please select an account.<%END%>
 <% ELSE %>
 <fieldset class="ui-widget"><legend><%|loc%>CDR Report<%END%></legend>
-  <form action="view" method="GET" accept-charset="utf-8" class="ui-widget validate">
+  <form action="view.html" method="GET" accept-charset="utf-8" class="ui-widget validate">
     <p class="ui-helper-clearfix">
       <label for="year" class="left"><%|loc%>Month or Day to report<%END%></label>
       <input type="text" name="year"  size="4" value="<%|loc%>YYYY<%END%>" class="required" />
