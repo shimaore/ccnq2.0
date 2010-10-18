@@ -4,7 +4,7 @@
     <form method="post" action="" accept-charset="utf-8" class="ui-widget validate">
       <p class="ui-helper-clearfix">
         <label for="cfa_number"><% | loc %>Forward all incoming call to:<% END %></label>
-        <input type="text" name="cfa_number" value="<% field.cfa_number | html %>" />
+        <input type="text" name="cfa_number" value="<% field.cfa_number | html %>" size="16" />
         <% IF forwarding_modes %>
           <select name="cfa_mode">
             <% FOR m IN forwarding_modes.pairs %>
@@ -16,7 +16,7 @@
       <% IF field.register %>
       <p class="ui-helper-clearfix">
         <label for="cfnr_number"><% | loc %>When your endpoint is not accessible, incoming call attempts will normally fail, with an indication that the number has been disconnected. Instead, forward them to:<% END %></label>
-        <input type="text" name="cfnr_number" value="<% field.cfnr_number | html %>" />
+        <input type="text" name="cfnr_number" value="<% field.cfnr_number | html %>" size="16" />
         <% IF forwarding_modes %>
           <select name="cfnr_mode">
             <% FOR m IN forwarding_modes.pairs %>
@@ -28,7 +28,7 @@
       <% END %>
       <p class="ui-helper-clearfix">
         <label for="cfb_number"><% | loc %>When busy, forward call to:<% END %></label>
-        <input type="text" name="cfb_number" value="<% field.cfb_number | html %>" />
+        <input type="text" name="cfb_number" value="<% field.cfb_number | html %>" size="16" />
         <% IF forwarding_modes %>
           <select name="cfb_mode">
             <% FOR m IN forwarding_modes.pairs %>
@@ -39,10 +39,10 @@
       </p>
       <p class="ui-helper-clearfix">
         <label for="cfda_timeout"><% | loc %>If an incoming call is not answered after at most:<% END %></label>
-        <input type="text" name="cfda_timeout" value="<% field.cfda_timeout | html %>" />
+        <input type="text" name="cfda_timeout" value="<% field.cfda_timeout | html %>" size="2" />
         <%|loc%>seconds<%END%>
         <label for="cfda_number"><% | loc %>, or if the call otherwise fails to connect (for example because your endpoint is not accessible), forward the call to:<% END %></label>
-        <input type="text" name="cfda_number" value="<% field.cfda_number | html %>" />
+        <input type="text" name="cfda_number" value="<% field.cfda_number | html %>" size="16" />
         <% IF forwarding_modes %>
           <select name="cfda_mode">
             <% FOR m IN forwarding_modes.pairs %>
