@@ -92,7 +92,7 @@ sub _view_id {
 
 get '/provisioning/view/:view/:id.html' => sub { to_html(_view_id) };
 get '/provisioning/view/:view/:id.json' => sub { as_json(_view_id) };
-get '/provisioning/view/:view/:id.json' => sub { as_tabs(_view_id) };
+get '/provisioning/view/:view/:id.tabs' => sub { as_tabs(_view_id) };
 
 =head1 /provisioning/view/account
 
