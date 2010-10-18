@@ -97,6 +97,7 @@ post '/number_forwarding/:number' => sub {
 
   # Remove old parameters, if any
   delete $params->{forwarding_number};
+  delete $params->{forwarding_type};
   delete $params->{forwarding_mode};
 
   return CCNQ::Portal::Inner::Util::update_number($account,$number,$params);
