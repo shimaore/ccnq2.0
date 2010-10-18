@@ -36,6 +36,13 @@ sub receive_ok {
   }
 }
 
+sub db {
+  my ($uri,$db_name) = @_;
+  my $couch = couch($uri);
+  my $couch_db = $couch->db($db_name);
+  return $couch_db;
+}
+
 sub install {
   my ($uri,$db_name,$designs) = @_;
   $designs ||= {};
@@ -43,8 +50,7 @@ sub install {
   my $rcv = AE::cv;
 
   info("Creating CouchDB '${db_name}' database on server $uri");
-  my $couch = couch($uri);
-  my $db = $couch->db($db_name);
+  my $couch_db = db($uri,$db_name);
 
   my $install_designs = sub {
     # No designs
@@ -131,8 +137,7 @@ sub update_cv {
   }
 
   # Insert / Update a CouchDB record
-  my $couch = couch($uri);
-  my $couch_db = $couch->db($db_name);
+  my $couch_db = db($uri,$db_name);
 
   $couch_db->open_doc($params->{_id})->cb(sub{
     my $doc = CCNQ::AE::receive(@_);
@@ -178,8 +183,7 @@ sub update_bulk_cv {
   }
 
   # Insert / Update / Delete CouchDB records
-  my $couch = couch($uri);
-  my $couch_db = $couch->db($db_name);
+  my $couch_db = db($uri,$db_name);
 
   for my $new_data (@{$params->{docs}}) {
     my $id = $new_data->{_id};
@@ -240,8 +244,7 @@ sub update_key_cv {
   }
 
   # Insert / Update a CouchDB record
-  my $couch = couch($uri);
-  my $couch_db = $couch->db($db_name);
+  my $couch_db = db($uri,$db_name);
 
   $couch_db->open_doc($params->{_id})->cb(sub{
     my $doc = CCNQ::AE::receive(@_);
@@ -278,8 +281,7 @@ sub delete_cv {
   }
 
   # Delete a CouchDB record
-  my $couch = couch($uri);
-  my $couch_db = $couch->db($db_name);
+  my $couch_db = db($uri,$db_name);
 
   $couch_db->open_doc($params->{_id})->cb(sub{
     my $doc = CCNQ::AE::receive(@_);
@@ -303,8 +305,8 @@ sub retrieve_cv {
   }
 
   # Return a CouchDB record, or a set of records
-  my $couch = couch($uri);
-  my $couch_db = $couch->db($db_name);
+  my $couch_db = db($uri,$db_name);
+
   $couch_db->open_doc($params->{_id})->cb(sub{
     my $doc = CCNQ::AE::receive(@_);
     if(!$doc) {
@@ -340,8 +342,7 @@ sub view_cv {
     die 'View is required';
   }
 
-  my $couch = couch($uri);
-  my $couch_db = $couch->db($db_name);
+  my $couch_db = db($uri,$db_name);
 
   my $view;
   if($params->{view} eq '_all_docs') {
@@ -358,12 +359,6 @@ sub view_cv {
       endkey       => [@key_prefix,{}],
       include_docs => "true",
     };
-
-    #debug("view_cv: ".
-    #  join(',', map {
-    #      join(' ', map { sprintf("%04x",$_) } unpack("U*",$_));
-    #    } @key_prefix )
-    #);
 
     $view = $couch_db->view($params->{view},$options);
   }
