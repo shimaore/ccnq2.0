@@ -343,9 +343,9 @@ use constant _cdr => __generic(sub {
 
   $req->method eq 'GET' or return 501;
 
-  my ($account,$year,$month,$day,$account_sub,$event_type);
+  my ($account,$year,$month,$day);
   if($path =~ m{^/cdr/(.*)$}) {
-    ($account,$year,$month,$day,$account_sub,$event_type) =
+    ($account,$year,$month,$day) =
       map { decode_utf8(uri_unescape($_)) } split(qr|/|,$1);
     defined($account) && defined($year) && defined($month)
       or return 418;
@@ -361,17 +361,10 @@ use constant _cdr => __generic(sub {
     $start_key = sprintf('%s-%04d-%02d-00',$account,$year,$month);
     $end_key   = sprintf('%s-%04d-%02d-32',$account,$year,$month);
   }
-  if(defined($account_sub)) {
-    $start_key .= '-'.$account_sub;
-    $end_key   .= '-'.$account_sub;
-    if(defined($event_type)) {
-      $start_key .= '-'.$event_type;
-      $end_key   .= '-'.$event_type;
-    }
-  }
 
   use CCNQ::CDR;
-  CCNQ::CDR::db->all_docs({
+
+  CCNQ::CDR::all_docs({
     start_key => $start_key,
     end_key   => $end_key,
   })->cb(__view_cb($req));

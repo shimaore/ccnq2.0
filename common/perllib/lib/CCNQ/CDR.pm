@@ -58,4 +58,18 @@ sub retrieve {
   return CCNQ::CouchDB::retrieve_cv(cdr_uri,cdr_db,$params);
 }
 
+sub all_docs {
+  my (@params) = @_;
+
+  my $rcv = AE::cv;
+
+  db->all_docs(@params)->cb(sub{
+    my $data = CCNQ::AE::receive(@_);
+    $rcv->send($data);
+    undef $data;
+  });
+
+  return $rcv;
+}
+
 'CCNQ::CDR';
