@@ -61,17 +61,9 @@ sub _view_id {
   CCNQ::Portal::Inner::Util::user_can_access_billing_for($account)
     or return;
 
-  my @params = (
-    $account,
-    params->{year},
-    params->{month},
-  );
-
-  params->{day}
-    and push @params, params->{day};
-
   # New model: CouchDB as API
-  return CCNQ::CDR::period(@params);
+  use CCNQ::CDR;
+  return CCNQ::CDR::period($account,params->{year},params->{month},params->{day});
 }
 
 # View one
