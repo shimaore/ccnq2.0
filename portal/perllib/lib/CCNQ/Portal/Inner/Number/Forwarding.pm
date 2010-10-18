@@ -95,6 +95,10 @@ post '/number_forwarding/:number' => sub {
     $params->{$n} = $normalize_number->($params->{$n});
   }
 
+  # Remove old parameters, if any
+  delete $params->{forwarding_number};
+  delete $params->{forwarding_mode};
+
   return CCNQ::Portal::Inner::Util::update_number($account,$number,$params);
 };
 
