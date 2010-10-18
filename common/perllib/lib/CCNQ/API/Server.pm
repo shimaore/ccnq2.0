@@ -332,48 +332,6 @@ use constant _billing => __generic(sub {
   return;
 });
 
-=head2 _cdr
-
-Handles /cdr calls
-
-=cut
-
-use constant _cdr => __generic(sub {
-  my ($httpd, $req, $path) = @_;
-
-  $req->method eq 'GET' or return 501;
-
-  my ($account,$year,$month,$day);
-  if($path =~ m{^/cdr/(.*)$}) {
-    ($account,$year,$month,$day) =
-      map { decode_utf8(uri_unescape($_)) } split(qr|/|,$1);
-    defined($account) && defined($year) && defined($month)
-      or return 418;
-  } else {
-    return 404;
-  }
-
-  $day = int($day);
-  my ($start_key,$end_key);
-  if($day) {
-    $start_key = sprintf('%s-%04d%02d%02d',$account,$year,$month,$day);
-    $end_key   = $start_key.chr(0x7e);
-  } else {
-    $start_key = sprintf('%s-%04d%02d00',$account,$year,$month);
-    $end_key   = sprintf('%s-%04d%02d32',$account,$year,$month);
-  }
-
-  use CCNQ::CDR;
-
-  CCNQ::CDR::all_docs({
-    start_key => $start_key,
-    end_key   => $end_key,
-  })->cb(__view_cb($req));
-
-  $httpd->stop_request;
-  return;
-});
-
 =head2 _invoicing
 
 Handles /invoicing calls

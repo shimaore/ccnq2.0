@@ -70,9 +70,8 @@ sub _view_id {
   params->{day}
     and push @params, params->{day};
 
-  my $cv = AE::cv;
-  CCNQ::API::cdr( @params, $cv );
-  return $cv;
+  # New model: CouchDB as API
+  return CCNQ::CDR::period(@params);
 }
 
 # View one

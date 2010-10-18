@@ -58,18 +58,25 @@ sub retrieve {
   return CCNQ::CouchDB::retrieve_cv(cdr_uri,cdr_db,$params);
 }
 
-sub all_docs {
-  my (@params) = @_;
+sub period {
+  my ($account,$year,$month,$day) = @_;
 
-  my $rcv = AE::cv;
+  $day = int($day);
+  my ($start_key,$end_key);
+  if($day) {
+    $start_key = sprintf('%s-%04d%02d%02d',$account,$year,$month,$day);
+    $end_key   = $start_key.chr(0x7e);
+  } else {
+    $start_key = sprintf('%s-%04d%02d00',$account,$year,$month);
+    $end_key   = sprintf('%s-%04d%02d32',$account,$year,$month);
+  }
 
-  db->all_docs(@params)->cb(sub{
-    my $data = CCNQ::AE::receive(@_);
-    $rcv->send($data);
-    undef $data;
+  use CCNQ::CDR;
+
+  return db->all_docs({
+    start_key => $start_key,
+    end_key   => $end_key,
   });
-
-  return $rcv;
 }
 
 'CCNQ::CDR';
