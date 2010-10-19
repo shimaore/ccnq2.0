@@ -117,50 +117,12 @@ sub paginate_html {
 
   my $limit = int(params->{limit} || default_limit);
 
-  my $answer = CCNQ::AE::receive($cv);
-  my $result = [ map { $_->{doc} } @{$answer->{rows}} ];
+  var page   => $page;
+  var limit  => $limit;
+  var result => sub { CCNQ::AE::receive_docs($cv) };
 
-  $result->[0] or $page = 1;
-
-  my $navigation = '';
-
-  $page > 1
-    and $navigation .= sprintf(
-      q(<a href="?page=%d&limit=%d" class="prev_page">&larr;</a>),
-      $page-1, $limit,
-    );
-
-  $navigation .= qq(<span class="current_page">$page</span>);
-
-  $#$result < $limit
-  and $navigation .= sprintf(
-    q(<a href="?page=%d&limit=%d" class="next_page">&rarr;</a>),
-    $page+1, $limit,
-  );
-
-  $navigation .= q(<select class="per_page">);
-  $navigation .= join('', map {
-    sprintf( q(<option value="%d" %s>%d</option>),
-    $_, ($_ == $limit ? 'selected' : ''), $_ )
-  } qw( 10 25 50 100 ));
-  $navigation .= q(</select>);
-
-  $result->[0] or return $navigation;
-
-  my @columns = sort grep { !hidden_columns } keys %{ $result->[0] };
-  unshift @columns, $result->[0]->{profile};
-
-  return $navigation .
-    q(<table>).
-    # header row
-    q(<tr>).join('', map { q(<th>)._($_)_.q(</th>) } @columns).q(</tr>).
-    # data rows
-    join('', map {
-      q(<tr>).
-      join('', map { q(<td>).(defined($_) ? $_ : '').q(</td>) } @{$_}{@columns}).  # everybody love hashref slices!
-      q(</tr>)
-    } @$result) .
-    q(</table>);
+  var template_name => 'provisioning-page';
+  return CCNQ::Portal::content;
 }
 
 sub _view_page {
