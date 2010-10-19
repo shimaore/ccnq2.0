@@ -138,7 +138,7 @@ sub paginate_html {
   $navigation .= q(<select class="per_page">);
   $navigation .= join('', map {
     sprintf( q(<option value="%d" %s>%d</option>),
-    $_, ($_ == $limit ? 'selected' : ''), $_
+    $_, ($_ == $limit ? 'selected' : ''), $_ )
   } qw( 10 25 50 100 ));
   $navigation .= q(</select>);
 
