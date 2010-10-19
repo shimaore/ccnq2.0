@@ -7,7 +7,7 @@ $(function() {
     var new_page = current_page + page_offset;
     var url = "?page="+new_page+"&limit="+limit;
 
-    view.find(".view_content").load(url, function(){
+    view.find(".view_content").load(url+" .view_content", function(){
       view.find(".prev_page").click(function(){
         refresh(view,-1);
         return false;
