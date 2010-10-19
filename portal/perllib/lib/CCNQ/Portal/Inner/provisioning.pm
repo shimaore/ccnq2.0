@@ -175,7 +175,7 @@ sub _view_page {
   # New model: CouchDB as API
   use CCNQ::Provisioning;
   return CCNQ::Provisioning::provisioning_paginate(
-    '_design/'.params->{view},
+    'report/'.params->{view},
     $account,
     ($page-1)*$limit,
     $limit,
