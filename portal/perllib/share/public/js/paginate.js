@@ -10,11 +10,11 @@ $(function() {
     view.find(".view_content").load(url, function(){
       view.find(".prev_page").click(function(){
         refresh(view,-1);
-        return;
+        return false;
       });
       view.find(".next_page").click(function(){
         refresh(view,+1);
-        return;
+        return false;
       });
       view.find(".per_page").change(function(){
         var new_limit = 0 + view.find(".per_page").val();
