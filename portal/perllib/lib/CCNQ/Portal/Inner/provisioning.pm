@@ -101,7 +101,12 @@ get '/provisioning/page/:view.html' => sub {
   CCNQ::Portal::Inner::Util::validate_account;
 
   my $page = int(params->{page} || 1);
-  return paginate_html($page,_view_page($page));
+  if($page) {
+    return paginate_html($page,_view_page($page));
+  } else {
+    var template_name => 'provisioning-paginate';
+    return CCNQ::Portal::content;
+  }
 };
 
 use constant default_limit => 25;
@@ -117,7 +122,7 @@ sub paginate_html {
   var result => sub { CCNQ::AE::receive_docs($cv) };
 
   var template_name => 'provisioning-paginate';
-  return CCNQ::Portal::content;
+  template 'provisioning-paginate', {}, { layout => undef };
 }
 
 sub _view_page {
