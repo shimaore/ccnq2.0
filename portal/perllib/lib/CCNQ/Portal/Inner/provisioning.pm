@@ -98,7 +98,7 @@ get '/provisioning/page/:view.html' => sub {
   CCNQ::Portal::Inner::Util::validate_account;
 
   if(params->{page}) {
-    return paginate_html _view_page params->{page};
+    return paginate_html(_view_page(params->{page}));
   } else {
     var template_name => 'provisioning-paginate';
     return CCNQ::Portal::content;
