@@ -123,7 +123,7 @@ sub paginate_html {
 
   $page > 1
     and $navigation .= sprintf(
-      q(<a href="?page=%d&limit=%d" class="prev_page">&larr;</span>),
+      q(<a href="?page=%d&limit=%d" class="prev_page">&larr;</a>),
       $page-1, $limit,
     );
 
@@ -131,7 +131,7 @@ sub paginate_html {
 
   $#$result < $limit
   and $navigation .= sprintf(
-    q(<a href="?page=%d&limit=%d" class="next_page">&rarr;</span>),
+    q(<a href="?page=%d&limit=%d" class="next_page">&rarr;</a>),
     $page+1, $limit,
   );
 
