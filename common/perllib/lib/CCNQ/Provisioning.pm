@@ -31,6 +31,8 @@ use constant::defer provisioning_uri => sub {
 };
 use constant provisioning_db => 'provisioning';
 
+sub db { CCNQ::CouchDB::db(provisioning_uri,provisioning_db) }
+
 use constant js_report_by_account => <<'JAVASCRIPT';
   function (doc) {
     emit([doc.account,doc.account_sub,doc.profile,doc.type,doc._id],null);
@@ -226,6 +228,18 @@ Note: in CCNQ::Portal::Inner::Provisioning we prepend the account ID,
 sub provisioning_view {
   my ($params) = @_;
   return CCNQ::CouchDB::view_cv(provisioning_uri,provisioning_db,$params);
+}
+
+sub provisioning_paginate {
+  my ($view,$account,$skip,$limit) = @_;
+
+  return db->view($view,{
+    include_docs  => 'true',
+    startkey      => [$account],
+    endkey        => [$account,{}],
+    skip          => $skip,
+    limit         => $limit,
+  });
 }
 
 =pod

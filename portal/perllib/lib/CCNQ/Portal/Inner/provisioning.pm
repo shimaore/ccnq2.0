@@ -94,6 +94,94 @@ get '/provisioning/view/:view/:id.html' => sub { to_html(_view_id) };
 get '/provisioning/view/:view/:id.json' => sub { as_json(_view_id) };
 get '/provisioning/view/:view/:id.tabs' => sub { as_tabs(_view_id) };
 
+get '/provisioning/view/:view/_all.html' => sub {
+  CCNQ::Portal::Inner::Util::validate_account;
+
+  if(params->{page}) {
+    return paginate_html _view_page params->{page};
+  } else {
+    var template_name => 'provisioning-paginate';
+    return CCNQ::Portal::content;
+  }
+};
+
+use constant default_limit => 25;
+
+sub paginate_html {
+  my $cv = shift;
+  $cv or return send_error();
+
+  my $limit = params->{limit} || default_limit;
+
+  my $answer = CCNQ::AE::receive($cv);
+  my $result = [ map { $_->{doc} } @{$answer->{rows}} ];
+
+
+  my $page = 1 + ($answer->{offset} || 0) / $limit;
+  $result->[0] or $page = 1;
+
+  my $navigation = '';
+
+  $page > 1
+    and $navigation .= sprintf(
+      q(<a href="?page=%d&limit=%d" class="prev_page">&larr;</span>),
+      $page-1, $limit,
+    );
+
+  $navigation .= qq(<span class="current_page">$page</span>);
+
+  $page < ($answer->{total_rows}/$limit)
+  and $navigation .= sprintf(
+    q(<a href="?page=%d&limit=%d" class="next_page">&rarr;</span>),
+    $page+1, $limit,
+  );
+
+  $navigation .= <<'HTML';
+  <select class="per_page">
+    <option value="10">10</option>
+    <option value="25">25</option>
+    <option value="50">50</option>
+    <option value="100">100</option>
+  </select>
+HTML
+
+  $result->[0] or return $navigation;
+
+  my @columns = sort grep { !/^_/ } keys %{ $result->[0] };
+
+  return $navigation .
+    q(<table>).
+    # header row
+    q(<tr>).join('', map { q(<th>)._($_)_.q(</th>) } @columns).q(</tr>).
+    # data rows
+    join('', map {
+      q(<tr>).
+      join('', map { q(<td>).(defined($_) ? $_ : '').q(</td>) } @{$_}{@columns})  # everybody love hashref slices!
+      q(</tr>)
+    } @$result) .
+    q(</table>);
+}
+
+sub _view_page {
+  my $page = shift;
+  my $limit = params->{limit} || default_limit;
+
+  my $account = CCNQ::Portal::Inner::Util::validate_account;
+
+  CCNQ::Portal->current_session->user &&
+  $account
+    or return;
+
+  # New model: CouchDB as API
+  use CCNQ::Provisioning;
+  return CCNQ::Provisioning::provisioning_paginate(
+    params->{view},
+    $account,
+    ($page-1)*$limit,
+    $limit,
+  );
+}
+
 =head1 /provisioning/view/account
 
 Retrieve all provisioning data for the current (session) account.

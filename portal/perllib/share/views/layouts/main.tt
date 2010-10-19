@@ -17,6 +17,7 @@
 <script type="text/javascript" src="<% prefix %>/js/jquery.validate.min.js"></script>
 <script type="text/javascript"> var prefix = "<% prefix %>"; </script>
 <script type="text/javascript" src="<% prefix %>/js/forms.js"></script>
+<script type="text/javascript" src="<% prefix %>/js/paginate.js"></script>
 <script type="text/javascript" src="<% prefix %>/js/localization/messages_<% session.locale %>.js"></script>
 <!-- / jquery + jquery.ui -->
 </head>

@@ -1,0 +1,16 @@
+<% USE loc %>
+<% IF NOT session.account %>
+<%|loc%>Please select an account.<%|loc%>
+<% ELSE %>
+<div class="view">
+
+<div class="view_content">
+</div>
+
+</div>
+
+<noscript>
+  <a href="?page=1"><%|loc%>View content<%END%></a>
+</noscript>
+
+<% END %>
