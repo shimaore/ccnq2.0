@@ -8,13 +8,13 @@ $(function() {
     var url = "?page="+new_page+"&limit="+limit;
 
     view.children(".view_content").load(url, function(){
-      $(".view .prev_page").onclick(function(){
+      view.children(".prev_page").click(function(){
         refresh(view,-1);
       });
-      $(".view .next_page").onclick(function(){
+      view.children(".next_page").click(function(){
         refresh(view,+1);
       });
-      $(".view .per_page").change(function(){
+      view.children(".per_page").change(function(){
         var new_limit = view.children(".per_page").val();
         var same_page = (new_page / limit) * new_limit;
         refresh(view,same_page-current_page);
