@@ -1,7 +1,7 @@
 $(function() {
   var refresh;
   refresh = function(view,page_offset) {
-    var current_page  = view.children(".current_page").val();
+    var current_page  = view.children(".current_page").html();
     var limit         = view.children(".per_page").val();
 
     var new_page = current_page + page_offset;

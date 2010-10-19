@@ -135,14 +135,12 @@ sub paginate_html {
     $page+1, $limit,
   );
 
-  $navigation .= <<'HTML';
-  <select class="per_page">
-    <option value="10">10</option>
-    <option value="25">25</option>
-    <option value="50">50</option>
-    <option value="100">100</option>
-  </select>
-HTML
+  $navigation .= q(<select class="per_page">);
+  $navigation .= join('', map {
+    sprintf( q(<option value="%d" %s>%d</option>),
+    $_, ($_ == $limit ? 'selected' : ''), $_
+  } qw( 10 25 50 100 ));
+  $navigation .= q(</select>);
 
   $result->[0] or return $navigation;
 
