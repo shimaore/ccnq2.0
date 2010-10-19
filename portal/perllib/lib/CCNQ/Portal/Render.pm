@@ -99,33 +99,31 @@ Returns the HTML content for the default site, with the specified error message.
 
 =cut
 
+before sub {
+  var ccnq_version => $CCNQ::VERSION;
+  var ccnq_portal_version => $CCNQ::Portal::VERSION;
+  if(CCNQ::Portal->current_session->user) {
+    var user_name =>
+      CCNQ::Portal->current_session->user->profile->name;
+    var is_admin =>
+      CCNQ::Portal->current_session->user->profile->{is_admin} || 0;
+    var is_sysadmin =>
+      CCNQ::Portal->current_session->user->profile->{is_sysadmin} || 0;
+    var accounts =>
+      sub { CCNQ::Portal::Outer::AccountSelection->available_accounts },
+  }
+
+  var lh      => sub { CCNQ::Portal->current_session->locale };
+  var prefix  => prefix; # Dancer's prefix()
+  var site    => CCNQ::Portal->site;
+}
+
 use constant default_content => sub {
   my %p = @_;
   var error => $p{error} if $p{error};
 
-  var ccnq_version => $CCNQ::VERSION;
-  var ccnq_portal_version => $CCNQ::Portal::VERSION;
-
   my $template_name = vars->{template_name} || DEFAULT_TEMPLATE_NAME;
-
   my $template_params = vars;
-
-  if(CCNQ::Portal->current_session->user) {
-    $template_params->{user_name} =
-      CCNQ::Portal->current_session->user->profile->name;
-    $template_params->{is_admin} =
-      CCNQ::Portal->current_session->user->profile->{is_admin} || 0;
-    $template_params->{is_sysadmin} =
-      CCNQ::Portal->current_session->user->profile->{is_sysadmin} || 0;
-    $template_params->{accounts} =
-      sub { CCNQ::Portal::Outer::AccountSelection->available_accounts },
-  }
-
-  $template_params->{lh} = sub { CCNQ::Portal->current_session->locale };
-
-  $template_params->{prefix} = prefix; # Dancer's prefix()
-
-  $template_params->{site} = CCNQ::Portal->site;
 
   my $r = ccnq_template( $template_name => $template_params );
   return ref($r) ? $r : encode_utf8($r);
