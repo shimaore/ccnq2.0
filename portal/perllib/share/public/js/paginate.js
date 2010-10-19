@@ -25,7 +25,7 @@ $(function() {
     });
   };
 
-  # Initiliaze the view
+  // Initiliaze the view
   $(".view").each(function(){
     refresh($(this),0);
   });
