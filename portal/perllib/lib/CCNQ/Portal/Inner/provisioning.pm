@@ -99,7 +99,7 @@ get '/provisioning/page/:view.html' => sub {
 
   my $page = int(params->{page});
   if($page) {
-    return paginate_html(_view_page($page));
+    return paginate_html($page,_view_page($page));
   } else {
     var template_name => 'provisioning-paginate';
     return CCNQ::Portal::content;
@@ -109,15 +109,14 @@ get '/provisioning/page/:view.html' => sub {
 use constant default_limit => 25;
 
 sub paginate_html {
-  my $cv = shift;
+  my ($page,$cv) = @_;
   $cv or return send_error();
 
-  my $limit = int(params->{limit}) || default_limit;
+  my $limit = int(params->{limit} || default_limit);
 
   my $answer = CCNQ::AE::receive($cv);
   my $result = [ map { $_->{doc} } @{$answer->{rows}} ];
 
-  my $page = 1 + ($answer->{offset} || 0) / $limit;
   $result->[0] or $page = 1;
 
   my $navigation = '';
@@ -130,7 +129,7 @@ sub paginate_html {
 
   $navigation .= qq(<span class="current_page">$page</span>);
 
-  $page < (($answer->{total_rows}||0)/$limit)
+  $#result < $limit
   and $navigation .= sprintf(
     q(<a href="?page=%d&limit=%d" class="next_page">&rarr;</span>),
     $page+1, $limit,
