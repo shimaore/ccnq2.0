@@ -59,7 +59,7 @@ sub as_tabs {
   my $result = CCNQ::AE::receive_docs($cv);
   $result->[0] or return "";
   my @columns = sort grep { !hidden_columns } keys %{ $result->[0] };
-  unshift @columsn, $result->[0]->{profile};
+  unshift @columns, $result->[0]->{profile};
   return
     # header row
     join("\t", map { _($_)_ } @columns)."\n".
