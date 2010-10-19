@@ -34,6 +34,8 @@ use CCNQ::AE;
 
 =cut
 
+use constant hidden_columns => qr/^_|^account|^action|^api|^cluster|^request|^type|^endpoint_ip|^profile/;
+
 sub to_html {
   my $cv = shift;
   var template_name => 'provisioning';
@@ -56,7 +58,8 @@ sub as_tabs {
   header 'Content-Disposition' => qq(attachment; filename="export.csv");
   my $result = CCNQ::AE::receive_docs($cv);
   $result->[0] or return "";
-  my @columns = sort grep { !/^_/ } keys %{ $result->[0] };
+  my @columns = sort grep { !hidden_columns } keys %{ $result->[0] };
+  unshift $result->[0]->{profile}, @columns;
   return
     # header row
     join("\t", map { _($_)_ } @columns)."\n".
@@ -144,7 +147,8 @@ sub paginate_html {
 
   $result->[0] or return $navigation;
 
-  my @columns = sort grep { !/^_/ } keys %{ $result->[0] };
+  my @columns = sort grep { !hidden_columns } keys %{ $result->[0] };
+  unshift $result->[0]->{profile}, @columns;
 
   return $navigation .
     q(<table>).
