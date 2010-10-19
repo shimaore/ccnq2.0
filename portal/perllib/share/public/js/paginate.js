@@ -19,7 +19,7 @@ $(function() {
       view.find(".per_page").change(function(){
         var new_limit = 0 + view.find(".per_page").val();
         var same_page = Math.floor((new_page * limit) / new_limit);
-        refresh(view,same_page.-current_page);
+        refresh(view,same_page-current_page);
       });
     });
   };
