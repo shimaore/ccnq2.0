@@ -2,15 +2,44 @@
 <% IF NOT session.account %>
 <%|loc%>Please select an account.<%END%>
 <% ELSE %>
+
 <div class="view">
-
 <div class="view_content">
-</div>
+
+<% IF page > 1 %>
+<a href="?page=<% page - 1 %>&limit=<% limit %>" class="prev_page">&larr;</a>
+<% END %>
+<span class="current_page"><% page | html %></span>
+<% IF result.size < limit %>
+<a href="?page=<% page + 1 %>&limit=<% limit %>" class="next_page">&rarr;</a>
+<% END %>
+
+<select class="per_page">
+<option value="10" <% IF limit == 10 %>selected<%END%>>10</option>
+<option value="25" <% IF limit == 25 %>selected<%END%>>25</option>
+<option value="50" <% IF limit == 50 %>selected<%END%>>50</option>
+<option value="100" <% IF limit == 100 %>selected<%END%>>100</option>
+</select>
+
+<table>
+<% FOREACH r IN result; SET profile = r.profile %>
+  <tr>
+  <th>
+    <a href="<% prefix %>/provisioning/view/<% profile | uri %>/<% r.$profile | uri %>.html?account=<% r.account | uri %>"><% r.$profile | html %></a>
+  </th>
+  <% FOREACH d IN r; UNLESS d.key.match('^_|^account|^action|^api|^cluster|^request|^type|^endpoint_ip|^profile') %>
+    <td>
+      <% IF    d.key == 'endpoint' %><a href="<% prefix %>/provisioning/view/endpoint/<% d.value | uri %>.html?account=<% r.account | uri %>"><% d.value | html %></a>
+      <% ELSIF d.key == 'location' %><a href="<% prefix %>/provisioning/view/location/<% d.value | uri %>.html?account=<% r.account | uri %>"><% d.value | html %></a>
+      <% ELSIF d.key == 'account'  %><a href="<% prefix %>/?account=<% r.account | uri %>"><% d.value | html %></a>
+      <% ELSE %><% d.value | html %><% END %>
+    </td>
+  <% END; END %>
+  </tr>
+<% END %>
+</table>
 
 </div>
-
-<noscript>
-  <a href="?page=1"><%|loc%>View content<%END%></a>
-</noscript>
+</div>
 
 <% END %>
