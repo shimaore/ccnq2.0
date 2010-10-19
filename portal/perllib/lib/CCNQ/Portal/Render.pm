@@ -116,7 +116,7 @@ before sub {
   var lh      => sub { CCNQ::Portal->current_session->locale };
   var prefix  => prefix; # Dancer's prefix()
   var site    => CCNQ::Portal->site;
-}
+};
 
 use constant default_content => sub {
   my %p = @_;
