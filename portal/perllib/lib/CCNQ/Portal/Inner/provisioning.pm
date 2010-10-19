@@ -110,7 +110,7 @@ sub paginate_html {
   my ($page,$cv) = @_;
   $cv or return send_error();
 
-  my $limit = int(params->{limit} || default_limit);
+  my $limit = eval { int(params->{limit}) } || default_limit;
 
   var page   => $page;
   var limit  => $limit;
@@ -122,7 +122,7 @@ sub paginate_html {
 
 sub _view_page {
   my $page = shift;
-  my $limit = params->{limit} || default_limit;
+  my $limit = eval { int(params->{limit}) } || default_limit;
 
   my $account = CCNQ::Portal::Inner::Util::validate_account;
 
