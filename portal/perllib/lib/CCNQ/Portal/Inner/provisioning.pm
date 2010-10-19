@@ -156,7 +156,7 @@ HTML
     # data rows
     join('', map {
       q(<tr>).
-      join('', map { q(<td>).(defined($_) ? $_ : '').q(</td>) } @{$_}{@columns})  # everybody love hashref slices!
+      join('', map { q(<td>).(defined($_) ? $_ : '').q(</td>) } @{$_}{@columns}).  # everybody love hashref slices!
       q(</tr>)
     } @$result) .
     q(</table>);
