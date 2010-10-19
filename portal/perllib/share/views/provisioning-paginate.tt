@@ -10,7 +10,7 @@
 <a href="?page=<% page - 1 %>&limit=<% limit %>" class="prev_page">&larr;</a>
 <% END %>
 <span class="current_page"><% page | html %></span>
-<% IF result.size < limit %>
+<% IF result.size == limit %>
 <a href="?page=<% page + 1 %>&limit=<% limit %>" class="next_page">&rarr;</a>
 <% END %>
 
