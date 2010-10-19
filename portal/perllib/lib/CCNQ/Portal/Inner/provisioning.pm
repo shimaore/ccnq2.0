@@ -94,7 +94,7 @@ get '/provisioning/view/:view/:id.html' => sub { to_html(_view_id) };
 get '/provisioning/view/:view/:id.json' => sub { as_json(_view_id) };
 get '/provisioning/view/:view/:id.tabs' => sub { as_tabs(_view_id) };
 
-get '/provisioning/view/:view/_all.html' => sub {
+get '/provisioning/page/:view.html' => sub {
   CCNQ::Portal::Inner::Util::validate_account;
 
   if(params->{page}) {
