@@ -121,7 +121,7 @@ sub paginate_html {
   var limit  => $limit;
   var result => sub { CCNQ::AE::receive_docs($cv) };
 
-  template 'provisioning-paginate', vars, { layout => undef };
+  template 'provisioning-page', vars, { layout => undef };
 }
 
 sub _view_page {
