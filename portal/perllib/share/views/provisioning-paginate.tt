@@ -8,4 +8,8 @@
 </div>
 </div>
 
+<noscript>
+  <a href="?page=1&limit=25"><%|loc%>View content<%END%></a>
+</noscript>
+
 <% END %>
