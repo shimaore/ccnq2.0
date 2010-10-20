@@ -156,3 +156,8 @@ div.activity {
 .entry form {
   display: inline;
 }
+
+.view {
+  background-color: white;
+  color: black;
+}
