@@ -157,7 +157,35 @@ div.activity {
   display: inline;
 }
 
+tr {
+  border-style: none;
+  border-top: solid thin #839858;
+  border-bottom: solid thin #839858;
+}
+
+th, td {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: baseline;
+  padding: 1px;
+}
+
 .view table {
   background-color: white;
   color: black;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  padding: 1px;
+  margin: 2px;
+  font-size: 11px;
+  border-spacing: 1px;
 }
+
+.view td {
+    padding: 1px 3px;
+}
+.view th {
+    padding: 1px 3px;
+}
+
