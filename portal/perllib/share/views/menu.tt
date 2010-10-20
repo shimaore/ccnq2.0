@@ -41,6 +41,7 @@
         <% local_locations_menu %>
       <% ELSE %>
       <li><a href="<% prefix %>/provisioning/view/location/_all.html"><%|loc%>View all<%END%></a></li>
+      <li><a href="<% prefix %>/provisioning/page/location.html"><%|loc%>View<%END%></a></li>
       <% IF site.locations_cannot_be_modified %>
       <li><a href="<% prefix %>/location"><%|loc%>Create<%END%></a></li>
       <% ELSE %>
@@ -59,6 +60,7 @@
       <% IF session.account %>
       <li><span class="separator"><%|loc(session.account)%>Account [_1]<%END%></span></li>
       <li><a href="<% prefix %>/provisioning/view/endpoint/_all.tabs"><%|loc%>Download all<%END%></a></li>
+      <li><a href="<% prefix %>/provisioning/page/endpoint.html"><%|loc%>View<%END%></a></li>
       <li><a href="<% prefix %>/provisioning/endpoint"><%|loc%>Manage<%END%></a></li>
       <% IF not is_admin %>
       <li><span><form action="<% prefix %>/provisioning/lookup/endpoint.html" method="GET">
@@ -78,6 +80,7 @@
       <% IF session.account %>
       <li><span class="separator"><%|loc(session.account)%>Account [_1]<%END%></span></li>
       <li><a href="<% prefix %>/provisioning/view/number/_all.tabs"><%|loc%>Download all<%END%></a></li>
+      <li><a href="<% prefix %>/provisioning/page/number.html"><%|loc%>View<%END%></a></li>
       <% IF not is_admin %>
       <li><span><form action="<% prefix %>/provisioning/lookup/number.html" method="GET">
           <input type="text" size="16" name="key" /></form></span></li>
