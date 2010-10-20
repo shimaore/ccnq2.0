@@ -100,7 +100,7 @@ get '/provisioning/view/:view/:id.tabs' => sub { as_tabs(_view_id) };
 get '/provisioning/page/:view.html' => sub {
   CCNQ::Portal::Inner::Util::validate_account;
 
-  my $page = int(params->{page} || 1);
+  my $page = int(params->{page} || 0);
   if($page) {
     return paginate_html($page,_view_page($page));
   } else {
