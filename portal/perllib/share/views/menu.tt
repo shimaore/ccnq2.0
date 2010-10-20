@@ -40,7 +40,7 @@
       <% IF local_locations_menu %>
         <% local_locations_menu %>
       <% ELSE %>
-      <li><a href="<% prefix %>/provisioning/view/location/_all.html"><%|loc%>View all<%END%></a></li>
+      <li><a href="<% prefix %>/provisioning/view/location/_all.tabs"><%|loc%>Download all<%END%></a></li>
       <li><a href="<% prefix %>/provisioning/page/location.html"><%|loc%>View<%END%></a></li>
       <% IF site.locations_cannot_be_modified %>
       <li><a href="<% prefix %>/location"><%|loc%>Create<%END%></a></li>
