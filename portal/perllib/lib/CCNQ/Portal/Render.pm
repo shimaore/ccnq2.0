@@ -104,13 +104,13 @@ before sub {
   var ccnq_portal_version => $CCNQ::Portal::VERSION;
   if(CCNQ::Portal->current_session->user) {
     var user_name =>
-      CCNQ::Portal->current_session->user->profile->name;
+      sub { CCNQ::Portal->current_session->user->profile->name };
     var is_admin =>
-      CCNQ::Portal->current_session->user->profile->{is_admin} || 0;
+      sub { CCNQ::Portal->current_session->user->profile->{is_admin} || 0 };
     var is_sysadmin =>
-      CCNQ::Portal->current_session->user->profile->{is_sysadmin} || 0;
+      sub { CCNQ::Portal->current_session->user->profile->{is_sysadmin} || 0 };
     var accounts =>
-      sub { CCNQ::Portal::Outer::AccountSelection->available_accounts },
+      sub { CCNQ::Portal::Outer::AccountSelection->available_accounts };
   }
 
   var lh      => sub { CCNQ::Portal->current_session->locale };
