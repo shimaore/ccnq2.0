@@ -102,16 +102,23 @@ Returns the HTML content for the default site, with the specified error message.
 before sub {
   var ccnq_version => $CCNQ::VERSION;
   var ccnq_portal_version => $CCNQ::Portal::VERSION;
-  if(CCNQ::Portal->current_session->user) {
-    var user_name =>
-      sub { CCNQ::Portal->current_session->user->profile->name };
-    var is_admin =>
-      sub { CCNQ::Portal->current_session->user->profile->{is_admin} || 0 };
-    var is_sysadmin =>
-      sub { CCNQ::Portal->current_session->user->profile->{is_sysadmin} || 0 };
-    var accounts =>
-      sub { CCNQ::Portal::Outer::AccountSelection->available_accounts };
-  }
+
+  var user_name => sub {
+    CCNQ::Portal->current_session->user &&
+    CCNQ::Portal->current_session->user->profile->name
+  };
+  var is_admin => sub {
+    CCNQ::Portal->current_session->user &&
+    CCNQ::Portal->current_session->user->profile->{is_admin} || 0
+  };
+  var is_sysadmin => sub {
+    CCNQ::Portal->current_session->user &&
+    CCNQ::Portal->current_session->user->profile->{is_sysadmin} || 0
+  };
+  var accounts => sub {
+    CCNQ::Portal->current_session->user &&
+    CCNQ::Portal::Outer::AccountSelection->available_accounts
+  };
 
   var lh      => sub { CCNQ::Portal->current_session->locale };
   var prefix  => prefix; # Dancer's prefix()
