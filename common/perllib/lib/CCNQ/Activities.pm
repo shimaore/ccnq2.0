@@ -214,10 +214,10 @@ sub forwarding {
     my $n = $i.'_number';
     my $m = $i.'_mode';
 
-    $request->{$n} && $request->{$m}
+    $request->{$n}
       or next;
 
-    my $forwarding_sbc_name = $self->FORWARDING_SBC_NAME($request->{$m});
+    my $forwarding_sbc_name = $self->FORWARDING_SBC_NAME($request->{$m} || '');
     my $forwarding_uri = sub { 'sip:'.$request->{$n}.'@'.$forwarding_sbc_name.';account='.$request->{account}.';account_sub='.$request->{account_sub} };
 
     $forwarding_data->{$i} = $forwarding_uri->();
