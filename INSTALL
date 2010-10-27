@@ -179,11 +179,13 @@ EOT
 
   # Install FreeSwitch
 
-  sudo aptitude -y install unixodbc libasound2 libcurl3 libvorbis0a
+  sudo aptitude -y install unixodbc libasound2 libcurl3 libvorbis0a libjpeg62
+  sudo aptitude -y install -t testing libperl5.10
   sudo aptitude -y install libcrypt-ssleay-perl  # for CNAM
 
   cd ~/src
   FREESWITCH=1.0.6-git20100812
+  FREESWITCH=1.0.head~git.master.20101015.1-1
   ARCH=amd64
   wget http://opensource.sotelips.net/~stephane/${ARCH}/freeswitch_${FREESWITCH}_${ARCH}.deb
   wget http://opensource.sotelips.net/~stephane/${ARCH}/freeswitch-lang-en_${FREESWITCH}_${ARCH}.deb
