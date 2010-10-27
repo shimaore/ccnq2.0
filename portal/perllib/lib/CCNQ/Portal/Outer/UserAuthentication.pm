@@ -27,13 +27,14 @@ post '/login' => sub {
     sub {
       CCNQ::Portal->current_session->start_userid(shift);
       CCNQ::Portal::Outer::AccountSelection::account();
-    });
-    return CCNQ::Portal::content;
+    }
+  );
+  redirect uri_for('/');
 };
 
 get '/logout' => sub {
   CCNQ::Portal->current_session->end();
-  return CCNQ::Portal::content;
+  redirect uri_for('/');
 };
 
 'CCNQ::Portal::Outer::UserAuthentication';
