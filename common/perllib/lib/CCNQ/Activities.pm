@@ -26,7 +26,10 @@ use Carp;
 sub INBOUND_PROXY_NAME   { croak }
 sub OUTBOUND_PROXY_NAME  { croak }
 
-sub FORWARDING_SBC_NAME  { CCNQ::Install::cluster_fqdn('forwarding-sbc') }
+sub FORWARDING_SBC_NAME  {
+  my $self = shift;
+  CCNQ::Install::cluster_fqdn('forwarding-sbc');
+}
 
 sub outbound_loopback_target { croak }
 
