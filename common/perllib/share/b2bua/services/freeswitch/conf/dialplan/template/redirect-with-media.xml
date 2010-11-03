@@ -11,6 +11,8 @@
 
     <extension name="redirect">
       <condition field="destination_number" expression="^(\d+)$">
+        <action application="set" data="progress_timeout=12"/>
+        <action application="set" data="call_timeout=300"/>
         <action application="pre_answer"/> <!-- 183: lock the SDP here -->
         <action application="gentones" data="%(2000,4000,440,480)"/> <!-- ringback -->
         <action application="set" data="ccnq_account=${regex(${sip_req_params}|account=([^;]*)|%1)}"/>

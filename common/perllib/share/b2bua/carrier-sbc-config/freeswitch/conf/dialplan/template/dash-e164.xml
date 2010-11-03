@@ -14,6 +14,7 @@
       <condition field="destination_number" expression="^1(911)$">
         <action application="set" data="ccnq_direction=egress"/>
         <action application="set" data="progress_timeout=12"/>
+        <action application="set" data="call_timeout=300"/>
         <action application="export" data="t38_passthru=true"/>
         <action application="set" data="effective_caller_id_number=+${caller_id_number}"/>
         <action application="bridge" data="sofia/sbc-$${profile_name}/$1@$${egress_target}"/>
@@ -24,6 +25,7 @@
       <condition field="destination_number" expression="^(1.*)$">
         <action application="set" data="ccnq_direction=egress"/>
         <action application="set" data="progress_timeout=12"/>
+        <action application="set" data="call_timeout=300"/>
         <action application="export" data="t38_passthru=true"/>
         <action application="set" data="effective_caller_id_number=+${caller_id_number}"/>
         <action application="bridge" data="sofia/sbc-$${profile_name}/+$1@$${egress_target}"/>
@@ -34,6 +36,7 @@
       <condition field="destination_number" expression="^(.*)$">
         <action application="set" data="ccnq_direction=egress"/>
         <action application="set" data="progress_timeout=12"/>
+        <action application="set" data="call_timeout=300"/>
         <action application="export" data="t38_passthru=true"/>
         <action application="set" data="effective_caller_id_number=+${caller_id_number}"/>
         <action application="bridge" data="sofia/sbc-$${profile_name}/+$1@$${egress_target}"/>
@@ -56,6 +59,7 @@
       <condition field="destination_number" expression="^\+?(.*)$">
         <action application="set" data="ccnq_direction=ingress"/>
         <action application="set" data="progress_timeout=12"/>
+        <action application="set" data="call_timeout=300"/>
         <action application="export" data="t38_passthru=true"/>
         <action application="set" data="effective_caller_id_number=${regex(${caller_id_number}|^\\+?(.*)|%1)}"/>
         <action application="bridge" data="sofia/internal-$${profile_name}/$1@$${ingress_target}"/>

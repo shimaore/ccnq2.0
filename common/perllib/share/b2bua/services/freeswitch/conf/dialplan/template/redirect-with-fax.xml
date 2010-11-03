@@ -11,6 +11,8 @@
 
     <extension name="redirect">
       <condition field="destination_number" expression="^(\d+)$">
+        <action application="set" data="progress_timeout=12"/>
+        <action application="set" data="call_timeout=300"/>
         <action application="set" data="ccnq_account=${regex(${sip_req_params}|account=([^;]*)|%1)}"/>
         <action application="set" data="ccnq_account_sub=${regex(${sip_req_params}|account_sub=([^;]*)|%1)}"/>
         <action application="bridge" data="sofia/sbc-$${profile_name}/${destination_number}@$${egress_target};account=${ccnq_account};account_sub=${ccnq_account_sub}"/>
