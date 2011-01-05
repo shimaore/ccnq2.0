@@ -45,7 +45,7 @@
 </div>
 <% END %>
 <div id="content" class="ui-widget"><% content %></div>
-<div style="clear: both; height: 0px;">&nbsp;</div>
+
 <div id="footer"><% INCLUDE footer.tt %></div>
 </body>
 </html>
