@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #
-# These instructions are for Debian/Lenny.
+# These instructions are for Debian/testing.
 #
 # I assume you use sudo to gain root access.
 #
@@ -22,27 +22,11 @@
 # This file is a series of shell code fragments.
 # Each command starts two spaces from the left column.
 
-# * Update apt's sources.list to import the "testing" distribution
-#   (needed for some packages on the API and MediaProxy servers):
+# * Replace apt's sources.list to use the "testing" distribution
+#   (not required if you already installed "testing")
 
-  grep 'testing' /etc/apt/sources.list || cat <<'EOT' | sudo tee -a /etc/apt/sources.list > /dev/null
-# Testing packages required by CCNQ2.0 for Erlang/CouchDB, MediaProxy
+  sudo tee /etc/apt/sources.list > /dev/null <<'EOT'
 deb     http://ftp.us.debian.org/debian/   testing main contrib
-EOT
-
-  grep 'testing' /etc/apt/preferences || cat <<'EOT' | sudo tee /etc/apt/preferences > /dev/null
-#
-# Install Debian/Lenny packages by default
-#
-Package: *
-Pin: release a=lenny
-Pin-Priority: 700
-#
-# Although testing is available, do not attempt to automatically upgrade to it.
-#
-Package: *
-Pin: release a=testing
-Pin-Priority: -1
 EOT
 
   sudo aptitude update
@@ -53,7 +37,7 @@ EOT
 # but it never gets cleaned up. I recommend:
 
   sudo mv /etc/rsyslog.conf /etc/rsyslog.conf.bak
-  cat <<'EOT' | sudo tee /etc/rsyslog.conf >/dev/null
+  sudo tee /etc/rsyslog.conf >/dev/null <<'EOT'
 $ModLoad imuxsock # provides support for local system logging
 $ModLoad imklog   # provides kernel logging support (previously done by rklogd)
 $ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat
@@ -63,6 +47,8 @@ $FileCreateMode 0640
 $DirCreateMode 0755
 auth,authpriv.*             /var/log/auth.log
 *.info;auth,authpriv.none  -/var/log/syslog
+# Uncomment the following line to gather debug messages
+# *.debug                  -/var/log/debug
 EOT
   sudo /etc/init.d/rsyslog reload
 #    Also notice how we do not log "debug" information.
@@ -76,7 +62,7 @@ EOT
 #
   sudo aptitude update
   sudo aptitude -y install ntp psmisc build-essential git-core
-  sudo aptitude -y install -t testing monit bind9
+  sudo aptitude -y install monit bind9
   # Perl modules in testing have proper versions (the ones in Lenny might not).
   sudo aptitude -y install -t testing \
      libdatetime-perl libdatetime-locale-perl libanyevent-perl libasync-interrupt-perl libauthen-sasl-perl libcache-memcached-perl libcgi-untaint-email-perl libcgi-untaint-perl libclass-inspector-perl libcommon-sense-perl libcrypt-cbc-perl libdata-dump-perl libdata-dump-streamer-perl libdata-structure-util-perl libdbi-perl libdigest-hmac-perl libdigest-sha1-perl libemail-valid-perl libexpat-dev libhttp-server-simple-perl libhttp-server-simple-psgi-perl libio-all-perl libio-string-perl libio-stringy-perl libjson-perl libjson-xs-perl liblingua-en-numbers-ordinate-perl liblocale-maketext-lexicon-perl liblogger-syslog-perl libmailtools-perl libmime-types-perl libmodule-install-perl libnet-dns-perl libnet-ip-perl libnet-libidn-perl libnet-ssleay-perl libobject-event-perl libparams-util-perl libstring-crc32-perl libtest-deep-perl libtest-simple-perl libuniversal-require-perl liburi-perl libwww-perl libxml-parser-perl libxml-writer-perl libyaml-perl
@@ -212,8 +198,8 @@ EOT
 
 # * If you intent to use the "sip-traces" API (you should), run the following on any server that will handle SIP traffic:
 
-  sudo aptitude install -y -t testing libpam-runtime   # dependency issue as of 2010/08
-  sudo aptitude install -y -t testing tshark ngrep
+  sudo aptitude install -y libpam-runtime   # dependency issue as of 2010/08
+  sudo aptitude install -y tshark ngrep
   sudo adduser `whoami` wireshark
 
 # * Finally:
