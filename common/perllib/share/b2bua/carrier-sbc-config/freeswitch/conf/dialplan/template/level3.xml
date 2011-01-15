@@ -22,7 +22,7 @@
         <!-- if needed, see the list of variables at http://wiki.freeswitch.org/wiki/Channel_Variables#variable_xxxx -->
         <!-- <action application="set" data="sip_contact_host=$${local_ip_v4}/> -->
         <!-- <action application="set" data="sip_to_uri=sip:+$1@$${egress_target}/> -->
-        <action application="set" data="sip_cid_type=none"/>
+        <action application="set" data="sip_cid_type=pid"/>
         <action application="bridge" data="sofia/sbc-$${egress_profile}/+$1@$${egress_target}"/>
       </condition>
     </extension>
