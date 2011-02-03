@@ -9,8 +9,9 @@
   <% IF r.status && r.response %>
     <% SET rank = r.rank %>
     <% IF not activities.$rank %><% SET activities.$rank = 1 %><% SET progress = progress + 1 %><% END %>
-    <% IF r.status == 'failed' %><% SET refresh = 0 %> <span class="ui-icon ui-icon-alert"></span><% END %>
+    <% IF r.status == 'failed' %><% SET refresh = 0 %> <span class="ui-icon ui-icon-alert"></span><div class="error"><% END %>
     <div class="status <% r.status %>">Node <% r.response.from %>: <% r.status | loc %></div>
+    <% IF r.status == 'failed' %></div><% END %>
     <!-- <% r.response.error.join(", ") | html %> -->
     <% IF r.action == "trace" && r.response.result.rows %>
       <% last_call_id = '' %>
