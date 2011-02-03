@@ -93,16 +93,16 @@
           <input type="checkbox" name="forwarding_sbc" <% IF field.forwarding_sbc %>checked<% END %> value="1" />
         </p>
         <p class="ui-helper-clearfix">
-          <label for="outbound_route" class="left"><% | loc %>Force outbound route:<% END %></label>
+          <label for="outbound_route" class="left"><% | loc %>Endpoint outbound route:<% END %></label>
           <input type="text" name="outbound_route" value="<% field.outbound_route | html %>" />
-        </p>
-        <p class="ui-helper-clearfix">
-          <label for="ignore_caller_outbound_route" class="left"><% | loc %>Ignore caller outbound route<% END %></label>
-          <input type="checkbox" name="ignore_caller_outbound_route" <% IF field.ignore_caller_outbound_route %>checked<% END %> value="1" />
         </p>
         <p class="ui-helper-clearfix">
           <label for="ignore_default_outbound_route" class="left"><% | loc %>Ignore default outbound route<% END %></label>
           <input type="checkbox" name="ignore_default_outbound_route" <% IF field.ignore_default_outbound_route %>checked<% END %> value="1" />
+        </p>
+        <p class="ui-helper-clearfix">
+          <label for="ignore_caller_outbound_route" class="left"><% | loc %>Ignore caller outbound route<% END %></label>
+          <input type="checkbox" name="ignore_caller_outbound_route" <% IF field.ignore_caller_outbound_route %>checked<% END %> value="1" />
         </p>
         <p class="ui-helper-clearfix">
           <label for="check_from" class="left"><% | loc %>Check From username<% END %></label>
