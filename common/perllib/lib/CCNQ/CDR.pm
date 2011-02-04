@@ -72,8 +72,8 @@ sub period {
   }
 
   return db->all_docs({
-    start_key => $start_key,
-    end_key   => $end_key,
+    startkey => $start_key,
+    endkey   => $end_key,
     include_docs => 'true',
   });
 }
