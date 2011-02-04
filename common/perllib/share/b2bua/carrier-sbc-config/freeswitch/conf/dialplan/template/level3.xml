@@ -17,6 +17,7 @@
         <action application="set" data="call_timeout=300"/>
         <action application="export" data="t38_passthru=true"/>
         <action application="set" data="effective_caller_id_name=_undef_"/>
+        <action application="set" data="sip_contact_user=+${caller_id_number}"/>
         <!-- might need to replace the caller_id_number differently if it is not done by another B2BUA -->
         <action application="set" data="effective_caller_id_number=+${caller_id_number}"/>
         <!-- if needed, see the list of variables at http://wiki.freeswitch.org/wiki/Channel_Variables#variable_xxxx -->
