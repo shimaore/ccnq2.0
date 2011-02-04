@@ -140,7 +140,7 @@ CREATE TABLE dr_groups (
     id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
     username CHAR(64) NOT NULL,
     domain CHAR(128) DEFAULT '' NOT NULL,
-    groupid CHAR(255) NOT NULL,
+    groupid INT(10) UNSIGNED NOT NULL,
     description CHAR(128) DEFAULT '' NOT NULL
 );
 
