@@ -61,7 +61,7 @@ sub retrieve {
 sub period {
   my ($account,$year,$month,$day) = @_;
 
-  $day = int($day);
+  $day = int($day||'0');
   my ($start_key,$end_key);
   if($day) {
     $start_key = sprintf('%s-%04d%02d%02d',$account,$year,$month,$day);
