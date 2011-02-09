@@ -162,7 +162,7 @@ sub radius_extra
 }
 
 sub _avp_delete_st { q(DELETE FROM avpops WHERE uuid = ? AND domain = ? AND attribute = ?) }
-sub _avp_insert_st { q(INSERT INTO avpops(uuid,username,domain,attribute,value,type) VALUES (?,?,?,?,?,2)) }
+sub _avp_insert_st { q(INSERT INTO avpops(uuid,username,domain,attribute,value,type) VALUES (?,?,?,?,?,?)) }
 
 sub _avp_set
 {
@@ -174,8 +174,9 @@ sub _avp_set
 
     if(defined $value)
     {
+        # In OpenSIPS 1.5, do_routing("$avp(...)") fails if the groupid is not an integer.
         return (_avp_delete_st,[$key,$domain,$attribute_value],
-                _avp_insert_st,[$key,$key,$domain,$attribute_value,$value]);
+                _avp_insert_st,[$key,$key,$domain,$attribute_value,$value,($attribute_name eq 'user_outbound_route' ? 1 : 2)]);
     }
     else
     {
