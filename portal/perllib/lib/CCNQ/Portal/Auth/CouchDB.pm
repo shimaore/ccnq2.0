@@ -67,7 +67,7 @@ sub exists {
   my ($user_id) = @_;
 
   my $profile = CCNQ::Portal::UserProfile->load($user_id);
-  return ['already'] if $profile->name;
+  return ['already'] if $profile->email;
   return ['not-present'];
 }
 
