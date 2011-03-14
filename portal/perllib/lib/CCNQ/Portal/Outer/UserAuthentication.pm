@@ -29,12 +29,16 @@ post '/login' => sub {
       CCNQ::Portal::Outer::AccountSelection::account();
     }
   );
-  redirect uri_for(prefix.'/');
+  my $prefix = prefix;
+  defined $prefix or $prefix = '';
+  redirect uri_for($prefix.'/');
 };
 
 get '/logout' => sub {
   CCNQ::Portal->current_session->end();
-  redirect uri_for(prefix.'/');
+  my $prefix = prefix;
+  defined $prefix or $prefix = '';
+  redirect uri_for($prefix.'/');
 };
 
 'CCNQ::Portal::Outer::UserAuthentication';
