@@ -42,7 +42,7 @@ JAVASCRIPT
 use constant js_report_numbers => <<'JAVASCRIPT';
   function (doc){
     if(doc.profile == 'number') {
-      emit([doc.account,doc.number],doc.carrier)
+      emit([doc.account,doc.number],null)
     }
   }
 JAVASCRIPT
