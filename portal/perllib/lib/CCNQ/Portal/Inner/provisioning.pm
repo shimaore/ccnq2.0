@@ -58,7 +58,8 @@ sub as_tabs {
   header 'Content-Disposition' => qq(attachment; filename="export.csv");
   my $result = CCNQ::AE::receive_docs($cv);
   $result->[0] or return "";
-  my @columns = sort grep { !hidden_columns } keys %{ $result->[0] };
+  my $hidden_columns = hidden_columns;
+  my @columns = sort grep { !m{$hidden_columns} } keys %{ $result->[0] };
   unshift @columns, $result->[0]->{profile};
   return
     # header row
