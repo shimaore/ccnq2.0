@@ -17,7 +17,7 @@
 
   <settings>
     <param name="colorize-console" value="true"/>
-    <param name="max-sessions" value="2000"/>
+    <param name="max-sessions" value="4000"/>
     <param name="sessions-per-second" value="200"/>
     <param name="loglevel" value="alert"/>
     <param name="crash-protection" value="true"/>
