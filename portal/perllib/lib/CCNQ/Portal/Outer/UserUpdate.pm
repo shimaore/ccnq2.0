@@ -98,19 +98,7 @@ sub update {
     $billing_params->{name} = $params->{name};
 
     # Email address
-    my $email = $untainter->extract(-as_email=>'email');
-    if($email) {
-      $params->{email} = $email->format;
-      $params->{email} =~ s/^\s+//;
-      $params->{email} =~ s/\s+$//;
-      $billing_params->{email} = $params->{email};
-    } else {
-      if(params->{email}) {
-        var error => _('Invalid email address')_;
-        return;
-      }
-    }
-  }
+    # Since the email address is used as the ID, do not allow to update the address.
 
   if( CCNQ::Portal->current_session->user->profile->is_admin ) {
     # Portal accounts
