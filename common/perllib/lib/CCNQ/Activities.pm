@@ -225,10 +225,8 @@ sub forwarding {
 
     $forwarding_data->{$i} = $forwarding_uri->();
 
-    my $t = $i.'_timeout';
-    $forwarding_data->{$t} = $request->{$t}
-      if exists $request->{$t} && defined $request->{$t};
   }
+  $forwarding_data->{cfda_timeout} = $request->{cfda_timeout};
   return $forwarding_data;
 }
 
