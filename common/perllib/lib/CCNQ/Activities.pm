@@ -224,6 +224,10 @@ sub forwarding {
     my $forwarding_uri = sub { 'sip:'.$request->{$n}.'@'.$forwarding_sbc_name.';account='.$request->{account}.';account_sub='.$request->{account_sub} };
 
     $forwarding_data->{$i} = $forwarding_uri->();
+
+    my $t = $i.'_timeout';
+    $forwarding_data->{$t} = $request->{$t}
+      if exists $request->{$t} && defined $request->{$t};
   }
   return $forwarding_data;
 }
