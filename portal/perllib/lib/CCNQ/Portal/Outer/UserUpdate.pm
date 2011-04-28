@@ -99,6 +99,7 @@ sub update {
 
     # Email address
     # Since the email address is used as the ID, do not allow to update the address.
+  }
 
   if( CCNQ::Portal->current_session->user->profile->is_admin ) {
     # Portal accounts
