@@ -99,6 +99,8 @@ sub update {
 
     # Email address
     # Since the email address is used as the ID, do not allow to update the address.
+    $params->{email} = $user->profile->email;
+    $billing_params->{email} = $user->profile->email;
   }
 
   if( CCNQ::Portal->current_session->user->profile->is_admin ) {
