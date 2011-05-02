@@ -66,8 +66,8 @@
   <legend>Manage another User Profile</legend>
   <form id="select_user_form" action="<% prefix %>/user_profile/select" method="post" class="ui-widget" accept-charset="utf-8">
     <p class="ui-helper-clearfix">
-    <label for="user_id" class="left"><% | loc %>User ID<% END %></label>
-    <input type="text" name="user_id" value="" class="required"/>
+    <!-- <label for="user_id" class="left"><% | loc %>User ID<% END %></label>
+    <input type="text" name="user_id" value="" class="required"/> -->
     <select name="user_id_alt">
       <option value=""></option>
       <% FOREACH r IN get_all_users.rows %>
