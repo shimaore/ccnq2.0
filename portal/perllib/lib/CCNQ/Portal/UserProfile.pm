@@ -18,6 +18,9 @@ use strict; use warnings;
 use CCNQ::Portal;
 use CCNQ::AE;
 
+# Prefix to use in user-IDs stored in the CouchDB _users database.
+sub user_id_prefix { 'org.apache.couchdb:' }
+
 sub db {
   return CCNQ::Portal::db;
 }
@@ -40,6 +43,8 @@ sub load {
 sub _load {
   my $self = shift;
   my ($user_id) = @_;
+  my $prefix = $self->user_id_prefix;
+  $user_id = $prefix.$user_id unless $user_id =~ /^$prefix/;
   # Access the database to load information about the specified user.
   my $cv = $self->db->open_doc($user_id);
   my $doc = CCNQ::AE::receive($cv);
