@@ -25,7 +25,7 @@ sub cnam_run {
     use LWP::UserAgent;
     my $ua = LWP::UserAgent->new;
     my $req = HTTP::Request->new(
-      POST => CNAM_URI.$number
+      GET => CNAM_URI.$number
     );
 
     my $res = $ua->request($req);
