@@ -5,7 +5,7 @@ our $session;
 # XXX TODO Replace with http://wiki.freeswitch.org/wiki/Mod_cidlookup
 
 # use constant CNAM_URI => 'https://cnam.sotelips.net:9443/callingname.yaws?Number=';
-use constant CNAM_URI => 'https://cnam.sotelips.net:9443/';
+use constant CNAM_URI => 'https://cnam.sotelips.net:9443/1';
 
 sub info
 {
