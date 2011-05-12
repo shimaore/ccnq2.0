@@ -1,4 +1,6 @@
 #!/bin/bash
+# (c) 2011 Stephane Alnet
+# License: GPL3+
 
 sudo aptitude install libdatetime-perl
 
