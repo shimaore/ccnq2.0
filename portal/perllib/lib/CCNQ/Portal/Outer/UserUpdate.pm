@@ -204,6 +204,6 @@ put '/user_profile/:user_id' => sub {
   my $profile = CCNQ::Portal::UserProfile->load($user_id);
   $profile->update( name => params->{name}, email => params->{email} );
   return q({"ok":true});
-}
+};
 
 'CCNQ::Portal::Outer::UserUpdate';
