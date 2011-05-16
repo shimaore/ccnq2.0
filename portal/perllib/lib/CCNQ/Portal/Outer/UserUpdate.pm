@@ -195,4 +195,15 @@ post '/user_profile/:user_id' => sub {
   return CCNQ::Portal::content;
 };
 
+put '/user_profile/:user_id' => sub {
+
+  CCNQ::Portal->current_session->user &&
+  CCNQ::Portal->current_session->user->profile->is_admin
+    or return q({"error":"unauthorized"});
+
+  my $profile = CCNQ::Portal::UserProfile->load($user_id);
+  $profile->update( name => params->{name}, email => params->{email} );
+  return q({"ok":true});
+}
+
 'CCNQ::Portal::Outer::UserUpdate';
