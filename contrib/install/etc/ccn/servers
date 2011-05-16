@@ -1,0 +1,5 @@
+# list all server names here
+export SERVERS="couchdb1 couchdb2 sbc1 sbc2 inbound-proxy1 inbound-proxy2 outbound-proxy1 outbound-proxy2"
+# additionally, any SSH options
+export SSH_OPTIONS="-p 22"
+export SCP_OPTIONS="-P 22"

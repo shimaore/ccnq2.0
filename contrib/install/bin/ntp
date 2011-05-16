@@ -1,0 +1,6 @@
+#!/bin/bash
+
+  echo "Installing ntp"
+
+  sudo aptitude -y install ntpdate ntp
+  sudo ntpdate -u pool.ntp.org

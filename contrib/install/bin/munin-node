@@ -1,0 +1,25 @@
+#!/bin/bash
+
+sudo aptitude update
+sudo aptitude -y install -t testing \
+    munin-node munin-plugins-extra \
+    libnet-cidr-perl  libnet-ssleay-perl
+
+# Here's an example change to allow 192.168.1.224/32 access to munin-node.
+sudo sed -i -e 's/# cidr_deny  192\.0\.2\.42\/32/cidr_allow 192.168.1.224\/32/' /etc/munin/munin-node.conf
+
+# I tend to use arno-iptables-firewall, so here are some rules to allow 192.168.1.224/32 access to munin-node.
+if [ -d /etc/arno-iptables-firewall ]; then
+
+CFG=/etc/arno-iptables-firewall/custom-rules
+grep 4949 $CFG || sudo tee -a $CFG >/dev/null <<'CFG'
+
+# munin
+${IPTABLES} -A EXT_INPUT_CHAIN -s 192.168.1.224 -p tcp -m tcp --dport 4949 -j ACCEPT
+CFG
+
+sudo /etc/init.d/arno-iptables-firewall restart
+fi
+
+# Finally restart munin-node with the new configuration
+sudo /etc/init.d/munin-node restart

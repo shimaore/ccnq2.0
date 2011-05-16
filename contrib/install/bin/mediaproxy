@@ -1,0 +1,21 @@
+#!/bin/bash
+
+  MEDIAPROXY=2.4.2
+  ARCH=$DEB_HOST_ARCH
+
+  echo "Installing mediaproxy dispatcher (version $MEDIAPROXY)"
+
+  # Install MediaProxy dispatcher (if using MediaProxy)
+  sudo aptitude -y install python python-support libnetfilter-conntrack1 python-cjson python-twisted-core python-twisted-names python-zopeinterface
+  # Versions required for mediaproxy-common include python-application (>= 1.1.5) and python-gnutls (>= 1.1.8) which are not in Debian/Lenny
+  sudo aptitude -y install python-application/testing python-gnutls/testing
+  cd ~/src
+  wget -N -c http://opensource.sotelips.net/~stephane/${ARCH}/mediaproxy-common_${MEDIAPROXY}_${ARCH}.deb
+  wget -N -c http://opensource.sotelips.net/~stephane/${ARCH}/mediaproxy-dispatcher_${MEDIAPROXY}_all.deb
+  sudo dpkg -i mediaproxy-common_${MEDIAPROXY}_${ARCH}.deb
+  sudo dpkg -i mediaproxy-dispatcher_${MEDIAPROXY}_all.deb
+
+  # Also make sure that the user which will be running xmpp_agent.pl is a member of the "opensips" group.
+  # (This is required so that xmpp_agent.pl can get access to the OpenSIPS FIFO.)
+  # The following command adds the current user to group "opensips":
+  sudo adduser `whoami` opensips

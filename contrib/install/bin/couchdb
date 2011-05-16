@@ -1,0 +1,13 @@
+#!/bin/bash
+
+  echo Installing CouchDB
+
+  # CouchDB 0.10.1. is now in Debian/testing
+  sudo aptitude install -y -t testing couchdb
+
+  # In /etc/couchdb/local.ini, replace the line that reads:
+  #    ;loglevel = warn
+  # with
+  #    loglevel = error
+  # to avoid filling the disk with log messages.
+  sudo sed -i -e 's/^;level = .*$/level = error/' /etc/couchdb/local.ini

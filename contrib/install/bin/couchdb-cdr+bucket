@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# For cdr and bucket servers
+# Update LOCAL_IP to reflect the proper IP.
+LOCAL_IP=192.168.1.3
+sed -i -e "s/;bind_address = 127.0.0.1/bind_address = $LOCAL_IP/" /etc/couchdb/local.ini
+echo $LOCAL_IP | tee /etc/ccn/couchdb_local_server >/dev/null

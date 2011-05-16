@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# I use this script to install remote access on the different servers.
+# Once this file has been ran locally, the servers can be accessed remotely
+# (for example using the run-all.sh script) to finish the installation.
+
+aptitude update
+aptitude -y dist-upgrade
+
+update-alternatives --set editor /usr/bin/vim.tiny
+
+USER=stephane
+adduser --gecos '' --disabled-password $USER
+mkdir -p /home/$USER/.ssh
+echo 'ssh-rsa (Your SSH key here)' > /home/$USER/.ssh/authorized_keys
+chown -R $USER.$USER /home/$USER
+chmod -R og-rwx /home/$USER
+
+aptitude install -y sudo
+adduser stephane sudo
+
+# visudo
+sed -i -e 's/# %sudo ALL=NOPASSWD: ALL/%sudo ALL=NOPASSWD: ALL/' /etc/sudoers
+
+# Install dpkg-architecture
+sudo aptitude install dpkg-dev

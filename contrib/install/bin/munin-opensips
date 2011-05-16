@@ -1,0 +1,40 @@
+#!/bin/bash
+
+cat <<'SHELL' | sudo tee /usr/share/munin/plugins/opensips_dialogs >/dev/null
+#!/bin/bash
+
+if [[ $# -eq 1 ]] && [[ $1 == 'autoconf' ]]; then
+        echo "yes"
+        exit
+fi
+
+if [[ $# -eq 1 ]] && [[ $1 == 'config' ]]; then
+  cat <<EOT;
+graph_title Dialogs
+graph_args -l 0
+graph_vlabel dialogs
+graph_category voice
+opensips_dialogs.label Dialogs
+opensips_dialogs.max 25000
+opensips_dialogs.min 0
+opensips_dialogs.draw LINE2
+EOT
+  exit
+fi
+
+echo -n "opensips_dialogs.value "
+/usr/sbin/opensipsctl fifo dlg_list | egrep '^dialog::' | wc -l
+
+SHELL
+
+sudo chmod +x /usr/share/munin/plugins/opensips_dialogs
+sudo ln -s /usr/share/munin/plugins/opensips_dialogs /etc/munin/plugins/
+
+sudo grep -q opensips /etc/munin/plugin-conf.d/munin-node || (cat <<'CONF' | sudo tee -a /etc/munin/plugin-conf.d/munin-node >/dev/null)
+
+[opensips_*]
+user opensips
+
+CONF
+
+sudo /etc/init.d/munin-node restart

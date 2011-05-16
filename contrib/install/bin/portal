@@ -1,0 +1,5 @@
+#!/bin/bash
+
+  echo Installing portal
+  sudo aptitude -y install libtemplate-perl libnet-ldap-perl memcached
+  (cd ~/src/ccnq2.0/portal/perllib && perl Makefile.PL && make && make test && sudo make install)

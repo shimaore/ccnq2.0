@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# sudo aptitude update
+# sudo aptitude install -t testing monit
+
+# sudo sed -i -e 's/startup=0/startup=1/' /etc/default/monit
+
+# sudo rm  /etc/monit/couchdb.monitrc /etc/monit/freeswitch.monitrc /etc/monit/local.monitrc /etc/monit/opensips.monitrc
+# sudo /etc/init.d/monit syntax && sudo /etc/init.d/monit restart
+
+sudo /usr/sbin/monit monitor all

@@ -1,0 +1,68 @@
+#!/bin/bash
+
+# This script will run through the common steps in the INSTALL file.
+# Once you've ran this script (for example "./run-all.sh 001-install-base")
+# you can then run scripts dedicated to a specific server's task(s).
+# Make sure to update your domain below:
+DOMAIN_NAME=private.voip.example.net
+# That's it.
+
+([ -e /etc/hosts.orig ] || sudo mv /etc/hosts /etc/hosts.orig) && echo "127.0.0.1 localhost" | sudo tee /etc/hosts > /dev/null
+
+sudo aptitude -y install bind9
+sudo sh -c "echo 'nameserver 127.0.0.1' > /etc/resolv.conf"
+sudo sh -c "echo 'domain $DOMAIN_NAME' >> /etc/resolv.conf"
+
+  grep 'testing' /etc/apt/sources.list || cat <<'EOT' | sudo tee -a /etc/apt/sources.list > /dev/null
+# Testing packages required by CCNQ2.0 for Erlang/CouchDB, MediaProxy
+deb     http://ftp.us.debian.org/debian/   testing main contrib
+EOT
+  grep 'testing' /etc/apt/preferences || cat <<'EOT' | sudo tee /etc/apt/preferences > /dev/null
+# Install Debian/Lenny packages by default
+Package: *
+Pin: release a=lenny
+Pin-Priority: 700
+
+# Although testing is available, do not attempt to automatically upgrade to it.
+Package: *
+Pin: release a=testing
+Pin-Priority: -1
+EOT
+
+  sudo aptitude update
+  sudo aptitude -y dist-upgrade
+
+  sudo mv /etc/rsyslog.conf /etc/rsyslog.conf.bak
+  cat <<'EOT' | sudo tee /etc/rsyslog.conf >/dev/null
+$ModLoad imuxsock # provides support for local system logging
+$ModLoad imklog   # provides kernel logging support (previously done by rklogd)
+$ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat
+$FileOwner root
+$FileGroup adm
+$FileCreateMode 0640
+$DirCreateMode 0755
+auth,authpriv.*                 /var/log/auth.log
+*.*;auth,authpriv.none          -/var/log/syslog
+EOT
+  sudo /etc/init.d/rsyslog reload
+
+   grep '/opt/freeswitch/db' /etc/fstab || \
+   echo 'tmpfs /opt/freeswitch/db tmpfs defaults 0 0' | sudo tee -a /etc/fstab >/dev/null
+
+  sudo aptitude update
+  sudo aptitude -y install ntp monit psmisc libjson-perl libnet-libidn-perl libauthen-sasl-perl libxml-writer-perl libwww-perl libyaml-perl libexpat-dev liblogger-syslog-perl libio-stringy-perl git-core libnet-ssleay-perl build-essential libmodule-install-perl libuniversal-require-perl libdbi-perl liburi-perl libjson-xs-perl libdata-dump-streamer-perl libio-all-perl libdata-dump-perl libtest-deep-perl libclass-inspector-perl libdata-structure-util-perl
+  sudo aptitude -y install fail2ban
+
+  sudo aptitude install -y -t testing tshark ngrep
+  sudo addgroup wireshark
+  sudo adduser `whoami` wireshark
+
+  sudo mkdir /etc/ccn
+  hexdump -C /dev/urandom | head -1 | md5sum | sudo tee /etc/ccn/cookie > /dev/null
+  echo -n $DOMAIN_NAME                        | sudo tee /etc/ccn/domain_name >/dev/null
+
+  mkdir -p ~/src && (rm -rf ~/src/ccnq2.0; cd ~/src && git clone git://github.com/stephanealnet/ccnq2.0.git)
+
+  (cd ~/src/ccnq2.0/common/perllib && perl Makefile.PL && make && make test && sudo make install)
+
+  sudo aptitude -y install dh-make-perl

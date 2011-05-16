@@ -1,0 +1,19 @@
+#!/bin/bash
+
+  MEDIAPROXY=2.4.2
+  ARCH=$DEB_HOST_ARCH
+
+  echo "Installing mediaproxy relay (version $MEDIAPROXY)"
+
+  # Install MediaProxy relay
+  sudo aptitude -y install python python-support libnetfilter-conntrack1 python-cjson python-twisted-core python-twisted-names python-zopeinterface
+  # Versions required for mediaproxy-common include python-application (>= 1.1.5) and python-gnutls (>= 1.1.8) which are not in Debian/Lenny
+  sudo aptitude -y install python-application/testing python-gnutls/testing
+  cd ~/src
+  wget -N -c http://opensource.sotelips.net/~stephane/${ARCH}/mediaproxy-common_${MEDIAPROXY}_${ARCH}.deb
+  wget -N -c http://opensource.sotelips.net/~stephane/${ARCH}/mediaproxy-relay_${MEDIAPROXY}_all.deb
+  sudo dpkg -i mediaproxy-common_${MEDIAPROXY}_${ARCH}.deb
+  sudo dpkg -i mediaproxy-relay_${MEDIAPROXY}_all.deb
+
+  sudo sed -i -e 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/' /etc/sysctl.conf
+  echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward >/dev/null

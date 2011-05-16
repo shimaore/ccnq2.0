@@ -1,0 +1,11 @@
+#!/bin/bash
+
+  ARCH=$DEB_HOST_ARCH
+
+  echo "Updating Perl modules (architecture $ARCH)"
+
+  (rm -rf /tmp/perl; mkdir /tmp/perl && cd /tmp/perl && \
+    wget http://opensource.sotelips.net/~stephane/perl/all-${ARCH}.tar.gz && \
+    tar xzvf all-${ARCH}.tar.gz && \
+    for file in *.deb; do echo "Installing $file"; sudo dpkg -i $file; done && \
+    rm *.deb all-${ARCH}.tar.gz && cd && rmdir /tmp/perl && echo "Done." )

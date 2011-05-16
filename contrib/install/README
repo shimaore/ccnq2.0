@@ -1,0 +1,15 @@
+These scripts are used during the initial installation of the different servers.
+They provide automated copy and execution of scripts on remote servers using scp/ssh.
+
+On your management system you should install the file in etc/ccn/servers as /etc/ccn/servers,
+and update it to reflect your local settings. (This file plays the same role as the file found
+in contrib/manage/etc/ccn/servers.)
+
+The set of scripts in the "bin" directory are meant to be used the following way (for example):
+
+  cd bin
+  ./run-all.sh ntp
+  SERVERS="sbc1 scb2" ./run-all.sh freeswitch
+
+(Notice how you can run a given script only on a subset of servers using the syntax in the last
+example.)

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+  echo Installing ejabberd
+  sudo aptitude -y install -t testing ejabberd
+  sudo sed -i -e 's/^{shaper, normal, {maxrate, 1000}}\./{shaper, normal, {maxrate, 1000000}}./' /etc/ejabberd/ejabberd.cfg

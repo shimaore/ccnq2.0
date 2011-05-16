@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# This gives you an option to kill the upgrade in case you forgot there
+# might be calls running on the system..
+if [ -e /opt/freeswitch/bin/fs_cli ]; then
+  echo "Waiting a little bit"
+  /opt/freeswitch/bin/fs_cli -p CCNQ -x 'show calls' || exit
+  sleep 10
+  /opt/freeswitch/bin/fs_cli -p CCNQ -x 'show calls'
+fi
+
+  FREESWITCH=1.0.6-git20100812
+  FREESWITCH=1.0.head~git.master.20101015.1-1
+  ARCH=$DEB_HOST_ARCH
+
+  echo "Installing FreeSwitch (version $FREESWITCH)"
+
+  # Install FreeSwitch
+
+  sudo aptitude -y install unixodbc libasound2 libcurl3 libvorbis0a libjpeg62
+  sudo aptitude -y install -t testing libperl5.10
+  sudo aptitude -y install libcrypt-ssleay-perl  # for CNAM
+
+  cd ~/src
+  wget -N -c http://opensource.sotelips.net/~stephane/${ARCH}/freeswitch_${FREESWITCH}_${ARCH}.deb
+  wget -N -c http://opensource.sotelips.net/~stephane/${ARCH}/freeswitch-lang-en_${FREESWITCH}_${ARCH}.deb
+  wget -N -c http://opensource.sotelips.net/~stephane/${ARCH}/freeswitch-perl_${FREESWITCH}_${ARCH}.deb
+  wget -N -c http://opensource.sotelips.net/~stephane/${ARCH}/freeswitch-lua_${FREESWITCH}_${ARCH}.deb
+  # wget -N -c http://opensource.sotelips.net/~stephane/${ARCH}/freeswitch-sounds-en-us-callie-8000_${FREESWITCH}_${ARCH}.deb
+  # wget -N -c http://opensource.sotelips.net/~stephane/${ARCH}/freeswitch-codec-passthru-g729_${FREESWITCH}_${ARCH}.deb
+
+
+  sudo dpkg -i freeswitch_${FREESWITCH}_${ARCH}.deb
+  sudo dpkg -i freeswitch-lang-en_${FREESWITCH}_${ARCH}.deb
+  sudo dpkg -i freeswitch-perl_${FREESWITCH}_${ARCH}.deb   # CNAM, currently
+  sudo dpkg -i freeswitch-lua_${FREESWITCH}_${ARCH}.deb
+  # sudo dpkg -i freeswitch-sounds-en-us-callie-8000_${FREESWITCH}_${ARCH}.deb
+  # sudo dpkg -i freeswitch-codec-passthru-g729_${FREESWITCH}_${ARCH}.deb

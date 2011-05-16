@@ -1,0 +1,12 @@
+#!/bin/bash
+
+  echo "Creating opensips database"
+
+  sudo mysql <<SQL
+    CREATE DATABASE opensips;
+    CONNECT opensips;
+    CREATE USER opensips IDENTIFIED BY 'opensips';
+    GRANT ALL ON opensips.* TO opensips;
+SQL
+  # Run this AFTER ccnq2_upgrade, otherwise /etc/opensips/opensips.sql will not be present.
+  sudo /bin/sh -c 'mysql opensips < /etc/opensips/opensips.sql'

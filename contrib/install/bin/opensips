@@ -1,0 +1,25 @@
+#!/bin/bash
+
+  OPENSIPS=1.5.3-0
+  ARCH=$DEB_HOST_ARCH
+
+  echo "Instaling OpenSIPS (version $OPENSIPS for arch $ARCH)"
+
+  # Install OpenSIPS (note: we provide "amd64" and "i386"-type Debian packages only)
+  sudo aptitude -y install libmysqlclient15off mysql-client postfix
+  wget -N -c http://opensource.sotelips.net/~stephane/${ARCH}/opensips_${OPENSIPS}_${ARCH}.deb
+  wget -N -c http://opensource.sotelips.net/~stephane/${ARCH}/opensips-mysql-module_${OPENSIPS}_${ARCH}.deb
+  sudo dpkg -i opensips_${OPENSIPS}_${ARCH}.deb
+  sudo dpkg -i opensips-mysql-module_${OPENSIPS}_${ARCH}.deb
+
+  sudo aptitude -y install mysql-server
+  # (leave the MySQL root password empty)
+  # Also I do:
+  sudo aptitude -y --purge remove portmap fam
+
+  sudo sed -i -e 's/RUN_OPENSIPS=no/RUN_OPENSIPS=yes/' /etc/default/opensips
+
+  # Also make sure that the user which will be running xmpp_agent.pl is a member of the "opensips" group.
+  # (This is required so that xmpp_agent.pl can get access to the OpenSIPS FIFO.)
+  # The following command adds the current user to group "opensips":
+  sudo adduser `whoami` opensips
