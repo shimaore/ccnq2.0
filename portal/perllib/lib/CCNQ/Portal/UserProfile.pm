@@ -19,7 +19,8 @@ use CCNQ::Portal;
 use CCNQ::AE;
 
 # Prefix to use in user-IDs stored in the CouchDB _users database.
-sub user_id_prefix { 'org.apache.couchdb:' }
+# sub user_id_prefix { 'org.apache.couchdb:' } # This won't work with CCNQ2
+sub user_id_prefix { '' }
 
 sub db {
   return CCNQ::Portal::db;
