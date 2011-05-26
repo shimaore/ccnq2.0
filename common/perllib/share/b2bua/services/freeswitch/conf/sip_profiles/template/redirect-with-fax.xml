@@ -84,6 +84,7 @@
     <!--<param name="force-subscription-expires" value="60"/>-->
     <!--<param name="disable-transfer" value="true"/>-->
     <param name="disable-register" value="true"/>
+    <param name="pass-callee-id" value="false"/>
 
     <!--<param name="enable-3pcc" value="true"/>-->
 
