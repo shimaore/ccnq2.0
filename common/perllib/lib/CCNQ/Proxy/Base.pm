@@ -68,6 +68,8 @@ sub avp
         check_from      => 147,
         # by username: auth (nanpa-style)
         allow_onnet     => 200,
+        # by username: max call duration
+        dialog_timer    => 201,
 
         # by src_subs + number
         valid_from      => 100,

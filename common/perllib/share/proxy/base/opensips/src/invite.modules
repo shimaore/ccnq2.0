@@ -30,5 +30,5 @@ loadmodule "uac_redirect.so"
 loadmodule "dialog.so"
 modparam("dialog", "dlg_flag", 19)
 # Set maximum duration of dialog (=call)
-# modparam("dialog", "timeout_avp", "$avp(i:10)")
+modparam("dialog", "timeout_avp", "$(avp(dialog_timer))")
 modparam("dialog", "db_mode", 0) # No database of dialogs

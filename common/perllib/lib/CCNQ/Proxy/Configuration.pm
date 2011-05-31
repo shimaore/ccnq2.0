@@ -79,6 +79,7 @@ sub parameters {
     UAC_VSF     => 'vsf',
     NODE_ID     => node_id,
     INV_TIMER   => 90,
+    DIALOG_TIMER => 8*3600,
     FORCE_INTERNAL => internal_ip ? 'force_send_socket('.internal_ip.');' : '',
     FORCE_EXTERNAL => external_ip ? 'force_send_socket('.external_ip.');' : '',
   );
