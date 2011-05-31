@@ -11,6 +11,7 @@ flag 7 = msg sender (caller) is NATed
 flag 8 = set if mediaproxy already invoked (on this leg) [flag, bflag]
 
 flag 12 = failed transaction flag
+flag 14 = bye on timeout flag
 flag 16 = call is been recorded
 flag 18 = sock_flag (registrar.so)
 flag 19 = dialog flag (dialog.so)

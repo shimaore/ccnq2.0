@@ -31,4 +31,5 @@ loadmodule "dialog.so"
 modparam("dialog", "dlg_flag", 19)
 # Set maximum duration of dialog (=call)
 modparam("dialog", "timeout_avp", "$(avp(dialog_timer))")
+modparam("dialog", "bye_on_timeout_flag", 14)
 modparam("dialog", "db_mode", 0) # No database of dialogs
