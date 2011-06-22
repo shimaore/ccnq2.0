@@ -350,7 +350,7 @@ sub locations_for {
 sub update_location {
   my ($account,$location,$new_data) = @_;
   defined($account) or confess "account is required";
-  defined($location) or do {
+  defined($location) && $location ne '' or do {
     use Data::UUID;
     $location = Data::UUID->to_string(Data::UUID->create());
   };
