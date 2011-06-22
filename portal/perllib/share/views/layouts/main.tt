@@ -47,5 +47,6 @@
 <div id="content" class="ui-widget"><% content %></div>
 
 <div id="footer"><% INCLUDE footer.tt %></div>
+<% extra_footer %>
 </body>
 </html>
