@@ -66,7 +66,7 @@ post '/billing/account_address' => sub {
   CCNQ::API::billing('report','accounts',$account,$cv);
   my $data = CCNQ::AE::receive_first_doc($cv) || {};
 
-  my $params = CCNQ::Portal::Util::neat({},qw(
+  my $params = CCNQ::Portal::Util::neat($data,qw(
     addr1
     addr2
     addr3
@@ -76,10 +76,6 @@ post '/billing/account_address' => sub {
     zip
     billing_phone
   ));
-
-  for my $f (keys %$params) {
-    $data->{$f} = $params->{$f};
-  }
 
   # Save the new account information.
   my $cv2 = AE::cv;
