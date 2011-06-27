@@ -83,6 +83,8 @@ post '/billing/account_address' => sub {
 
   $data->{billing_address} = $new_address;
 
+  $data->{billing_phone} = params->{billing_phone};
+
   # Save the new account information.
   my $cv2 = AE::cv;
   CCNQ::API::api_update('account',$data,$cv2);

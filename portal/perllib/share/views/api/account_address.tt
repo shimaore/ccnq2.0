@@ -11,6 +11,10 @@
       </p>
     <% END %>
   <% END %>
+      <p class="ui-helper-clearfix">
+      <label for="billing_phone" class="left"><% | loc %>Billing Phone Number<% END %></label>
+      <input type="text" name="billing_phone" size="16" value="<% account_billing_data.billing_phone | html %>" />
+      </p>
   <% IF is_admin %>
       <p class="ui-helper-clearfix submit">
         <input type="submit" value="<% | loc %>Save<% END %>" />
