@@ -78,7 +78,7 @@ post '/billing/account_address' => sub {
   ));
 
   for my $f (keys %$params) {
-    $data{$f} = $params{$f};
+    $data->{$f} = $params->{$f};
   }
 
   # Save the new account information.
