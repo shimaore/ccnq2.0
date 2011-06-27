@@ -61,7 +61,7 @@ post '/billing/account_address' => sub {
   # Customers cannot update their own addresses.
   return unless CCNQ::Portal->current_session->user->profile->is_admin;
 
-  my $params = CCNQ::Portal::Utils::neat({
+  my $params = CCNQ::Portal::Util::neat({
     account => session('account')
   },qw(
     addr1
