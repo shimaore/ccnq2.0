@@ -3,7 +3,7 @@
   <legend><%|loc%>Account Billing Address<%END%></legend>
   <legend><%|loc%>Billing Address<%END%></legend>
   <form method="POST">
-  <% FOREACH f IN [addr1, addr2, addr3, addr4, city, state, zip, billing_phone %>
+  <% FOREACH f IN ['addr1', 'addr2', 'addr3', 'addr4', 'city', 'state', 'zip', 'billing_phone'] %>
       <p class="ui-helper-clearfix">
       <label for="<% f %>" class="left"><% | loc %><% f %><% END %></label>
       <input type="text" name="<% f %>" value="<% account_billing_data.$f | html %>" />
