@@ -3,18 +3,12 @@
   <legend><%|loc%>Account Billing Address<%END%></legend>
   <legend><%|loc%>Billing Address<%END%></legend>
   <form method="POST">
-  <% FOREACH f IN account_address_format %>
-    <% IF f.0 %>
+  <% FOREACH f IN [addr1, addr2, addr3, addr4, city, state, zip, billing_phone %>
       <p class="ui-helper-clearfix">
-      <label for="<% f.0 %>" class="left"><% | loc %><% f.0 %><% END %></label>
-      <input type="text" name="<% f.0 %>" size="<% f.1 %>" value="<% address.$f | html %>" />
+      <label for="<% f %>" class="left"><% | loc %><% f %><% END %></label>
+      <input type="text" name="<% f %>" value="<% account_billing_data.$f | html %>" />
       </p>
-    <% END %>
   <% END %>
-      <p class="ui-helper-clearfix">
-      <label for="billing_phone" class="left"><% | loc %>Billing Phone Number<% END %></label>
-      <input type="text" name="billing_phone" size="16" value="<% account_billing_data.billing_phone | html %>" />
-      </p>
   <% IF is_admin %>
       <p class="ui-helper-clearfix submit">
         <input type="submit" value="<% | loc %>Save<% END %>" />

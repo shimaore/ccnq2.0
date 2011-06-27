@@ -18,10 +18,9 @@ use strict; use warnings;
 use Dancer ':syntax';
 
 use CCNQ::Portal;
+use CCNQ::Portal::Util;
 use CCNQ::Portal::I18N;
 use CCNQ::Portal::Inner::Util;
-
-use Geo::PostalAddress;
 
 =head1 SUMMARY
 
@@ -46,14 +45,6 @@ get '/billing/account_address' => sub {
   my $data = CCNQ::AE::receive_first_doc($cv) || {};
   var account_billing_data => $data;
 
-  # Gather the names of fields for the specific country.
-  my $address_parser = Geo::PostalAddress->new(uc($data->{billing_country}));
-  $address_parser or return CCNQ::Portal::content( error => _('Please correct the billing country code')_ );
-  var account_address_format => $address_parser->format();
-
-  # Retrieve the account's specific address data.
-  var address => $address_parser->display($data->{billing_address})
-    if $data->{billing_address};
   return CCNQ::Portal::content;
 
 };
@@ -70,20 +61,18 @@ post '/billing/account_address' => sub {
   # Customers cannot update their own addresses.
   return unless CCNQ::Portal->current_session->user->profile->is_admin;
 
-  # Retrieve the account's data.
-  my $cv = AE::cv;
-  CCNQ::API::billing('report','accounts',$account,$cv);
-  my $data = CCNQ::AE::receive_first_doc($cv) || {};
-
-  # Update the address if the one that was submitted is valid.
-  my $address_parser = Geo::PostalAddress->new(uc($data->{billing_country}));
-  $address_parser or return CCNQ::Portal::content( error => _('Please correct the billing country code')_ );
-  my $new_address = $address_parser->storage({params});
-  ref($new_address) or return CCNQ::Portal::content( error => _($new_address)_ );
-
-  $data->{billing_address} = $new_address;
-
-  $data->{billing_phone} = params->{billing_phone};
+  my $params = CCNQ::Portal::Utils::neat({
+    account => session('account')
+  },qw(
+    addr1
+    addr2
+    addr3
+    addr4
+    city
+    state
+    zip
+    billing_phone
+  ));
 
   # Save the new account information.
   my $cv2 = AE::cv;
