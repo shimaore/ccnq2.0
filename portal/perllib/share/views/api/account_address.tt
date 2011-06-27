@@ -6,7 +6,7 @@
   <% FOREACH f IN ['addr1', 'addr2', 'addr3', 'addr4', 'city', 'state', 'zip', 'billing_phone'] %>
       <p class="ui-helper-clearfix">
       <label for="<% f %>" class="left"><% | loc %><% f %><% END %></label>
-      <input type="text" name="<% f %>" value="<% account_billing_data.$f | html %>" />
+      <input type="text" name="<% f %>" value="<% billing_address.$f | html %>" />
       </p>
   <% END %>
   <% IF is_admin %>
