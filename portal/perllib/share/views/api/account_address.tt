@@ -6,7 +6,7 @@
   <% FOREACH f IN account_address_format %>
     <% IF f.0 %>
       <p class="ui-helper-clearfix">
-      <label for="name" class="left"><% | loc %><% f.0 %><% END %></label>
+      <label for="<% f.0 %>" class="left"><% | loc %><% f.0 %><% END %></label>
       <input type="text" name="<% f.0 %>" size="<% f.1 %>" value="<% address.$f | html %>" />
       </p>
     <% END %>
