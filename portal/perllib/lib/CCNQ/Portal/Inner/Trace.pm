@@ -68,7 +68,7 @@ post '/trace' => sub {
   ));
 
   my $cv1 = AE::cv;
-  CCNQ::API::api_query('trace',$params,$cv1);
+  CCNQ::API::api_query('traces',$params,$cv1);
   return CCNQ::Portal::Util::redirect_request($cv1);
 };
 
