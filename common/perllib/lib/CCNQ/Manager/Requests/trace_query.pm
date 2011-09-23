@@ -19,7 +19,7 @@ sub run {
   # Return list of activities required to complete this request.
   return (
     {
-      action => 'trace',
+      action => 'traces',
       node_name => $request->{node_name},
       params => {
         map { $_ => $request->{$_} } qw( dump_packets call_id to_user from_user days_ago  )
