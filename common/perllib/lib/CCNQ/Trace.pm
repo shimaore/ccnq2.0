@@ -116,6 +116,7 @@ sub crontab_update {
 SHELL=/bin/bash
 PATH=/bin:/usr/bin:/usr/local/bin
 20 3 * * *   nice -n 19 /usr/bin/env find /var/log/traces -type f '!' -newermt '2 days ago' -delete
+17 * * * *   nice -n 19 /usr/bin/env find /var/log/traces -name '*.pcap' -print0 | xargs -0 gzip
 CRON
   my $crontab_file = File::Spec->catfile(CCNQ::CCN,'ccnq2_crontab_traces.crontab');
 
@@ -202,7 +203,7 @@ sub run {
     # Output the subset of packets
     my $script_content = <<SCRIPT;
 #!/bin/sh
-nice mergecap -w - $base_dir/*.pcap | nice ngrep -i -l -q -I - -O '$fh' '$ngrep_filter' >/dev/null;
+nice mergecap -w - $base_dir/*.pcap $base_dir/*.pcap.gz | nice ngrep -i -l -q -I - -O '$fh' '$ngrep_filter' >/dev/null;
 exec nice tshark -r "$fh" -R '$tshark_filter' -w -
 SCRIPT
     print $script $script_content;
@@ -232,7 +233,7 @@ SCRIPT
     my $fields = join(' ',map { ('-e', $_) } @{trace_field_names()});
     my $script_content = <<SCRIPT;
 #!/bin/bash
-nice mergecap -w - $base_dir/*.pcap | ngrep -i -l -q -I - -O '$fh' '$ngrep_filter' >/dev/null;
+nice mergecap -w - $base_dir/*.pcap $base_dir/*.pcap.gz | ngrep -i -l -q -I - -O '$fh' '$ngrep_filter' >/dev/null;
 exec nice tshark -r "$fh" -R '$tshark_filter' -nltad -T fields $fields
 SCRIPT
     print $script $script_content;
