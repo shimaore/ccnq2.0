@@ -116,7 +116,6 @@ sub crontab_update {
 SHELL=/bin/bash
 PATH=/bin:/usr/bin:/usr/local/bin
 20 3 * * *   nice -n 19 /usr/bin/env find /var/log/traces -type f '!' -newermt '2 days ago' -delete
-17 * * * *   nice -n 19 /usr/bin/env find /var/log/traces -name '*.pcap' -print0 | xargs -0 gzip
 CRON
   my $crontab_file = File::Spec->catfile(CCNQ::CCN,'ccnq2_crontab_traces.crontab');
 
