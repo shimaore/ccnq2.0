@@ -17,7 +17,7 @@
       <% IF r.account %>
       | <span class="edit"><a href="<% prefix %>/number_forwarding/<% r.number %>?account=<% r.account | uri %>"><%|loc%>Change Forwarding<%END%></a></span>
       | <span class="edit"><a href="<% prefix %>/number_location/<% r.number %>?account=<% r.account | uri %>"><%|loc%>Change Location<%END%></a></span>
-      | <span class="edit"><a href="<% prefix %>/number_name/<% r.number %>?account=<% r.account | uri %>"><%|loc%>Change Caller Name<%END%></a></span>
+      <% IF r.name_available %>| <span class="edit"><a href="<% prefix %>/number_name/<% r.number %>?account=<% r.account | uri %>"><%|loc%>Change Caller Name<%END%></a></span><%END%>
       | <span class="edit"><a href="<% prefix %>/numbers/bank/return/<% r.number %>?account=<% r.account | uri %>"><%|loc%>Delete<%END%></a></span>
       <% ELSE %>
       | <span class="edit"><a href="<% prefix %>/numbers/bank/all.html?number=<% r.number %>&account=<% r.account | uri %>"><%|loc%>Modify<%END%></a></span>
