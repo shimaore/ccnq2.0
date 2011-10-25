@@ -50,7 +50,7 @@ auth,authpriv.*             /var/log/auth.log
 # Uncomment the following line to gather debug messages
 # *.debug                  -/var/log/debug
 EOT
-  sudo /etc/init.d/rsyslog reload
+  sudo /etc/init.d/rsyslog restart
 #    Also notice how we do not log "debug" information.
 
 # * Note: for high performance, the directory /opt/freeswitch/db must be
