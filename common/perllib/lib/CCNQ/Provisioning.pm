@@ -108,18 +108,6 @@ use constant js_number_bank_by_type => <<'JAVASCRIPT';
   }
 JAVASCRIPT
 
-use constant js_recent_names => <<'JAVASCRIPT';
-  function(doc) {
-    if(doc.profile != 'number') return;
-    if(!doc.name) return;
-    var d = new Date();
-    // Timelapse in hours
-    var delta = (d.getTime()/1000 - doc.timestamp_name)/3600;
-    if(delta > 26) return;
-    emit([doc.number,doc.name],null);
-  }
-JAVASCRIPT
-
 # Locate endpoint across all accounts
 use constant js_report_lookup_endpoint => <<'JAVASCRIPT';
   function (doc) {
@@ -179,10 +167,6 @@ use constant provisioning_designs => {
       },
       number_bank_by_type => {
         map => js_number_bank_by_type,
-        # no reduce function
-      },
-      recent_names => {
-        map => js_recent_names,
         # no reduce function
       },
       lookup_endpoint => {
