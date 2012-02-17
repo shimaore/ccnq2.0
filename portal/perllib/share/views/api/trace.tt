@@ -14,8 +14,8 @@
       <p class="ui-helper-clearfix">
         <label for="dump_packets" class="left"><% | loc %>Dump packets:<% END %></label>
         <select name="dump_packets">
-          <option value="0">No</option>
           <option value="1">Yes</option>
+          <option value="0">No</option>
         </select>
       </p>
       <p class="ui-helper-clearfix">
