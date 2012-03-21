@@ -69,7 +69,11 @@ sub redirect_request {
   my $prefix = prefix;
   defined $prefix or $prefix = '';
   my $url = $prefix.'/request/'.$r->{request};
-  return redirect $url;
+  if( params->{no_redirect_please} ) {
+    return $url;
+  } else {
+    return redirect $url;
+  }
 }
 
 use constant password_charset => "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-";
