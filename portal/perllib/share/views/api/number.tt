@@ -9,15 +9,6 @@
       <p class="ui-helper-clearfix">
         <label for="number" class="left"><% | loc %>Number:<% END %></label>
         <input type="text" name="number" value="<% field.number | html %>" class="" size="16" />
-        <select name="number_alt">
-          <option value=""></option>
-          <% FOREACH n IN numbers_for(session.account) %>
-          <option <% IF n.number == field.number %>selected<% END %> value="<% n.number | html %>"><% n.number | html %> (<% n.endpoint %>)</option>
-          <% END %>
-          <% FOREACH n IN available_numbers %>
-          <option <% IF n.number == field.number %>selected<% END %> value="<% n.number | html %>"><% n.number | html %> (<% n.number_type %>)</option>
-          <% END %>
-        </select>
       </p>
       <p class="ui-helper-clearfix">
         <label for="endpoint" class="left"><% | loc %>Endpoint:<% END %></label>
