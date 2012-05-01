@@ -57,7 +57,7 @@ get '/themes/css/:theme/style.css' => sub {
   content_of(path(CCNQ::CCN,'themes','css',params->{theme},'style.css'));
 };
 
-get r('/themes/css/([\w-]+)/images/([\w-]+)\.png') => sub {
+get qr{/themes/css/([\w-]+)/images/([\w-]+)\.png} => sub {
   content_type 'image/png';
   content_of(path(CCNQ::CCN,'themes','css',(splat)[0],'images',(splat)[1].".png"));
 };
@@ -71,22 +71,22 @@ We catch those by using /ccnq2 as a prefix.
 
 use CCNQ::Portal;
 
-get r('/css/([\w.-]+)\.css') => sub {
+get qr{/css/([\w.-]+)\.css} => sub {
   content_type 'text/css';
   content_of(path(CCNQ::Portal::SRC,'public','css',(splat)[0].".css"));
 };
 
-get r('/js/([\w.-]+)\.js') => sub {
+get qr{/js/([\w.-]+)\.js} => sub {
   content_type 'text/javascript';
   content_of(path(CCNQ::Portal::SRC,'public','js',(splat)[0].".js"));
 };
 
-get r('/images/([\w.-]+)\.gif') => sub {
+get qr{/images/([\w.-]+)\.gif} => sub {
   content_type 'text/javascript';
   content_of(path(CCNQ::Portal::SRC,'public','js',(splat)[0].".gif"));
 };
 
-get r('/js/localization/([\w.-]+)\.js') => sub {
+get qr{/js/localization/([\w.-]+)\.js} => sub {
   content_type 'text/javascript';
   content_of(path(CCNQ::Portal::SRC,'public','js','localization',(splat)[0].".js"));
 };
