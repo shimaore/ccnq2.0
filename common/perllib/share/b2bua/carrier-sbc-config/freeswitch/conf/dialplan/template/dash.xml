@@ -11,7 +11,7 @@
     </extension>
 
     <extension name="egress-911">
-      <condition field="destination_number" expression="^1(911)$">
+      <condition field="destination_number" expression="^1([5789]11)$">
         <action application="set" data="ccnq_direction=egress"/>
         <action application="set" data="progress_timeout=12"/>
         <action application="set" data="call_timeout=300"/>
