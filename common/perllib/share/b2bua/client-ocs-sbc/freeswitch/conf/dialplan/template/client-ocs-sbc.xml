@@ -24,7 +24,21 @@
       </condition>
     </extension>
 
-    <extension name="cleanup-called">
+    <extension name="cleanup-called-1">
+      <condition field="destination_number" expression="^\+(1[0-9]+)">
+        <action application="set" data="ccnq_to_e164=$1"/>
+        <action application="transfer" data="call"/>
+      </condition>
+    </extension>
+
+    <extension name="cleanup-called-2">
+      <condition field="destination_number" expression="^\+([2-9][0-9]+)">
+        <action application="set" data="ccnq_to_e164=011$1"/>
+        <action application="transfer" data="call"/>
+      </condition>
+    </extension>
+
+    <extension name="cleanup-called-3">
       <condition field="destination_number" expression="^\+?([1-9][0-9]+)">
         <action application="set" data="ccnq_to_e164=$1"/>
         <action application="transfer" data="call"/>
