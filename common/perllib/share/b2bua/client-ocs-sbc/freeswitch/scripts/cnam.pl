@@ -37,7 +37,7 @@ sub cnam_run {
     else
     {
       info('Error:',$res->status_line);
-      $session->setVariable('effective_caller_id_name','No data');
+      # $session->setVariable('effective_caller_id_name','No data');
     }
   }
   else
