@@ -59,7 +59,7 @@ sub to_html {
   var template_name => 'api/number-bank';
   var number_types => CCNQ::Portal::Inner::Number->registered_number_types;
   var carriers     => CCNQ::Portal::Inner::Number->registered_carriers;
-  $cv and var result => sub { CCNQ::AE::receive_docs($cv) };
+  # $cv and var result => sub { CCNQ::AE::receive_docs($cv) };
   return CCNQ::Portal::content;
 }
 
