@@ -232,6 +232,7 @@ post '/numbers/bank/delete' => sub {
 
 get '/numbers/bank/return/:number' => sub {
   CCNQ::Portal->current_session->user
+  && CCNQ::Portal->current_session->user->profile->is_admin
     or return;
 
   my $number = CCNQ::Portal::normalize_number(params->{number});
