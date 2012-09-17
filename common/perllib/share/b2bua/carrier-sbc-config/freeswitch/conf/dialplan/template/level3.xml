@@ -16,6 +16,7 @@
         <action application="set" data="progress_timeout=12"/>
         <action application="set" data="call_timeout=300"/>
         <action application="export" data="t38_passthru=true"/>
+        <action application="export" data="suppress_cng=true"/>
         <action application="set" data="effective_caller_id_name=_undef_"/>
         <action application="set" data="sip_contact_user=+${caller_id_number}"/>
         <!-- might need to replace the caller_id_number differently if it is not done by another B2BUA -->
