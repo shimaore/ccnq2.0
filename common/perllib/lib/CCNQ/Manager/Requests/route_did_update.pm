@@ -77,7 +77,7 @@ sub run {
     } ),
 
     # 5. Add billing entry for the day of creation
-    CCNQ::Activities::Billing::partial_day($request,'did'),
+    # CCNQ::Activities::Billing::partial_day($request,'did'),
 
     # 6. Mark completed
     CCNQ::Manager::request_completed(),

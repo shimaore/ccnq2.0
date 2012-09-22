@@ -26,7 +26,7 @@ sub run {
   return (
     CCNQ::Activities::Proxy->endpoint_delete($request),
     CCNQ::Activities::Provisioning::delete_endpoint($request),
-    CCNQ::Activities::Billing::partial_day($request,'endpoint_delete'),
+    # CCNQ::Activities::Billing::partial_day($request,'endpoint_delete'),
     CCNQ::Manager::request_completed(),
   );
 }
