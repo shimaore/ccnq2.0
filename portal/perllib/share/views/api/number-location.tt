@@ -9,6 +9,7 @@
       <p class="ui-helper-clearfix">
         <label for="location" class="left"><% | loc %>Location:<% END %></label>
         <select name="location">
+          <option value="__none"><%|loc%>None<%END%></option>
           <option value=""><%|loc%>Use endpoint's location<%END%></option>
           <% FOREACH r IN locations_for(session.account) %>
           <option value="<% r.location | html %>" <% IF field.location == r.location %>selected<%END %>><% r.name | html %> (<% r.main_number | html %>)</option>
