@@ -102,3 +102,9 @@ loadmodule "alias_db.so"
 modparam("alias_db", "db_url",     "${DB_URL}")
 modparam("alias_db", "use_domain", 1)
 modparam("alias_db", "append_branches", 1)
+
+# --- pike
+loadmodule "pike.so"
+modparam("pike", "sampling_time_unit", 10)
+modparam("pike", "reqs_density_per_unit", 50)
+modparam("pike", "remove_latency", 60)
