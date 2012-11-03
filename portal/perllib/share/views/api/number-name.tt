@@ -7,7 +7,7 @@
         <input type="text" readonly name="number" value="<% field.number | html %>" size="16" />
       </p>
       <p class="ui-helper-clearfix">
-        <label for="location" class="left"><% | loc %>Caller Name:<% END %></label>
+        <label for="name" class="left"><% | loc %>Caller Name:<% END %></label>
         <input type="text" name="name" value="<% field.name | html %>" size="16" width="16" />
       </p>
       <p class="ui-helper-clearfix submit">
